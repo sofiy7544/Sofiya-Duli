@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jellycat Ukraine 🇬🇧 — Оригінал з Британії</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FDF8F3;
+  --card: #FFFFFF;
+  --warm1: #F5EDE0;
+  --warm2: #EDD9C0;
+  --accent: #C8501A;
+  --accent2: #E8956A;
+  --green: #4A7C59;
+  --ink: #1C1209;
+  --muted: #7A6555;
+  --border: #E8DDD0;
+  --tg: #229ED9;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  font-family: 'Inter', sans-serif;
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+.hero {
+  background: var(--ink);
+  color: #fff;
+  padding: 20px 20px 0;
+  overflow: hidden;
+  position: relative;
+}
+.hero-inner {
+  max-width: 480px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+.logo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.logo span { color: var(--accent2); }
+.uk-flag {
+  background: #fff;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.hero-text { padding-bottom: 32px; }
+.hero-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: 'Fraunces', serif;
+  font-size: 2.4rem;
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 14px;
+  letter-spacing: -0.02em;
+}
+.hero h1 em { font-style: italic; color: var(--accent2); }
+.hero-sub {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+.hero-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.pill {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.85);
+}
+.tg-btn-hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--tg);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 16px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  width: 100%;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 20px rgba(34,158,217,0.4);
+  font-family: 'Inter', sans-serif;
+}
+.tg-btn-hero:active { transform: scale(0.98); }
+.tg-btn-hero svg { width:22px; height:22px; flex-shrink:0; }
+
+.section {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 32px 20px 0;
+}
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+.section-sub { font-size: 0.78rem; color: var(--muted); }
+
+.cards { display: flex; flex-direction: column; gap: 14px; }
+
+.card {
+  background: var(--card);
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+  transition: transform 0.15s;
+  position: relative;
+}
+.card:active { transform: scale(0.99); }
+.card-img {
+  width: 110px;
+  min-height: 130px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  position: relative;
+}
+.card-body {
+  padding: 16px 16px 16px 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.card-category {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.card-name {
+  font-family: 'Fraunces', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.25;
+  margin-bottom: 6px;
+}
+.card-desc {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-price {
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.card-price .from {
+  font-size: 0.68rem;
+  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 1px;
+}
+.buy-btn {
+  background: var(--ink);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 9px 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.buy-btn:hover { background: var(--accent); }
+.badge-hot {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.badge-new {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: var(--green);
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.card[data-color="peach"] .card-img { background: #FFF0E8; }
+.card[data-color="lilac"] .card-img { background: #F2EEF9; }
+.card[data-color="mint"] .card-img { background: #E8F5EE; }
+.card[data-color="sky"] .card-img { background: #E8F4FD; }
+.card[data-color="rose"] .card-img { background: #FDE8EE; }
+.card[data-color="cream"] .card-img { background: #FDF5E8; }
+.card[data-color="yellow"] .card-img { background: #FEFAE8; }
+.card[data-color="grey"] .card-img { background: #F2F2F2; }
+
+.trust {
+  background: var(--warm1);
+  border-radius: 20px;
+  border: 1.5px solid var(--warm2);
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 20px;
+}
+.trust-item { display: flex; align-items: flex-start; gap: 10px; }
+.trust-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+.trust-text strong {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.trust-text span { font-size: 0.72rem; color: var(--muted); line-height: 1.4; }
+
+.steps { display: flex; flex-direction: column; gap: 0; margin-top: 4px; }
+.step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.step:last-child { border-bottom: none; }
+.step-num {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.step-text strong { display: block; font-size: 0.92rem; font-weight: 600; margin-bottom: 3px; }
+.step-text span { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+
+.bottom-cta {
+  background: var(--ink);
+  border-radius: 20px;
+  padding: 28px 24px;
+  text-align: center;
+  margin-top: 20px;
+}
+.bottom-cta h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.bottom-cta p { font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 20px; line-height: 1.5; }
+
+footer {
+  max-width: 480px;
+  margin: 24px auto 0;
+  padding: 20px 20px 40px;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+footer strong { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="top-bar">
+      <div class="logo">Jelly<span>cat</span> UA</div>
+      <div class="uk-flag">🇬🇧 Оригінал UK</div>
+    </div>
+    <div class="hero-text">
+      <div class="hero-badge">✈️ Привозимо з Британії</div>
+      <h1>М'які іграшки<br>Jellycat — <em>справжні</em></h1>
+      <p class="hero-sub">Офіційний імпорт з Великобританії. Бирки, чеки, оригінальна упаковка. Відправляємо Новою Поштою по всій Україні 🇺🇦</p>
+      <div class="hero-pills">
+        <div class="pill">🏷️ Є бирки та чеки</div>
+        <div class="pill">📦 Нова Пошта</div>
+        <div class="pill">💬 Відповідь за 5 хв</div>
+      </div>
+      <a href="https://t.me/jellycat_ua" target="_blank" class="tg-btn-hero">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.19 13.67l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.958.889z"/></svg>
+        Написати в Telegram
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-head">
+    <div class="section-title">Каталог 🧸</div>
+    <div class="section-sub">Оригінал з UK</div>
+  </div>
+  <div class="cards">
+
+    <div class="card" data-color="peach">
+      <div class="card-img">🐰<div class="badge-hot">ХІТ</div></div>
+      <div class="card-body">
+        <div>
+          <div class="card-category">Bashful Bunny</div>
+          <div class="card-name">Зайчик Bashful Beige</div>
+          <div class="card-desc">Класика Jellycat з 1999. Ніжне хутро, м'які вушка. Є розміри S / M / L</div>
+        </div>
+        <div class="card-footer">
+          <div class="card-price"><span class="from">від</span>1 490 ₴</div>
+          <a href="https://t.me/jellycat_ua" target="_blank" class="buy-btn">Замовити →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-color="sky">
+      <div class="card-img">🐲<div class="badge-hot">ХІТ</div></div>
+      <div class="card-body">
+        <div>
+          <div class="card-category">Dragons</div>
+          <div class="card-name">Sky Dragon</div>
+          <div class="card-desc">Веселковий дракон — один з найбажаніших Jellycat. Розкуповується миттєво!</div>
+        </div>
+        <div class="card-footer">
+          <div class="card-price"><span class="from">від</span>2 290 ₴</div>
+          <a href="https://t.me/jellycat_ua" target="_blank" class="buy-btn">Замовити →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-color="cream">
+      <div class="card-img">🐻</div>
+      <div class="card-body">
+        <div>
+          <div class="card-category">Bears</div>
+          <div class="card-name">Bartholomew Bear</div>
+          <div class="card-desc">Ведмедик з ніжним хутром та сумними очима. Улюбленець усього інтернету</div>
+        </div>
+        <div class="card-footer">
+          <div class="card-price"><span class="from">від</span>1 690 ₴</div>
+          <a href="https://t.me/jellycat_ua" target="_blank" class="buy-btn">Замовити →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-color="rose">
+      <div class="card-img">🌸<div class="badge-new">НОВИНКА</div></div>
+      <div class="card-body">
+        <div>
+          <div class="card-category">Amuseables</div>
+          <div class="card-name">Amuseable Rose</div>
+          <div class="card-desc">М'яка троянда з мордочкою. Унікальна іграшка-рослина від Jellycat</div>
+        </div>
+        <div class="card-footer">
+          <div class="card-price"><span class="from">від</span>1 390 ₴</div>
+          <a href="https://t.me/jellycat_ua" target="_blank" class="buy-btn">Замовити →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-color="lilac">
+      <div class="card-img">🐰</div>
+      <div class="card-body">
+        <div>
+          <div class="card-category">Bashful Luxe</div>
+          <div class="card-name">Luxe Bunny Rosa</div>
+          <div class="card-desc">Розкішна версія зайчика з пухнастим хутром. Ідеальний подарунок</div>
+        </div>
+        <div class="card-footer">
+          <div class="card-price"><span class="from">від</span>1 890 ₴</div>
+          <a href="https://t.me/jellycat_ua" target="_blank" class="buy-btn">Замовити →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-color="yellow">
+      <div class="card-img">🍌</div>
+      <div class="card-body">
+        <div>
+          <div class="card-category">Amuseables</div>
+          <div class="card-name">Amuseable Banana</div>
+          <div class="card-desc">Банан з мордочкою і ніжками — вірусний хіт TikTok</div>
+        </div>
+        <div class="card-footer">
+          <div class="card-price"><span class="from">від</span>1 250 ₴</div>
+          <a href="https://t.me/jellycat_ua" target="_blank" class="buy-btn">Замовити →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-color="mint">
+      <div class="card-img">🐢<div class="badge-new">ТРЕНД</div></div>
+      <div class="card-body">
+        <div>
+          <div class="card-category">Animals</div>
+          <div class="card-name">Timmy Turtle</div>
+          <div class="card-desc">Черепашка зі сердитим виглядом, якого всі люблять</div>
+        </div>
+        <div class="card-footer">
+          <div class="card-price"><span class="from">від</span>1 190 ₴</div>
+          <a href="https://t.me/jellycat_ua" target="_blank" class="buy-btn">Замовити →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-color="grey">
+      <div class="card-img">🐘</div>
+      <div class="card-body">
+        <div>
+          <div class="card-category">Animals</div>
+          <div class="card-name">Fuddlewuddle Elephant</div>
+          <div class="card-desc">Слоник з великими вухами і м'якеньким хоботом. Улюбленець малечі</div>
+        </div>
+        <div class="card-footer">
+          <div class="card-price"><span class="from">від</span>1 590 ₴</div>
+          <a href="https://t.me/jellycat_ua" target="_blank" class="buy-btn">Замовити →</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="trust">
+    <div class="trust-item">
+      <div class="trust-icon">🇬🇧</div>
+      <div class="trust-text"><strong>Оригінал UK</strong><span>Купуємо в офіційних магазинах Британії</span></div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">🏷️</div>
+      <div class="trust-text"><strong>Бирки та чеки</strong><span>Кожна іграшка з документами</span></div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">📦</div>
+      <div class="trust-text"><strong>Нова Пошта</strong><span>Відправляємо по всій Україні</span></div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">💬</div>
+      <div class="trust-text"><strong>Відповідь швидко</strong><span>Пишемо у Telegram за 5 хвилин</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="padding-top:32px;">
+  <div class="section-head">
+    <div class="section-title">Як замовити</div>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text"><strong>Напишіть нам у Telegram</strong><span>Скажіть, яку іграшку хочете і який розмір — ми перевіримо наявність</span></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text"><strong>Оплата і підтвердження</strong><span>Приймаємо оплату на картку ПриватБанк або Монобанк</span></div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text"><strong>Відправка Новою Поштою</strong><span>Відправляємо в день оплати або наступного дня. Надсилаємо ТТН</span></div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-text"><strong>Отримуєте посилку 🎉</strong><span>Оригінальний Jellycat з UK вже у вас вдома</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="padding-bottom:40px;">
+  <div class="bottom-cta">
+    <h2>Хочете щось<br>конкретне? 🐰</h2>
+    <p>Напишіть у Telegram — підберемо іграшку, розкажемо про наявність і ціни. Відповідаємо швидко!</p>
+    <a href="https://t.me/jellycat_ua" target="_blank" class="tg-btn-hero">
+      <svg viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px;flex-shrink:0"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.19 13.67l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.958.889z"/></svg>
+      @jellycat_ua — написати зараз
+    </a>
+  </div>
+</div>
+
+<footer>
+  <strong>Jellycat UA</strong> — неофіційний реселер оригінальних іграшок Jellycat.<br>
+  Всі товари привезені з Великобританії 🇬🇧<br>
+  Jellycat® — торгова марка Jellycat Ltd, UK.
+</footer>
+
+</body>
+</html>

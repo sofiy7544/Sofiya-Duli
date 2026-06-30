@@ -3,805 +3,1038 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DULI TOYS · JellyCat Ukraine — М'які іграшки преміум-класу</title>
-<meta name="description" content="DULI TOYS — преміальний магазин м'яких іграшок. Оригінальні плюшеві іграшки з доставкою по Україні. Опт та роздріб. Замовлення у Telegram @Dulitoys.">
-<meta property="og:title" content="DULI TOYS · JellyCat Ukraine — М'які іграшки преміум-класу">
-<meta property="og:description" content="Оригінальні плюшеві іграшки. Опт та роздріб. Доставка Новою Поштою. @Dulitoys">
+<title>DULI TOYS — Оптовий постачальник м'яких іграшок · Китай → Європа</title>
+<meta name="description" content="DULI TOYS — оптовий імпорт м'яких іграшок для немовлят та дітей. Прямі поставки Китай → Україна, Польща, Нідерланди, ЄС. Логістика авіа / залізниця / фури / море. Опт та роздріб. @Dulitoys">
+<meta property="og:title" content="DULI TOYS — Оптовий постачальник м'яких іграшок · Китай → Європа">
+<meta property="og:description" content="Прямі оптові поставки м'яких іграшок з Китаю в Україну та ЄС. Каталог 90+ артикулів, прорахунок логістики, 12 служб доставки. @Dulitoys">
 <meta property="og:type" content="website">
-<meta name="theme-color" content="#F4F0E9">
+<meta name="theme-color" content="#14181F">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=Roboto+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#F4F0E9; --bg2:#EDE6DB; --surface:#FFFFFF; --surface2:#FBF8F3;
-  --ink:#1B1713; --ink2:#4A4138; --muted:#8C8175; --muted2:#B3A899;
-  --line:#E6DED1; --line2:#DAD0C0;
-  --accent:#B65D3C; --accent-d:#9A4A2D; --accent-soft:#F3E3D8;
-  --sage:#5E6B5A; --gold:#B8902F; --tg:#229ED9; --green:#3F8B5C;
-  --sh-sm:0 2px 10px rgba(40,30,20,.05);
-  --sh:0 14px 40px rgba(40,30,20,.10);
-  --sh-lg:0 30px 70px rgba(40,30,20,.16);
-  --r:18px; --r-lg:26px;
-  --ease:cubic-bezier(.22,.61,.36,1);
+  --ink:#14181F; --ink2:#222934; --ink3:#333C49;
+  --bg:#F4F3EF; --bg2:#ECEAE3; --surface:#FFFFFF; --surface2:#FAF9F6;
+  --gold:#C0993F; --gold-l:#D8B65F; --gold-d:#9A7A2C; --gold-soft:#F3EAD4;
+  --text:#1B1F26; --muted:#6E7681; --muted2:#9AA1AB;
+  --line:#E2E0D8; --line2:#D2CFC4;
+  --green:#3F8B5C; --green-bg:#E7F1EA; --amber:#B5852A; --amber-bg:#F6EED9; --blue:#3F6CB0; --blue-bg:#E6EDF7;
+  --tg:#229ED9;
+  --sh-sm:0 1px 3px rgba(20,24,31,.06); --sh:0 12px 36px rgba(20,24,31,.10); --sh-lg:0 28px 64px rgba(20,24,31,.18);
+  --r:14px; --r-lg:22px; --ease:cubic-bezier(.22,.61,.36,1);
+  --nav-h:66px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{background:var(--bg);font-family:'Manrope',sans-serif;color:var(--ink);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);font-family:'Manrope',sans-serif;color:var(--text);line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 body.lock{overflow:hidden}
 a{text-decoration:none;color:inherit}
-button{font-family:inherit;cursor:pointer;border:none;background:none}
-img{max-width:100%}
-.serif{font-family:'Marcellus',serif;font-weight:400;letter-spacing:.01em}
-.wrap{max-width:1240px;margin:0 auto;padding:0 28px}
-.eyebrow{font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;color:var(--accent);font-weight:700}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.serif{font-family:'Fraunces',serif}
+.mono{font-family:'Roboto Mono',monospace}
+.wrap{max-width:1320px;margin:0 auto;padding:0 26px}
+.eyebrow{font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-d);font-weight:700}
+.gold{color:var(--gold-d)}
 
 /* ===== Top bar ===== */
-.topbar{background:var(--ink);color:#EFE7DA;font-size:.76rem;letter-spacing:.08em;text-align:center;padding:9px 16px;font-weight:500}
-.topbar b{color:var(--gold)}
+.topbar{background:var(--ink);color:#D7DBE2;font-size:.76rem;letter-spacing:.04em}
+.topbar .wrap{display:flex;justify-content:space-between;align-items:center;height:38px;gap:16px;overflow:hidden;white-space:nowrap}
+.topbar b{color:var(--gold-l)}
+.topbar .tb-right{display:flex;gap:18px}
+.topbar a:hover{color:#fff}
 
 /* ===== Nav ===== */
-.nav{position:sticky;top:0;z-index:40;background:rgba(244,240,233,.86);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
-.nav-in{display:flex;align-items:center;justify-content:space-between;height:74px;gap:24px}
-.brand{display:flex;align-items:center;gap:12px}
-.brand-mark{width:42px;height:42px;border-radius:13px;background:var(--ink);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:1.3rem;transition:transform .4s var(--ease)}
-.brand:hover .brand-mark{transform:rotate(-8deg)}
-.brand-txt b{font-family:'Marcellus',serif;font-size:1.2rem;letter-spacing:.06em;display:block;line-height:1}
-.brand-txt small{font-size:.6rem;letter-spacing:.34em;color:var(--muted);text-transform:uppercase}
-.nav-links{display:flex;gap:34px}
-.nav-links a{font-size:.86rem;font-weight:600;color:var(--ink2);position:relative;padding:4px 0;transition:color .2s}
-.nav-links a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:1.5px;background:var(--accent);transition:width .3s var(--ease)}
-.nav-links a:hover{color:var(--ink)}.nav-links a:hover::after{width:100%}
-.nav-right{display:flex;align-items:center;gap:10px}
-.icon-btn{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--ink);transition:background .2s,transform .2s;position:relative}
-.icon-btn:hover{background:var(--bg2);transform:translateY(-1px)}
-.icon-btn svg{width:21px;height:21px}
-.cart-count{position:absolute;top:4px;right:4px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--accent);color:#fff;font-size:.66rem;font-weight:800;display:flex;align-items:center;justify-content:center;transform:scale(0);transition:transform .25s var(--ease)}
-.cart-count.show{transform:scale(1)}
-.burger{display:none}
+.nav{position:sticky;top:0;z-index:40;background:var(--ink);border-bottom:1px solid rgba(255,255,255,.07)}
+.nav-in{display:flex;align-items:center;gap:18px;height:var(--nav-h)}
+.brand{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.brand-mark{width:42px;height:42px;border-radius:11px;background:linear-gradient(150deg,var(--gold-l),var(--gold-d));color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:900}
+.brand-txt b{font-family:'Fraunces',serif;font-weight:900;font-size:1.22rem;color:#fff;display:block;line-height:1;letter-spacing:.01em}
+.brand-txt small{font-size:.58rem;letter-spacing:.26em;color:var(--gold-l);text-transform:uppercase;font-weight:600}
+.tabs{display:flex;gap:2px;margin-left:8px;flex:1}
+.tab{padding:9px 15px;border-radius:9px;font-size:.85rem;font-weight:600;color:#AEB4BE;transition:.18s;white-space:nowrap}
+.tab:hover{color:#fff;background:rgba(255,255,255,.06)}
+.tab.on{color:var(--ink);background:var(--gold-l)}
+.nav-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.inq-btn{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.12);padding:9px 15px;border-radius:10px;font-size:.84rem;font-weight:700;transition:.18s;position:relative}
+.inq-btn:hover{background:rgba(255,255,255,.14)}
+.inq-btn svg{width:18px;height:18px}
+.inq-count{min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--gold);color:var(--ink);font-size:.68rem;font-weight:800;display:flex;align-items:center;justify-content:center}
+.nav-tg{background:var(--tg);color:#fff;padding:9px 14px;border-radius:10px;font-size:.84rem;font-weight:700}
+.burger{display:none;width:42px;height:42px;border-radius:10px;align-items:center;justify-content:center;color:#fff;background:rgba(255,255,255,.08)}
+.burger svg{width:22px;height:22px}
+
+/* ===== Views ===== */
+.view{display:none;animation:fade .5s var(--ease)}
+.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
 /* ===== Hero ===== */
-.hero{position:relative;padding:72px 0 84px;overflow:hidden}
-.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:30px;padding:7px 15px;font-size:.74rem;font-weight:600;color:var(--ink2);box-shadow:var(--sh-sm);margin-bottom:26px}
-.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(63,139,92,.18)}
-.hero h1{font-family:'Marcellus',serif;font-size:4.3rem;line-height:1.04;letter-spacing:-.01em;margin-bottom:20px}
-.hero h1 em{font-style:italic;color:var(--accent)}
-.hero p{font-size:1.12rem;color:var(--ink2);max-width:480px;margin-bottom:34px}
-.hero-cta{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
-.hero-meta{display:flex;gap:30px;margin-top:40px;padding-top:30px;border-top:1px solid var(--line)}
-.hero-meta div b{font-family:'Marcellus',serif;font-size:1.7rem;display:block;line-height:1}
-.hero-meta div span{font-size:.78rem;color:var(--muted)}
-/* hero visual */
-.hero-visual{position:relative;height:520px}
-.hv-card{position:absolute;border-radius:var(--r-lg);box-shadow:var(--sh-lg);display:flex;align-items:center;justify-content:center;font-size:9rem;overflow:hidden}
-.hv-1{inset:0 30% 32% 0;background:linear-gradient(150deg,#F0DDD0,#E7C9B6);font-size:11rem;animation:float1 7s var(--ease) infinite}
-.hv-2{right:0;top:8%;width:46%;height:46%;background:linear-gradient(150deg,#E3E7DE,#CDD6C5);animation:float2 8s var(--ease) infinite}
-.hv-3{right:6%;bottom:0;width:42%;height:40%;background:linear-gradient(150deg,#EDE4D6,#DCCBB0);animation:float1 9s var(--ease) infinite}
-.hv-tag{position:absolute;left:8%;bottom:6%;background:var(--surface);border-radius:14px;padding:12px 16px;box-shadow:var(--sh);display:flex;align-items:center;gap:10px;font-size:.8rem;font-weight:700;animation:float2 6s var(--ease) infinite}
-.hv-tag .em{font-size:1.4rem}
-.hv-tag small{display:block;font-weight:500;color:var(--muted);font-size:.7rem}
-@keyframes float1{50%{transform:translateY(-16px)}}
-@keyframes float2{50%{transform:translateY(14px)}}
+.hero{background:linear-gradient(160deg,#14181F 0%,#1B212B 55%,#222B36 100%);color:#fff;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;top:-20%;right:-8%;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(192,153,63,.20),transparent 65%)}
+.hero-in{position:relative;z-index:2;padding:70px 0 60px;display:grid;grid-template-columns:1.15fr .85fr;gap:46px;align-items:center}
+.hero-badge{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:30px;padding:7px 15px;font-size:.74rem;font-weight:600;color:#D7DBE2;margin-bottom:22px}
+.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:#5FCB87;box-shadow:0 0 0 4px rgba(95,203,135,.2)}
+.hero h1{font-family:'Fraunces',serif;font-weight:900;font-size:3.5rem;line-height:1.05;letter-spacing:-.01em;margin-bottom:18px}
+.hero h1 em{font-style:italic;color:var(--gold-l)}
+.hero p{font-size:1.08rem;color:#B8BEC8;max-width:520px;margin-bottom:28px}
+.hero-cta{display:flex;gap:13px;flex-wrap:wrap}
+.hero-routes{margin-top:34px;padding-top:26px;border-top:1px solid rgba(255,255,255,.1);display:flex;gap:26px;flex-wrap:wrap}
+.hero-route{font-size:.82rem;color:#AEB4BE}
+.hero-route b{color:#fff;display:block;font-size:.92rem;font-weight:700}
+.hero-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-lg);padding:28px;backdrop-filter:blur(6px)}
+.hero-card h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.2rem;color:#fff;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.mini-stat{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:.88rem;color:#B8BEC8}
+.mini-stat:last-child{border:none}
+.mini-stat b{color:var(--gold-l);font-family:'Roboto Mono',monospace;font-weight:600}
 
 /* ===== Buttons ===== */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:14px;padding:15px 26px;font-size:.92rem;font-weight:700;letter-spacing:.01em;transition:transform .2s var(--ease),box-shadow .25s,background .2s;white-space:nowrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:12px;padding:14px 24px;font-size:.9rem;font-weight:700;transition:transform .18s var(--ease),box-shadow .22s,background .2s;white-space:nowrap}
 .btn svg{width:18px;height:18px}
-.btn-dark{background:var(--ink);color:var(--bg)}
-.btn-dark:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(27,23,19,.28)}
-.btn-accent{background:var(--accent);color:#fff}
-.btn-accent:hover{background:var(--accent-d);transform:translateY(-2px);box-shadow:0 14px 30px rgba(182,93,60,.34)}
-.btn-ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line2)}
-.btn-ghost:hover{border-color:var(--ink);transform:translateY(-2px)}
+.btn-gold{background:linear-gradient(150deg,var(--gold-l),var(--gold-d));color:var(--ink)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(192,153,63,.4)}
+.btn-light{background:#fff;color:var(--ink)}
+.btn-light:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(0,0,0,.18)}
+.btn-dark{background:var(--ink);color:#fff}
+.btn-dark:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(20,24,31,.3)}
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,.25);color:#fff}
+.btn-ghost:hover{border-color:#fff;transform:translateY(-2px)}
+.btn-outline{background:var(--surface);border:1px solid var(--line2);color:var(--ink)}
+.btn-outline:hover{border-color:var(--ink);transform:translateY(-2px)}
+.btn-sm{padding:9px 15px;font-size:.82rem;border-radius:10px}
 .btn-block{width:100%}
-.btn-lg{padding:17px 30px;font-size:1rem}
 
-/* ===== Marquee trust ===== */
-.trust{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--surface2);padding:22px 0}
-.trust-row{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
-.trust-item{display:flex;align-items:center;gap:11px;font-size:.84rem;font-weight:600;color:var(--ink2)}
-.trust-item .ic{font-size:1.3rem}
+/* ===== Logos strip ===== */
+.strip{background:var(--ink2);border-top:1px solid rgba(255,255,255,.06)}
+.strip .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:18px 26px}
+.strip-item{display:flex;align-items:center;gap:9px;color:#C3C8D0;font-size:.82rem;font-weight:600}
+.strip-item .ic{font-size:1.15rem}
 
-/* ===== Section base ===== */
-.sec{padding:96px 0}
-.sec-head{margin-bottom:46px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
-.sec-head h2{font-family:'Marcellus',serif;font-size:2.8rem;line-height:1.06;letter-spacing:-.01em;margin-top:12px}
-.sec-head p{color:var(--muted);max-width:420px;font-size:.96rem}
-.sec-head .filters{display:flex;gap:8px;flex-wrap:wrap}
-.chip{padding:9px 18px;border-radius:30px;border:1px solid var(--line2);background:var(--surface);font-size:.82rem;font-weight:600;color:var(--ink2);transition:.2s}
-.chip:hover{border-color:var(--ink)}
-.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+/* ===== Section ===== */
+.sec{padding:64px 0}
+.sec-head{margin-bottom:34px}
+.sec-head h2{font-family:'Fraunces',serif;font-weight:900;font-size:2.3rem;line-height:1.08;letter-spacing:-.01em;margin-top:10px}
+.sec-head p{color:var(--muted);max-width:560px;margin-top:8px}
+.sec-light{background:var(--surface)}
+.sec-dark{background:var(--ink);color:#fff}
+.sec-dark .sec-head p{color:#AEB4BE}
+.sec-dark .eyebrow{color:var(--gold-l)}
 
-/* ===== Product grid ===== */
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
-.card{background:var(--surface);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--sh-sm);border:1px solid var(--line);transition:transform .35s var(--ease),box-shadow .35s;display:flex;flex-direction:column;cursor:pointer}
-.card:hover{transform:translateY(-8px);box-shadow:var(--sh)}
-.card-media{position:relative;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;font-size:5.4rem;overflow:hidden}
-.card-media .em{transition:transform .5s var(--ease)}
-.card:hover .card-media .em{transform:scale(1.12) rotate(-4deg)}
-.card-badge{position:absolute;top:14px;left:14px;background:var(--ink);color:var(--bg);font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;border-radius:20px}
-.card-badge.accent{background:var(--accent)}
-.card-fav{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;font-size:1rem;opacity:0;transform:translateY(-6px);transition:.3s var(--ease)}
-.card:hover .card-fav{opacity:1;transform:none}
-.card-quick{position:absolute;left:14px;right:14px;bottom:14px;background:var(--ink);color:var(--bg);border-radius:12px;padding:13px;font-size:.84rem;font-weight:700;text-align:center;opacity:0;transform:translateY(14px);transition:.35s var(--ease)}
-.card:hover .card-quick{opacity:1;transform:none}
-.card-body{padding:20px 20px 22px;display:flex;flex-direction:column;gap:4px;flex:1}
-.card-cat{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
-.card-name{font-family:'Marcellus',serif;font-size:1.18rem;line-height:1.2}
-.card-foot{margin-top:auto;padding-top:14px;display:flex;align-items:center;justify-content:space-between}
-.card-price{font-size:1.12rem;font-weight:800}
-.card-price small{font-size:.72rem;font-weight:500;color:var(--muted);display:block}
-.card-add{width:42px;height:42px;border-radius:12px;background:var(--bg2);color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:1.3rem;transition:.2s}
-.card-add:hover{background:var(--accent);color:#fff;transform:scale(1.08)}
-/* media palettes */
-.m1{background:linear-gradient(150deg,#F2E0D4,#E6C8B4)}
-.m2{background:linear-gradient(150deg,#E1E7DD,#CBD5C3)}
-.m3{background:linear-gradient(150deg,#ECE3D4,#D9C7AD)}
-.m4{background:linear-gradient(150deg,#F0DEDF,#E2C4C7)}
-.m5{background:linear-gradient(150deg,#E6E1EC,#D0C8DC)}
-.m6{background:linear-gradient(150deg,#F1EAD2,#E0D3A6)}
-.m7{background:linear-gradient(150deg,#DCE6E8,#C0D2D6)}
-.m8{background:linear-gradient(150deg,#EEE3DA,#DAC7B6)}
-.m9{background:linear-gradient(150deg,#E9E2DC,#D2C5BA)}
+/* ===== Feature grid ===== */
+.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.feat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px;transition:.3s var(--ease)}
+.feat:hover{transform:translateY(-5px);box-shadow:var(--sh)}
+.feat .ic{font-size:1.7rem;margin-bottom:14px}
+.feat h4{font-size:1.04rem;margin-bottom:5px}
+.feat p{font-size:.85rem;color:var(--muted)}
 
-/* ===== Categories band ===== */
-.cats{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.cat{position:relative;border-radius:var(--r-lg);overflow:hidden;height:230px;display:flex;align-items:flex-end;padding:26px;color:#fff;cursor:pointer;box-shadow:var(--sh-sm)}
-.cat::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(20,15,11,.62));z-index:1}
-.cat .em{position:absolute;top:-10px;right:-6px;font-size:8rem;opacity:.9;z-index:0;transition:transform .5s var(--ease)}
-.cat:hover .em{transform:scale(1.1) rotate(6deg)}
-.cat .lbl{position:relative;z-index:2}
-.cat .lbl h4{font-family:'Marcellus',serif;font-size:1.5rem}
-.cat .lbl span{font-size:.8rem;opacity:.85}
-.cat-a{background:linear-gradient(150deg,#C99A7E,#9A6B4D)}
-.cat-b{background:linear-gradient(150deg,#8DA083,#5E6B5A)}
-.cat-c{background:linear-gradient(150deg,#C7A98C,#9C7A52)}
+/* ===== Catalog layout ===== */
+.cat-layout{display:grid;grid-template-columns:248px 1fr;gap:26px;align-items:start}
+.cat-side{position:sticky;top:calc(var(--nav-h) + 16px);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.cat-side h4{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding:18px 18px 10px}
+.cat-tree{list-style:none}
+.cat-tree li{border-top:1px solid var(--line)}
+.cat-tree button{display:flex;justify-content:space-between;align-items:center;width:100%;padding:12px 18px;font-size:.88rem;font-weight:600;color:var(--ink2);transition:.15s;text-align:left}
+.cat-tree button:hover{background:var(--bg2)}
+.cat-tree button.on{background:var(--ink);color:#fff}
+.cat-tree button.on .cnt{background:rgba(255,255,255,.18);color:#fff}
+.cnt{font-size:.7rem;font-weight:700;color:var(--muted);background:var(--bg2);padding:2px 8px;border-radius:10px;font-family:'Roboto Mono',monospace}
+.legend{padding:16px 18px;border-top:1px solid var(--line);background:var(--surface2)}
+.legend .lt{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.legend code{font-family:'Roboto Mono',monospace;font-size:.78rem;color:var(--gold-d);font-weight:600}
+.legend p{font-size:.74rem;color:var(--muted);line-height:1.6;margin-top:6px}
 
-/* ===== Story / editorial ===== */
-.story{background:var(--ink);color:var(--bg);border-radius:32px;padding:72px 64px;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;position:relative;overflow:hidden}
-.story h2{font-family:'Marcellus',serif;font-size:2.7rem;line-height:1.1;margin-bottom:20px}
-.story p{color:rgba(244,240,233,.7);margin-bottom:18px;font-size:1rem}
-.story .eyebrow{color:var(--gold)}
-.story-stats{display:grid;grid-template-columns:1fr 1fr;gap:28px}
-.story-stat{border-left:2px solid rgba(184,144,47,.5);padding-left:18px}
-.story-stat b{font-family:'Marcellus',serif;font-size:2.4rem;display:block;line-height:1;color:var(--gold)}
-.story-stat span{font-size:.84rem;color:rgba(244,240,233,.65)}
+/* catalog toolbar */
+.cat-main{min-width:0}
+.toolbar{display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.search{flex:1;min-width:220px;position:relative}
+.search input{width:100%;padding:13px 14px 13px 42px;border:1px solid var(--line2);border-radius:11px;background:var(--surface);font-family:inherit;font-size:.9rem}
+.search input:focus{outline:none;border-color:var(--gold)}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted)}
+.sort{padding:13px 14px;border:1px solid var(--line2);border-radius:11px;background:var(--surface);font-family:inherit;font-size:.86rem;font-weight:600}
+.count-pill{font-size:.82rem;color:var(--muted);font-weight:600}
+
+/* table */
+.table-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.tbl{width:100%;border-collapse:collapse;font-size:.86rem}
+.tbl thead th{background:var(--ink);color:#C9CDD4;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;text-align:left;padding:13px 14px;position:sticky;top:0}
+.tbl tbody td{padding:13px 14px;border-top:1px solid var(--line);vertical-align:middle}
+.tbl tbody tr{transition:background .15s}
+.tbl tbody tr:hover{background:var(--surface2)}
+.t-art{font-family:'Roboto Mono',monospace;font-size:.78rem;color:var(--gold-d);font-weight:600;white-space:nowrap}
+.t-name{font-weight:700;color:var(--ink);min-width:170px}
+.t-name small{display:block;font-weight:500;color:var(--muted);font-size:.74rem}
+.t-tag{font-size:.72rem;color:var(--muted)}
+.t-price{font-weight:800;white-space:nowrap}
+.t-price small{display:block;font-weight:500;color:var(--muted2);font-size:.7rem;text-decoration:line-through}
+.t-moq{font-family:'Roboto Mono',monospace;font-weight:600;color:var(--ink2)}
+.stock{display:inline-flex;align-items:center;gap:6px;font-size:.74rem;font-weight:700;padding:4px 9px;border-radius:20px;white-space:nowrap}
+.stock::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.s-in{color:var(--green);background:var(--green-bg)}
+.s-tr{color:var(--blue);background:var(--blue-bg)}
+.s-or{color:var(--amber);background:var(--amber-bg)}
+.t-add{width:36px;height:36px;border-radius:10px;background:var(--bg2);color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:.18s;margin-left:auto}
+.t-add:hover{background:var(--gold);color:var(--ink);transform:scale(1.08)}
+.empty-row td{text-align:center;padding:50px;color:var(--muted)}
+
+/* ===== Categories cards ===== */
+.col-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.col-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:30px;cursor:pointer;transition:.3s var(--ease);position:relative;overflow:hidden}
+.col-card:hover{transform:translateY(-6px);box-shadow:var(--sh)}
+.col-card .em{font-size:2.6rem;margin-bottom:16px;display:block}
+.col-card h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.35rem;margin-bottom:6px}
+.col-card p{font-size:.86rem;color:var(--muted);margin-bottom:16px}
+.col-card .meta{display:flex;gap:16px;font-size:.78rem;color:var(--muted)}
+.col-card .meta b{color:var(--gold-d);font-family:'Roboto Mono',monospace}
+.col-card .go{position:absolute;top:26px;right:26px;color:var(--muted);transition:.25s}
+.col-card:hover .go{color:var(--gold-d);transform:translate(3px,-3px)}
+
+/* ===== Logistics ===== */
+.dir-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.dir{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;transition:.3s var(--ease)}
+.dir:hover{box-shadow:var(--sh);transform:translateY(-4px)}
+.dir-route{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.dir-flag{font-size:1.7rem}
+.dir-arrow{flex:1;height:2px;background:repeating-linear-gradient(90deg,var(--gold) 0 8px,transparent 8px 14px);position:relative}
+.dir-arrow::after{content:"›";position:absolute;right:-4px;top:-13px;color:var(--gold-d);font-size:1.3rem;font-weight:700}
+.dir h4{font-size:1.08rem;margin-bottom:14px}
+.dir-modes{display:flex;flex-wrap:wrap;gap:8px}
+.mode-pill{display:flex;align-items:center;gap:6px;background:var(--bg2);border-radius:9px;padding:7px 11px;font-size:.78rem;font-weight:600}
+.mode-pill small{color:var(--muted);font-weight:500}
+
+.modes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:8px}
+.tmode{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;text-align:center;transition:.3s var(--ease)}
+.tmode:hover{transform:translateY(-5px);box-shadow:var(--sh)}
+.tmode .em{font-size:2.2rem}
+.tmode h4{margin:12px 0 4px}
+.tmode p{font-size:.8rem;color:var(--muted)}
+.tmode .sp{margin-top:12px;font-family:'Roboto Mono',monospace;font-size:.78rem;color:var(--gold-d);font-weight:600}
+
+/* ===== Carriers ===== */
+.car-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.car{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;gap:13px;align-items:center;transition:.25s var(--ease)}
+.car:hover{box-shadow:var(--sh);transform:translateY(-3px)}
+.car .badge{width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;color:#fff;flex-shrink:0}
+.car b{font-size:.92rem;display:block}
+.car small{font-size:.74rem;color:var(--muted)}
+
+/* tariff table */
+.tariff-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:8px}
+.tariff{width:100%;border-collapse:collapse;font-size:.85rem}
+.tariff th,.tariff td{padding:13px 16px;text-align:left;border-top:1px solid var(--line)}
+.tariff thead th{background:var(--ink);color:#C9CDD4;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;border:none}
+.tariff td.r{font-family:'Roboto Mono',monospace;font-weight:600;color:var(--gold-d)}
+.tariff tbody tr:hover{background:var(--surface2)}
+
+/* ===== Calculator ===== */
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+.calc-form{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:32px}
+.calc-form .field{margin-bottom:16px}
+.field label{display:block;font-size:.76rem;font-weight:700;color:var(--ink2);margin-bottom:7px}
+.field input,.field select{width:100%;padding:13px 14px;border:1px solid var(--line2);border-radius:11px;background:var(--surface);font-family:inherit;font-size:.9rem}
+.field input:focus,.field select:focus{outline:none;border-color:var(--gold)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.calc-res{background:var(--ink);color:#fff;border-radius:var(--r-lg);padding:32px;position:sticky;top:calc(var(--nav-h) + 16px)}
+.calc-res h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.3rem;margin-bottom:6px}
+.calc-res .sub{font-size:.82rem;color:#AEB4BE;margin-bottom:22px}
+.res-big{font-family:'Fraunces',serif;font-weight:900;font-size:3rem;color:var(--gold-l);line-height:1}
+.res-big small{font-size:1rem;color:#AEB4BE;font-weight:500;font-family:'Manrope'}
+.res-row{display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.88rem;color:#C9CDD4}
+.res-row:last-child{border:none}
+.res-row b{color:#fff;font-family:'Roboto Mono',monospace}
+.res-note{font-size:.74rem;color:#8C93A0;margin-top:18px;line-height:1.6}
 
 /* ===== Steps ===== */
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
-.step{padding:30px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);transition:.3s var(--ease)}
-.step:hover{transform:translateY(-5px);box-shadow:var(--sh)}
-.step .n{font-family:'Marcellus',serif;font-size:1.1rem;width:46px;height:46px;border-radius:50%;border:1.5px solid var(--accent);color:var(--accent);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
-.step h4{font-size:1.05rem;margin-bottom:6px}
-.step p{font-size:.86rem;color:var(--muted)}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px 18px;position:relative}
+.step .n{font-family:'Roboto Mono',monospace;font-size:.78rem;color:var(--gold-d);font-weight:700;margin-bottom:12px}
+.step h4{font-size:.98rem;margin-bottom:5px}
+.step p{font-size:.8rem;color:var(--muted)}
 
-/* ===== Reviews ===== */
-.reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.review{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:30px;transition:.3s var(--ease)}
-.review:hover{box-shadow:var(--sh);transform:translateY(-4px)}
-.review .stars{color:var(--gold);letter-spacing:3px;margin-bottom:14px}
-.review p{font-size:.95rem;color:var(--ink2);margin-bottom:20px}
-.review .who{display:flex;align-items:center;gap:12px}
-.review .av{width:44px;height:44px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800}
-.review .who b{display:block;font-size:.9rem}
-.review .who small{font-size:.76rem;color:var(--muted)}
+/* tier table */
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.tier{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:28px;transition:.3s var(--ease)}
+.tier:hover{transform:translateY(-5px);box-shadow:var(--sh)}
+.tier.feat{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.tier .tag{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-d);font-weight:700}
+.tier .qty{font-family:'Fraunces',serif;font-weight:900;font-size:2rem;margin:6px 0}
+.tier .disc{font-size:1.1rem;font-weight:800;color:var(--green);margin-bottom:14px}
+.tier ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.tier li{font-size:.85rem;color:var(--ink2);display:flex;gap:9px}
+.tier li::before{content:"✓";color:var(--gold-d);font-weight:800}
 
-/* ===== CTA newsletter ===== */
-.cta{background:linear-gradient(150deg,#F1E2D6,#E7CDB8);border-radius:32px;padding:64px;text-align:center;position:relative;overflow:hidden}
-.cta h2{font-family:'Marcellus',serif;font-size:2.6rem;margin-bottom:12px}
-.cta p{color:var(--ink2);max-width:440px;margin:0 auto 28px}
-.cta-form{display:flex;gap:12px;max-width:460px;margin:0 auto;flex-wrap:wrap}
-.cta-form input{flex:1;min-width:200px;padding:16px 20px;border-radius:14px;border:1px solid var(--line2);background:var(--surface);font-family:inherit;font-size:.92rem}
-.cta-form input:focus{outline:none;border-color:var(--accent)}
+/* ===== About ===== */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:46px;align-items:center}
+.about-stats{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.about-stat{border-left:2px solid var(--gold);padding-left:18px}
+.about-stat b{font-family:'Fraunces',serif;font-weight:900;font-size:2.3rem;display:block;line-height:1}
+.about-stat span{font-size:.84rem;color:var(--muted)}
+
+/* ===== Contacts ===== */
+.cont-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.cont-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:32px}
+.cont-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.cont-item:last-child{border:none}
+.cont-item .ic{width:44px;height:44px;border-radius:11px;background:var(--gold-soft);color:var(--gold-d);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.cont-item b{display:block;font-size:.95rem}
+.cont-item span{font-size:.84rem;color:var(--muted)}
 
 /* ===== Footer ===== */
-footer{background:var(--ink);color:var(--bg);padding:64px 0 30px;margin-top:0}
-.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.3fr;gap:40px;margin-bottom:44px}
-.foot-brand .brand-mark{background:var(--bg);color:var(--ink)}
-.foot-brand .brand-txt b,.foot-brand .brand-txt small{color:var(--bg)}
-.foot-brand p{color:rgba(244,240,233,.6);font-size:.88rem;max-width:280px;margin-top:16px}
-.foot-col h5{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
-.foot-col a{display:block;font-size:.88rem;color:rgba(244,240,233,.7);margin-bottom:12px;transition:color .2s}
-.foot-col a:hover{color:var(--bg)}
-.foot-bottom{border-top:1px solid rgba(244,240,233,.14);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:.78rem;color:rgba(244,240,233,.5)}
-.foot-pay{display:flex;gap:8px;flex-wrap:wrap}
-.foot-pay span{border:1px solid rgba(244,240,233,.2);border-radius:7px;padding:4px 10px;font-size:.72rem}
+footer{background:var(--ink);color:#C3C8D0;padding:56px 0 28px}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:36px;margin-bottom:40px}
+.foot-brand p{font-size:.86rem;color:#9AA1AB;max-width:300px;margin-top:14px}
+.foot-col h5{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-l);margin-bottom:16px}
+.foot-col a{display:block;font-size:.86rem;color:#9AA1AB;margin-bottom:11px;transition:.18s}
+.foot-col a:hover{color:#fff}
+.foot-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.78rem;color:#7C8089}
+.foot-pay{display:flex;gap:7px;flex-wrap:wrap}
+.foot-pay span{border:1px solid rgba(255,255,255,.16);border-radius:7px;padding:4px 9px;font-size:.7rem}
 
-/* ===== Cart drawer & overlay ===== */
-.overlay{position:fixed;inset:0;background:rgba(20,15,11,.5);backdrop-filter:blur(3px);z-index:60;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+/* ===== Inquiry drawer ===== */
+.overlay{position:fixed;inset:0;background:rgba(15,18,23,.55);backdrop-filter:blur(3px);z-index:60;opacity:0;visibility:hidden;transition:.3s}
 .overlay.show{opacity:1;visibility:visible}
-.drawer{position:fixed;top:0;right:0;height:100%;width:430px;max-width:92vw;background:var(--bg);z-index:70;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .4s var(--ease);box-shadow:var(--sh-lg)}
+.drawer{position:fixed;top:0;right:0;height:100%;width:460px;max-width:94vw;background:var(--bg);z-index:70;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .4s var(--ease);box-shadow:var(--sh-lg)}
 .drawer.show{transform:none}
-.drawer-head{display:flex;align-items:center;justify-content:space-between;padding:24px 26px;border-bottom:1px solid var(--line)}
-.drawer-head h3{font-family:'Marcellus',serif;font-size:1.4rem}
-.drawer-close{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:var(--ink);transition:background .2s}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;padding:22px 24px;border-bottom:1px solid var(--line);background:var(--surface)}
+.drawer-head h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.3rem}
+.drawer-close{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;transition:.18s}
 .drawer-close:hover{background:var(--bg2)}
-.drawer-body{flex:1;overflow-y:auto;padding:20px 26px}
-.cart-empty{text-align:center;padding:60px 20px;color:var(--muted)}
-.cart-empty .em{font-size:3.4rem;display:block;margin-bottom:14px}
-.cart-item{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
-.ci-media{width:74px;height:74px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:2.4rem;flex-shrink:0}
-.ci-info{flex:1;min-width:0}
-.ci-name{font-family:'Marcellus',serif;font-size:1.02rem;line-height:1.2}
-.ci-meta{font-size:.74rem;color:var(--muted);margin:2px 0 8px}
-.ci-bottom{display:flex;align-items:center;justify-content:space-between}
-.qty{display:flex;align-items:center;gap:0;border:1px solid var(--line2);border-radius:10px;overflow:hidden}
-.qty button{width:30px;height:30px;font-size:1.1rem;color:var(--ink);transition:background .2s}
+.drawer-body{flex:1;overflow-y:auto;padding:18px 24px}
+.inq-empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.inq-empty .em{font-size:3rem;display:block;margin-bottom:12px}
+.inq-item{display:flex;gap:12px;padding:15px 0;border-bottom:1px solid var(--line)}
+.inq-item .info{flex:1;min-width:0}
+.inq-item .art{font-family:'Roboto Mono',monospace;font-size:.72rem;color:var(--gold-d);font-weight:600}
+.inq-item .nm{font-weight:700;font-size:.9rem;line-height:1.3}
+.inq-item .bottom{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.qty{display:flex;align-items:center;border:1px solid var(--line2);border-radius:9px;overflow:hidden}
+.qty button{width:30px;height:30px;font-size:1.1rem;transition:.15s}
 .qty button:hover{background:var(--bg2)}
-.qty span{width:34px;text-align:center;font-size:.86rem;font-weight:700}
-.ci-price{font-weight:800;font-size:.98rem}
-.ci-remove{font-size:.72rem;color:var(--muted);text-decoration:underline;margin-top:6px}
-.ci-remove:hover{color:var(--accent)}
-.drawer-foot{padding:22px 26px;border-top:1px solid var(--line);background:var(--surface2)}
-.drawer-row{display:flex;justify-content:space-between;margin-bottom:8px;font-size:.9rem;color:var(--ink2)}
-.drawer-total{display:flex;justify-content:space-between;align-items:baseline;margin:14px 0 18px}
-.drawer-total b{font-family:'Marcellus',serif;font-size:1.7rem}
-.drawer-note{font-size:.74rem;color:var(--muted);text-align:center;margin-top:12px}
-
-/* checkout form inside drawer */
-.checkout{display:none}
-.checkout.show{display:block}
-.field{margin-bottom:13px}
-.field label{display:block;font-size:.74rem;color:var(--muted);font-weight:600;margin-bottom:6px}
-.field input,.field select,.field textarea{width:100%;padding:12px 14px;border:1px solid var(--line2);border-radius:11px;background:var(--surface);font-family:inherit;font-size:.88rem;color:var(--ink)}
-.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--accent)}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-.back-link{font-size:.8rem;color:var(--muted);margin-bottom:14px;display:inline-flex;gap:6px;align-items:center}
-.back-link:hover{color:var(--ink)}
-
-/* ===== Product modal ===== */
-.modal{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
-.modal.show{opacity:1;visibility:visible}
-.modal-card{background:var(--bg);border-radius:var(--r-lg);max-width:880px;width:100%;max-height:90vh;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;transform:scale(.96) translateY(10px);transition:transform .35s var(--ease);box-shadow:var(--sh-lg)}
-.modal.show .modal-card{transform:none}
-.modal-media{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;font-size:10rem;position:relative}
-.modal-info{padding:40px 38px;overflow-y:auto;display:flex;flex-direction:column}
-.modal-close{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;font-size:1.4rem;z-index:2;transition:.2s}
-.modal-close:hover{background:#fff;transform:rotate(90deg)}
-.modal-cat{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-.modal-name{font-family:'Marcellus',serif;font-size:2.1rem;line-height:1.1;margin-bottom:10px}
-.modal-stars{color:var(--gold);letter-spacing:2px;font-size:.88rem;margin-bottom:16px}
-.modal-stars small{color:var(--muted);letter-spacing:0;margin-left:6px}
-.modal-price{font-size:1.8rem;font-weight:800;margin-bottom:18px}
-.modal-desc{font-size:.92rem;color:var(--ink2);margin-bottom:22px}
-.modal-label{font-size:.74rem;font-weight:700;letter-spacing:.04em;margin-bottom:9px}
-.size-row{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}
-.size{min-width:48px;padding:10px 14px;border:1px solid var(--line2);border-radius:11px;font-size:.86rem;font-weight:700;background:var(--surface);transition:.2s}
-.size:hover{border-color:var(--ink)}
-.size.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.modal-actions{display:flex;gap:12px;align-items:center;margin-top:auto;padding-top:10px}
-.modal-feats{display:flex;gap:18px;margin-top:20px;padding-top:18px;border-top:1px solid var(--line);flex-wrap:wrap}
-.modal-feat{font-size:.76rem;color:var(--muted);display:flex;align-items:center;gap:6px}
+.qty input{width:50px;text-align:center;border:none;font-family:'Roboto Mono',monospace;font-weight:600;font-size:.84rem;background:transparent}
+.qty input:focus{outline:none}
+.inq-item .lp{font-weight:800;font-size:.9rem;white-space:nowrap}
+.inq-rm{font-size:.72rem;color:var(--muted);text-decoration:underline;margin-top:5px}
+.inq-rm:hover{color:var(--gold-d)}
+.drawer-foot{padding:20px 24px;border-top:1px solid var(--line);background:var(--surface)}
+.drawer-total{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.drawer-total b{font-family:'Fraunces',serif;font-weight:900;font-size:1.7rem}
+.drawer-note{font-size:.74rem;color:var(--muted);text-align:center;margin-top:10px}
+.field textarea{width:100%;padding:12px 14px;border:1px solid var(--line2);border-radius:11px;font-family:inherit;font-size:.88rem;resize:vertical}
+.field textarea:focus{outline:none;border-color:var(--gold)}
 
 /* toast */
-.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--ink);color:var(--bg);padding:14px 22px;border-radius:14px;font-size:.88rem;font-weight:600;z-index:90;box-shadow:var(--sh-lg);transition:transform .4s var(--ease);display:flex;align-items:center;gap:10px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--ink);color:#fff;padding:13px 22px;border-radius:12px;font-size:.86rem;font-weight:600;z-index:90;box-shadow:var(--sh-lg);transition:transform .4s var(--ease);display:flex;gap:9px;align-items:center}
 .toast.show{transform:translateX(-50%) translateY(0)}
 
-/* float tg */
-.float-tg{position:fixed;bottom:24px;right:24px;z-index:50;width:58px;height:58px;border-radius:50%;background:var(--tg);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(34,158,217,.45);transition:transform .25s;animation:floaty 3.5s ease-in-out infinite}
+/* float */
+.float-tg{position:fixed;bottom:22px;right:22px;z-index:50;width:56px;height:56px;border-radius:50%;background:var(--tg);display:flex;align-items:center;justify-content:center;box-shadow:0 12px 28px rgba(34,158,217,.45);transition:.25s;animation:floaty 3.5s ease-in-out infinite}
 .float-tg:hover{transform:scale(1.1)}
-.float-tg svg{width:28px;height:28px;color:#fff}
+.float-tg svg{width:27px;height:27px;color:#fff}
 @keyframes floaty{50%{transform:translateY(-7px)}}
 
-/* reveal */
-.rv{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.rv{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
 .rv.in{opacity:1;transform:none}
 
 /* ===== Responsive ===== */
-@media(max-width:1024px){
-  .hero h1{font-size:3.4rem}.grid{grid-template-columns:repeat(3,1fr)}
-  .story{padding:54px 44px}.sec-head h2{font-size:2.3rem}
-}
-@media(max-width:860px){
-  .nav-links{display:none}
+@media(max-width:1080px){
+  .tabs{display:none}
   .burger{display:flex}
-  .hero-grid{grid-template-columns:1fr;gap:36px}
-  .hero-visual{height:380px;order:-1}
-  .hero h1{font-size:3rem}
-  .grid{grid-template-columns:repeat(2,1fr);gap:18px}
-  .cats{grid-template-columns:1fr}
-  .story{grid-template-columns:1fr;padding:44px 30px;gap:32px}
-  .steps{grid-template-columns:1fr 1fr}
-  .reviews{grid-template-columns:1fr}
-  .foot-grid{grid-template-columns:1fr 1fr}
-  .modal-card{grid-template-columns:1fr;max-height:88vh}
-  .modal-media{aspect-ratio:16/10;font-size:6rem}
-  .sec{padding:68px 0}
+  .feat-grid,.car-grid,.modes-grid{grid-template-columns:repeat(2,1fr)}
+  .hero-in{grid-template-columns:1fr;gap:32px}
+  .calc{grid-template-columns:1fr}.calc-res{position:static}
+  .steps{grid-template-columns:1fr 1fr 1fr}
 }
-@media(max-width:540px){
-  .wrap{padding:0 18px}
-  .hero h1{font-size:2.5rem}
-  .hero-meta{gap:18px;flex-wrap:wrap}
-  .grid{grid-template-columns:1fr 1fr;gap:14px}
-  .card-name{font-size:1.02rem}.card-media{font-size:4.2rem}
-  .sec-head h2{font-size:2rem}
-  .cta{padding:40px 24px}.story h2{font-size:2.1rem}
-  .foot-grid{grid-template-columns:1fr}
-  .modal-info{padding:28px 24px}.modal-name{font-size:1.7rem}
-  .steps{grid-template-columns:1fr}
+@media(max-width:780px){
+  .cat-layout{grid-template-columns:1fr}
+  .cat-side{position:static}
+  .col-grid,.tiers,.dir-grid,.about-grid,.cont-grid{grid-template-columns:1fr}
+  .about-grid{gap:28px}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .hero h1{font-size:2.6rem}
+  .steps{grid-template-columns:1fr 1fr}
+  /* card-style table on mobile */
+  .tbl thead{display:none}
+  .tbl,.tbl tbody,.tbl tr,.tbl td{display:block;width:100%}
+  .tbl tbody tr{border-top:1px solid var(--line);padding:12px 4px;position:relative}
+  .tbl tbody td{border:none;padding:3px 14px}
+  .tbl td.cell-add{position:absolute;top:12px;right:8px;width:auto}
+}
+@media(max-width:480px){
+  .wrap{padding:0 16px}
+  .feat-grid,.car-grid,.modes-grid,.steps,.foot-grid{grid-template-columns:1fr}
+  .hero h1{font-size:2.2rem}
+  .sec-head h2{font-size:1.8rem}
 }
 </style>
 </head>
 <body>
 
-<div class="topbar">✦ Безкоштовна доставка від <b>2 500 ₴</b> · Оригінал з гарантією · Опт та роздріб · Замовлення у Telegram <b>@Dulitoys</b> ✦</div>
+<!-- TOP BAR -->
+<div class="topbar"><div class="wrap">
+  <div>🌍 Прямі оптові поставки · Китай → Україна · Польща · Нідерланди · вся Європа</div>
+  <div class="tb-right">
+    <a href="tel:+380637041617">📞 +380 63 704 16 17</a>
+    <a href="https://t.me/Dulitoys" target="_blank">💬 @Dulitoys</a>
+  </div>
+</div></div>
 
 <!-- NAV -->
 <nav class="nav"><div class="wrap nav-in">
-  <a href="#top" class="brand">
-    <div class="brand-mark">🧸</div>
-    <div class="brand-txt"><b>DULI TOYS</b><small>Jellycat Ukraine</small></div>
+  <a class="brand" onclick="go('home')" style="cursor:pointer">
+    <div class="brand-mark">D</div>
+    <div class="brand-txt"><b>DULI TOYS</b><small>Wholesale · Опт</small></div>
   </a>
-  <div class="nav-links">
-    <a href="#catalog">Каталог</a>
-    <a href="#categories">Колекції</a>
-    <a href="#story">Про нас</a>
-    <a href="#how">Доставка</a>
-    <a href="#contact">Контакти</a>
+  <div class="tabs" id="tabs">
+    <button class="tab" data-v="home">Головна</button>
+    <button class="tab" data-v="catalog">Каталог</button>
+    <button class="tab" data-v="categories">Категорії</button>
+    <button class="tab" data-v="logistics">Логістика</button>
+    <button class="tab" data-v="shipping">Пошти і тарифи</button>
+    <button class="tab" data-v="calc">Калькулятор</button>
+    <button class="tab" data-v="wholesale">Опт</button>
+    <button class="tab" data-v="about">Про нас</button>
+    <button class="tab" data-v="contacts">Контакти</button>
   </div>
   <div class="nav-right">
-    <a href="https://www.instagram.com/" target="_blank" class="icon-btn" aria-label="Instagram">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.2" fill="currentColor" stroke="none"/></svg>
-    </a>
-    <button class="icon-btn" onclick="openCart()" aria-label="Кошик">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      <span class="cart-count" id="cartCount">0</span>
+    <button class="inq-btn" onclick="openInq()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11V6a3 3 0 0 1 6 0v5"/><rect x="4" y="11" width="16" height="9" rx="2"/></svg>
+      Заявка <span class="inq-count" id="inqCount">0</span>
     </button>
-    <button class="icon-btn burger" onclick="toggleMenu()" aria-label="Меню">
+    <a href="https://t.me/Dulitoys" target="_blank" class="nav-tg">Telegram</a>
+    <button class="burger" onclick="toggleMenu()" aria-label="Меню">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
     </button>
   </div>
 </div></nav>
 
-<span id="top"></span>
-
-<!-- HERO -->
-<header class="hero"><div class="wrap hero-grid">
-  <div class="hero-copy">
-    <div class="hero-badge"><span class="dot"></span> Новинки колекції вже в наявності</div>
-    <h1 class="serif">М'які іграшки, що <em>дарують</em> тепло</h1>
-    <p>DULI TOYS — преміальні плюшеві іграшки з ретельно підібраних колекцій. Оригінал, м'якість і характер у кожній деталі. Доставка по всій Україні.</p>
-    <div class="hero-cta">
-      <a href="#catalog" class="btn btn-dark btn-lg">Перейти до каталогу</a>
-      <a href="https://t.me/Dulitoys" target="_blank" class="btn btn-ghost btn-lg">Опт / 批发</a>
-    </div>
-    <div class="hero-meta">
-      <div><b class="serif">3.5M+</b><span>іграшок продано</span></div>
-      <div><b class="serif">4.9★</b><span>середній рейтинг</span></div>
-      <div><b class="serif">9</b><span>років на ринку</span></div>
-    </div>
-  </div>
-  <div class="hero-visual">
-    <div class="hv-card hv-1"><span>🐰</span></div>
-    <div class="hv-card hv-2"><span>🐲</span></div>
-    <div class="hv-card hv-3"><span>🐻</span></div>
-    <div class="hv-tag"><span class="em">🚚</span><div>Нова Пошта<small>відправка 1–2 дні</small></div></div>
-  </div>
-</div></header>
-
-<!-- TRUST -->
-<section class="trust"><div class="wrap trust-row">
-  <div class="trust-item"><span class="ic">✓</span> Оригінал з гарантією</div>
-  <div class="trust-item"><span class="ic">🚚</span> Доставка по Україні</div>
-  <div class="trust-item"><span class="ic">↩️</span> Обмін та повернення 14 днів</div>
-  <div class="trust-item"><span class="ic">💬</span> Підтримка за 5 хвилин</div>
-  <div class="trust-item"><span class="ic">🔒</span> Безпечна оплата</div>
-</div></section>
-
-<!-- CATALOG -->
-<section class="sec" id="catalog"><div class="wrap">
-  <div class="sec-head rv">
+<!-- ============ HOME ============ -->
+<div class="view active" data-view="home">
+  <header class="hero"><div class="wrap hero-in">
     <div>
-      <div class="eyebrow">Колекція 2026</div>
-      <h2 class="serif">Обрані іграшки</h2>
+      <div class="hero-badge"><span class="dot"></span> Оптовий імпортер №1 у сегменті м'яких іграшок</div>
+      <h1 class="serif">М'які іграшки <em>оптом</em> — прямо з Китаю до вашого складу</h1>
+      <p>Повний цикл: підбір асортименту, викуп на фабриках, прорахунок логістики та доставка в Україну, Польщу, Нідерланди й по всій Європі. Опт та роздріб. Іграшки для немовлят і дітей.</p>
+      <div class="hero-cta">
+        <button class="btn btn-gold" onclick="go('catalog')">Відкрити каталог →</button>
+        <button class="btn btn-ghost" onclick="go('calc')">Прорахувати логістику</button>
+      </div>
+      <div class="hero-routes">
+        <div class="hero-route"><b>5 видів</b>транспорту</div>
+        <div class="hero-route"><b>12 служб</b>доставки</div>
+        <div class="hero-route"><b>90+ артикулів</b>у каталозі</div>
+        <div class="hero-route"><b>від 30 шт</b>мінімальна партія</div>
+      </div>
     </div>
-    <div class="filters" id="filters">
-      <button class="chip on" data-f="all">Усі</button>
-      <button class="chip" data-f="Bunny">Зайці</button>
-      <button class="chip" data-f="Bears">Ведмеді</button>
-      <button class="chip" data-f="Amuseables">Amuseables</button>
-      <button class="chip" data-f="Animals">Тварини</button>
+    <div class="hero-card">
+      <h3 class="serif">⚡ Напрямки та терміни</h3>
+      <div class="mini-stat"><span>🇨🇳 → 🇺🇦 Україна (авіа)</span><b>7–12 дн</b></div>
+      <div class="mini-stat"><span>🇨🇳 → 🇵🇱 Польща (фура)</span><b>14–20 дн</b></div>
+      <div class="mini-stat"><span>🇨🇳 → 🇳🇱 Нідерланди (з/д)</span><b>18–25 дн</b></div>
+      <div class="mini-stat"><span>🇨🇳 → 🇪🇺 Європа (море)</span><b>35–50 дн</b></div>
+      <div class="mini-stat"><span>🇺🇦 → 🇪🇺 ЄС (авто)</span><b>3–6 дн</b></div>
     </div>
-  </div>
-  <div class="grid" id="grid"></div>
-</div></section>
+  </div></header>
 
-<!-- CATEGORIES -->
-<section class="sec" id="categories" style="padding-top:0"><div class="wrap">
-  <div class="sec-head rv">
-    <div><div class="eyebrow">Підбірки</div><h2 class="serif">За настроєм</h2></div>
-    <p>Знайдіть ідеальну іграшку — у подарунок, для колекції чи просто для душі.</p>
-  </div>
-  <div class="cats">
-    <div class="cat cat-a rv" onclick="filterTo('Bunny')"><span class="em">🐰</span><div class="lbl"><h4 class="serif">Зайці</h4><span>Класика Bashful Bunny</span></div></div>
-    <div class="cat cat-b rv" onclick="filterTo('Animals')"><span class="em">🐘</span><div class="lbl"><h4 class="serif">Тварини</h4><span>Слони, черепахи, восьминоги</span></div></div>
-    <div class="cat cat-c rv" onclick="filterTo('Amuseables')"><span class="em">🍌</span><div class="lbl"><h4 class="serif">Amuseables</h4><span>Вірусні хіти з характером</span></div></div>
-  </div>
-</div></section>
+  <section class="strip"><div class="wrap">
+    <div class="strip-item"><span class="ic">🏭</span> Прямі фабрики Китаю</div>
+    <div class="strip-item"><span class="ic">📑</span> Офіційний рахунок та документи</div>
+    <div class="strip-item"><span class="ic">🛃</span> Митне оформлення під ключ</div>
+    <div class="strip-item"><span class="ic">✅</span> Контроль якості партії</div>
+    <div class="strip-item"><span class="ic">🤝</span> Опт від 30 шт · роздріб</div>
+  </div></section>
 
-<!-- STORY -->
-<section class="sec" id="story" style="padding-top:0"><div class="wrap">
-  <div class="story rv">
-    <div>
-      <div class="eyebrow">Наша історія</div>
-      <h2 class="serif">Більше ніж іграшки — це емоції</h2>
-      <p>З 2016 року ми привозимо в Україну ретельно відібрані плюшеві іграшки. Кожна модель проходить контроль якості, а кожне замовлення пакується з турботою.</p>
-      <p>Працюємо напряму з виробниками — тому ціни чесні, а наявність завжди актуальна. Опт чи роздріб — підхід однаково уважний.</p>
-      <a href="#how" class="btn btn-accent" style="margin-top:8px">Як ми працюємо</a>
+  <section class="sec"><div class="wrap">
+    <div class="sec-head rv"><div class="eyebrow">Чому DULI TOYS</div><h2 class="serif">Повний цикл оптових поставок</h2><p>Від вибору товару на фабриці до доставки на ваш склад — ми беремо на себе кожен етап.</p></div>
+    <div class="feat-grid">
+      <div class="feat rv"><div class="ic">📦</div><h4>Каталог 90+ SKU</h4><p>Кожен артикул має чітке кодування та опис — як у профі-каталогах.</p></div>
+      <div class="feat rv"><div class="ic">🚚</div><h4>Уся Європа</h4><p>Україна, Польща, Нідерланди та ще 10+ країн ЄС.</p></div>
+      <div class="feat rv"><div class="ic">🧮</div><h4>Прорахунок логістики</h4><p>Калькулятор вартості за вагою, напрямком і видом транспорту.</p></div>
+      <div class="feat rv"><div class="ic">🍼</div><h4>Для немовлят і дітей</h4><p>Сертифікована безпечна продукція 0+ та розвиваючі іграшки.</p></div>
     </div>
-    <div class="story-stats">
-      <div class="story-stat"><b class="serif">12K+</b><span>щасливих клієнтів</span></div>
-      <div class="story-stat"><b class="serif">48 год</b><span>прорахунок опту</span></div>
-      <div class="story-stat"><b class="serif">100%</b><span>оригінальна продукція</span></div>
-      <div class="story-stat"><b class="serif">24/7</b><span>підтримка у Telegram</span></div>
+  </div></section>
+
+  <section class="sec sec-dark"><div class="wrap">
+    <div class="sec-head rv"><div class="eyebrow">Логістика</div><h2 class="serif">5 видів транспорту під будь-яку задачу</h2><p>Підбираємо оптимальне співвідношення ціна / швидкість для вашої партії.</p></div>
+    <div class="modes-grid" id="homeModes"></div>
+    <div style="margin-top:26px"><button class="btn btn-gold" onclick="go('logistics')">Усі напрямки та умови →</button></div>
+  </div></section>
+
+  <section class="sec"><div class="wrap">
+    <div class="sec-head rv"><div class="eyebrow">Асортимент</div><h2 class="serif">Категорії товару</h2></div>
+    <div class="col-grid" id="homeCats"></div>
+  </div></section>
+
+  <section class="sec sec-light" style="border-top:1px solid var(--line)"><div class="wrap">
+    <div class="about-grid">
+      <div class="rv">
+        <div class="eyebrow">З 2016 року</div>
+        <h2 class="serif" style="font-size:2.3rem;margin:10px 0 16px">Надійний партнер для вашого бізнесу</h2>
+        <p style="color:var(--muted);margin-bottom:14px">Ми спеціалізуємось виключно на м'яких іграшках з Китаю. Працюємо з магазинами, маркетплейс-селлерами, дистриб'юторами та мережами по всій Європі.</p>
+        <button class="btn btn-dark" onclick="go('wholesale')">Умови співпраці</button>
+      </div>
+      <div class="about-stats rv">
+        <div class="about-stat"><b class="serif">3.5M+</b><span>іграшок поставлено</span></div>
+        <div class="about-stat"><b class="serif">1200+</b><span>оптових клієнтів</span></div>
+        <div class="about-stat"><b class="serif">14</b><span>країн доставки</span></div>
+        <div class="about-stat"><b class="serif">48 год</b><span>прорахунок партії</span></div>
+      </div>
     </div>
-  </div>
-</div></section>
+  </div></section>
+</div>
 
-<!-- HOW / DELIVERY -->
-<section class="sec" id="how" style="padding-top:0"><div class="wrap">
-  <div class="sec-head rv">
-    <div><div class="eyebrow">Просто та зручно</div><h2 class="serif">Як замовити</h2></div>
-    <p>Чотири кроки — і улюблена іграшка вже їде до вас.</p>
-  </div>
-  <div class="steps">
-    <div class="step rv"><div class="n serif">1</div><h4>Оберіть товар</h4><p>Додайте іграшки в кошик — обирайте розмір та кількість.</p></div>
-    <div class="step rv"><div class="n serif">2</div><h4>Оформіть замовлення</h4><p>Заповніть дані — заявка миттєво формується у Telegram.</p></div>
-    <div class="step rv"><div class="n serif">3</div><h4>Підтвердження</h4><p>Менеджер уточнить деталі та прийме оплату на картку.</p></div>
-    <div class="step rv"><div class="n serif">4</div><h4>Доставка 🎉</h4><p>Відправляємо Новою Поштою за 1–2 дні по всій Україні.</p></div>
-  </div>
-</div></section>
+<!-- ============ CATALOG ============ -->
+<div class="view" data-view="catalog">
+  <section class="sec"><div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Оптовий каталог</div><h2 class="serif">Каталог найменувань</h2><p>Артикул кодує категорію, лінійку, розмір і порядковий номер. Ціни — оптові, за одиницю. Додавайте позиції у заявку.</p></div>
+    <div class="cat-layout">
+      <aside class="cat-side">
+        <h4>Категорії</h4>
+        <ul class="cat-tree" id="catTree"></ul>
+        <div class="legend">
+          <div class="lt">Структура артикулу</div>
+          <code>DT-PLU-BUN-028-0103</code>
+          <p><b>DT</b> — DULI TOYS · <b>PLU</b> — категорія · <b>BUN</b> — лінійка · <b>028</b> — розмір, см · <b>0103</b> — номер позиції</p>
+        </div>
+      </aside>
+      <div class="cat-main">
+        <div class="toolbar">
+          <div class="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <input id="catSearch" placeholder="Пошук за артикулом або назвою…" oninput="renderTable()">
+          </div>
+          <select class="sort" id="catSort" onchange="renderTable()">
+            <option value="art">За артикулом</option>
+            <option value="name">За назвою</option>
+            <option value="price-asc">Ціна ↑</option>
+            <option value="price-desc">Ціна ↓</option>
+          </select>
+          <span class="count-pill" id="catCount"></span>
+        </div>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr>
+              <th>Артикул</th><th>Найменування</th><th>Вік</th><th>Матеріал</th><th>Розмір</th><th>Уп.</th><th>МОЦ</th><th>Опт, ₴/шт</th><th>Наявність</th><th></th>
+            </tr></thead>
+            <tbody id="catBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div></section>
+</div>
 
-<!-- REVIEWS -->
-<section class="sec" style="padding-top:0"><div class="wrap">
-  <div class="sec-head rv">
-    <div><div class="eyebrow">Відгуки</div><h2 class="serif">Нас рекомендують</h2></div>
-  </div>
-  <div class="reviews">
-    <div class="review rv"><div class="stars">★★★★★</div><p>«Іграшка прийшла ідеально упакована, якість неймовірна. Дитина в захваті, дякую!»</p><div class="who"><div class="av">О</div><div><b>Олена К.</b><small>Київ</small></div></div></div>
-    <div class="review rv"><div class="stars">★★★★★</div><p>«Замовляв опт на магазин — прорахували швидко, привезли вчасно. Працюємо далі.»</p><div class="who"><div class="av">Д</div><div><b>Дмитро С.</b><small>Львів</small></div></div></div>
-    <div class="review rv"><div class="stars">★★★★★</div><p>«Найкращий вибір плюшевих іграшок в Україні. Завжди є новинки та трендові моделі.»</p><div class="who"><div class="av">М</div><div><b>Марія В.</b><small>Одеса</small></div></div></div>
-  </div>
-</div></section>
+<!-- ============ CATEGORIES ============ -->
+<div class="view" data-view="categories">
+  <section class="sec"><div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Асортимент</div><h2 class="serif">Категорії товару</h2><p>Оберіть напрямок — відкриється відфільтрований каталог за категорією.</p></div>
+    <div class="col-grid" id="allCats"></div>
+  </div></section>
+</div>
 
-<!-- CTA -->
-<section class="sec" id="contact" style="padding-top:0"><div class="wrap">
-  <div class="cta rv">
-    <div class="eyebrow" style="color:var(--accent-d)">Будьмо на зв'язку</div>
-    <h2 class="serif">Знижка −10% на перше замовлення</h2>
-    <p>Залиште контакт — надішлемо промокод і добірку новинок у Telegram.</p>
-    <form class="cta-form" onsubmit="return subscribe(event)">
-      <input type="text" name="contact" placeholder="Ваш Telegram або телефон" required>
-      <button class="btn btn-dark" type="submit">Отримати промокод</button>
-    </form>
-  </div>
-</div></section>
+<!-- ============ LOGISTICS ============ -->
+<div class="view" data-view="logistics">
+  <section class="sec"><div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Напрямки</div><h2 class="serif">Логістика Китай → Європа</h2><p>Возимо в Україну, Польщу, Нідерланди та по всій Європі. Авіа, залізниця, фури, авто та море.</p></div>
+    <div class="dir-grid" id="dirGrid"></div>
+  </div></section>
+  <section class="sec sec-dark"><div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Транспорт</div><h2 class="serif">Види доставки</h2></div>
+    <div class="modes-grid" id="logiModes"></div>
+  </div></section>
+  <section class="sec"><div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Процес</div><h2 class="serif">Як відбувається поставка</h2></div>
+    <div class="steps">
+      <div class="step"><div class="n">01</div><h4>Заявка</h4><p>Узгоджуємо асортимент, кількість і напрямок.</p></div>
+      <div class="step"><div class="n">02</div><h4>Прорахунок</h4><p>Ціна товару + логістика + митниця. Виставляємо рахунок.</p></div>
+      <div class="step"><div class="n">03</div><h4>Викуп</h4><p>Закупівля на фабриках, контроль якості, консолідація.</p></div>
+      <div class="step"><div class="n">04</div><h4>Доставка</h4><p>Обраний транспорт + митне оформлення під ключ.</p></div>
+      <div class="step"><div class="n">05</div><h4>Видача</h4><p>Передача партії на ваш склад або відділення пошти.</p></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ============ SHIPPING ============ -->
+<div class="view" data-view="shipping">
+  <section class="sec"><div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Служби доставки</div><h2 class="serif">12 поштових і логістичних операторів</h2><p>Працюємо з провідними службами Китаю, України та ЄС — обираємо оптимальну під напрямок.</p></div>
+    <div class="car-grid" id="carriers"></div>
+  </div></section>
+  <section class="sec sec-light" style="border-top:1px solid var(--line)"><div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Орієнтовні тарифи</div><h2 class="serif">Вартість логістики, $ / кг</h2><p>Базові ставки за кілограм залежно від виду транспорту та напрямку. Точний прорахунок — у калькуляторі.</p></div>
+    <div class="tariff-wrap">
+      <table class="tariff">
+        <thead><tr><th>Напрямок</th><th>✈️ Авіа</th><th>🚆 Залізниця</th><th>🚛 Фура</th><th>🚢 Море</th><th>Експрес-авто</th></tr></thead>
+        <tbody id="tariffBody"></tbody>
+      </table>
+    </div>
+    <div style="margin-top:22px"><button class="btn btn-gold" onclick="go('calc')">Перейти до калькулятора →</button></div>
+  </div></section>
+</div>
+
+<!-- ============ CALCULATOR ============ -->
+<div class="view" data-view="calc">
+  <section class="sec"><div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Прорахунок</div><h2 class="serif">Калькулятор логістики</h2><p>Орієнтовна вартість і термін доставки вашої партії. Для точного прорахунку — надішліть заявку.</p></div>
+    <div class="calc">
+      <div class="calc-form">
+        <div class="field"><label>Напрямок</label><select id="cDir" onchange="calc()"></select></div>
+        <div class="field"><label>Вид транспорту</label><select id="cMode" onchange="calc()"></select></div>
+        <div class="field-row">
+          <div class="field"><label>Вага партії, кг</label><input id="cWeight" type="number" min="1" value="100" oninput="calc()"></div>
+          <div class="field"><label>Об'єм, м³ (необов.)</label><input id="cVol" type="number" min="0" step="0.1" value="0.6" oninput="calc()"></div>
+        </div>
+        <div class="field"><label>Кількість іграшок, шт</label><input id="cQty" type="number" min="1" value="500" oninput="calc()"></div>
+        <button class="btn btn-dark btn-block" onclick="sendCalc()" style="margin-top:6px">Надіслати на точний прорахунок</button>
+      </div>
+      <div class="calc-res">
+        <h3 class="serif">Орієнтовний розрахунок</h3>
+        <div class="sub" id="cResSub">Китай → Україна · Авіа</div>
+        <div class="res-big"><span id="cResCost">—</span> <small>$</small></div>
+        <div style="margin:22px 0 4px">
+          <div class="res-row"><span>Ставка</span><b id="cRate">—</b></div>
+          <div class="res-row"><span>Розрахункова вага</span><b id="cChw">—</b></div>
+          <div class="res-row"><span>Обробка / митниця</span><b id="cHandle">—</b></div>
+          <div class="res-row"><span>Термін доставки</span><b id="cTime">—</b></div>
+          <div class="res-row"><span>На одиницю товару</span><b id="cPerUnit">—</b></div>
+        </div>
+        <div class="res-note">* Орієнтовні ставки. Фінальна вартість залежить від габаритів, ваги, сезону та умов фабрики. Розрахункова вага = max(фактична, об'ємна 1м³≈167кг).</div>
+      </div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ============ WHOLESALE ============ -->
+<div class="view" data-view="wholesale">
+  <section class="sec"><div class="wrap">
+    <div class="sec-head"><div class="eyebrow">B2B</div><h2 class="serif">Умови оптової співпраці</h2><p>Чим більша партія — тим нижча ціна за одиницю. Працюємо з ФОП, ТОВ та приватними клієнтами.</p></div>
+    <div class="tiers">
+      <div class="tier"><div class="tag">Старт</div><div class="qty serif">від 30 шт</div><div class="disc">базова опт-ціна</div><ul><li>Змішана партія</li><li>Передоплата 100%</li><li>Доставка за тарифом</li><li>Менеджер у Telegram</li></ul></div>
+      <div class="tier feat"><div class="tag">Оптимальний</div><div class="qty serif">від 300 шт</div><div class="disc">−12% до ціни</div><ul><li>Пріоритетний викуп</li><li>Безкоштовна консолідація</li><li>Контроль якості партії</li><li>Персональний менеджер</li><li>Відстрочка для постійних</li></ul></div>
+      <div class="tier"><div class="tag">Дистриб'ютор</div><div class="qty serif">від 1000 шт</div><div class="disc">−20% + спецумови</div><ul><li>Контейнерні поставки</li><li>Власне брендування OEM</li><li>Найкраща ставка логістики</li><li>Індивідуальний контракт</li></ul></div>
+    </div>
+    <div class="sec-head" style="margin-top:54px"><h2 class="serif" style="font-size:1.7rem">Як замовити опт</h2></div>
+    <div class="steps">
+      <div class="step"><div class="n">01</div><h4>Каталог</h4><p>Оберіть позиції та додайте у заявку.</p></div>
+      <div class="step"><div class="n">02</div><h4>Заявка</h4><p>Надішліть список — отримаєте прорахунок.</p></div>
+      <div class="step"><div class="n">03</div><h4>Рахунок</h4><p>Виставляємо рахунок з логістикою.</p></div>
+      <div class="step"><div class="n">04</div><h4>Оплата</h4><p>Передоплата — старт викупу.</p></div>
+      <div class="step"><div class="n">05</div><h4>Доставка</h4><p>Привозимо на ваш склад.</p></div>
+    </div>
+    <div style="margin-top:34px"><button class="btn btn-gold" onclick="go('catalog')">До каталогу →</button> <button class="btn btn-outline" onclick="openInq()">Моя заявка</button></div>
+  </div></section>
+</div>
+
+<!-- ============ ABOUT ============ -->
+<div class="view" data-view="about">
+  <section class="sec"><div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Про компанію</div><h2 class="serif">DULI TOYS — оптовий імпорт м'яких іграшок</h2></div>
+    <div class="about-grid">
+      <div>
+        <p style="color:var(--muted);margin-bottom:14px">З 2016 року ми привозимо в Україну та Європу ретельно відібрані м'які іграшки напряму з фабрик Китаю. Спеціалізація вузька — і саме тому ми знаємо про цей товар усе: від матеріалів і сертифікації до пакування й митного оформлення.</p>
+        <p style="color:var(--muted);margin-bottom:14px">Наші клієнти — роздрібні магазини, маркетплейс-селлери, дистриб'ютори та мережі. Для кожного підбираємо асортимент, рахуємо логістику й супроводжуємо угоду від першого дзвінка до видачі партії.</p>
+        <p style="color:var(--muted)">Працюємо з офісом і командою менеджерів, які приймають дзвінки та обробляють заявки у великих обсягах.</p>
+      </div>
+      <div class="about-stats">
+        <div class="about-stat"><b class="serif">9</b><span>років на ринку</span></div>
+        <div class="about-stat"><b class="serif">100%</b><span>оригінальна продукція</span></div>
+        <div class="about-stat"><b class="serif">5</b><span>видів транспорту</span></div>
+        <div class="about-stat"><b class="serif">12</b><span>служб доставки</span></div>
+      </div>
+    </div>
+  </div></section>
+  <section class="sec sec-dark"><div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Цінності</div><h2 class="serif">Чому з нами зручно</h2></div>
+    <div class="feat-grid">
+      <div class="feat" style="background:var(--ink2);border-color:rgba(255,255,255,.08);color:#fff"><div class="ic">🔍</div><h4>Прозорість</h4><p style="color:#AEB4BE">Окремо товар, окремо логістика — все у рахунку.</p></div>
+      <div class="feat" style="background:var(--ink2);border-color:rgba(255,255,255,.08);color:#fff"><div class="ic">⏱️</div><h4>Швидкість</h4><p style="color:#AEB4BE">Прорахунок партії протягом 48 годин.</p></div>
+      <div class="feat" style="background:var(--ink2);border-color:rgba(255,255,255,.08);color:#fff"><div class="ic">🛡️</div><h4>Якість</h4><p style="color:#AEB4BE">Контроль кожної партії перед відправкою.</p></div>
+      <div class="feat" style="background:var(--ink2);border-color:rgba(255,255,255,.08);color:#fff"><div class="ic">🌍</div><h4>Географія</h4><p style="color:#AEB4BE">Доставка у 14 країн Європи.</p></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- ============ CONTACTS ============ -->
+<div class="view" data-view="contacts">
+  <section class="sec"><div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Зв'язок</div><h2 class="serif">Контакти та заявка</h2><p>Залиште запит — менеджер зв'яжеться, прорахує партію та логістику.</p></div>
+    <div class="cont-grid">
+      <div class="cont-card">
+        <div class="cont-item"><div class="ic">📞</div><div><b>Телефон офісу</b><span>+380 (63) 704 16 17</span></div></div>
+        <div class="cont-item"><div class="ic">💬</div><div><b>Telegram</b><span>@Dulitoys — відповідь за 5 хвилин</span></div></div>
+        <div class="cont-item"><div class="ic">📧</div><div><b>Email</b><span>office@dulitoys.com</span></div></div>
+        <div class="cont-item"><div class="ic">📍</div><div><b>Офіс</b><span>Київ, Україна · пн–сб 9:00–19:00</span></div></div>
+        <div class="cont-item"><div class="ic">🌍</div><div><b>Напрямки</b><span>Україна · Польща · Нідерланди · ЄС</span></div></div>
+      </div>
+      <div class="cont-card">
+        <form onsubmit="return sendContact(event)">
+          <div class="field"><label>Ім'я / Компанія</label><input name="name" required placeholder="Напр. ТОВ Іграшковий світ"></div>
+          <div class="field"><label>Телефон</label><input name="phone" required placeholder="+380 __ ___ __ __"></div>
+          <div class="field"><label>Напрямок доставки</label><select name="dir"><option>Україна</option><option>Польща</option><option>Нідерланди</option><option>Інша країна ЄС</option></select></div>
+          <div class="field"><label>Запит</label><textarea name="msg" rows="4" placeholder="Які іграшки, кількість, побажання…"></textarea></div>
+          <button class="btn btn-gold btn-block" type="submit">Надіслати заявку у Telegram</button>
+        </form>
+      </div>
+    </div>
+  </div></section>
+</div>
 
 <!-- FOOTER -->
 <footer><div class="wrap">
   <div class="foot-grid">
     <div class="foot-brand">
-      <div class="brand"><div class="brand-mark">🧸</div><div class="brand-txt"><b>DULI TOYS</b><small>Jellycat Ukraine</small></div></div>
-      <p>Преміальні м'які іграшки з доставкою по Україні. Опт та роздріб. Оригінал з гарантією якості.</p>
+      <div class="brand"><div class="brand-mark">D</div><div class="brand-txt"><b>DULI TOYS</b><small>Wholesale · Опт</small></div></div>
+      <p>Оптовий імпорт м'яких іграшок для немовлят і дітей. Прямі поставки Китай → Україна, Польща, Нідерланди та вся Європа.</p>
     </div>
-    <div class="foot-col"><h5>Магазин</h5><a href="#catalog">Каталог</a><a href="#categories">Колекції</a><a href="#story">Про нас</a><a href="#how">Доставка та оплата</a></div>
-    <div class="foot-col"><h5>Соцмережі</h5><a href="https://t.me/Dulitoys" target="_blank">Telegram</a><a href="https://www.instagram.com/" target="_blank">Instagram</a><a href="#">Prom.ua</a><a href="#">TikTok</a></div>
-    <div class="foot-col"><h5>Контакти</h5><a href="tel:+380637041617">📞 +380 (63) 704 16 17</a><a href="https://t.me/Dulitoys" target="_blank">💬 @Dulitoys</a><a href="#">📧 office@dulitoys.com</a><a href="#">📍 Київ, Україна</a></div>
+    <div class="foot-col"><h5>Каталог</h5><a onclick="go('catalog')">Усі товари</a><a onclick="go('categories')">Категорії</a><a onclick="go('wholesale')">Опт</a><a onclick="openInq()">Моя заявка</a></div>
+    <div class="foot-col"><h5>Логістика</h5><a onclick="go('logistics')">Напрямки</a><a onclick="go('shipping')">Пошти і тарифи</a><a onclick="go('calc')">Калькулятор</a><a onclick="go('about')">Про нас</a></div>
+    <div class="foot-col"><h5>Контакти</h5><a href="tel:+380637041617">📞 +380 63 704 16 17</a><a href="https://t.me/Dulitoys" target="_blank">💬 @Dulitoys</a><a href="#">📧 office@dulitoys.com</a><a href="#">📍 Київ, Україна</a></div>
   </div>
   <div class="foot-bottom">
-    <div>© 2016–2026 DULI TOYS · Jellycat Ukraine. Усі права захищено.</div>
-    <div class="foot-pay"><span>Visa</span><span>Mastercard</span><span>ПриватБанк</span><span>monobank</span><span>Нова Пошта</span></div>
+    <div>© 2016–2026 DULI TOYS · Оптовий постачальник м'яких іграшок</div>
+    <div class="foot-pay"><span>Visa</span><span>Mastercard</span><span>SWIFT</span><span>Alipay</span><span>Нова Пошта</span><span>DHL</span></div>
   </div>
 </div></footer>
 
-<!-- FLOAT TG -->
 <a href="https://t.me/Dulitoys" target="_blank" class="float-tg" aria-label="Telegram">
   <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.19 13.67l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.958.889z"/></svg>
 </a>
 
-<!-- OVERLAY -->
-<div class="overlay" id="overlay" onclick="closeAll()"></div>
+<div class="overlay" id="overlay" onclick="closeInq()"></div>
 
-<!-- CART DRAWER -->
+<!-- INQUIRY DRAWER -->
 <aside class="drawer" id="drawer">
   <div class="drawer-head">
-    <h3 class="serif" id="drawerTitle">Кошик</h3>
-    <button class="drawer-close" onclick="closeCart()">×</button>
+    <h3 class="serif" id="inqTitle">Заявка на опт</h3>
+    <button class="drawer-close" onclick="closeInq()">×</button>
   </div>
-  <div class="drawer-body" id="drawerBody"><!-- cart items / checkout --></div>
-  <div class="drawer-foot" id="drawerFoot"></div>
+  <div class="drawer-body" id="inqBody"></div>
+  <div class="drawer-foot" id="inqFoot"></div>
 </aside>
 
-<!-- PRODUCT MODAL -->
-<div class="modal" id="modal">
-  <div class="modal-card">
-    <div class="modal-media" id="modalMedia">
-      <button class="modal-close" onclick="closeModal()">×</button>
-      <span id="modalEmoji"></span>
-    </div>
-    <div class="modal-info">
-      <div class="modal-cat" id="modalCat"></div>
-      <div class="modal-name serif" id="modalName"></div>
-      <div class="modal-stars">★★★★★ <small id="modalReviews"></small></div>
-      <div class="modal-price" id="modalPrice"></div>
-      <div class="modal-desc" id="modalDesc"></div>
-      <div class="modal-label">Розмір</div>
-      <div class="size-row" id="modalSizes"></div>
-      <div class="modal-actions">
-        <button class="btn btn-accent btn-block" id="modalAdd">Додати в кошик</button>
-      </div>
-      <div class="modal-feats">
-        <div class="modal-feat">✓ Оригінал</div>
-        <div class="modal-feat">🚚 Відправка 1–2 дні</div>
-        <div class="modal-feat">↩️ Повернення 14 днів</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- TOAST -->
 <div class="toast" id="toast"><span id="toastIcon">✓</span><span id="toastMsg"></span></div>
 
 <script>
-/* ===================== DATA ===================== */
-const PRODUCTS = [
-  {id:'p1', name:'Bashful Bunny Beige', cat:'Bunny', catLabel:'Bashful Bunny', price:1490, emoji:'🐰', media:'m1', badge:'Бестселер', badgeAccent:false, reviews:328, sizes:['S','M','L'], desc:'Класика Jellycat з 1999 року. Ніжне хутро, м\'які вушка та характерна постава. Ідеальний перший друг для будь-якого віку.'},
-  {id:'p2', name:'Sky Dragon', cat:'Animals', catLabel:'Dragons', price:2290, emoji:'🐲', media:'m7', badge:'Хіт', badgeAccent:true, reviews:214, sizes:['M','L'], desc:'Веселковий дракон — один з найбажаніших Jellycat. Розкуповується миттєво, тож не зволікайте.'},
-  {id:'p3', name:'Bartholomew Bear', cat:'Bears', catLabel:'Bears', price:1690, emoji:'🐻', media:'m3', badge:'', badgeAccent:false, reviews:176, sizes:['S','M','L'], desc:'Ведмедик з ніжним хутром і добрими очима. Улюбленець усього інтернету та чудовий подарунок.'},
-  {id:'p4', name:'Amuseable Rose', cat:'Amuseables', catLabel:'Amuseables', price:1390, emoji:'🌸', media:'m4', badge:'Новинка', badgeAccent:true, reviews:98, sizes:['One size'], desc:'М\'яка троянда з усміхненою мордочкою. Унікальна іграшка-рослина, що піднімає настрій.'},
-  {id:'p5', name:'Luxe Bunny Rosa', cat:'Bunny', catLabel:'Bashful Luxe', price:1890, emoji:'🐇', media:'m5', badge:'', badgeAccent:false, reviews:142, sizes:['M','L'], desc:'Розкішна версія зайчика з особливо пухнастим хутром. Преміальний подарунок на будь-яку нагоду.'},
-  {id:'p6', name:'Amuseable Banana', cat:'Amuseables', catLabel:'Amuseables', price:1250, emoji:'🍌', media:'m6', badge:'Тренд', badgeAccent:true, reviews:267, sizes:['One size'], desc:'Банан з мордочкою та ніжками — вірусний хіт TikTok. Веселий акцент для будь-якої кімнати.'},
-  {id:'p7', name:'Timmy Turtle', cat:'Animals', catLabel:'Animals', price:1190, emoji:'🐢', media:'m2', badge:'', badgeAccent:false, reviews:88, sizes:['S','M'], desc:'Черепашка зі своєрідним характером, яку всі обожнюють. М\'якенький панцир і добрий погляд.'},
-  {id:'p8', name:'Fuddlewuddle Elephant', cat:'Animals', catLabel:'Animals', price:1590, emoji:'🐘', media:'m8', badge:'', badgeAccent:false, reviews:155, sizes:['S','M','L'], desc:'Слоник з великими вухами і м\'якеньким хоботом. Улюбленець малечі та надійний друг для сну.'},
-  {id:'p9', name:'Odell Octopus', cat:'Animals', catLabel:'Sea Life', price:1450, emoji:'🐙', media:'m9', badge:'Новинка', badgeAccent:true, reviews:73, sizes:['One size'], desc:'Восьминіг з вісьмома обіймашками. Незвичний герой морської колекції з оксамитовим хутром.'}
+/* ===================== CATEGORIES ===================== */
+const CATS = [
+  {cat:'PLU', name:'М\'які іграшки', em:'🧸', desc:'Зайці, ведмеді, дракони, тварини — класичний плюш.'},
+  {cat:'SEA', name:'Морська колекція', em:'🐙', desc:'Восьминоги, черепахи, морські мешканці.'},
+  {cat:'AMU', name:'Amuseables', em:'🍌', desc:'Фрукти, рослини та об\'єкти з характером — вірусні хіти.'},
+  {cat:'CMF', name:'Для немовлят', em:'🍼', desc:'Комфортери-обіймашки 0–12 міс, сертифіковані.'},
+  {cat:'RAT', name:'Брязкальця та підвіски', em:'🔔', desc:'М\'які брязкальця, підвіски на коляску й ліжечко.'},
+  {cat:'DEV', name:'Розвиваючі', em:'🧩', desc:'Сенсорні та музичні іграшки, нічники.'},
+  {cat:'SET', name:'Подарункові набори', em:'🎁', desc:'Готові набори — сезонні та святкові.'},
 ];
 
-const FMT = n => n.toLocaleString('uk-UA') + ' ₴';
-const FREE_SHIP = 2500;
+/* ===================== PRODUCT GENERATION ===================== */
+const LINES = [
+  {cat:'PLU', line:'BUN', name:'Зайчик Bashful', mat:'Плюш', age:'0+', moq:30, sizes:[18,28,36], base:380, colors:['Beige','Grey','Rosa']},
+  {cat:'PLU', line:'BEA', name:'Ведмедик Bartholomew', mat:'Плюш', age:'0+', moq:30, sizes:[20,31,45], base:420, colors:['Brown','Cream']},
+  {cat:'PLU', line:'DRG', name:'Дракон Sky', mat:'Плюш', age:'3+', moq:30, sizes:[28,42], base:560, colors:['Rainbow','Green']},
+  {cat:'PLU', line:'ELE', name:'Слоник Fuddlewuddle', mat:'Плюш', age:'0+', moq:30, sizes:[23,31], base:410, colors:['Grey']},
+  {cat:'PLU', line:'CAT', name:'Кошеня Sacha', mat:'Плюш', age:'0+', moq:30, sizes:[20,30], base:390, colors:['Grey','Ginger']},
+  {cat:'PLU', line:'DOG', name:'Цуценя Bashful Puppy', mat:'Плюш', age:'0+', moq:30, sizes:[18,28], base:400, colors:['Cream','Brown']},
+  {cat:'SEA', line:'OCT', name:'Восьминіг Odell', mat:'Велюр-плюш', age:'0+', moq:30, sizes:[24,32], base:360, colors:['Coral','Blue']},
+  {cat:'SEA', line:'TUR', name:'Черепашка Timmy', mat:'Плюш', age:'0+', moq:30, sizes:[18,26], base:300, colors:['Green']},
+  {cat:'SEA', line:'SHK', name:'Акула Sienna', mat:'Плюш', age:'3+', moq:30, sizes:[35], base:520, colors:['Grey']},
+  {cat:'AMU', line:'BAN', name:'Банан Amuseable', mat:'Плюш', age:'3+', moq:40, sizes:[20,32], base:320, colors:['Yellow']},
+  {cat:'AMU', line:'ROS', name:'Троянда Amuseable', mat:'Плюш', age:'3+', moq:40, sizes:[22], base:340, colors:['Red','Pink']},
+  {cat:'AMU', line:'AVO', name:'Авокадо Amuseable', mat:'Плюш', age:'3+', moq:40, sizes:[18], base:330, colors:['Green']},
+  {cat:'AMU', line:'SUN', name:'Сонце Amuseable', mat:'Плюш', age:'3+', moq:40, sizes:[20], base:350, colors:['Yellow']},
+  {cat:'CMF', line:'CMF', name:'Комфортер-обіймашка', mat:'Велюр', age:'0–12 міс', moq:50, sizes:[30], base:240, colors:['Bunny','Bear','Lamb']},
+  {cat:'CMF', line:'SOO', name:'Іграшка-сплюшка', mat:'Велюр', age:'0–9 міс', moq:50, sizes:[25], base:230, colors:['Grey','Beige']},
+  {cat:'RAT', line:'RAT', name:'Брязкальце м\'яке', mat:'Бавовна+плюш', age:'0–6 міс', moq:50, sizes:[15], base:160, colors:['Mint','Pink','Blue']},
+  {cat:'RAT', line:'PRM', name:'Підвіска на коляску', mat:'Плюш', age:'0–9 міс', moq:50, sizes:[22], base:210, colors:['Mix']},
+  {cat:'RAT', line:'TET', name:'Прорізувач-іграшка', mat:'Силікон+плюш', age:'3–12 міс', moq:50, sizes:[14], base:190, colors:['Grey']},
+  {cat:'DEV', line:'MUS', name:'Музична іграшка-нічник', mat:'Плюш+LED', age:'0+', moq:40, sizes:[26], base:480, colors:['Star','Moon']},
+  {cat:'DEV', line:'SEN', name:'Сенсорна іграшка', mat:'Текстиль', age:'3 міс+', moq:50, sizes:[18], base:230, colors:['Mix']},
+  {cat:'DEV', line:'NLT', name:'Іграшка-нічник LED', mat:'Плюш+LED', age:'0+', moq:40, sizes:[24], base:520, colors:['Bear','Bunny']},
+  {cat:'SET', line:'GFT', name:'Подарунковий набір', mat:'Плюш', age:'0+', moq:20, sizes:[0], base:780, colors:['Newborn','Welcome']},
+  {cat:'SET', line:'SEA', name:'Сезонний набір', mat:'Плюш', age:'0+', moq:20, sizes:[0], base:850, colors:['Winter','Spring']},
+];
+
+let PRODUCTS = [];
+(function genProducts(){
+  let n = 100;
+  const stocks = ['s-in','s-tr','s-or'];
+  const stockLbl = {'s-in':'В наявності','s-tr':'Транзит','s-or':'Під замовлення'};
+  LINES.forEach(L => {
+    L.sizes.forEach(sz => {
+      L.colors.forEach(col => {
+        n++;
+        const art = `DT-${L.cat}-${L.line}-${String(sz).padStart(3,'0')}-${n}`;
+        const sizeF = sz ? (0.65 + sz/42) : 1.5;
+        const opt = Math.round((L.base * sizeF) / 10) * 10;
+        const retail = Math.round(opt * 1.85 / 10) * 10;
+        const pack = sz && sz < 25 ? 40 : (sz && sz < 40 ? 20 : 10);
+        const st = stocks[n % 3];
+        PRODUCTS.push({
+          art, cat:L.cat, line:L.line,
+          name: L.name + (col!=='—'?` · ${col}`:''),
+          sub: L.cat==='SET' ? 'Набір' : (sz?`розмір ${sz} см`:''),
+          age:L.age, mat:L.mat, size: sz?`${sz} см`:'—',
+          pack, moq:L.moq, opt, retail, stock:st, stockLbl:stockLbl[st]
+        });
+      });
+    });
+  });
+})();
+
+const FMT = n => n.toLocaleString('uk-UA');
 
 /* ===================== STATE ===================== */
-let cart = JSON.parse(localStorage.getItem('duli_cart') || '[]');
-let activeFilter = 'all';
-let modalProduct = null, modalSize = null;
+let inq = JSON.parse(localStorage.getItem('duli_inq') || '[]');
+let activeCat = 'all';
+const saveInq = () => localStorage.setItem('duli_inq', JSON.stringify(inq));
 
-const save = () => localStorage.setItem('duli_cart', JSON.stringify(cart));
-
-/* ===================== RENDER GRID ===================== */
-function renderGrid(){
-  const grid = document.getElementById('grid');
-  const list = PRODUCTS.filter(p => activeFilter === 'all' || p.cat === activeFilter);
-  grid.innerHTML = list.map(p => `
-    <article class="card rv in" onclick="openProduct('${p.id}')">
-      <div class="card-media ${p.media}">
-        ${p.badge ? `<span class="card-badge ${p.badgeAccent?'accent':''}">${p.badge}</span>`:''}
-        <span class="card-fav">♡</span>
-        <span class="em">${p.emoji}</span>
-        <div class="card-quick">Швидкий перегляд</div>
-      </div>
-      <div class="card-body">
-        <span class="card-cat">${p.catLabel}</span>
-        <h3 class="card-name serif">${p.name}</h3>
-        <div class="card-foot">
-          <div class="card-price">${FMT(p.price)}<small>★ ${(4.7+(p.reviews%3)*0.1).toFixed(1)} · ${p.reviews} відгуків</small></div>
-          <button class="card-add" aria-label="Додати" onclick="event.stopPropagation();quickAdd('${p.id}')">+</button>
-        </div>
-      </div>
-    </article>`).join('');
+/* ===================== VIEW ROUTER ===================== */
+function go(v){
+  document.querySelectorAll('.view').forEach(el => el.classList.toggle('active', el.dataset.view===v));
+  document.querySelectorAll('#tabs .tab').forEach(t => t.classList.toggle('on', t.dataset.v===v));
+  if(location.hash !== '#'+v) history.replaceState(null,'','#'+v);
+  window.scrollTo({top:0,behavior:'instant'});
+  const menu = document.getElementById('tabs');
+  if(window.innerWidth<=1080) menu.style.display='';
+  document.querySelectorAll('.rv').forEach(el=>el.classList.add('in'));
 }
-
-/* filters */
-document.getElementById('filters').addEventListener('click', e => {
-  const b = e.target.closest('.chip'); if(!b) return;
-  activeFilter = b.dataset.f;
-  document.querySelectorAll('#filters .chip').forEach(c => c.classList.toggle('on', c===b));
-  renderGrid();
+document.getElementById('tabs').addEventListener('click', e=>{
+  const b=e.target.closest('.tab'); if(b) go(b.dataset.v);
 });
-function filterTo(cat){
-  activeFilter = cat;
-  document.querySelectorAll('#filters .chip').forEach(c => c.classList.toggle('on', c.dataset.f===cat));
-  renderGrid();
-  document.getElementById('catalog').scrollIntoView({behavior:'smooth'});
-}
-
-/* ===================== PRODUCT MODAL ===================== */
-function openProduct(id){
-  const p = PRODUCTS.find(x => x.id===id); if(!p) return;
-  modalProduct = p; modalSize = p.sizes[0];
-  document.getElementById('modalMedia').className = 'modal-media ' + p.media;
-  document.getElementById('modalEmoji').textContent = p.emoji;
-  document.getElementById('modalCat').textContent = p.catLabel;
-  document.getElementById('modalName').textContent = p.name;
-  document.getElementById('modalReviews').textContent = '· ' + p.reviews + ' відгуків';
-  document.getElementById('modalPrice').textContent = FMT(p.price);
-  document.getElementById('modalDesc').textContent = p.desc;
-  document.getElementById('modalSizes').innerHTML = p.sizes.map((s,i)=>
-    `<button class="size ${i===0?'on':''}" onclick="pickSize(this,'${s}')">${s}</button>`).join('');
-  document.getElementById('modalAdd').onclick = () => { addToCart(p.id, modalSize, 1); closeModal(); };
-  document.getElementById('modal').classList.add('show');
-  document.getElementById('overlay').classList.add('show');
-  document.body.classList.add('lock');
-}
-function pickSize(el, s){
-  modalSize = s;
-  document.querySelectorAll('#modalSizes .size').forEach(x => x.classList.toggle('on', x===el));
-}
-function closeModal(){
-  document.getElementById('modal').classList.remove('show');
-  if(!document.getElementById('drawer').classList.contains('show')){
-    document.getElementById('overlay').classList.remove('show');
-    document.body.classList.remove('lock');
-  }
-}
-
-/* ===================== CART ===================== */
-function quickAdd(id){ const p = PRODUCTS.find(x=>x.id===id); addToCart(id, p.sizes[0], 1); }
-
-function addToCart(id, size, qty){
-  const p = PRODUCTS.find(x => x.id===id);
-  const key = id + '|' + size;
-  const ex = cart.find(i => i.key===key);
-  if(ex) ex.qty += qty;
-  else cart.push({key, id, size, qty, name:p.name, price:p.price, emoji:p.emoji, media:p.media});
-  save(); updateCartCount(); renderCart();
-  toast('✓', `${p.name} додано в кошик`);
-}
-function changeQty(key, d){
-  const it = cart.find(i => i.key===key); if(!it) return;
-  it.qty += d;
-  if(it.qty <= 0) cart = cart.filter(i => i.key!==key);
-  save(); updateCartCount(); renderCart();
-}
-function removeItem(key){
-  cart = cart.filter(i => i.key!==key);
-  save(); updateCartCount(); renderCart();
-}
-function cartTotal(){ return cart.reduce((s,i)=> s + i.price*i.qty, 0); }
-function cartQty(){ return cart.reduce((s,i)=> s + i.qty, 0); }
-
-function updateCartCount(){
-  const c = document.getElementById('cartCount');
-  const q = cartQty();
-  c.textContent = q;
-  c.classList.toggle('show', q>0);
-}
-
-function renderCart(){
-  const body = document.getElementById('drawerBody');
-  const foot = document.getElementById('drawerFoot');
-  document.getElementById('drawerTitle').textContent = 'Кошик' + (cartQty()? ' · '+cartQty() : '');
-  if(cart.length === 0){
-    body.innerHTML = `<div class="cart-empty"><span class="em">🧸</span><p>Ваш кошик поки порожній</p><br><button class="btn btn-dark" onclick="closeCart()">До покупок</button></div>`;
-    foot.innerHTML = '';
-    return;
-  }
-  body.innerHTML = `<div id="cartList">` + cart.map(i => `
-    <div class="cart-item">
-      <div class="ci-media ${i.media}">${i.emoji}</div>
-      <div class="ci-info">
-        <div class="ci-name serif">${i.name}</div>
-        <div class="ci-meta">Розмір: ${i.size}</div>
-        <div class="ci-bottom">
-          <div class="qty">
-            <button onclick="changeQty('${i.key}',-1)">−</button>
-            <span>${i.qty}</span>
-            <button onclick="changeQty('${i.key}',1)">+</button>
-          </div>
-          <div class="ci-price">${FMT(i.price*i.qty)}</div>
-        </div>
-        <div class="ci-remove" onclick="removeItem('${i.key}')">Видалити</div>
-      </div>
-    </div>`).join('') + `</div>`;
-  const total = cartTotal();
-  const left = FREE_SHIP - total;
-  foot.innerHTML = `
-    <div class="drawer-row"><span>Сума</span><span>${FMT(total)}</span></div>
-    <div class="drawer-row"><span>Доставка</span><span>${total>=FREE_SHIP?'Безкоштовно':'за тарифом НП'}</span></div>
-    <div class="drawer-total"><span>Разом</span><b class="serif">${FMT(total)}</b></div>
-    ${left>0?`<div class="drawer-note">Додайте ще на ${FMT(left)} для безкоштовної доставки</div>`:''}
-    <button class="btn btn-accent btn-block btn-lg" style="margin-top:14px" onclick="showCheckout()">Оформити замовлення</button>`;
-}
-
-/* ===================== CHECKOUT ===================== */
-function showCheckout(){
-  const body = document.getElementById('drawerBody');
-  const foot = document.getElementById('drawerFoot');
-  document.getElementById('drawerTitle').textContent = 'Оформлення';
-  body.innerHTML = `
-    <a class="back-link" onclick="renderCart()">← Назад до кошика</a>
-    <form id="checkoutForm" onsubmit="return placeOrder(event)">
-      <div class="field"><label>Ім'я та прізвище</label><input name="name" required placeholder="Напр. Софія Дулі"></div>
-      <div class="field"><label>Телефон</label><input name="phone" required placeholder="+380 __ ___ __ __"></div>
-      <div class="field-row">
-        <div class="field"><label>Місто</label><input name="city" required placeholder="Київ"></div>
-        <div class="field"><label>Відділення НП</label><input name="np" required placeholder="№ відділення"></div>
-      </div>
-      <div class="field"><label>Спосіб оплати</label>
-        <select name="pay"><option>Передоплата на картку</option><option>Накладений платіж</option><option>Уточнити з менеджером</option></select>
-      </div>
-      <div class="field"><label>Коментар (необов'язково)</label><textarea name="note" rows="2" placeholder="Побажання до замовлення"></textarea></div>
-    </form>`;
-  const total = cartTotal();
-  foot.innerHTML = `
-    <div class="drawer-total"><span>До сплати</span><b class="serif">${FMT(total)}</b></div>
-    <button class="btn btn-dark btn-block btn-lg" form="checkoutForm" type="submit">
-      Підтвердити у Telegram
-    </button>
-    <div class="drawer-note">Замовлення сформується у Telegram @Dulitoys для підтвердження</div>`;
-}
-
-function placeOrder(e){
-  e.preventDefault();
-  const f = e.target, g = n => f.elements[n].value.trim();
-  let msg = '🧸 НОВЕ ЗАМОВЛЕННЯ · DULI TOYS%0A%0A';
-  cart.forEach(i => { msg += `• ${i.name} (${i.size}) ×${i.qty} — ${FMT(i.price*i.qty)}%0A`; });
-  msg += `%0A💰 Разом: ${FMT(cartTotal())}%0A%0A`;
-  msg += `👤 ${g('name')}%0A📞 ${g('phone')}%0A📍 ${g('city')}, НП №${g('np')}%0A💳 ${g('pay')}`;
-  if(g('note')) msg += `%0A📝 ${g('note')}`;
-  window.open('https://t.me/Dulitoys?text=' + msg, '_blank');
-  // clear cart after sending
-  cart = []; save(); updateCartCount();
-  closeCart();
-  toast('🎉', 'Замовлення сформовано! Завершіть у Telegram');
-  return false;
-}
-
-/* ===================== DRAWER OPEN/CLOSE ===================== */
-function openCart(){
-  renderCart();
-  document.getElementById('drawer').classList.add('show');
-  document.getElementById('overlay').classList.add('show');
-  document.body.classList.add('lock');
-}
-function closeCart(){
-  document.getElementById('drawer').classList.remove('show');
-  if(!document.getElementById('modal').classList.contains('show')){
-    document.getElementById('overlay').classList.remove('show');
-    document.body.classList.remove('lock');
-  }
-}
-function closeAll(){ closeModal(); closeCart(); }
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeAll(); });
-
-/* ===================== MENU (mobile) ===================== */
 function toggleMenu(){
-  const l = document.querySelector('.nav-links');
-  const open = l.style.display === 'flex';
-  if(open){ l.style.display=''; }
-  else {
-    l.style.cssText = 'display:flex;position:absolute;top:74px;left:0;right:0;flex-direction:column;background:var(--bg);padding:20px 28px;gap:18px;border-bottom:1px solid var(--line);box-shadow:var(--sh)';
-    l.querySelectorAll('a').forEach(a => a.onclick = () => { l.style.display=''; });
+  const m=document.getElementById('tabs');
+  if(m.style.display==='flex'){ m.style.display=''; return; }
+  m.style.cssText='display:flex;position:absolute;top:var(--nav-h);left:0;right:0;flex-direction:column;background:var(--ink);padding:14px;gap:4px;z-index:39;box-shadow:var(--sh-lg)';
+}
+
+/* ===================== HOME blocks ===================== */
+const MODES = [
+  {id:'air', em:'✈️', name:'Авіа', desc:'Найшвидше — для термінових партій.', sp:'7–12 днів', rate:9.5},
+  {id:'rail', em:'🚆', name:'Залізниця', desc:'Баланс ціни та швидкості.', sp:'18–25 днів', rate:4.2},
+  {id:'truck', em:'🚛', name:'Фура / авто', desc:'Гнучко, від дверей до дверей.', sp:'14–20 днів', rate:5.5},
+  {id:'sea', em:'🚢', name:'Море', desc:'Найдешевше — для великих обсягів.', sp:'35–50 днів', rate:2.8},
+  {id:'express', em:'🚐', name:'Експрес-авто', desc:'Преміум-швидкість по ЄС.', sp:'5–9 днів', rate:12.0},
+];
+const DIRECTIONS = [
+  {id:'cn-ua', from:'🇨🇳', to:'🇺🇦', name:'Китай → Україна', factor:1.0,  days:{air:'7–12',rail:'18–25',truck:'14–20',sea:'35–50',express:'—'}},
+  {id:'cn-pl', from:'🇨🇳', to:'🇵🇱', name:'Китай → Польща', factor:0.96, days:{air:'8–13',rail:'16–22',truck:'15–21',sea:'32–46',express:'—'}},
+  {id:'cn-nl', from:'🇨🇳', to:'🇳🇱', name:'Китай → Нідерланди', factor:1.05,days:{air:'8–14',rail:'18–26',truck:'17–24',sea:'30–45',express:'—'}},
+  {id:'cn-eu', from:'🇨🇳', to:'🇪🇺', name:'Китай → Європа (ЄС)', factor:1.0, days:{air:'9–14',rail:'18–28',truck:'18–25',sea:'35–52',express:'—'}},
+  {id:'ua-eu', from:'🇺🇦', to:'🇪🇺', name:'Україна → ЄС', factor:0.55,days:{air:'2–4',rail:'4–7',truck:'3–6',sea:'—',express:'2–5'}},
+];
+const CARRIERS = [
+  {n:'Нова Пошта', r:'Україна', c:'#C8102E'}, {n:'Укрпошта', r:'Україна', c:'#FFD200', t:'#14181F'},
+  {n:'Meest', r:'Україна / ЄС', c:'#0B5FAE'}, {n:'Cainiao', r:'Китай', c:'#FF6A00'},
+  {n:'SF Express', r:'Китай', c:'#000000'}, {n:'China Post', r:'Китай', c:'#0A7A3B'},
+  {n:'DHL', r:'Світ', c:'#FFCC00', t:'#14181F'}, {n:'FedEx', r:'Світ', c:'#4D148C'},
+  {n:'UPS', r:'Світ', c:'#5A3510'}, {n:'GLS', r:'ЄС', c:'#06477F'},
+  {n:'InPost', r:'Польща', c:'#FFCC00', t:'#14181F'}, {n:'PostNL', r:'Нідерланди', c:'#FF6600'},
+];
+
+function modeCard(m){ return `<div class="tmode"><div class="em">${m.em}</div><h4>${m.name}</h4><p>${m.desc}</p><div class="sp">${m.sp} · $${m.rate}/кг</div></div>`; }
+function catCard(c){ const cnt=PRODUCTS.filter(p=>p.cat===c.cat).length; return `<div class="col-card" onclick="openCat('${c.cat}')"><span class="go">↗</span><span class="em">${c.em}</span><h3 class="serif">${c.name}</h3><p>${c.desc}</p><div class="meta"><span>Артикулів: <b>${cnt}</b></span><span>Опт <b>від ${FMT(Math.min(...PRODUCTS.filter(p=>p.cat===c.cat).map(p=>p.opt)))} ₴</b></span></div></div>`; }
+
+document.getElementById('homeModes').innerHTML = MODES.slice(0,4).map(modeCard).join('');
+document.getElementById('logiModes').innerHTML = MODES.map(modeCard).join('');
+document.getElementById('homeCats').innerHTML = CATS.slice(0,6).map(catCard).join('');
+document.getElementById('allCats').innerHTML = CATS.map(catCard).join('');
+
+/* directions */
+document.getElementById('dirGrid').innerHTML = DIRECTIONS.map(d=>`
+  <div class="dir">
+    <div class="dir-route"><span class="dir-flag">${d.from}</span><span class="dir-arrow"></span><span class="dir-flag">${d.to}</span></div>
+    <h4>${d.name}</h4>
+    <div class="dir-modes">
+      ${MODES.filter(m=>d.days[m.id]&&d.days[m.id]!=='—').map(m=>`<div class="mode-pill">${m.em} ${m.name} <small>${d.days[m.id]} дн</small></div>`).join('')}
+    </div>
+  </div>`).join('');
+
+/* carriers */
+document.getElementById('carriers').innerHTML = CARRIERS.map(c=>`
+  <div class="car"><div class="badge" style="background:${c.c};color:${c.t||'#fff'}">${c.n.slice(0,2).toUpperCase()}</div><div><b>${c.n}</b><small>${c.r}</small></div></div>`).join('');
+
+/* tariff table */
+document.getElementById('tariffBody').innerHTML = DIRECTIONS.map(d=>`
+  <tr><td><b>${d.name}</b></td>${MODES.map(m=>{
+    const av = d.days[m.id] && d.days[m.id]!=='—';
+    return `<td class="${av?'r':''}">${av?'$'+(m.rate*d.factor).toFixed(1):'—'}</td>`;
+  }).join('')}</tr>`).join('');
+
+/* ===================== CATALOG ===================== */
+function buildTree(){
+  const tree = document.getElementById('catTree');
+  const total = PRODUCTS.length;
+  let html = `<li><button class="${activeCat==='all'?'on':''}" onclick="setCat('all')">Усі товари <span class="cnt">${total}</span></button></li>`;
+  CATS.forEach(c=>{
+    const cnt = PRODUCTS.filter(p=>p.cat===c.cat).length;
+    html += `<li><button class="${activeCat===c.cat?'on':''}" onclick="setCat('${c.cat}')">${c.em} ${c.name} <span class="cnt">${cnt}</span></button></li>`;
+  });
+  tree.innerHTML = html;
+}
+function setCat(c){ activeCat=c; buildTree(); renderTable(); }
+function openCat(c){ activeCat=c; go('catalog'); buildTree(); renderTable(); }
+
+function renderTable(){
+  const q = (document.getElementById('catSearch').value||'').trim().toLowerCase();
+  const sort = document.getElementById('catSort').value;
+  let list = PRODUCTS.filter(p => (activeCat==='all'||p.cat===activeCat) &&
+    (!q || p.art.toLowerCase().includes(q) || p.name.toLowerCase().includes(q)));
+  list.sort((a,b)=>{
+    if(sort==='name') return a.name.localeCompare(b.name,'uk');
+    if(sort==='price-asc') return a.opt-b.opt;
+    if(sort==='price-desc') return b.opt-a.opt;
+    return a.art.localeCompare(b.art);
+  });
+  document.getElementById('catCount').textContent = list.length + ' позицій';
+  const body = document.getElementById('catBody');
+  if(!list.length){ body.innerHTML = `<tr class="empty-row"><td colspan="10">Нічого не знайдено за запитом «${q}»</td></tr>`; return; }
+  body.innerHTML = list.map(p=>`
+    <tr>
+      <td><span class="t-art">${p.art}</span></td>
+      <td class="t-name">${p.name}<small>${p.sub||''}</small></td>
+      <td class="t-tag">${p.age}</td>
+      <td class="t-tag">${p.mat}</td>
+      <td class="t-tag">${p.size}</td>
+      <td class="t-tag">${p.pack} шт</td>
+      <td class="t-moq">${p.moq}</td>
+      <td class="t-price">${FMT(p.opt)} ₴<small>РРЦ ${FMT(p.retail)} ₴</small></td>
+      <td><span class="stock ${p.stock}">${p.stockLbl}</span></td>
+      <td class="cell-add"><button class="t-add" title="Додати у заявку" onclick="addInq('${p.art}')">+</button></td>
+    </tr>`).join('');
+}
+
+/* ===================== INQUIRY ===================== */
+function addInq(art){
+  const p = PRODUCTS.find(x=>x.art===art); if(!p) return;
+  const ex = inq.find(i=>i.art===art);
+  if(ex) ex.qty += p.moq;
+  else inq.push({art, qty:p.moq});
+  saveInq(); updateInqCount(); renderInq();
+  toast('✓', `${p.name} додано у заявку (${p.moq} шт)`);
+}
+function setQty(art, val){
+  const i = inq.find(x=>x.art===art); if(!i) return;
+  i.qty = Math.max(1, parseInt(val)||1);
+  saveInq(); updateInqCount(); renderInqFoot();
+}
+function stepQty(art, d){
+  const i = inq.find(x=>x.art===art); if(!i) return;
+  i.qty = Math.max(1, i.qty + d);
+  saveInq(); updateInqCount(); renderInq();
+}
+function rmInq(art){ inq = inq.filter(x=>x.art!==art); saveInq(); updateInqCount(); renderInq(); }
+function inqTotal(){ return inq.reduce((s,i)=>{ const p=PRODUCTS.find(x=>x.art===i.art); return s + (p?p.opt*i.qty:0); },0); }
+function inqUnits(){ return inq.reduce((s,i)=>s+i.qty,0); }
+function updateInqCount(){ document.getElementById('inqCount').textContent = inq.length; }
+
+function renderInq(){
+  const body = document.getElementById('inqBody');
+  document.getElementById('inqTitle').textContent = 'Заявка' + (inq.length?` · ${inq.length}`:'');
+  if(!inq.length){
+    body.innerHTML = `<div class="inq-empty"><span class="em">📋</span><p>Заявка порожня.<br>Додайте позиції з каталогу.</p><br><button class="btn btn-dark" onclick="closeInq();go('catalog')">До каталогу</button></div>`;
+    document.getElementById('inqFoot').innerHTML=''; return;
   }
+  body.innerHTML = inq.map(i=>{
+    const p = PRODUCTS.find(x=>x.art===i.art); if(!p) return '';
+    return `<div class="inq-item">
+      <div class="info">
+        <div class="art">${p.art}</div>
+        <div class="nm">${p.name}</div>
+        <div class="bottom">
+          <div class="qty">
+            <button onclick="stepQty('${p.art}',-${p.moq})">−</button>
+            <input type="number" value="${i.qty}" min="1" onchange="setQty('${p.art}',this.value)">
+            <button onclick="stepQty('${p.art}',${p.moq})">+</button>
+          </div>
+          <div class="lp">${FMT(p.opt*i.qty)} ₴</div>
+        </div>
+        <div class="inq-rm" onclick="rmInq('${p.art}')">Видалити</div>
+      </div>
+    </div>`;
+  }).join('');
+  renderInqFoot();
+}
+function renderInqFoot(){
+  document.getElementById('inqFoot').innerHTML = `
+    <div class="drawer-total"><span>Позицій: ${inq.length} · одиниць: ${FMT(inqUnits())}</span></div>
+    <div class="drawer-total"><span>Сума (без логістики)</span><b class="serif">${FMT(inqTotal())} ₴</b></div>
+    <button class="btn btn-gold btn-block" onclick="sendInq()" style="margin-top:10px">Надіслати заявку у Telegram</button>
+    <div class="drawer-note">Менеджер прорахує логістику та виставить рахунок</div>`;
+}
+function openInq(){ renderInq(); document.getElementById('drawer').classList.add('show'); document.getElementById('overlay').classList.add('show'); document.body.classList.add('lock'); }
+function closeInq(){ document.getElementById('drawer').classList.remove('show'); document.getElementById('overlay').classList.remove('show'); document.body.classList.remove('lock'); }
+
+function sendInq(){
+  if(!inq.length) return;
+  let msg = '📋 ОПТОВА ЗАЯВКА · DULI TOYS%0A%0A';
+  inq.forEach(i=>{ const p=PRODUCTS.find(x=>x.art===i.art); if(p) msg += `• ${p.art} · ${p.name} — ${FMT(i.qty)} шт × ${FMT(p.opt)}₴ = ${FMT(p.opt*i.qty)}₴%0A`; });
+  msg += `%0A📦 Усього одиниць: ${FMT(inqUnits())}%0A💰 Сума товару: ${FMT(inqTotal())} ₴%0A(потрібен прорахунок логістики)`;
+  window.open('https://t.me/Dulitoys?text='+msg, '_blank');
+  toast('🎉','Заявку сформовано! Завершіть у Telegram');
+}
+
+/* ===================== CALCULATOR ===================== */
+document.getElementById('cDir').innerHTML = DIRECTIONS.map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
+function refreshModeOptions(){
+  const d = DIRECTIONS.find(x=>x.id===document.getElementById('cDir').value);
+  document.getElementById('cMode').innerHTML = MODES.filter(m=>d.days[m.id]&&d.days[m.id]!=='—')
+    .map(m=>`<option value="${m.id}">${m.em} ${m.name}</option>`).join('');
+}
+function calc(){
+  refreshModeOptions();
+  const d = DIRECTIONS.find(x=>x.id===document.getElementById('cDir').value);
+  const m = MODES.find(x=>x.id===document.getElementById('cMode').value) || MODES[0];
+  const w = Math.max(1, +document.getElementById('cWeight').value||0);
+  const vol = Math.max(0, +document.getElementById('cVol').value||0);
+  const qty = Math.max(1, +document.getElementById('cQty').value||1);
+  const volW = vol * 167;                       // 1 m³ ≈ 167 kg
+  const chargeable = Math.max(w, volW);
+  const rate = m.rate * d.factor;
+  const handling = 15 + chargeable*0.15;
+  const cost = Math.round(chargeable*rate + handling);
+  document.getElementById('cResSub').textContent = `${d.name} · ${m.name}`;
+  document.getElementById('cResCost').textContent = FMT(cost);
+  document.getElementById('cRate').textContent = '$'+rate.toFixed(1)+'/кг';
+  document.getElementById('cChw').textContent = FMT(Math.round(chargeable))+' кг';
+  document.getElementById('cHandle').textContent = '$'+Math.round(handling);
+  document.getElementById('cTime').textContent = d.days[m.id]+' днів';
+  document.getElementById('cPerUnit').textContent = '$'+(cost/qty).toFixed(2)+'/шт';
+}
+document.getElementById('cDir').addEventListener('change', calc);
+function sendCalc(){
+  const d = DIRECTIONS.find(x=>x.id===document.getElementById('cDir').value);
+  const m = MODES.find(x=>x.id===document.getElementById('cMode').value)||MODES[0];
+  const w=document.getElementById('cWeight').value, vol=document.getElementById('cVol').value, qty=document.getElementById('cQty').value;
+  const msg = `🧮 ЗАПИТ НА ПРОРАХУНОК ЛОГІСТИКИ%0A%0AНапрямок: ${d.name}%0AТранспорт: ${m.name}%0AВага: ${w} кг%0AОб'єм: ${vol} м³%0AКількість: ${qty} шт%0A%0AОрієнтовно: $${document.getElementById('cResCost').textContent} · ${d.days[m.id]} днів`;
+  window.open('https://t.me/Dulitoys?text='+msg,'_blank');
+  toast('🧮','Запит надіслано у Telegram');
+}
+
+/* ===================== CONTACT FORM ===================== */
+function sendContact(e){
+  e.preventDefault();
+  const f=e.target, g=n=>f.elements[n].value.trim();
+  const msg = `📨 ЗАЯВКА З САЙТУ · DULI TOYS%0A%0AКомпанія: ${g('name')}%0AТелефон: ${g('phone')}%0AНапрямок: ${g('dir')}%0AЗапит: ${g('msg')}`;
+  window.open('https://t.me/Dulitoys?text='+msg,'_blank');
+  f.reset(); toast('✓','Заявку надіслано у Telegram');
+  return false;
 }
 
 /* ===================== TOAST ===================== */
 let toastT;
-function toast(icon, msg){
-  document.getElementById('toastIcon').textContent = icon;
-  document.getElementById('toastMsg').textContent = msg;
-  const t = document.getElementById('toast');
-  t.classList.add('show');
-  clearTimeout(toastT);
-  toastT = setTimeout(() => t.classList.remove('show'), 2600);
-}
-
-/* ===================== NEWSLETTER ===================== */
-function subscribe(e){
-  e.preventDefault();
-  const v = e.target.elements.contact.value.trim();
-  window.open('https://t.me/Dulitoys?text=' + encodeURIComponent('Вітаю! Хочу промокод −10% на перше замовлення. Мій контакт: ' + v), '_blank');
-  e.target.reset();
-  toast('🎁', 'Дякуємо! Промокод чекає у Telegram');
-  return false;
+function toast(icon,msg){
+  document.getElementById('toastIcon').textContent=icon;
+  document.getElementById('toastMsg').textContent=msg;
+  const t=document.getElementById('toast'); t.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2600);
 }
 
 /* ===================== REVEAL ===================== */
-const io = new IntersectionObserver(es => es.forEach(en => {
-  if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
-}), {threshold:.12});
-document.querySelectorAll('.rv').forEach(el => io.observe(el));
+const io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}}),{threshold:.1});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeInq();});
 
 /* ===================== INIT ===================== */
-renderGrid();
-updateCartCount();
+buildTree(); renderTable(); updateInqCount(); refreshModeOptions(); calc();
+const startView = (location.hash||'#home').slice(1);
+go(document.querySelector(`.view[data-view="${startView}"]`)?startView:'home');
 </script>
 </body>
 </html>

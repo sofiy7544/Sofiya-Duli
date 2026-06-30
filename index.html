@@ -3,564 +3,560 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jellycat Ukraine 🇬🇧 — Оригінал з Британії</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>DULI TOYS GROUP 杜丽玩具集团 — Wholesale & Retail Soft Toys from China</title>
+<meta name="description" content="DULI TOYS GROUP — міжнародний імпортер м'яких іграшок з Китаю. Опт та роздріб. China → Ukraine. 中国玩具批发 · Global Toy Trading.">
+<meta property="og:title" content="DULI TOYS GROUP · 杜丽玩具集团 · Soft Toys Wholesale">
+<meta property="og:description" content="Прямі поставки м'яких іграшок з Китаю. Опт від 50 шт. Logistics included. 1688 · Pinduoduo · Alibaba · Taobao.">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300&family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #FDF8F3;
-  --card: #FFFFFF;
-  --warm1: #F5EDE0;
-  --warm2: #EDD9C0;
-  --accent: #C8501A;
-  --accent2: #E8956A;
-  --green: #4A7C59;
-  --ink: #1C1209;
-  --muted: #7A6555;
-  --border: #E8DDD0;
-  --tg: #229ED9;
+:root{
+  --bg:#0B0E13; --bg2:#11151D; --card:#151A23; --card2:#1B212C;
+  --gold:#E0B25E; --gold2:#C8942F; --red:#D83A2E; --reddeep:#A82018;
+  --green:#3FA66A; --tg:#229ED9; --ink:#F4EFE7; --muted:#94A0B0;
+  --muted2:#5E6B7A; --border:#232A36; --borderlt:#2C3543;
+  --grad:linear-gradient(135deg,#E0B25E,#C8942F);
+  --gradred:linear-gradient(135deg,#D83A2E,#A82018);
 }
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);font-family:'Inter',sans-serif;color:var(--ink);overflow-x:hidden;line-height:1.5}
+.cn{font-family:'Noto Sans SC',sans-serif}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.gold{color:var(--gold)}.red{color:var(--red)}
 
-* { margin:0; padding:0; box-sizing:border-box; }
+/* ===== Announcement marquee ===== */
+.ann{background:var(--gradred);color:#fff;font-size:.78rem;font-weight:600;letter-spacing:.04em;overflow:hidden;white-space:nowrap;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.12)}
+.ann-track{display:inline-block;animation:scroll 32s linear infinite}
+.ann-track span{margin:0 26px;opacity:.95}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-body {
-  background: var(--bg);
-  font-family: 'Inter', sans-serif;
-  color: var(--ink);
-  min-height: 100vh;
-}
+/* ===== Nav ===== */
+.nav{position:sticky;top:0;z-index:50;background:rgba(11,14,19,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:66px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{width:42px;height:42px;border-radius:11px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:1.35rem;box-shadow:0 6px 22px rgba(224,178,94,.32)}
+.brand-txt{display:flex;flex-direction:column;line-height:1.05}
+.brand-txt b{font-family:'Fraunces',serif;font-size:1.12rem;font-weight:900;letter-spacing:.01em}
+.brand-txt small{font-size:.64rem;color:var(--gold);letter-spacing:.22em;font-weight:600}
+.nav-links{display:flex;gap:30px;align-items:center}
+.nav-links a{font-size:.85rem;color:var(--muted);font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--ink)}
+.lang{display:flex;gap:2px;background:var(--card);border:1px solid var(--border);border-radius:9px;padding:3px}
+.lang button{background:none;border:none;color:var(--muted2);font-size:.72rem;font-weight:700;padding:4px 8px;border-radius:6px;cursor:pointer;font-family:inherit;transition:.18s}
+.lang button.on{background:var(--grad);color:#1a1206}
+.nav-cta{background:var(--tg);color:#fff;font-size:.82rem;font-weight:600;padding:9px 18px;border-radius:10px;transition:transform .15s}
+.nav-cta:hover{transform:translateY(-1px)}
+.burger{display:none;background:none;border:none;color:var(--ink);font-size:1.5rem;cursor:pointer}
 
-.hero {
-  background: var(--ink);
-  color: #fff;
-  padding: 20px 20px 0;
-  overflow: hidden;
-  position: relative;
-}
-.hero-inner {
-  max-width: 480px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 2;
-}
-.top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 28px;
-}
-.logo {
-  font-family: 'Fraunces', serif;
-  font-size: 1.4rem;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  color: #fff;
-}
-.logo span { color: var(--accent2); }
-.uk-flag {
-  background: #fff;
-  border-radius: 6px;
-  padding: 3px 8px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--ink);
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.hero-text { padding-bottom: 32px; }
-.hero-badge {
-  display: inline-block;
-  background: var(--accent);
-  color: #fff;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 5px 12px;
-  border-radius: 20px;
-  margin-bottom: 16px;
-}
-.hero h1 {
-  font-family: 'Fraunces', serif;
-  font-size: 2.4rem;
-  font-weight: 900;
-  line-height: 1.1;
-  margin-bottom: 14px;
-  letter-spacing: -0.02em;
-}
-.hero h1 em { font-style: italic; color: var(--accent2); }
-.hero-sub {
-  font-size: 0.9rem;
-  color: rgba(255,255,255,0.65);
-  line-height: 1.6;
-  margin-bottom: 24px;
-}
-.hero-pills {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 28px;
-}
-.pill {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 20px;
-  padding: 6px 14px;
-  font-size: 0.78rem;
-  color: rgba(255,255,255,0.85);
-}
-.tg-btn-hero {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background: var(--tg);
-  color: #fff;
-  border: none;
-  border-radius: 14px;
-  padding: 16px 24px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
-  width: 100%;
-  transition: transform 0.15s, box-shadow 0.15s;
-  box-shadow: 0 4px 20px rgba(34,158,217,0.4);
-  font-family: 'Inter', sans-serif;
-}
-.tg-btn-hero:active { transform: scale(0.98); }
-.tg-btn-hero svg { width:22px; height:22px; flex-shrink:0; }
+/* ===== Hero ===== */
+.hero{position:relative;padding:84px 0 70px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(circle at 78% 18%,rgba(216,58,46,.22),transparent 42%),
+  radial-gradient(circle at 16% 82%,rgba(224,178,94,.16),transparent 46%)}
+.hero-cn-bg{position:absolute;top:-30px;right:-40px;font-size:24rem;font-weight:900;color:rgba(224,178,94,.045);line-height:.8;pointer-events:none;font-family:'Noto Sans SC',sans-serif;z-index:0}
+.hero-in{position:relative;z-index:2;max-width:760px}
+.hero-badge{display:inline-flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--borderlt);border-radius:30px;padding:7px 16px;font-size:.76rem;color:var(--muted);margin-bottom:26px}
+.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(63,166,106,.2);animation:pulse 2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 7px rgba(63,166,106,0)}}
+.hero h1{font-family:'Fraunces',serif;font-size:3.7rem;font-weight:900;line-height:1.04;letter-spacing:-.02em;margin-bottom:8px}
+.hero h1 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-cn-line{font-size:1.5rem;font-weight:700;color:var(--gold);margin-bottom:20px;letter-spacing:.12em}
+.hero p{font-size:1.08rem;color:var(--muted);max-width:580px;margin-bottom:34px}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.btn{display:inline-flex;align-items:center;gap:10px;border:none;border-radius:13px;padding:16px 28px;font-size:.98rem;font-weight:700;cursor:pointer;font-family:inherit;transition:transform .15s,box-shadow .15s}
+.btn-pri{background:var(--grad);color:#1a1206;box-shadow:0 10px 30px rgba(224,178,94,.3)}
+.btn-pri:hover{transform:translateY(-2px)}
+.btn-sec{background:var(--card2);color:var(--ink);border:1px solid var(--borderlt)}
+.btn-sec:hover{transform:translateY(-2px);border-color:var(--gold)}
+.btn svg{width:20px;height:20px}
+.hero-note{font-size:.8rem;color:var(--muted2)}
 
-.section {
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 32px 20px 0;
-}
-.section-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-.section-title {
-  font-family: 'Fraunces', serif;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--ink);
-  letter-spacing: -0.02em;
-}
-.section-sub { font-size: 0.78rem; color: var(--muted); }
+/* ===== Logos / partners marquee ===== */
+.logos{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg2);padding:26px 0;overflow:hidden}
+.logos-label{text-align:center;font-size:.68rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted2);margin-bottom:18px}
+.logos-row{display:flex;gap:54px;align-items:center;justify-content:center;flex-wrap:wrap}
+.logo-item{display:flex;align-items:center;gap:9px;font-weight:800;font-size:1.05rem;color:var(--muted);opacity:.85;transition:.2s}
+.logo-item:hover{opacity:1;color:var(--ink)}
+.logo-item .ic{font-size:1.3rem}
+.logo-item small{font-size:.62rem;font-weight:600;color:var(--muted2);display:block}
 
-.cards { display: flex; flex-direction: column; gap: 14px; }
+/* ===== Stats ===== */
+.stats{padding:64px 0}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px 24px;position:relative;overflow:hidden}
+.stat::after{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:var(--grad)}
+.stat-num{font-family:'Fraunces',serif;font-size:2.6rem;font-weight:900;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat-label{font-size:.86rem;color:var(--ink);font-weight:600;margin-top:8px}
+.stat-cn{font-size:.74rem;color:var(--muted2);margin-top:3px}
 
-.card {
-  background: var(--card);
-  border-radius: 20px;
-  border: 1.5px solid var(--border);
-  overflow: hidden;
-  display: flex;
-  align-items: stretch;
-  transition: transform 0.15s;
-  position: relative;
-}
-.card:active { transform: scale(0.99); }
-.card-img {
-  width: 110px;
-  min-height: 130px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 4rem;
-  position: relative;
-}
-.card-body {
-  padding: 16px 16px 16px 0;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.card-category {
-  font-size: 0.65rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--muted);
-  margin-bottom: 4px;
-}
-.card-name {
-  font-family: 'Fraunces', serif;
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: var(--ink);
-  line-height: 1.25;
-  margin-bottom: 6px;
-}
-.card-desc {
-  font-size: 0.78rem;
-  color: var(--muted);
-  line-height: 1.5;
-  margin-bottom: 12px;
-}
-.card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.card-price {
-  font-family: 'Fraunces', serif;
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--ink);
-}
-.card-price .from {
-  font-size: 0.68rem;
-  font-weight: 400;
-  font-family: 'Inter', sans-serif;
-  color: var(--muted);
-  display: block;
-  margin-bottom: 1px;
-}
-.buy-btn {
-  background: var(--ink);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 9px 16px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
-  font-family: 'Inter', sans-serif;
-  transition: background 0.15s;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.buy-btn:hover { background: var(--accent); }
-.badge-hot {
-  position: absolute;
-  top: 10px; right: 10px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 0.6rem;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-.badge-new {
-  position: absolute;
-  top: 10px; right: 10px;
-  background: var(--green);
-  color: #fff;
-  font-size: 0.6rem;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-.card[data-color="peach"] .card-img { background: #FFF0E8; }
-.card[data-color="lilac"] .card-img { background: #F2EEF9; }
-.card[data-color="mint"] .card-img { background: #E8F5EE; }
-.card[data-color="sky"] .card-img { background: #E8F4FD; }
-.card[data-color="rose"] .card-img { background: #FDE8EE; }
-.card[data-color="cream"] .card-img { background: #FDF5E8; }
-.card[data-color="yellow"] .card-img { background: #FEFAE8; }
-.card[data-color="grey"] .card-img { background: #F2F2F2; }
+/* ===== Section base ===== */
+.sec{padding:72px 0}
+.sec-head{text-align:center;max-width:620px;margin:0 auto 48px}
+.eyebrow{display:inline-block;font-size:.7rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:14px}
+.sec-head h2{font-family:'Fraunces',serif;font-size:2.5rem;font-weight:900;letter-spacing:-.02em;line-height:1.1;margin-bottom:8px}
+.sec-head .cn-sub{font-size:1.05rem;color:var(--muted);font-weight:500}
+.sec-head p{font-size:1rem;color:var(--muted);margin-top:14px}
 
-.trust {
-  background: var(--warm1);
-  border-radius: 20px;
-  border: 1.5px solid var(--warm2);
-  padding: 20px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-top: 20px;
-}
-.trust-item { display: flex; align-items: flex-start; gap: 10px; }
-.trust-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
-.trust-text strong {
-  display: block;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: 2px;
-}
-.trust-text span { font-size: 0.72rem; color: var(--muted); line-height: 1.4; }
+/* ===== Services (opt / retail) ===== */
+.serv{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.serv-card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:38px 34px;position:relative;overflow:hidden;transition:.25s}
+.serv-card:hover{border-color:var(--borderlt);transform:translateY(-4px)}
+.serv-card.feat{background:linear-gradient(160deg,#1c1813,#151A23);border-color:var(--gold2)}
+.serv-ic{width:58px;height:58px;border-radius:15px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:1.7rem;margin-bottom:20px}
+.serv-card.feat .serv-ic{background:var(--grad)}
+.serv-card h3{font-family:'Fraunces',serif;font-size:1.55rem;font-weight:800;margin-bottom:4px}
+.serv-card .cn-tag{font-size:.92rem;color:var(--gold);font-weight:600;margin-bottom:14px}
+.serv-card p{font-size:.92rem;color:var(--muted);margin-bottom:20px}
+.serv-list{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:26px}
+.serv-list li{display:flex;gap:11px;align-items:flex-start;font-size:.9rem;color:var(--ink)}
+.serv-list li .chk{color:var(--green);font-weight:800;flex-shrink:0}
+.serv-tag{position:absolute;top:24px;right:24px;background:var(--gradred);color:#fff;font-size:.64rem;font-weight:800;letter-spacing:.1em;padding:5px 11px;border-radius:20px;text-transform:uppercase}
 
-.steps { display: flex; flex-direction: column; gap: 0; margin-top: 4px; }
-.step {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--border);
-}
-.step:last-child { border-bottom: none; }
-.step-num {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  background: var(--ink);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.82rem;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-.step-text strong { display: block; font-size: 0.92rem; font-weight: 600; margin-bottom: 3px; }
-.step-text span { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+/* ===== Process steps ===== */
+.proc{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;counter-reset:s}
+.proc-step{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px 18px;position:relative}
+.proc-step .n{font-family:'Fraunces',serif;font-size:1.7rem;font-weight:900;color:var(--gold);margin-bottom:12px}
+.proc-step h4{font-size:.96rem;font-weight:700;margin-bottom:5px}
+.proc-step .cn-mini{font-size:.78rem;color:var(--gold2);margin-bottom:8px}
+.proc-step p{font-size:.8rem;color:var(--muted)}
+.proc-arrow{position:absolute;right:-11px;top:38px;color:var(--borderlt);font-size:1.2rem;z-index:2}
 
-.bottom-cta {
-  background: var(--ink);
-  border-radius: 20px;
-  padding: 28px 24px;
-  text-align: center;
-  margin-top: 20px;
-}
-.bottom-cta h2 {
-  font-family: 'Fraunces', serif;
-  font-size: 1.6rem;
-  font-weight: 900;
-  color: #fff;
-  margin-bottom: 8px;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-}
-.bottom-cta p { font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 20px; line-height: 1.5; }
+/* ===== Sourcing platforms ===== */
+.src{background:var(--bg2);border:1px solid var(--border);border-radius:26px;padding:48px;display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
+.src-left h2{font-family:'Fraunces',serif;font-size:2.2rem;font-weight:900;margin-bottom:6px}
+.src-left .cn-big{font-size:1.3rem;color:var(--gold);font-weight:700;margin-bottom:18px}
+.src-left p{font-size:.96rem;color:var(--muted);margin-bottom:14px}
+.src-flag{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--borderlt);border-radius:10px;padding:8px 14px;font-size:.84rem;font-weight:600}
+.src-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.src-plat{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;transition:.2s}
+.src-plat:hover{border-color:var(--gold2);transform:translateY(-3px)}
+.src-plat .pic{font-size:1.5rem;margin-bottom:9px}
+.src-plat b{display:block;font-size:1rem;font-weight:800}
+.src-plat .cn{display:block;font-size:.82rem;color:var(--gold);margin:2px 0 6px}
+.src-plat span{font-size:.76rem;color:var(--muted)}
 
-footer {
-  max-width: 480px;
-  margin: 24px auto 0;
-  padding: 20px 20px 40px;
-  text-align: center;
-  font-size: 0.75rem;
-  color: var(--muted);
-  line-height: 1.7;
+/* ===== Catalog ===== */
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.cat-card{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:.22s;cursor:pointer}
+.cat-card:hover{transform:translateY(-5px);border-color:var(--borderlt)}
+.cat-img{height:130px;display:flex;align-items:center;justify-content:center;font-size:3.6rem;position:relative}
+.cat-c1{background:#2a1d1a}.cat-c2{background:#1d2a23}.cat-c3{background:#1d232a}.cat-c4{background:#2a261d}
+.cat-c5{background:#291d2a}.cat-c6{background:#2a1d22}.cat-c7{background:#1d2a2a}.cat-c8{background:#252a1d}
+.cat-body{padding:16px 18px 20px}
+.cat-body .cn-name{font-size:.8rem;color:var(--gold);font-weight:600;margin-bottom:2px}
+.cat-body h4{font-size:1rem;font-weight:700;margin-bottom:5px}
+.cat-body p{font-size:.78rem;color:var(--muted);margin-bottom:12px}
+.cat-price{display:flex;align-items:center;justify-content:space-between}
+.cat-price b{font-family:'Fraunces',serif;font-size:1.08rem;color:var(--gold)}
+.cat-price small{font-size:.66rem;color:var(--muted2);display:block;font-weight:400}
+.cat-moq{font-size:.66rem;color:var(--muted);background:var(--card2);padding:4px 9px;border-radius:7px}
+
+/* ===== Why us ===== */
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.why{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:30px 26px;transition:.22s}
+.why:hover{border-color:var(--borderlt);transform:translateY(-3px)}
+.why .ic{font-size:2rem;margin-bottom:16px}
+.why h4{font-size:1.08rem;font-weight:700;margin-bottom:3px}
+.why .cn-mini{font-size:.8rem;color:var(--gold);margin-bottom:10px}
+.why p{font-size:.88rem;color:var(--muted)}
+
+/* ===== Logistics band ===== */
+.logi{background:linear-gradient(135deg,#1c1813,#11151D);border:1px solid var(--gold2);border-radius:26px;padding:46px;text-align:center;position:relative;overflow:hidden}
+.logi .route{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;margin:30px 0 8px;font-weight:800}
+.logi-node{display:flex;flex-direction:column;align-items:center;gap:6px}
+.logi-node .flag{font-size:2.2rem}
+.logi-node b{font-size:1.05rem}
+.logi-node small{font-size:.74rem;color:var(--gold);font-weight:600}
+.logi .dash{color:var(--gold2);font-size:1.6rem;letter-spacing:.1em}
+.logi h2{font-family:'Fraunces',serif;font-size:2.2rem;font-weight:900;margin-bottom:8px}
+.logi p{color:var(--muted);max-width:560px;margin:0 auto}
+
+/* ===== Testimonials ===== */
+.tst-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.tst{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px}
+.tst .stars{color:var(--gold);margin-bottom:14px;letter-spacing:2px}
+.tst p{font-size:.92rem;color:var(--ink);margin-bottom:18px;line-height:1.6}
+.tst-who{display:flex;align-items:center;gap:12px}
+.tst-av{width:42px;height:42px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:800;color:#1a1206}
+.tst-who b{display:block;font-size:.88rem}
+.tst-who small{font-size:.74rem;color:var(--muted)}
+
+/* ===== CTA / contact ===== */
+.cta{background:var(--gradred);border-radius:30px;padding:60px 48px;text-align:center;position:relative;overflow:hidden}
+.cta::before{content:"批发";position:absolute;font-family:'Noto Sans SC',sans-serif;font-size:18rem;font-weight:900;color:rgba(255,255,255,.06);top:-60px;right:-20px;line-height:.8}
+.cta h2{font-family:'Fraunces',serif;font-size:2.8rem;font-weight:900;color:#fff;margin-bottom:8px;position:relative}
+.cta .cn-l{font-size:1.2rem;color:rgba(255,255,255,.85);font-weight:600;margin-bottom:16px;position:relative}
+.cta p{color:rgba(255,255,255,.9);max-width:520px;margin:0 auto 30px;position:relative}
+.cta .btn-pri{background:#fff;color:var(--reddeep);position:relative}
+
+/* form */
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:40px;max-width:680px;margin:40px auto 0}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.field label{display:block;font-size:.78rem;color:var(--muted);margin-bottom:7px;font-weight:600}
+.field input,.field select,.field textarea{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:11px;padding:13px 15px;color:var(--ink);font-family:inherit;font-size:.9rem;transition:.18s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold)}
+.field textarea{resize:vertical;min-height:90px}
+.form-full{margin-bottom:16px}
+.form-card .btn-pri{width:100%;justify-content:center}
+
+/* ===== Footer ===== */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:54px 0 30px;margin-top:72px}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr;gap:36px;margin-bottom:40px}
+.foot-brand .brand{margin-bottom:16px}
+.foot-brand p{font-size:.86rem;color:var(--muted);max-width:280px}
+.foot-cn{font-size:.82rem;color:var(--muted2);margin-top:12px;line-height:1.7}
+.foot-col h5{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.foot-col a{display:block;font-size:.86rem;color:var(--muted);margin-bottom:11px;transition:.18s}
+.foot-col a:hover{color:var(--ink)}
+.foot-bottom{border-top:1px solid var(--border);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:.78rem;color:var(--muted2)}
+.foot-pay{display:flex;gap:8px}
+.foot-pay span{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:4px 10px;font-size:.72rem}
+
+/* float btn */
+.float-tg{position:fixed;bottom:26px;right:26px;z-index:60;width:60px;height:60px;border-radius:50%;background:var(--tg);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(34,158,217,.5);transition:transform .2s;animation:floaty 3s ease-in-out infinite}
+.float-tg:hover{transform:scale(1.1)}
+.float-tg svg{width:30px;height:30px;color:#fff}
+@keyframes floaty{50%{transform:translateY(-7px)}}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}
+.rv.in{opacity:1;transform:none}
+
+@media(max-width:920px){
+  .nav-links{display:none}.burger{display:block}
+  .hero h1{font-size:2.6rem}.hero-cn-bg{font-size:14rem}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .serv{grid-template-columns:1fr}
+  .proc{grid-template-columns:1fr 1fr}.proc-arrow{display:none}
+  .src{grid-template-columns:1fr;padding:32px}
+  .cat-grid{grid-template-columns:1fr 1fr}
+  .why-grid,.tst-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr 1fr;gap:28px}
+  .cta h2{font-size:2rem}.sec-head h2{font-size:1.9rem}
 }
-footer strong { color: var(--ink); }
+@media(max-width:540px){
+  .stats-grid,.cat-grid,.foot-grid{grid-template-columns:1fr}
+  .hero h1{font-size:2.1rem}.logi{padding:30px 22px}.cta{padding:42px 24px}
+  .form-card,.src{padding:24px}
+}
 </style>
 </head>
 <body>
 
-<div class="hero">
-  <div class="hero-inner">
-    <div class="top-bar">
-      <div class="logo">Jelly<span>cat</span> UA</div>
-      <div class="uk-flag">🇬🇧 Оригінал UK</div>
+<!-- Announcement -->
+<div class="ann"><div class="ann-track" id="ann">
+  <span class="cn">🚢 全球玩具批发 · GLOBAL SOFT TOY WHOLESALE</span>
+  <span>📦 OPT від 50 шт · ЛОГІСТИКА ПІД КЛЮЧ</span>
+  <span class="cn">⭐ 中国直供 · DIRECT FROM CHINA FACTORIES</span>
+  <span>✈️ China 🇨🇳 → Ukraine 🇺🇦 · 7–14 DAYS</span>
+  <span class="cn">💎 1688 · 拼多多 · ALIBABA · TAOBAO</span>
+  <span>🤝 B2B & B2C · РОЗДРІБ І ОПТ</span>
+  <!-- duplicate for seamless loop -->
+  <span class="cn">🚢 全球玩具批发 · GLOBAL SOFT TOY WHOLESALE</span>
+  <span>📦 OPT від 50 шт · ЛОГІСТИКА ПІД КЛЮЧ</span>
+  <span class="cn">⭐ 中国直供 · DIRECT FROM CHINA FACTORIES</span>
+  <span>✈️ China 🇨🇳 → Ukraine 🇺🇦 · 7–14 DAYS</span>
+  <span class="cn">💎 1688 · 拼多多 · ALIBABA · TAOBAO</span>
+  <span>🤝 B2B & B2C · РОЗДРІБ І ОПТ</span>
+</div></div>
+
+<!-- Nav -->
+<nav class="nav"><div class="wrap nav-in">
+  <a href="#" class="brand">
+    <div class="brand-mark">🧸</div>
+    <div class="brand-txt"><b>DULI TOYS</b><small>杜丽玩具 · GROUP</small></div>
+  </a>
+  <div class="nav-links">
+    <a href="#services">Послуги</a>
+    <a href="#process">Як працюємо</a>
+    <a href="#sourcing">中国 Sourcing</a>
+    <a href="#catalog">Каталог</a>
+    <a href="#contact">Контакти</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px">
+    <div class="lang" id="lang">
+      <button data-l="ua" class="on">UA</button>
+      <button data-l="ru">RU</button>
+      <button data-l="en">EN</button>
+      <button data-l="cn" class="cn">中文</button>
     </div>
-    <div class="hero-text">
-      <div class="hero-badge">✈️ Привозимо з Британії</div>
-      <h1>М'які іграшки<br>Jellycat — <em>справжні</em></h1>
-      <p class="hero-sub">Офіційний імпорт з Великобританії. Бирки, чеки, оригінальна упаковка. Відправляємо Новою Поштою по всій Україні 🇺🇦</p>
-      <div class="hero-pills">
-        <div class="pill">🏷️ Є бирки та чеки</div>
-        <div class="pill">📦 Нова Пошта</div>
-        <div class="pill">💬 Відповідь за 5 хв</div>
-      </div>
-      <a href="https://t.me/jellycat_ua" target="_blank" class="tg-btn-hero">
+    <a href="https://t.me/jellycat_ua" target="_blank" class="nav-cta">Telegram</a>
+    <button class="burger" onclick="document.querySelector('.nav-links').style.display='flex'">☰</button>
+  </div>
+</div></nav>
+
+<!-- Hero -->
+<header class="hero"><div class="wrap">
+  <div class="hero-cn-bg cn">玩具</div>
+  <div class="hero-in">
+    <div class="hero-badge"><span class="dot"></span> <span id="t-badge">Працюємо з 2016 · 12 000+ відвантажень · Офіс у Києві</span></div>
+    <h1 id="t-h1">М'які іграшки з Китаю<br><em>оптом і в роздріб</em></h1>
+    <div class="hero-cn-line cn">中国软体玩具批发与零售 · WHOLESALE & RETAIL</div>
+    <p id="t-sub">DULI TOYS GROUP — міжнародний імпортер плюшевих іграшок. Прямі поставки з фабрик Китаю, повний прорахунок логістики, виставлення рахунку та доставка під ключ. Опт від 50 штук, роздріб через Instagram.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn btn-pri" id="t-cta1">📦 Оптовий запит / 批发询价</a>
+      <a href="https://t.me/jellycat_ua" target="_blank" class="btn btn-sec">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.19 13.67l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.958.889z"/></svg>
-        Написати в Telegram
+        Купити в роздріб
       </a>
     </div>
+    <p class="hero-note">🔒 Передоплата · 📑 Офіційний рахунок · 🚚 Нова Пошта / самовивіз · 💬 Відповідь за 5 хв</p>
   </div>
-</div>
+</div></header>
 
-<div class="section">
-  <div class="section-head">
-    <div class="section-title">Каталог 🧸</div>
-    <div class="section-sub">Оригінал з UK</div>
+<!-- Partners -->
+<section class="logos"><div class="wrap">
+  <div class="logos-label">Закуповуємо напряму · 采购平台 · OUR SOURCING NETWORK</div>
+  <div class="logos-row">
+    <div class="logo-item"><span class="ic">🅰️</span> Alibaba <small>阿里巴巴</small></div>
+    <div class="logo-item"><span class="ic">🔵</span> 1688.com <small>厂家直供</small></div>
+    <div class="logo-item"><span class="ic">🔴</span> Pinduoduo <small>拼多多 · PDD</small></div>
+    <div class="logo-item"><span class="ic">🟠</span> Taobao <small>淘宝</small></div>
+    <div class="logo-item"><span class="ic">🟢</span> Prom.ua <small>UA маркет</small></div>
+    <div class="logo-item"><span class="ic">🟣</span> Ulix <small>опт UA</small></div>
   </div>
-  <div class="cards">
+</div></section>
 
-    <div class="card" data-color="peach">
-      <div class="card-img">🐰<div class="badge-hot">ХІТ</div></div>
-      <div class="card-body">
-        <div>
-          <div class="card-category">Bashful Bunny</div>
-          <div class="card-name">Зайчик Bashful Beige</div>
-          <div class="card-desc">Класика Jellycat з 1999. Ніжне хутро, м'які вушка. Є розміри S / M / L</div>
-        </div>
-        <div class="card-footer">
-          <div class="card-price"><span class="from">від</span>1 490 ₴</div>
-          <a href="https://t.me/jellycat_ua" target="_blank" class="buy-btn">Замовити →</a>
-        </div>
-      </div>
-    </div>
+<!-- Stats -->
+<section class="stats"><div class="wrap stats-grid">
+  <div class="stat rv"><div class="stat-num" data-to="3500000">0</div><div class="stat-label">Іграшок відвантажено</div><div class="stat-cn cn">已发货玩具</div></div>
+  <div class="stat rv"><div class="stat-num" data-to="1200" data-suf="+">0</div><div class="stat-label">Оптових клієнтів</div><div class="stat-cn cn">批发客户</div></div>
+  <div class="stat rv"><div class="stat-num" data-to="48" data-suf=" год">0</div><div class="stat-label">Прорахунок партії</div><div class="stat-cn cn">报价时间</div></div>
+  <div class="stat rv"><div class="stat-num" data-to="9" data-suf=" років">0</div><div class="stat-label">На ринку</div><div class="stat-cn cn">行业经验</div></div>
+</div></section>
 
-    <div class="card" data-color="sky">
-      <div class="card-img">🐲<div class="badge-hot">ХІТ</div></div>
-      <div class="card-body">
-        <div>
-          <div class="card-category">Dragons</div>
-          <div class="card-name">Sky Dragon</div>
-          <div class="card-desc">Веселковий дракон — один з найбажаніших Jellycat. Розкуповується миттєво!</div>
-        </div>
-        <div class="card-footer">
-          <div class="card-price"><span class="from">від</span>2 290 ₴</div>
-          <a href="https://t.me/jellycat_ua" target="_blank" class="buy-btn">Замовити →</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" data-color="cream">
-      <div class="card-img">🐻</div>
-      <div class="card-body">
-        <div>
-          <div class="card-category">Bears</div>
-          <div class="card-name">Bartholomew Bear</div>
-          <div class="card-desc">Ведмедик з ніжним хутром та сумними очима. Улюбленець усього інтернету</div>
-        </div>
-        <div class="card-footer">
-          <div class="card-price"><span class="from">від</span>1 690 ₴</div>
-          <a href="https://t.me/jellycat_ua" target="_blank" class="buy-btn">Замовити →</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" data-color="rose">
-      <div class="card-img">🌸<div class="badge-new">НОВИНКА</div></div>
-      <div class="card-body">
-        <div>
-          <div class="card-category">Amuseables</div>
-          <div class="card-name">Amuseable Rose</div>
-          <div class="card-desc">М'яка троянда з мордочкою. Унікальна іграшка-рослина від Jellycat</div>
-        </div>
-        <div class="card-footer">
-          <div class="card-price"><span class="from">від</span>1 390 ₴</div>
-          <a href="https://t.me/jellycat_ua" target="_blank" class="buy-btn">Замовити →</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" data-color="lilac">
-      <div class="card-img">🐰</div>
-      <div class="card-body">
-        <div>
-          <div class="card-category">Bashful Luxe</div>
-          <div class="card-name">Luxe Bunny Rosa</div>
-          <div class="card-desc">Розкішна версія зайчика з пухнастим хутром. Ідеальний подарунок</div>
-        </div>
-        <div class="card-footer">
-          <div class="card-price"><span class="from">від</span>1 890 ₴</div>
-          <a href="https://t.me/jellycat_ua" target="_blank" class="buy-btn">Замовити →</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" data-color="yellow">
-      <div class="card-img">🍌</div>
-      <div class="card-body">
-        <div>
-          <div class="card-category">Amuseables</div>
-          <div class="card-name">Amuseable Banana</div>
-          <div class="card-desc">Банан з мордочкою і ніжками — вірусний хіт TikTok</div>
-        </div>
-        <div class="card-footer">
-          <div class="card-price"><span class="from">від</span>1 250 ₴</div>
-          <a href="https://t.me/jellycat_ua" target="_blank" class="buy-btn">Замовити →</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" data-color="mint">
-      <div class="card-img">🐢<div class="badge-new">ТРЕНД</div></div>
-      <div class="card-body">
-        <div>
-          <div class="card-category">Animals</div>
-          <div class="card-name">Timmy Turtle</div>
-          <div class="card-desc">Черепашка зі сердитим виглядом, якого всі люблять</div>
-        </div>
-        <div class="card-footer">
-          <div class="card-price"><span class="from">від</span>1 190 ₴</div>
-          <a href="https://t.me/jellycat_ua" target="_blank" class="buy-btn">Замовити →</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" data-color="grey">
-      <div class="card-img">🐘</div>
-      <div class="card-body">
-        <div>
-          <div class="card-category">Animals</div>
-          <div class="card-name">Fuddlewuddle Elephant</div>
-          <div class="card-desc">Слоник з великими вухами і м'якеньким хоботом. Улюбленець малечі</div>
-        </div>
-        <div class="card-footer">
-          <div class="card-price"><span class="from">від</span>1 590 ₴</div>
-          <a href="https://t.me/jellycat_ua" target="_blank" class="buy-btn">Замовити →</a>
-        </div>
-      </div>
-    </div>
-
+<!-- Services -->
+<section class="sec" id="services"><div class="wrap">
+  <div class="sec-head rv">
+    <div class="eyebrow">Напрямки · 业务方向 · WHAT WE DO</div>
+    <h2>Опт та роздріб під ключ</h2>
+    <div class="cn-sub cn">批发与零售一站式服务 · One-stop wholesale & retail</div>
   </div>
-
-  <div class="trust">
-    <div class="trust-item">
-      <div class="trust-icon">🇬🇧</div>
-      <div class="trust-text"><strong>Оригінал UK</strong><span>Купуємо в офіційних магазинах Британії</span></div>
+  <div class="serv">
+    <div class="serv-card feat rv">
+      <div class="serv-tag">Основний напрямок</div>
+      <div class="serv-ic">📦</div>
+      <h3>Оптова торгівля</h3>
+      <div class="cn-tag cn">批发贸易 · WHOLESALE B2B</div>
+      <p>Великі обсяги для магазинів, маркетплейс-селлерів та реселерів. Працюємо з будь-якою кількістю — від 50 штук до контейнера.</p>
+      <ul class="serv-list">
+        <li><span class="chk">✓</span> Прорахунок ціни товару + логістики</li>
+        <li><span class="chk">✓</span> Виставлення офіційного рахунку</li>
+        <li><span class="chk">✓</span> Прямі поставки з фабрик Китаю</li>
+        <li><span class="chk">✓</span> Доставка під ключ China → Ukraine</li>
+        <li><span class="chk">✓</span> Персональний менеджер</li>
+      </ul>
+      <a href="#contact" class="btn btn-pri">Залишити оптовий запит →</a>
     </div>
-    <div class="trust-item">
-      <div class="trust-icon">🏷️</div>
-      <div class="trust-text"><strong>Бирки та чеки</strong><span>Кожна іграшка з документами</span></div>
-    </div>
-    <div class="trust-item">
-      <div class="trust-icon">📦</div>
-      <div class="trust-text"><strong>Нова Пошта</strong><span>Відправляємо по всій Україні</span></div>
-    </div>
-    <div class="trust-item">
-      <div class="trust-icon">💬</div>
-      <div class="trust-text"><strong>Відповідь швидко</strong><span>Пишемо у Telegram за 5 хвилин</span></div>
+    <div class="serv-card rv">
+      <div class="serv-ic">🛍️</div>
+      <h3>Роздрібна торгівля</h3>
+      <div class="cn-tag cn">零售贸易 · RETAIL B2C</div>
+      <p>Готові позиції в наявності. Продаємо через Instagram, Prom.ua та Telegram. Швидка відправка Новою Поштою по Україні.</p>
+      <ul class="serv-list">
+        <li><span class="chk">✓</span> Товар у наявності — відправка одразу</li>
+        <li><span class="chk">✓</span> Замовлення через Instagram / Telegram</li>
+        <li><span class="chk">✓</span> Оплата картка / накладений платіж</li>
+        <li><span class="chk">✓</span> Реклама та підбір під запит</li>
+        <li><span class="chk">✓</span> Подарункова упаковка</li>
+      </ul>
+      <a href="https://t.me/jellycat_ua" target="_blank" class="btn btn-sec">Написати в Telegram →</a>
     </div>
   </div>
-</div>
+</div></section>
 
-<div class="section" style="padding-top:32px;">
-  <div class="section-head">
-    <div class="section-title">Як замовити</div>
+<!-- Process -->
+<section class="sec" id="process" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)"><div class="wrap">
+  <div class="sec-head rv">
+    <div class="eyebrow">Як це працює · 合作流程 · HOW IT WORKS</div>
+    <h2>Від запиту до доставки</h2>
+    <div class="cn-sub cn">从询价到交付 · 6 простих кроків</div>
   </div>
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <div class="step-text"><strong>Напишіть нам у Telegram</strong><span>Скажіть, яку іграшку хочете і який розмір — ми перевіримо наявність</span></div>
+  <div class="proc">
+    <div class="proc-step rv"><div class="n">01</div><div class="cn-mini cn">询价</div><h4>Запит</h4><p>Кажете, які іграшки і скільки потрібно (напр. 50 шт)</p><div class="proc-arrow">→</div></div>
+    <div class="proc-step rv"><div class="n">02</div><div class="cn-mini cn">报价</div><h4>Прорахунок</h4><p>Рахуємо ціну товару + логістику з Китаю</p><div class="proc-arrow">→</div></div>
+    <div class="proc-step rv"><div class="n">03</div><div class="cn-mini cn">发票</div><h4>Рахунок</h4><p>Виставляємо офіційний рахунок на оплату</p><div class="proc-arrow">→</div></div>
+    <div class="proc-step rv"><div class="n">04</div><div class="cn-mini cn">付款</div><h4>Оплата</h4><p>Клієнт оплачує — ми закуповуємо товар</p><div class="proc-arrow">→</div></div>
+    <div class="proc-step rv"><div class="n">05</div><div class="cn-mini cn">物流</div><h4>Логістика</h4><p>Привозимо з Китаю, рахуємо доставку</p><div class="proc-arrow">→</div></div>
+    <div class="proc-step rv" style="grid-column:auto"><div class="n">06</div><div class="cn-mini cn">交付</div><h4>Доставка</h4><p>Передаємо товар клієнту 🎉</p></div>
+  </div>
+</div></section>
+
+<!-- Sourcing -->
+<section class="sec" id="sourcing"><div class="wrap">
+  <div class="src rv">
+    <div class="src-left">
+      <div class="eyebrow">中国采购 · CHINA SOURCING</div>
+      <h2>Закуповуємо напряму в Китаї</h2>
+      <div class="cn-big cn">工厂直供 · 没有中间商</div>
+      <p>Працюємо з перевіреними фабриками та найбільшими китайськими майданчиками. Без посередників — тому ціни нижчі за ринок.</p>
+      <p style="margin-bottom:20px">我们与中国工厂直接合作，为乌克兰客户提供最优惠的批发价格。</p>
+      <div class="src-flag"><span class="cn">🇨🇳 中国工厂</span> &nbsp;→&nbsp; <span>🇺🇦 Україна</span></div>
     </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <div class="step-text"><strong>Оплата і підтвердження</strong><span>Приймаємо оплату на картку ПриватБанк або Монобанк</span></div>
-    </div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <div class="step-text"><strong>Відправка Новою Поштою</strong><span>Відправляємо в день оплати або наступного дня. Надсилаємо ТТН</span></div>
-    </div>
-    <div class="step">
-      <div class="step-num">4</div>
-      <div class="step-text"><strong>Отримуєте посилку 🎉</strong><span>Оригінальний Jellycat з UK вже у вас вдома</span></div>
+    <div class="src-grid">
+      <div class="src-plat"><div class="pic">🔵</div><b>1688.com</b><span class="cn">厂家批发</span><span>Оптові ціни напряму від виробника</span></div>
+      <div class="src-plat"><div class="pic">🔴</div><b>Pinduoduo</b><span class="cn">拼多多 · PDD</span><span>Найнижчі ціни Китаю, групові закупки</span></div>
+      <div class="src-plat"><div class="pic">🅰️</div><b>Alibaba</b><span class="cn">阿里巴巴</span><span>Перевірені постачальники, trade assurance</span></div>
+      <div class="src-plat"><div class="pic">🟠</div><b>Taobao</b><span class="cn">淘宝网</span><span>Рідкісні моделі та трендові новинки</span></div>
     </div>
   </div>
-</div>
+</div></section>
 
-<div class="section" style="padding-bottom:40px;">
-  <div class="bottom-cta">
-    <h2>Хочете щось<br>конкретне? 🐰</h2>
-    <p>Напишіть у Telegram — підберемо іграшку, розкажемо про наявність і ціни. Відповідаємо швидко!</p>
-    <a href="https://t.me/jellycat_ua" target="_blank" class="tg-btn-hero">
-      <svg viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px;flex-shrink:0"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.19 13.67l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.958.889z"/></svg>
-      @jellycat_ua — написати зараз
-    </a>
+<!-- Catalog -->
+<section class="sec" id="catalog" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)"><div class="wrap">
+  <div class="sec-head rv">
+    <div class="eyebrow">Каталог · 产品目录 · CATALOG</div>
+    <h2>Категорії товарів</h2>
+    <div class="cn-sub cn">软体毛绒玩具 · Оптові ціни — за запитом</div>
   </div>
-</div>
+  <div class="cat-grid">
+    <div class="cat-card rv"><div class="cat-img cat-c1">🐰</div><div class="cat-body"><div class="cn-name cn">兔子毛绒</div><h4>Плюшеві зайці</h4><p>Bunny / Rabbit, серії та розміри S–L</p><div class="cat-price"><div><small>від</small><b>$2.40</b></div><span class="cat-moq">MOQ 50</span></div></div></div>
+    <div class="cat-card rv"><div class="cat-img cat-c2">🐲</div><div class="cat-body"><div class="cn-name cn">龙玩具</div><h4>Дракони</h4><p>Sky Dragon та трендові серії</p><div class="cat-price"><div><small>від</small><b>$3.10</b></div><span class="cat-moq">MOQ 50</span></div></div></div>
+    <div class="cat-card rv"><div class="cat-img cat-c3">🐻</div><div class="cat-body"><div class="cn-name cn">泰迪熊</div><h4>Ведмеді</h4><p>Teddy Bear, класика та luxe</p><div class="cat-price"><div><small>від</small><b>$2.80</b></div><span class="cat-moq">MOQ 50</span></div></div></div>
+    <div class="cat-card rv"><div class="cat-img cat-c4">🍌</div><div class="cat-body"><div class="cn-name cn">水果玩具</div><h4>Фрукти-іграшки</h4><p>Amuseables — вірусні хіти TikTok</p><div class="cat-price"><div><small>від</small><b>$2.20</b></div><span class="cat-moq">MOQ 100</span></div></div></div>
+    <div class="cat-card rv"><div class="cat-img cat-c5">🐘</div><div class="cat-body"><div class="cn-name cn">动物玩具</div><h4>Тварини</h4><p>Слони, коти, собаки, динозаври</p><div class="cat-price"><div><small>від</small><b>$2.50</b></div><span class="cat-moq">MOQ 50</span></div></div></div>
+    <div class="cat-card rv"><div class="cat-img cat-c6">🌸</div><div class="cat-body"><div class="cn-name cn">花朵玩具</div><h4>Квіти-іграшки</h4><p>Amuseable Rose та рослинки</p><div class="cat-price"><div><small>від</small><b>$2.30</b></div><span class="cat-moq">MOQ 100</span></div></div></div>
+    <div class="cat-card rv"><div class="cat-img cat-c7">🐢</div><div class="cat-body"><div class="cn-name cn">海洋动物</div><h4>Морські</h4><p>Черепахи, восьминоги, акули</p><div class="cat-price"><div><small>від</small><b>$2.60</b></div><span class="cat-moq">MOQ 50</span></div></div></div>
+    <div class="cat-card rv"><div class="cat-img cat-c8">🎁</div><div class="cat-body"><div class="cn-name cn">节日礼品</div><h4>Подарункові набори</h4><p>Сезонні та святкові серії</p><div class="cat-price"><div><small>від</small><b>$4.00</b></div><span class="cat-moq">MOQ 30</span></div></div></div>
+  </div>
+  <div style="text-align:center;margin-top:34px"><a href="#contact" class="btn btn-pri">Отримати повний прайс 价目表 →</a></div>
+</div></section>
 
-<footer>
-  <strong>Jellycat UA</strong> — неофіційний реселер оригінальних іграшок Jellycat.<br>
-  Всі товари привезені з Великобританії 🇬🇧<br>
-  Jellycat® — торгова марка Jellycat Ltd, UK.
-</footer>
+<!-- Why us -->
+<section class="sec"><div class="wrap">
+  <div class="sec-head rv">
+    <div class="eyebrow">Чому ми · 为什么选择我们 · WHY US</div>
+    <h2>Велика компанія — велика відповідальність</h2>
+  </div>
+  <div class="why-grid">
+    <div class="why rv"><div class="ic">🏭</div><h4>Прямі фабрики</h4><div class="cn-mini cn">工厂直供</div><p>Працюємо без посередників напряму з виробниками Китаю — найкраща ціна на ринку.</p></div>
+    <div class="why rv"><div class="ic">📊</div><h4>Прозорий прорахунок</h4><div class="cn-mini cn">透明报价</div><p>Окремо ціна товару, окремо логістика. Жодних прихованих платежів — все в рахунку.</p></div>
+    <div class="why rv"><div class="ic">🚚</div><h4>Логістика під ключ</h4><div class="cn-mini cn">一站式物流</div><p>Беремо на себе весь шлях: викуп, доставка з Китаю, митниця, передача клієнту.</p></div>
+    <div class="why rv"><div class="ic">📞</div><h4>Свій офіс і менеджери</h4><div class="cn-mini cn">专属客服</div><p>Приймаємо дзвінки, обробляємо великі обсяги, кожен клієнт має менеджера.</p></div>
+    <div class="why rv"><div class="ic">✅</div><h4>Контроль якості</h4><div class="cn-mini cn">质量控制</div><p>Перевіряємо постачальників і партії. Брак — замінюємо або повертаємо кошти.</p></div>
+    <div class="why rv"><div class="ic">📦</div><h4>Будь-які обсяги</h4><div class="cn-mini cn">任意数量</div><p>Від 50 штук у роздріб-опт до повного контейнера. Масштабуємось під вас.</p></div>
+  </div>
+</div></section>
 
+<!-- Logistics band -->
+<section class="sec"><div class="wrap">
+  <div class="logi rv">
+    <div class="eyebrow">Логістика · 国际物流 · LOGISTICS</div>
+    <h2>China → Ukraine під ключ</h2>
+    <p>Авіа та морські поставки. Викуп на фабриці, консолідація складу в Гуанчжоу, доставка та митне оформлення.</p>
+    <div class="route">
+      <div class="logi-node"><span class="flag">🏭</span><b>Фабрика</b><small class="cn">工厂</small></div>
+      <span class="dash">— ✈️ —</span>
+      <div class="logi-node"><span class="flag">🇨🇳</span><b>Гуанчжоу</b><small class="cn">广州仓库</small></div>
+      <span class="dash">— 🚢 —</span>
+      <div class="logi-node"><span class="flag">🛃</span><b>Митниця</b><small>Customs</small></div>
+      <span class="dash">— 🚚 —</span>
+      <div class="logi-node"><span class="flag">🇺🇦</span><b>Україна</b><small class="cn">乌克兰</small></div>
+    </div>
+    <p style="margin-top:14px;color:var(--gold);font-weight:600">⏱️ Термін: 7–14 днів авіа · 30–45 днів море</p>
+  </div>
+</div></section>
+
+<!-- Testimonials -->
+<section class="sec" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)"><div class="wrap">
+  <div class="sec-head rv">
+    <div class="eyebrow">Відгуки · 客户评价 · REVIEWS</div>
+    <h2>Нам довіряють</h2>
+  </div>
+  <div class="tst-grid">
+    <div class="tst rv"><div class="stars">★★★★★</div><p>«Замовляли партію 300 зайців на маркетплейс. Прорахували за добу, рахунок прозорий, привезли вчасно. Працюємо вже рік.»</p><div class="tst-who"><div class="tst-av">О</div><div><b>Олена К.</b><small>Магазин іграшок, Київ</small></div></div></div>
+    <div class="tst rv"><div class="stars">★★★★★</div><p>«Беру опт на Prom.ua. Ціни реально як з 1688, тільки без головного болю з викупом і доставкою. Рекомендую.»</p><div class="tst-who"><div class="tst-av">D</div><div><b>Dmytro S.</b><small>Seller, Rozetka / Prom</small></div></div></div>
+    <div class="tst rv"><div class="stars">★★★★★</div><p>«Розкрутила Instagram-магазин на їхньому товарі. Завжди є наявність, новинки приходять швидко. 谢谢!»</p><div class="tst-who"><div class="tst-av">М</div><div><b>Марія В.</b><small>Instagram shop</small></div></div></div>
+  </div>
+</div></section>
+
+<!-- CTA + Form -->
+<section class="sec" id="contact"><div class="wrap">
+  <div class="cta rv">
+    <h2>Готові зробити запит?</h2>
+    <div class="cn-l cn">准备好下单了吗？ · READY TO ORDER?</div>
+    <p>Напишіть, які іграшки та скільки потрібно — прорахуємо ціну товару, логістику та виставимо рахунок протягом 48 годин.</p>
+    <a href="https://t.me/jellycat_ua" target="_blank" class="btn btn-pri">💬 Написати менеджеру в Telegram</a>
+  </div>
+
+  <form class="form-card rv" onsubmit="return sendReq(event)">
+    <h3 style="font-family:'Fraunces',serif;font-size:1.5rem;font-weight:800;margin-bottom:6px">Оптовий запит · 批发询价表</h3>
+    <p style="color:var(--muted);font-size:.9rem;margin-bottom:24px">Заповніть форму — менеджер зв'яжеться та надішле прорахунок.</p>
+    <div class="form-row">
+      <div class="field"><label>Ім'я / 姓名</label><input name="name" required placeholder="Ваше ім'я"></div>
+      <div class="field"><label>Телефон / 电话</label><input name="phone" required placeholder="+380 __ ___ __ __"></div>
+    </div>
+    <div class="form-row">
+      <div class="field"><label>Тип / 类型</label><select name="type"><option>Опт (B2B) · 批发</option><option>Роздріб (B2C) · 零售</option><option>Дропшипінг</option></select></div>
+      <div class="field"><label>Кількість / 数量</label><input name="qty" placeholder="напр. 50, 300, контейнер"></div>
+    </div>
+    <div class="field form-full"><label>Які іграшки потрібні / 需要的产品</label><textarea name="msg" placeholder="Опишіть позиції: зайці, дракони, ведмеді, розміри, кольори, посилання на 1688 / Taobao..."></textarea></div>
+    <button class="btn btn-pri" type="submit">📤 Надіслати запит · 发送询价</button>
+  </form>
+</div></section>
+
+<!-- Footer -->
+<footer><div class="wrap">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <div class="brand"><div class="brand-mark">🧸</div><div class="brand-txt"><b>DULI TOYS</b><small>杜丽玩具 · GROUP</small></div></div>
+      <p>Міжнародний імпортер м'яких іграшок з Китаю. Опт та роздріб. Прямі поставки, логістика під ключ.</p>
+      <div class="foot-cn cn">中国软体玩具批发与零售<br>全球贸易 · China → Ukraine</div>
+    </div>
+    <div class="foot-col"><h5>Компанія</h5><a href="#services">Послуги</a><a href="#process">Як працюємо</a><a href="#sourcing">China Sourcing</a><a href="#catalog">Каталог</a></div>
+    <div class="foot-col"><h5>Майданчики</h5><a href="https://t.me/jellycat_ua" target="_blank">Telegram</a><a href="#">Instagram</a><a href="#">Prom.ua</a><a href="#">Ulix</a></div>
+    <div class="foot-col"><h5>Контакти · 联系</h5><a href="tel:+380000000000">📞 +380 (00) 000-00-00</a><a href="https://t.me/jellycat_ua" target="_blank">💬 @jellycat_ua</a><a href="#">📧 office@dulitoys.com</a><a href="#">📍 Офіс: Київ, Україна</a></div>
+  </div>
+  <div class="foot-bottom">
+    <div>© 2016–2026 DULI TOYS GROUP · 杜丽玩具集团 · All rights reserved</div>
+    <div class="foot-pay"><span>Visa</span><span>Mastercard</span><span>ПриватБанк</span><span>Alipay 支付宝</span><span>WeChat 微信</span></div>
+  </div>
+</div></footer>
+
+<a href="https://t.me/jellycat_ua" target="_blank" class="float-tg" aria-label="Telegram">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.19 13.67l-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.958.889z"/></svg>
+</a>
+
+<script>
+/* Reveal on scroll */
+const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* Animated counters */
+const countIO=new IntersectionObserver((es)=>es.forEach(e=>{
+  if(!e.isIntersecting)return; const el=e.target; countIO.unobserve(el);
+  const to=+el.dataset.to, suf=el.dataset.suf||''; let cur=0; const steps=60; const inc=to/steps;
+  const fmt=n=>n>=1000000?(n/1000000).toFixed(1).replace('.0','')+'M':n>=1000?Math.round(n/1000)+'K':Math.round(n);
+  const t=setInterval(()=>{cur+=inc; if(cur>=to){cur=to;clearInterval(t)} el.textContent=fmt(cur)+suf;},20);
+},{threshold:.5});
+document.querySelectorAll('.stat-num').forEach(el=>countIO.observe(el));
+
+/* Language switch (hero + badge + cta) */
+const T={
+ ua:{badge:"Працюємо з 2016 · 12 000+ відвантажень · Офіс у Києві",h1:"М'які іграшки з Китаю<br><em>оптом і в роздріб</em>",sub:"DULI TOYS GROUP — міжнародний імпортер плюшевих іграшок. Прямі поставки з фабрик Китаю, повний прорахунок логістики, виставлення рахунку та доставка під ключ. Опт від 50 штук, роздріб через Instagram.",cta1:"📦 Оптовий запит / 批发询价"},
+ ru:{badge:"Работаем с 2016 · 12 000+ отгрузок · Офис в Киеве",h1:"Мягкие игрушки из Китая<br><em>оптом и в розницу</em>",sub:"DULI TOYS GROUP — международный импортёр плюшевых игрушек. Прямые поставки с фабрик Китая, полный просчёт логистики, выставление счёта и доставка под ключ. Опт от 50 штук, розница через Instagram.",cta1:"📦 Оптовый запрос / 批发询价"},
+ en:{badge:"Since 2016 · 12,000+ shipments · Office in Kyiv",h1:"Soft Toys from China<br><em>wholesale & retail</em>",sub:"DULI TOYS GROUP is an international plush toy importer. Direct supply from Chinese factories, full logistics calculation, invoicing and turnkey delivery. Wholesale from 50 pcs, retail via Instagram.",cta1:"📦 Wholesale inquiry / 批发询价"},
+ cn:{badge:"自2016年 · 12,000+ 发货 · 基辅办事处",h1:"中国软体玩具<br><em>批发与零售</em>",sub:"DULI TOYS GROUP 是国际毛绒玩具进口商。中国工厂直供，完整物流报价，开具发票及一站式交付。批发起订50件，零售通过 Instagram。",cta1:"📦 批发询价 / Wholesale"}
+};
+document.querySelectorAll('#lang button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#lang button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); const d=T[b.dataset.l];
+  document.getElementById('t-badge').textContent=d.badge;
+  document.getElementById('t-h1').innerHTML=d.h1;
+  document.getElementById('t-sub').textContent=d.sub;
+  document.getElementById('t-cta1').textContent=d.cta1;
+});
+
+/* Form -> Telegram */
+function sendReq(e){
+  e.preventDefault();
+  const f=e.target, g=n=>f.elements[n].value;
+  const txt=`Оптовий запит DULI TOYS%0A%0AІм'я: ${g('name')}%0AТелефон: ${g('phone')}%0AТип: ${g('type')}%0AКількість: ${g('qty')}%0AТовар: ${g('msg')}`;
+  window.open('https://t.me/jellycat_ua?text='+txt,'_blank');
+  return false;
+}
+</script>
 </body>
 </html>

@@ -335,6 +335,46 @@ footer{background:var(--ink);color:#C3C8D0;padding:56px 0 28px}
 .float-tg svg{width:27px;height:27px;color:#fff}
 @keyframes floaty{50%{transform:translateY(-7px)}}
 
+/* catalog view toggle */
+.vtoggle{display:flex;border:1px solid var(--line2);border-radius:11px;overflow:hidden}
+.vtoggle button{width:42px;height:46px;font-size:1.1rem;color:var(--muted);transition:.18s}
+.vtoggle button.on{background:var(--ink);color:#fff}
+/* product card grid */
+.catgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column;transition:transform .3s var(--ease),box-shadow .3s;cursor:pointer}
+.pcard:hover{transform:translateY(-6px);box-shadow:var(--sh)}
+.pcard-img{aspect-ratio:4/3;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background-size:cover;background-position:center}
+.pcard-img .emoji{font-size:4.6rem;filter:drop-shadow(0 10px 18px rgba(20,24,31,.14));transition:transform .5s var(--ease)}
+.pcard:hover .pcard-img .emoji{transform:scale(1.13) rotate(-5deg)}
+.pcard-img .wm{position:absolute;bottom:9px;right:11px;font-size:.56rem;letter-spacing:.22em;color:rgba(20,24,31,.30);font-weight:800}
+.pcard-badges{position:absolute;top:12px;left:12px;display:flex;gap:6px;z-index:2}
+.pbadge{font-size:.58rem;font-weight:800;letter-spacing:.06em;padding:4px 8px;border-radius:6px;color:#fff}
+.pbadge.new{background:var(--green)}
+.pbadge.sale{background:#C0392B}
+.pcard-artc{position:absolute;top:12px;right:12px;font-family:'Roboto Mono',monospace;font-size:.6rem;background:rgba(255,255,255,.9);color:var(--gold-d);font-weight:600;padding:3px 7px;border-radius:6px;z-index:2}
+.pcard-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:5px;flex:1}
+.pcard-cat{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.pcard-name{font-family:'Fraunces',serif;font-size:1.08rem;line-height:1.22}
+.pcard-meta{font-size:.74rem;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pcard-foot{margin-top:auto;padding-top:13px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+.pcard-price b{font-size:1.18rem;font-weight:800}
+.pcard-price s{font-size:.74rem;color:var(--muted2);margin-left:5px}
+.pcard-price small{display:block;font-size:.64rem;color:var(--muted)}
+.pcard-add{background:var(--ink);color:#fff;border-radius:11px;padding:10px 15px;font-size:.8rem;font-weight:700;display:flex;align-items:center;gap:6px;transition:.2s;flex-shrink:0}
+.pcard-add:hover{background:var(--gold-d);transform:translateY(-1px)}
+.ph-PLU{background:linear-gradient(150deg,#F3E2D6,#E7C9B5)}
+.ph-SEA{background:linear-gradient(150deg,#DDE7E9,#C1D3D7)}
+.ph-AMU{background:linear-gradient(150deg,#F2EBD3,#E2D5A9)}
+.ph-CMF{background:linear-gradient(150deg,#F1DFE0,#E3C5C8)}
+.ph-RAT{background:linear-gradient(150deg,#E2E8DE,#CCD6C4)}
+.ph-DEV{background:linear-gradient(150deg,#E7E2ED,#D1C9DD)}
+.ph-PIL{background:linear-gradient(150deg,#EBE5DD,#D7C8B7)}
+.ph-BIG{background:linear-gradient(150deg,#EDE4D5,#DAC8AE)}
+.ph-INT{background:linear-gradient(150deg,#DEE7E5,#C3D4D0)}
+.ph-XMAS{background:linear-gradient(150deg,#EBDAD7,#D4B1AD)}
+.ph-SET{background:linear-gradient(150deg,#EAE3DD,#D3C6BB)}
+@media(max-width:1024px){.catgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.catgrid{grid-template-columns:1fr 1fr;gap:12px}.pcard-name{font-size:.96rem}.pcard-img .emoji{font-size:3.4rem}.pcard-body{padding:12px 12px 14px}.pcard-add{padding:9px 12px}}
 /* new products grid */
 .np-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 .np{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px;transition:.3s var(--ease);position:relative;overflow:hidden}
@@ -545,9 +585,14 @@ footer{background:var(--ink);color:#C3C8D0;padding:56px 0 28px}
             <option value="price-asc">Ціна ↑</option>
             <option value="price-desc">Ціна ↓</option>
           </select>
+          <div class="vtoggle">
+            <button id="vg" class="on" onclick="setCatView('grid')" title="Картки" aria-label="Картки">▦</button>
+            <button id="vl" onclick="setCatView('list')" title="Таблиця" aria-label="Таблиця">≣</button>
+          </div>
           <span class="count-pill" id="catCount"></span>
         </div>
-        <div class="table-wrap">
+        <div class="catgrid" id="catGrid"></div>
+        <div class="table-wrap" id="catTableWrap" style="display:none">
           <table class="tbl">
             <thead><tr>
               <th>Артикул</th><th>Найменування</th><th>Вік</th><th>Матеріал</th><th>Розмір</th><th>Уп.</th><th>МОЦ</th><th>Опт, ₴/шт</th><th>Наявність</th><th></th>
@@ -988,7 +1033,20 @@ function buildTree(){
 function setCat(c){ activeCat=c; buildTree(); renderTable(); }
 function openCat(c){ activeCat=c; go('catalog'); buildTree(); renderTable(); }
 
-function renderTable(){
+/* emoji per line for visual placeholders (photo-ready: swap for real <img> later) */
+const EMOJI={BUN:'🐰',BEA:'🐻',DRG:'🐲',ELE:'🐘',CAT:'🐱',DOG:'🐶',FOX:'🦊',LAM:'🐑',PIG:'🐷',MNK:'🐵',PAN:'🐼',UNI:'🦄',OCT:'🐙',TUR:'🐢',SHK:'🦈',CRB:'🦀',WHL:'🐳',SEA:'🐠',BAN:'🍌',ROS:'🌹',AVO:'🥑',SUN:'☀️',CLD:'☁️',STR:'🍓',CCT:'🌵',CMF:'🧸',SOO:'😴',BLK:'🧸',RAT:'🔔',PRM:'🎐',TET:'🦷',BRC:'📿',MUS:'🎵',SEN:'🧩',NLT:'💡',BUS:'🧩',PIL:'☁️',PIS:'⭐',PIH:'❤️',BGB:'🐻',BGR:'🐰',BGU:'🦄',INT:'🐶',INC:'🐱',INP:'🦜',XSA:'🎅',XSN:'⛄',XDR:'🦌',GFT:'🎁',SET:'🎁',GFB:'🎁'};
+const emojiFor=p=>EMOJI[p.line]||'🧸';
+
+let catView = localStorage.getItem('duli_catview') || 'grid';
+function setCatView(v){
+  catView=v; localStorage.setItem('duli_catview',v);
+  document.getElementById('vg').classList.toggle('on',v==='grid');
+  document.getElementById('vl').classList.toggle('on',v==='list');
+  document.getElementById('catGrid').style.display = v==='grid'?'grid':'none';
+  document.getElementById('catTableWrap').style.display = v==='list'?'block':'none';
+}
+
+function filteredProducts(){
   const q = (document.getElementById('catSearch').value||'').trim().toLowerCase();
   const sort = document.getElementById('catSort').value;
   let list = PRODUCTS.filter(p => (activeCat==='all'||p.cat===activeCat) &&
@@ -999,10 +1057,40 @@ function renderTable(){
     if(sort==='price-desc') return b.opt-a.opt;
     return a.art.localeCompare(b.art);
   });
+  return {list,q};
+}
+
+function renderTable(){
+  const {list,q} = filteredProducts();
   document.getElementById('catCount').textContent = list.length + ' позицій';
+
+  // ---- Card grid (primary, photo-ready) ----
+  const grid = document.getElementById('catGrid');
+  if(!list.length){
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted)">Нічого не знайдено за запитом «${q}»</div>`;
+  } else {
+    grid.innerHTML = list.map(p=>`
+      <article class="pcard" onclick="addInq('${p.art}');openInq()">
+        <div class="pcard-img ph-${p.cat}"${p.img?` style="background-image:url('${p.img}')"`:''}>
+          <div class="pcard-badges">${p.tag?`<span class="pbadge ${p.tag}">${p.tag==='new'?'NEW':'-'+p.off+'%'}</span>`:''}</div>
+          <span class="pcard-artc">${p.art}</span>
+          ${p.img?'':`<span class="emoji">${emojiFor(p)}</span><span class="wm">DULI TOYS</span>`}
+        </div>
+        <div class="pcard-body">
+          <span class="pcard-cat">${(CATS.find(c=>c.cat===p.cat)||{}).name||''}</span>
+          <h3 class="pcard-name">${p.name}</h3>
+          <div class="pcard-meta"><span>${p.size}</span>·<span>${p.age}</span>·<span class="stock ${p.stock}" style="padding:2px 7px">${p.stockLbl}</span></div>
+          <div class="pcard-foot">
+            <div class="pcard-price"><b>${FMT(p.opt)} ₴</b>${p.tag==='sale'?`<s>${FMT(p.optOld)} ₴</s>`:''}<small>МОЦ ${p.moq} шт · ${p.mat}</small></div>
+            <button class="pcard-add" onclick="event.stopPropagation();addInq('${p.art}')">У заявку +</button>
+          </div>
+        </div>
+      </article>`).join('');
+  }
+
+  // ---- Table (alternative B2B view) ----
   const body = document.getElementById('catBody');
-  if(!list.length){ body.innerHTML = `<tr class="empty-row"><td colspan="10">Нічого не знайдено за запитом «${q}»</td></tr>`; return; }
-  body.innerHTML = list.map(p=>`
+  body.innerHTML = list.length ? list.map(p=>`
     <tr>
       <td><span class="t-art">${p.art}</span></td>
       <td class="t-name">${p.name}${p.tag?`<span class="t-badge ${p.tag}">${p.tag==='new'?'NEW':'-'+p.off+'%'}</span>`:''}<small>${p.sub||''}</small></td>
@@ -1014,7 +1102,7 @@ function renderTable(){
       <td class="t-price">${FMT(p.opt)} ₴<small>${p.tag==='sale'?'було '+FMT(p.optOld)+' ₴':'РРЦ '+FMT(p.retail)+' ₴'}</small></td>
       <td><span class="stock ${p.stock}">${p.stockLbl}</span></td>
       <td class="cell-add"><button class="t-add" title="Додати у заявку" onclick="addInq('${p.art}')">+</button></td>
-    </tr>`).join('');
+    </tr>`).join('') : `<tr class="empty-row"><td colspan="10">Нічого не знайдено за запитом «${q}»</td></tr>`;
 }
 
 /* ===================== INQUIRY ===================== */
@@ -1183,7 +1271,7 @@ document.querySelectorAll('.rv').forEach(el=>io.observe(el));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeInq();});
 
 /* ===================== INIT ===================== */
-buildTree(); renderTable(); updateInqCount(); refreshModeOptions(); calc(); renderNew(); buildFaq();
+buildTree(); renderTable(); setCatView(catView); updateInqCount(); refreshModeOptions(); calc(); renderNew(); buildFaq();
 const startView = (location.hash||'#home').slice(1);
 go(document.querySelector(`.view[data-view="${startView}"]`)?startView:'home');
 </script>

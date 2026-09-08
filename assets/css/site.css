@@ -446,3 +446,60 @@ p{margin:0}
   .inc__l{grid-template-columns:1fr}
   .phero__price{width:100%;flex-direction:row;align-items:baseline;gap:8px}
 }
+
+/* ── прайс-сторінка ──────────────────────────────────────── */
+.jump{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:34px}
+.jump a{font-size:.88rem;font-weight:500;padding:9px 15px;border:1px solid var(--hair-2);border-radius:999px;color:var(--ink-2);transition:all var(--t)}
+.jump a:hover{border-color:var(--brand);color:var(--brand)}
+.pg__list{display:grid;gap:clamp(30px,4vw,48px)}
+.pg__h{font-size:1.22rem;margin-bottom:14px;scroll-margin-top:90px}
+.pg{scroll-margin-top:90px}
+
+/* ── як це працює ────────────────────────────────────────── */
+.hsteps{display:grid;gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:var(--r-lg);overflow:hidden}
+.hstep{background:var(--surface);display:grid;grid-template-columns:76px 1fr;gap:20px;padding:26px 28px;align-items:start}
+.hstep__n{font-size:1.5rem;font-weight:700;color:var(--brand);letter-spacing:-.03em;line-height:1}
+.hstep__b h3{margin-bottom:6px}
+.hstep__b p{color:var(--muted);font-size:.96rem;line-height:1.55;max-width:64ch}
+.nots{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.nots li{position:relative;background:var(--surface);border:1px solid var(--hair);border-radius:var(--r);padding:18px 20px 18px 50px;font-size:.96rem;color:var(--ink-2)}
+.nots li::before{content:"";position:absolute;left:20px;top:50%;width:14px;height:2px;background:var(--hair-2);transform:translateY(-50%)}
+.chk__grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.chk{background:var(--surface);border:1px solid var(--hair);border-radius:var(--r-lg);padding:28px 26px}
+.chk h3{margin-bottom:4px}
+.chk__s{font-size:.86rem;color:var(--muted);margin-bottom:20px}
+.chk__r{margin-bottom:18px}
+.chk__r:last-child{margin-bottom:0}
+.chk__r b{display:block;font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:var(--brand);margin-bottom:9px;font-weight:700}
+.chk__r ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.chk__r li{position:relative;padding-left:24px;font-size:.92rem;color:var(--ink-2);line-height:1.5}
+.chk__r li::before{content:"";position:absolute;left:2px;top:.5em;width:11px;height:6px;border-left:1.8px solid var(--brand);border-bottom:1.8px solid var(--brand);transform:rotate(-45deg)}
+
+/* ── бізнес ──────────────────────────────────────────────── */
+.b2o__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.b2o{background:var(--surface);border:1px solid var(--hair);border-radius:var(--r);padding:24px 22px;transition:border-color var(--t),transform var(--t)}
+.b2o:hover{border-color:var(--brand);transform:translateY(-2px)}
+.b2o b{font-size:1.02rem;font-weight:600;letter-spacing:-.014em}
+.formcard{background:var(--surface);border:1px solid var(--hair);border-radius:var(--r-xl);padding:clamp(24px,3.4vw,40px);max-width:760px;box-shadow:var(--sh-1)}
+
+/* ── про нас ─────────────────────────────────────────────── */
+.team{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.team__ph{aspect-ratio:4/5;background:var(--surface-2);border:1px solid var(--hair);border-radius:var(--r-lg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;color:var(--muted);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase}
+.team__ph svg{width:26px;height:26px;opacity:.5}
+.eq__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:14px}
+.eq{background:var(--surface);border:1px solid var(--hair);border-radius:var(--r);padding:22px 24px}
+.eq b{display:block;font-size:1rem;font-weight:600;margin-bottom:5px;letter-spacing:-.014em}
+.eq span{font-size:.89rem;color:var(--muted);line-height:1.5}
+
+/* ── FAQ-сторінка ───────────────────────────────────────── */
+.fgroups{display:grid;gap:clamp(30px,4vw,46px);max-width:860px}
+.fgroup__h{font-size:1.2rem;margin-bottom:8px;color:var(--brand)}
+
+@media (max-width:900px){
+  .chk__grid{grid-template-columns:1fr}
+  .team{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  .hstep{grid-template-columns:1fr;gap:10px;padding:22px}
+  .team{grid-template-columns:1fr 1fr;gap:10px}
+}

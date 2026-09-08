@@ -132,6 +132,34 @@
     qCalc();
   }
 
+  /* ── форма запиту КП ──────────────────────────────────── */
+  var b2b = document.getElementById('b2bForm');
+  if (b2b) b2b.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var g = function (n) { return (b2b.elements[n].value || '').trim(); };
+    var text = [
+      '🏢 ЗАПИТ КП · DULI Service', '',
+      'Компанія: ' + g('company'),
+      'Контакт: ' + g('person'),
+      'Телефон: ' + g('phone'),
+      'Об’єкт: ' + g('obj'),
+      'Площа: ' + (g('area') || '—') + ' м²',
+      'Графік: ' + g('sched'),
+      'Коментар: ' + (g('msg') || '—')
+    ].join('\n');
+    track('b2b_submit', { obj: g('obj'), area: g('area') });
+    var ep = (window.DULI && window.DULI.formEndpoint) || '';
+    if (ep) {
+      fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ text: text, phone: g('phone'), name: g('person') }) }).catch(function () {});
+    } else {
+      window.open('https://t.me/' + window.DULI.telegram + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
+    }
+    b2b.innerHTML = '<div style="text-align:center;padding:28px 0">' +
+      '<h3 style="margin-bottom:8px">Запит надіслано</h3>' +
+      '<p class="muted">Підготуємо комерційну пропозицію протягом одного робочого дня.</p></div>';
+  });
+
   /* ── картка послуги відкриває розрахунок ──────────────── */
   document.querySelectorAll('[data-calc-type]').forEach(function (b) {
     b.addEventListener('click', function (e) {

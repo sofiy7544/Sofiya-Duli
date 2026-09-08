@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sofiy7544.github.io/Sofiya-Duli/sitemap.xml

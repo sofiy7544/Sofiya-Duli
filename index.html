@@ -9,7 +9,7 @@
 <meta property="og:description" content="Прибирання квартир, будинків та офісів в Одесі. Прозорий прайс, розрахунок за 2 хвилини, гарантія 24 години. Працюємо 7 днів на тиждень.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="uk_UA">
-<meta name="theme-color" content="#0D1F37">
+<meta name="theme-color" content="#143424">
 <meta property="og:image" content="https://sofiy7544.github.io/Sofiya-Duli/assets/og.jpg">
 <meta property="og:url" content="https://sofiy7544.github.io/Sofiya-Duli/">
 <meta name="twitter:card" content="summary_large_image">
@@ -20,14 +20,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=Roboto+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#0D1F37; --ink2:#152C4A; --ink3:#20415F;
-  --bg:#F4F3F0; --bg2:#E8E7E2; --surface:#FFFFFF; --surface2:#FAF9F7;
-  --acc:#4A8ECD; --acc-l:#7BB0E0; --acc-d:#2C6BA6; --acc-soft:#E3EDF8;
-  --text:#12203A; --muted:#68717F; --muted2:#9AA2AE;
-  --line:#E4E3DD; --line2:#D0CFC7;
+  --ink:#143424; --ink2:#1D432E; --ink3:#2A5C40;
+  --bg:#F4F5F1; --bg2:#E7EAE3; --surface:#FFFFFF; --surface2:#FAFBF8;
+  --acc:#2F8F5B; --acc-l:#57B583; --acc-d:#1F6B41; --acc-soft:#E1F0E7;
+  --text:#132A1E; --muted:#65746B; --muted2:#98A69D;
+  --line:#E2E6DE; --line2:#CBD3C8;
   --green:#2F8B5C; --green-bg:#E4F1E9; --amber:#B5852A; --amber-bg:#F6EED9; --blue:#3F6CB0; --blue-bg:#E6EDF7;
   --tg:#229ED9;
-  --sh-sm:0 1px 3px rgba(13,31,55,.06); --sh:0 12px 36px rgba(13,31,55,.10); --sh-lg:0 28px 64px rgba(13,31,55,.20);
+  --sh-sm:0 1px 3px rgba(20,52,36,.06); --sh:0 12px 36px rgba(20,52,36,.10); --sh-lg:0 28px 64px rgba(20,52,36,.20);
   --r:14px; --r-lg:22px; --ease:cubic-bezier(.22,.61,.36,1);
   --nav-h:66px;
 }
@@ -44,7 +44,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .acc{color:var(--acc-d)}
 
 /* ===== Top bar ===== */
-.topbar{background:var(--ink);color:#CBD6E4;font-size:.76rem;letter-spacing:.04em}
+.topbar{background:var(--ink);color:#CBD8CF;font-size:.76rem;letter-spacing:.04em}
 .topbar .wrap{display:flex;justify-content:space-between;align-items:center;height:38px;gap:16px;overflow:hidden;white-space:nowrap}
 .topbar b{color:var(--acc-l)}
 .topbar .tb-right{display:flex;gap:18px}
@@ -54,15 +54,15 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .nav{position:sticky;top:0;z-index:40;background:var(--ink);border-bottom:1px solid rgba(255,255,255,.07)}
 .nav-in{display:flex;align-items:center;gap:18px;height:var(--nav-h)}
 .brand{display:flex;align-items:center;gap:12px;flex-shrink:0}
-.brand-mark{width:46px;height:46px;border-radius:13px;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.18)}
-.brand-mark img{width:100%;height:100%;object-fit:cover;object-position:center 38%;transform:scale(1.18)}
+.brand-mark{width:46px;height:46px;border-radius:13px;background:var(--ink2);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;border:1px solid rgba(255,255,255,.16)}
+.brand-mark img{width:100%;height:100%;object-fit:cover;object-position:center 30%;transform:scale(1.02)}
 .brand-logo{display:block;max-width:100%;height:auto}
 .brand-txt b{font-weight:800;font-size:1.2rem;color:#fff;display:block;line-height:1;letter-spacing:.06em;text-transform:uppercase}
 .brand-txt b i{font-style:normal;font-weight:600;letter-spacing:.02em;text-transform:none;color:var(--acc-l)}
 .brand-txt small{font-size:.58rem;letter-spacing:.24em;color:var(--acc-l);text-transform:uppercase;font-weight:600}
 .tabs{display:flex;gap:2px;margin-left:8px;flex:1;overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
-.tab{padding:9px 14px;border-radius:9px;font-size:.85rem;font-weight:600;color:#9FAEC2;transition:.18s;white-space:nowrap}
+.tab{padding:9px 14px;border-radius:9px;font-size:.85rem;font-weight:600;color:#9DB1A5;transition:.18s;white-space:nowrap}
 .tab:hover{color:#fff;background:rgba(255,255,255,.06)}
 .tab.on{color:#fff;background:var(--acc-d)}
 .nav-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
@@ -80,22 +80,22 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
 /* ===== Hero ===== */
-.hero{background:linear-gradient(155deg,#0D1F37 0%,#143050 52%,#1D4571 100%);color:#fff;position:relative;overflow:hidden}
-.hero::after{content:"";position:absolute;top:-22%;right:-8%;width:540px;height:540px;border-radius:50%;background:radial-gradient(circle,rgba(123,176,224,.26),transparent 66%)}
-.hero::before{content:"";position:absolute;bottom:-30%;left:-10%;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(74,142,205,.20),transparent 68%)}
+.hero{background:linear-gradient(155deg,#122F20 0%,#1D432E 52%,#2A6142 100%);color:#fff;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;top:-22%;right:-8%;width:540px;height:540px;border-radius:50%;background:radial-gradient(circle,rgba(87,181,131,.26),transparent 66%)}
+.hero::before{content:"";position:absolute;bottom:-30%;left:-10%;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(47,143,91,.22),transparent 68%)}
 .hero-in{position:relative;z-index:2;padding:70px 0 60px;display:grid;grid-template-columns:1.15fr .85fr;gap:46px;align-items:center}
-.hero-badge{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:30px;padding:7px 15px;font-size:.74rem;font-weight:600;color:#CBD6E4;margin-bottom:22px}
+.hero-badge{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:30px;padding:7px 15px;font-size:.74rem;font-weight:600;color:#CBD8CF;margin-bottom:22px}
 .hero-badge .dot{width:7px;height:7px;border-radius:50%;background:#5FCB87;box-shadow:0 0 0 4px rgba(95,203,135,.2)}
 .hero h1{font-family:'Fraunces',serif;font-weight:900;font-size:3.4rem;line-height:1.06;letter-spacing:-.01em;margin-bottom:18px}
 .hero h1 em{font-style:italic;color:var(--acc-l)}
-.hero p{font-size:1.06rem;color:#AFBFD2;max-width:540px;margin-bottom:28px}
+.hero p{font-size:1.06rem;color:#AFC3B6;max-width:540px;margin-bottom:28px}
 .hero-cta{display:flex;gap:13px;flex-wrap:wrap}
 .hero-routes{margin-top:34px;padding-top:26px;border-top:1px solid rgba(255,255,255,.1);display:flex;gap:26px;flex-wrap:wrap}
-.hero-route{font-size:.82rem;color:#9FAEC2}
+.hero-route{font-size:.82rem;color:#9DB1A5}
 .hero-route b{color:#fff;display:block;font-size:.94rem;font-weight:700}
 .hero-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-lg);padding:28px;backdrop-filter:blur(6px)}
 .hero-card h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.2rem;color:#fff;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-.mini-stat{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:.88rem;color:#AFBFD2}
+.mini-stat{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:.88rem;color:#AFC3B6}
 .mini-stat:last-child{border:none}
 .mini-stat b{color:var(--acc-l);font-family:'Roboto Mono',monospace;font-weight:600}
 
@@ -103,11 +103,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:12px;padding:14px 24px;font-size:.9rem;font-weight:700;transition:transform .18s var(--ease),box-shadow .22s,background .2s;white-space:nowrap}
 .btn svg{width:18px;height:18px}
 .btn-acc{background:linear-gradient(150deg,var(--acc),var(--acc-d));color:#fff}
-.btn-acc:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(44,107,166,.40)}
+.btn-acc:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(31,107,65,.40)}
 .btn-light{background:#fff;color:var(--ink)}
 .btn-light:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(0,0,0,.18)}
 .btn-dark{background:var(--ink);color:#fff}
-.btn-dark:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(13,31,55,.3)}
+.btn-dark:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(20,52,36,.3)}
 .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,.25);color:#fff}
 .btn-ghost:hover{border-color:#fff;transform:translateY(-2px)}
 .btn-outline{background:var(--surface);border:1px solid var(--line2);color:var(--ink)}
@@ -120,7 +120,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 /* ===== Trust strip ===== */
 .strip{background:var(--ink2);border-top:1px solid rgba(255,255,255,.06)}
 .strip .wrap{display:flex;justify-content:center;gap:16px 34px;flex-wrap:wrap;padding:18px 26px}
-.strip-item{display:flex;align-items:center;gap:9px;color:#BCC8D8;font-size:.82rem;font-weight:600}
+.strip-item{display:flex;align-items:center;gap:9px;color:#BAC9BF;font-size:.82rem;font-weight:600}
 .strip-item .ic{font-size:1.15rem}
 
 /* ===== Section ===== */
@@ -130,7 +130,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .sec-head p{color:var(--muted);max-width:600px;margin-top:8px}
 .sec-light{background:var(--surface)}
 .sec-dark{background:var(--ink);color:#fff}
-.sec-dark .sec-head p{color:#9FAEC2}
+.sec-dark .sec-head p{color:#9DB1A5}
 .sec-dark .eyebrow{color:var(--acc-l)}
 
 /* ===== Feature grid ===== */
@@ -169,7 +169,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 /* table */
 .table-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
 .tbl{width:100%;border-collapse:collapse;font-size:.86rem}
-.tbl thead th{background:var(--ink);color:#BCC8D8;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;text-align:left;padding:13px 14px}
+.tbl thead th{background:var(--ink);color:#BAC9BF;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;text-align:left;padding:13px 14px}
 .tbl tbody td{padding:13px 14px;border-top:1px solid var(--line);vertical-align:middle}
 .tbl tbody tr{transition:background .15s}
 .tbl tbody tr:hover{background:var(--surface2)}
@@ -232,7 +232,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .tariff-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:8px;overflow-x:auto}
 .tariff{width:100%;border-collapse:collapse;font-size:.85rem;min-width:640px}
 .tariff th,.tariff td{padding:13px 16px;text-align:left;border-top:1px solid var(--line)}
-.tariff thead th{background:var(--ink);color:#BCC8D8;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;border:none}
+.tariff thead th{background:var(--ink);color:#BAC9BF;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;border:none}
 .tariff td.r{font-family:'Roboto Mono',monospace;font-weight:600;color:var(--acc-d)}
 .tariff tbody tr:hover{background:var(--surface2)}
 
@@ -254,13 +254,13 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .opt .pr{margin-left:auto;font-family:'Roboto Mono',monospace;font-size:.74rem;color:var(--muted);font-weight:600}
 .calc-res{background:var(--ink);color:#fff;border-radius:var(--r-lg);padding:32px;position:sticky;top:calc(var(--nav-h) + 16px)}
 .calc-res h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.3rem;margin-bottom:6px}
-.calc-res .sub{font-size:.82rem;color:#9FAEC2;margin-bottom:22px}
+.calc-res .sub{font-size:.82rem;color:#9DB1A5;margin-bottom:22px}
 .res-big{font-family:'Fraunces',serif;font-weight:900;font-size:3rem;color:var(--acc-l);line-height:1}
-.res-big small{font-size:1rem;color:#9FAEC2;font-weight:500;font-family:'Manrope'}
-.res-row{display:flex;justify-content:space-between;gap:14px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.88rem;color:#BCC8D8}
+.res-big small{font-size:1rem;color:#9DB1A5;font-weight:500;font-family:'Manrope'}
+.res-row{display:flex;justify-content:space-between;gap:14px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.88rem;color:#BAC9BF}
 .res-row:last-of-type{border:none}
 .res-row b{color:#fff;font-family:'Roboto Mono',monospace;text-align:right}
-.res-note{font-size:.74rem;color:#8592A5;margin-top:18px;line-height:1.6}
+.res-note{font-size:.74rem;color:#83958A;margin-top:18px;line-height:1.6}
 
 /* ===== Steps ===== */
 .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
@@ -316,9 +316,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .pcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column;transition:transform .3s var(--ease),box-shadow .3s}
 .pcard:hover{transform:translateY(-6px);box-shadow:var(--sh)}
 .pcard-img{aspect-ratio:16/9;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background-size:cover;background-position:center}
-.pcard-img .emoji{font-size:3.8rem;filter:drop-shadow(0 10px 18px rgba(13,31,55,.14));transition:transform .5s var(--ease)}
+.pcard-img .emoji{font-size:3.8rem;filter:drop-shadow(0 10px 18px rgba(20,52,36,.14));transition:transform .5s var(--ease)}
 .pcard:hover .pcard-img .emoji{transform:scale(1.12) rotate(-5deg)}
-.pcard-img .wm{position:absolute;bottom:9px;right:11px;font-size:.56rem;letter-spacing:.22em;color:rgba(13,31,55,.28);font-weight:800}
+.pcard-img .wm{position:absolute;bottom:9px;right:11px;font-size:.56rem;letter-spacing:.22em;color:rgba(20,52,36,.30);font-weight:800}
 .pcard-badges{position:absolute;top:12px;left:12px;display:flex;gap:6px;z-index:2}
 .pbadge{font-size:.58rem;font-weight:800;letter-spacing:.06em;padding:4px 8px;border-radius:6px;color:#fff}
 .pbadge.hit{background:var(--acc-d)}
@@ -333,28 +333,28 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .pcard-price small{display:block;font-size:.66rem;color:var(--muted)}
 .pcard-add{background:var(--ink);color:#fff;border-radius:11px;padding:10px 15px;font-size:.8rem;font-weight:700;display:flex;align-items:center;gap:6px;transition:.2s;flex-shrink:0}
 .pcard-add:hover{background:var(--acc-d);transform:translateY(-1px)}
-.ph-home{background:linear-gradient(150deg,#E3EDF8,#C2D9EF)}
-.ph-general{background:linear-gradient(150deg,#EAF1F9,#CCDDEE)}
-.ph-repair{background:linear-gradient(150deg,#F0EDE6,#DCD4C4)}
-.ph-windows{background:linear-gradient(150deg,#E6F0F8,#C4DCEE)}
-.ph-upholstery{background:linear-gradient(150deg,#EBE9F3,#CFCDE3)}
-.ph-office{background:linear-gradient(150deg,#E6EBF2,#C9D4E2)}
-.ph-special{background:linear-gradient(150deg,#E8F1EC,#C9DFD4)}
-.ph-extra{background:linear-gradient(150deg,#F1EEE8,#DCD5C9)}
+.ph-home{background:linear-gradient(150deg,#E1F0E7,#BFDCCB)}
+.ph-general{background:linear-gradient(150deg,#EAF2EC,#CBDED2)}
+.ph-repair{background:linear-gradient(150deg,#F1EEE5,#DCD5C2)}
+.ph-windows{background:linear-gradient(150deg,#E6F1F4,#C5DEE4)}
+.ph-upholstery{background:linear-gradient(150deg,#ECE9F0,#D1CCDC)}
+.ph-office{background:linear-gradient(150deg,#E7EBE6,#CBD5C9)}
+.ph-special{background:linear-gradient(150deg,#E5F1E4,#C4DFC2)}
+.ph-extra{background:linear-gradient(150deg,#F1EFE7,#DCD7C6)}
 
 /* ===== Footer ===== */
-footer{background:var(--ink);color:#BCC8D8;padding:56px 0 28px}
+footer{background:var(--ink);color:#BAC9BF;padding:56px 0 28px}
 .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:36px;margin-bottom:40px}
-.foot-brand p{font-size:.86rem;color:#93A0B2;max-width:320px;margin-top:14px}
+.foot-brand p{font-size:.86rem;color:#91A197;max-width:320px;margin-top:14px}
 .foot-col h5{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--acc-l);margin-bottom:16px}
-.foot-col a{display:block;font-size:.86rem;color:#93A0B2;margin-bottom:11px;transition:.18s;cursor:pointer}
+.foot-col a{display:block;font-size:.86rem;color:#91A197;margin-bottom:11px;transition:.18s;cursor:pointer}
 .foot-col a:hover{color:#fff}
-.foot-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.78rem;color:#79869A}
+.foot-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.78rem;color:#78877E}
 .foot-pay{display:flex;gap:7px;flex-wrap:wrap}
 .foot-pay span{border:1px solid rgba(255,255,255,.16);border-radius:7px;padding:4px 9px;font-size:.7rem}
 
 /* ===== Estimate drawer ===== */
-.overlay{position:fixed;inset:0;background:rgba(10,18,32,.58);backdrop-filter:blur(3px);z-index:60;opacity:0;visibility:hidden;transition:.3s}
+.overlay{position:fixed;inset:0;background:rgba(12,30,20,.58);backdrop-filter:blur(3px);z-index:60;opacity:0;visibility:hidden;transition:.3s}
 .overlay.show{opacity:1;visibility:visible}
 .drawer{position:fixed;top:0;right:0;height:100%;width:470px;max-width:94vw;background:var(--bg);z-index:70;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .4s var(--ease);box-shadow:var(--sh-lg)}
 .drawer.show{transform:none}
@@ -422,14 +422,14 @@ footer{background:var(--ink);color:#BCC8D8;padding:56px 0 28px}
 .np .pr{font-family:'Roboto Mono',monospace;font-size:.84rem;font-weight:700;color:var(--acc-d)}
 
 /* cta band */
-.band{background:linear-gradient(150deg,var(--acc-d),#0D1F37);color:#fff;border-radius:var(--r-lg);padding:40px;display:flex;align-items:center;justify-content:space-between;gap:28px;flex-wrap:wrap}
+.band{background:linear-gradient(150deg,var(--acc-d),#143424);color:#fff;border-radius:var(--r-lg);padding:40px;display:flex;align-items:center;justify-content:space-between;gap:28px;flex-wrap:wrap}
 .band h3{font-family:'Fraunces',serif;font-weight:900;font-size:1.9rem;line-height:1.15;margin-bottom:8px}
-.band p{color:#C9DAEC;font-size:.94rem;max-width:520px}
+.band p{color:#C6DDCE;font-size:.94rem;max-width:520px}
 .band .acts{display:flex;gap:12px;flex-wrap:wrap}
 .band-in{display:flex;align-items:center;gap:22px;flex:1;min-width:260px}
-.band-bear{width:104px;height:104px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 10px 22px rgba(0,0,0,.30))}
-.about-logo{max-width:300px;width:100%;height:auto;margin-bottom:22px;display:block}
-.inq-empty img{width:130px;height:130px;object-fit:contain;margin-bottom:6px}
+.band-bear{width:104px;height:104px;object-fit:cover;border-radius:20px;flex-shrink:0;box-shadow:0 10px 24px rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.18)}
+.about-logo{max-width:320px;width:100%;height:auto;margin-bottom:24px;display:block;border-radius:20px;box-shadow:var(--sh)}
+.inq-empty img{width:132px;height:132px;object-fit:cover;border-radius:22px;margin-bottom:14px;box-shadow:var(--sh)}
 @media(max-width:700px){.band-bear{width:76px;height:76px}}
 
 .rv{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
@@ -500,7 +500,7 @@ footer{background:var(--ink);color:#BCC8D8;padding:56px 0 28px}
 <!-- NAV -->
 <nav class="nav"><div class="wrap nav-in">
   <a class="brand" onclick="go('home')" style="cursor:pointer">
-    <div class="brand-mark"><img src="assets/mark.png" alt="DULI Service" width="46" height="46"></div>
+    <div class="brand-mark"><img src="assets/mark.jpg" alt="DULI Service" width="46" height="46"></div>
     <div class="brand-txt"><b>DULI <i>Service</i></b><small>Клінінг · Одеса</small></div>
   </a>
   <div class="tabs" id="tabs">
@@ -621,7 +621,7 @@ footer{background:var(--ink);color:#BCC8D8;padding:56px 0 28px}
   <div class="sec sec-light"><div class="wrap">
     <div class="band rv">
       <div class="band-in">
-        <img class="band-bear" src="assets/mark.png" alt="" aria-hidden="true">
+        <img class="band-bear" src="assets/mark.jpg" alt="" aria-hidden="true">
         <div>
         <h3>Не знаєте, який тип прибирання потрібен?</h3>
         <p>Опишіть об’єкт — підкажемо формат і назвемо точну ціну. Консультація безкоштовна, нав’язувати послуги не будемо.</p>
@@ -983,7 +983,7 @@ footer{background:var(--ink);color:#BCC8D8;padding:56px 0 28px}
   <div class="sec"><div class="wrap">
     <div class="about-grid">
       <div>
-        <img class="about-logo" src="assets/logo.png" alt="DULI Service — клінінгова компанія в Одесі" width="300" height="398">
+        <img class="about-logo" src="assets/logo.jpg" alt="DULI Service — клінінгова компанія в Одесі" width="320" height="316">
         <div class="eyebrow">Про компанію</div>
         <h2 class="serif" style="font-size:2.3rem;font-weight:900;line-height:1.1;margin:10px 0 18px">Одеська клінінгова служба, яка працює на результат, а не на години</h2>
         <p style="color:var(--muted);margin-bottom:16px">DULI Service — клінінгова компанія в Одесі. Ми прибираємо квартири, приватні будинки, офіси та комерційні приміщення: від щотижневого підтримуючого прибирання до складних робіт після ремонту й пожежі.</p>
@@ -1021,7 +1021,7 @@ footer{background:var(--ink);color:#BCC8D8;padding:56px 0 28px}
   <div class="sec"><div class="wrap">
     <div class="band rv">
       <div class="band-in">
-        <img class="band-bear" src="assets/mark.png" alt="" aria-hidden="true">
+        <img class="band-bear" src="assets/mark.jpg" alt="" aria-hidden="true">
         <div>
         <h3>Хочете спробувати без ризику?</h3>
         <p>Замовте перше підтримуюче прибирання. Не сподобається результат — переробимо безкоштовно протягом 24 годин.</p>
@@ -1090,7 +1090,7 @@ footer{background:var(--ink);color:#BCC8D8;padding:56px 0 28px}
   <div class="foot-grid">
     <div class="foot-brand">
       <a class="brand" onclick="go('home')" style="cursor:pointer">
-        <div class="brand-mark"><img src="assets/mark.png" alt="DULI Service" width="46" height="46"></div>
+        <div class="brand-mark"><img src="assets/mark.jpg" alt="DULI Service" width="46" height="46"></div>
         <div class="brand-txt"><b>DULI <i>Service</i></b><small>Клінінг · Одеса</small></div>
       </a>
       <p>Клінінгова компанія в Одесі. Прибирання квартир, будинків, офісів і комерційних приміщень. Свій інвентар, професійна хімія, договір і гарантія 24 години.</p>
@@ -1522,7 +1522,7 @@ function updateInqCount(){ document.getElementById('inqCount').textContent = inq
 function renderInq(){
   const body = document.getElementById('inqBody');
   if(!inq.length){
-    body.innerHTML = `<div class="inq-empty"><img src="assets/mark.png" alt="">
+    body.innerHTML = `<div class="inq-empty"><img src="assets/mark.jpg" alt="">
       <b>Кошторис порожній</b>
       <p style="font-size:.86rem;margin-top:8px">Додайте послуги з прайс-листа — ми порахуємо підсумок і ви надішлете його нам одним повідомленням.</p>
       <button class="btn btn-outline btn-sm" style="margin-top:18px" onclick="closeInq();go('prices')">Відкрити прайс</button></div>`;

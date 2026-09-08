@@ -11,7 +11,8 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from data import (SITE, CLAIMS, TYPES, OBJECTS, EXTRAS, FREQUENCY, ZONES,
-                  SERVICES, PACKAGES, STEPS, WHY, BEFORE_AFTER, FAQ, B2B_OBJECTS)
+                  SERVICES, PACKAGES, STEPS, WHY, BEFORE_AFTER, FAQ, B2B_OBJECTS,
+                  PRICE_LIST, CHECKLISTS, GUARANTEES, EQUIPMENT, B2B_INCLUDED, FAQ_FULL)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = "/Sofiya-Duli/"          # префікс проєктного сайту GitHub Pages
@@ -51,10 +52,10 @@ def uah(n):
 # ─────────────────────────────── каркас ───────────────────────────────
 NAV = [
     ("Послуги", BASE + "services/"),
-    ("Ціни", BASE + "#packages"),
-    ("Як це працює", BASE + "#how"),
-    ("Про нас", BASE + "#why"),
-    ("Питання", BASE + "#faq"),
+    ("Ціни", BASE + "pricing/"),
+    ("Як це працює", BASE + "how-it-works/"),
+    ("Про нас", BASE + "about/"),
+    ("Питання", BASE + "faq/"),
 ]
 
 
@@ -502,6 +503,7 @@ def packages():
         <p class="lead muted">Що частіше приїжджаємо, то менше роботи за візит. Знижка застосовується автоматично й видно її одразу в калькуляторі.</p>
         <p class="muted" style="font-size:.9rem;margin-top:16px">У прикладі — генеральне прибирання 60 м². Ваша сума залежить від площі й типу.</p>
         <a class="btn btn--primary" href="#calc" style="margin-top:22px">Порахувати свою {ic('arrow')}</a>
+        <a class="btn btn--quiet" href="{BASE}pricing/" style="margin-top:22px;margin-left:18px">Повний прайс {ic('arrow')}</a>
       </div>
       <div class="reg__tbl">{''.join(rows)}</div>
     </div>
@@ -522,7 +524,7 @@ def b2b():
         <div class="b2b__tags">{tags}</div>
       </div>
       <div style="display:grid;gap:12px">
-        <a class="btn btn--primary btn--lg btn--block" href="{TG}" target="_blank" rel="noopener">Отримати розрахунок</a>
+        <a class="btn btn--primary btn--lg btn--block" href="{BASE}business/">Умови для бізнесу</a>
         <a class="btn btn--ghost btn--block" href="{TEL}" style="border-color:rgba(255,255,255,.28);color:#fff">{SITE['phone']}</a>
       </div>
     </div>
@@ -569,6 +571,7 @@ def final():
 def footer(cta="#calc"):
     svc_links = "".join('<a href="%sservices/%s/">%s</a>' % (BASE, s["slug"], s["name"]) for s in SERVICES[:5])
     nav_links = "".join('<a href="%s">%s</a>' % (h, t) for t, h in NAV)
+    nav_links += '<a href="%sbusiness/">Для бізнесу</a>' % BASE
     legal = SITE["legal"] or ""
     return f"""
 <footer class="ftr">
@@ -803,6 +806,300 @@ def services_hub():
             + calculator() + why() + final() + footer() + scripts())
 
 
+def pricing_page():
+    groups = "".join(
+        f"""
+    <div class="pg rv" id="pg-{i}">
+      <h3 class="pg__h">{name}</h3>
+      <div class="pt__wrap">
+        <table class="pt">
+          <thead><tr><th>Послуга</th><th>Ціна</th><th>Одиниця</th></tr></thead>
+          <tbody>{''.join('<tr><td>%s</td><td class="pt__v">%s</td><td class="pt__u">%s</td></tr>' % r for r in rows)}</tbody>
+        </table>
+      </div>
+    </div>"""
+        for i, (name, rows) in enumerate(PRICE_LIST)
+    )
+    jump = "".join('<a href="#pg-%d">%s</a>' % (i, name) for i, (name, _) in enumerate(PRICE_LIST))
+    zones_rows = "".join(
+        '<tr><td>%s</td><td class="pt__v">%s</td></tr>'
+        % (z["name"], ("+%d ₴" % z["fee"]) if z["fee"] else "безкоштовно")
+        for z in ZONES
+    )
+    crumb_html, crumb_ld = crumbs([("Головна", BASE), ("Ціни", None)])
+    title = "Ціни на клінінг в Одесі — прайс-лист 2026 | DULI Service"
+    desc = ("Повний прайс-лист DULI Service: прибирання квартир від 45 ₴/м², генеральне від 90 ₴/м², "
+            "після ремонту від 130 ₴/м², миття вікон, хімчистка меблів, офіси. 75 позицій.")
+    return (head(title, desc, "/pricing/", [crumb_ld])
+            + header(BASE + "#calc") + crumb_html
+            + page_hero("Ціни на клінінг в Одесі",
+                        "Повний прайс без зірочок і дрібного шрифту. Ціна фіксується до виїзду — "
+                        "якщо роботи виявиться більше, узгоджуємо це до початку, а не за фактом.",
+                        note="Мінімальне замовлення — %s ₴. Виїзд у межах міста безкоштовний."
+                             % uah(CLAIMS["min_order_uah"]))
+            + packages()
+            + f"""
+<section class="section">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Прайс-лист</span>
+      <h2>Усі послуги та ціни</h2>
+      <p class="lead muted">Розділи прайсу — перейдіть до потрібного або порахуйте вартість у калькуляторі.</p>
+    </div>
+    <div class="jump rv">{jump}</div>
+    <div class="pg__list">{groups}</div>
+
+    <div class="section-head rv" style="margin-top:clamp(48px,6vw,84px)">
+      <span class="eyebrow">Виїзд</span>
+      <h2>Райони Одеси</h2>
+      <p class="lead muted">У межах міста виїзд безкоштовний. Для передмістя — фіксована доплата за дорогу.</p>
+    </div>
+    <div class="pt__wrap rv" style="max-width:640px">
+      <table class="pt">
+        <thead><tr><th>Район</th><th>Доплата</th></tr></thead>
+        <tbody>{zones_rows}</tbody>
+      </table>
+    </div>
+  </div>
+</section>"""
+            + final() + footer(BASE + "#calc") + scripts())
+
+
+def how_page():
+    steps_html = "".join(
+        f"""
+    <div class="hstep">
+      <div class="hstep__n">0{i + 1}</div>
+      <div class="hstep__b"><h3>{t}</h3><p>{d}</p></div>
+    </div>"""
+        for i, (t, d) in enumerate(STEPS)
+    )
+    checks = "".join(
+        f"""
+    <div class="chk">
+      <h3>{name}</h3>
+      <p class="chk__s">{sub}</p>
+      {''.join('<div class="chk__r"><b>%s</b><ul>%s</ul></div>' % (room, ''.join('<li>%s</li>' % x for x in items)) for room, items in rooms)}
+    </div>"""
+        for name, sub, rooms in CHECKLISTS
+    )
+    nots = ["купувати хімію та інвентар", "звільняти квартиру на весь день",
+            "стояти поруч і контролювати", "домовлятися про вивіз сміття окремо",
+            "гадати, скільки це коштуватиме"]
+    crumb_html, crumb_ld = crumbs([("Головна", BASE), ("Як це працює", None)])
+    title = "Як ми прибираємо — процес і чек-листи | DULI Service"
+    desc = ("Як влаштоване прибирання DULI Service: п’ять кроків від заявки до приймання роботи "
+            "та повні чек-листи для кожного типу прибирання.")
+    return (head(title, desc, "/how-it-works/", [crumb_ld])
+            + header(BASE + "#calc") + crumb_html
+            + page_hero("Як це працює",
+                        "П’ять кроків, у яких від вас — два: сказати, що прибрати, і прийняти роботу. "
+                        "Решту робимо ми.")
+            + f"""
+<section class="section section--surface">
+  <div class="wrap"><div class="hsteps rv">{steps_html}</div></div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Чого вам не треба робити</span>
+      <h2>Ми беремо на себе побут цілком</h2>
+    </div>
+    <ul class="nots rv">{''.join('<li>%s</li>' % n for n in nots)}</ul>
+  </div>
+</section>
+
+<section class="section section--surface">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Чек-листи</span>
+      <h2>За чим працює бригада</h2>
+      <p class="lead muted">Це робочий документ, а не маркетинг. Ви можете звірити результат по пунктах
+      і не приймати роботу, поки все не виконано.</p>
+    </div>
+    <div class="chk__grid rv">{checks}</div>
+  </div>
+</section>"""
+            + calculator() + final() + footer() + scripts())
+
+
+def business_page():
+    tags = "".join('<div class="b2o"><b>%s</b></div>' % t for t in B2B_OBJECTS)
+    inc = "".join('<div class="why__i"><h4>%s</h4><p>%s</p></div>' % (t, d) for t, d in B2B_INCLUDED)
+    rows = "".join(
+        '<tr><td>%s</td><td class="pt__v">%s</td><td class="pt__u">%s</td></tr>' % r
+        for r in dict(PRICE_LIST)["Офіси та комерція"]
+    )
+    crumb_html, crumb_ld = crumbs([("Головна", BASE), ("Для бізнесу", None)])
+    title = "Клінінг для бізнесу в Одесі — офіси, кафе, магазини | DULI Service"
+    desc = ("Прибирання офісів, кафе, магазинів і салонів в Одесі за договором. Рахунки, акти, "
+            "безготівковий розрахунок, постійна бригада та підміна персоналу. Від 22 ₴/м².")
+    return (head(title, desc, "/business/", [crumb_ld])
+            + header(BASE + "#calc") + crumb_html
+            + page_hero("Клінінг для бізнесу",
+                        "Постійна бригада, фіксований графік і документи в порядку. Прибираємо до відкриття "
+                        "або після закриття, щоб не заважати вашій команді.",
+                        note="Працюємо з ФОП і ТОВ: договір, рахунки, акти, безготівковий розрахунок.")
+            + f"""
+<section class="section section--surface">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Об’єкти</span>
+      <h2>Кого ми обслуговуємо</h2>
+    </div>
+    <div class="b2o__grid rv">{tags}</div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Що входить</span>
+      <h2>Не лише прибирання</h2>
+    </div>
+    <div class="why rv">{inc}</div>
+  </div>
+</section>
+
+<section class="section section--surface">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Ціни</span>
+      <h2>Тарифи для комерційних приміщень</h2>
+      <p class="lead muted">Для регулярного обслуговування — знижка до 25 % залежно від частоти візитів.</p>
+    </div>
+    <div class="pt__wrap rv">
+      <table class="pt">
+        <thead><tr><th>Тип об’єкта</th><th>Ціна</th><th>Одиниця</th></tr></thead>
+        <tbody>{rows}</tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Комерційна пропозиція</span>
+      <h2>Порахуємо КП за один робочий день</h2>
+      <p class="lead muted">Залиште дані про об’єкт — надішлемо розрахунок із варіантами графіка та вартістю за місяць.</p>
+    </div>
+    <div class="formcard rv">
+      <form id="b2bForm">
+        <div class="field-row">
+          <div class="field"><label for="bc">Компанія</label><input id="bc" name="company" required placeholder="Назва"></div>
+          <div class="field"><label for="bp">Контактна особа</label><input id="bp" name="person" required placeholder="Ім’я"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="bt">Телефон</label><input id="bt" name="phone" type="tel" required placeholder="+380 __ ___ __ __"></div>
+          <div class="field"><label for="bo">Тип об’єкта</label>
+            <select id="bo" name="obj">{''.join('<option>%s</option>' % o for o in B2B_OBJECTS)}<option>Інше</option></select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="ba">Площа, м²</label><input id="ba" name="area" type="number" inputmode="numeric" placeholder="180"></div>
+          <div class="field"><label for="bs">Графік</label>
+            <select id="bs" name="sched"><option>Щодня</option><option>2 рази на тиждень</option><option>Щотижня</option><option>Разово</option><option>Ще не визначились</option></select>
+          </div>
+        </div>
+        <div class="field"><label for="bm">Коментар</label><textarea id="bm" name="msg" rows="3" placeholder="Адреса, час доступу, особливості об’єкта"></textarea></div>
+        <button class="btn btn--primary btn--block btn--lg" type="submit">Отримати КП</button>
+      </form>
+    </div>
+  </div>
+</section>"""
+            + final() + footer(BASE + "#calc") + scripts())
+
+
+def about_page():
+    guarantees = "".join(
+        '<div class="why__i">%s<h4>%s</h4><p>%s</p></div>' % (ic(i), t, d) for i, t, d in GUARANTEES
+    )
+    equip = "".join(
+        '<div class="eq"><b>%s</b><span>%s</span></div>' % (t, d) for t, d in EQUIPMENT
+    )
+    team = "".join(
+        '<div class="team__c"><div class="team__ph">%s<span>фото команди</span></div></div>' % ic("image")
+        for _ in range(4)
+    )
+    crumb_html, crumb_ld = crumbs([("Головна", BASE), ("Про нас", None)])
+    title = "Про DULI Service — клінінгова компанія в Одесі"
+    desc = ("DULI Service — клінінгова служба в Одесі. Постійні бригади, професійна хімія та обладнання, "
+            "фіксована ціна й гарантія 24 години.")
+    return (head(title, desc, "/about/", [crumb_ld])
+            + header(BASE + "#calc") + crumb_html
+            + page_hero("Служба, яка працює на результат, а не на години",
+                        "Ми свідомо відмовились від оплати «за присутність». Клієнт платить за результат: "
+                        "обсяг робіт зафіксовано в чек-листі, ціна — до виїзду, а якщо щось зроблено погано, "
+                        "ми повертаємось і переробляємо.")
+            + f"""
+<section class="section section--surface">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Команда</span>
+      <h2>За кожним прибиранням стоять люди</h2>
+      <p class="lead muted">Клінер заходить до вас додому, тож ви маєте знати, хто приїде. Усі працюють у нас
+      постійно й проходять навчання роботі з хімією та поверхнями — це не випадкові люди під замовлення.</p>
+    </div>
+    <div class="team rv">{team}</div>
+    <p class="muted rv" style="font-size:.88rem;margin-top:16px">Тут будуть фотографії бригад DULI у формі.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Обладнання</span>
+      <h2>Що бригада привозить із собою</h2>
+      <p class="lead muted">Вам не треба купувати нічого — ані хімії, ані ганчірок.</p>
+    </div>
+    <div class="eq__grid rv">{equip}</div>
+  </div>
+</section>
+
+<section class="section section--surface">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Гарантії</span>
+      <h2>За що ми відповідаємо</h2>
+    </div>
+    <div class="why rv">{guarantees}</div>
+  </div>
+</section>"""
+            + final() + footer(BASE + "#calc") + scripts())
+
+
+def faq_page():
+    groups = "".join(
+        f"""
+    <div class="fgroup rv">
+      <h3 class="fgroup__h">{name}</h3>
+      <div class="faq">{''.join(
+          '<div class="faq__i"><button class="faq__q" type="button" aria-expanded="false">%s%s</button>'
+          '<div class="faq__a"><div><p>%s</p></div></div></div>' % (q, ic("plus"), a) for q, a in items)}</div>
+    </div>"""
+        for name, items in FAQ_FULL
+    )
+    ld_faq = {
+        "@context": "https://schema.org", "@type": "FAQPage",
+        "mainEntity": [{"@type": "Question", "name": q,
+                        "acceptedAnswer": {"@type": "Answer", "text": a}}
+                       for _, items in FAQ_FULL for q, a in items],
+    }
+    crumb_html, crumb_ld = crumbs([("Головна", BASE), ("Питання", None)])
+    title = "Питання та відповіді про клінінг | DULI Service"
+    desc = ("Відповіді на питання про прибирання: ціни, оплата, хімія, гарантії, робота з бізнесом. "
+            "17 питань, на які ми відповідаємо найчастіше.")
+    return (head(title, desc, "/faq/", [crumb_ld, ld_faq])
+            + header(BASE + "#calc") + crumb_html
+            + page_hero("Питання та відповіді",
+                        "Зібрали те, що запитують найчастіше. Якщо вашого питання тут немає — "
+                        "зателефонуйте або напишіть, відповімо швидко.")
+            + '<section class="section section--surface"><div class="wrap"><div class="fgroups">%s</div></div></section>' % groups
+            + final() + footer(BASE + "#calc") + scripts())
+
+
 # ─────────────────────────────── збірка ───────────────────────────────
 def build_home():
     ld_faq = {
@@ -833,12 +1130,19 @@ def main():
     print("Збірка DULI Service:")
     write("index.html", build_home())
     write("services/index.html", services_hub())
+    write("pricing/index.html", pricing_page())
+    write("how-it-works/index.html", how_page())
+    write("business/index.html", business_page())
+    write("about/index.html", about_page())
+    write("faq/index.html", faq_page())
     for s in SERVICES:
         write("services/%s/index.html" % s["slug"], service_page(s))
 
     write("robots.txt", "User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n" % SITE["base_url"])
 
-    urls = [("/", "1.0"), ("/services/", "0.9")] + [("/services/%s/" % s["slug"], "0.8") for s in SERVICES]
+    urls = ([("/", "1.0"), ("/services/", "0.9"), ("/pricing/", "0.9")]
+            + [("/services/%s/" % s["slug"], "0.8") for s in SERVICES]
+            + [("/how-it-works/", "0.7"), ("/business/", "0.8"), ("/about/", "0.6"), ("/faq/", "0.7")])
     body = "".join(
         '  <url><loc>%s%s</loc><changefreq>weekly</changefreq><priority>%s</priority></url>\n'
         % (SITE["base_url"], u, pr) for u, pr in urls

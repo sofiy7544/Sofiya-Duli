@@ -503,3 +503,33 @@ p{margin:0}
   .hstep{grid-template-columns:1fr;gap:10px;padding:22px}
   .team{grid-template-columns:1fr 1fr;gap:10px}
 }
+
+/* ── таблиці на вузьких екранах: картки замість горизонтальної прокрутки ── */
+.pt__wrap--narrow{max-width:640px}
+@media (max-width:760px){
+  .pt__wrap{overflow:visible}
+  .pt__wrap--narrow{max-width:none}
+  .pt{min-width:0;display:block;font-size:.95rem}
+  .pt thead{display:none}
+  .pt tbody,.pt tr,.pt td{display:block;width:100%}
+  .pt tr{
+    display:grid;grid-template-columns:1fr auto;gap:3px 14px;align-items:baseline;
+    padding:15px 18px;border-bottom:1px solid var(--hair);
+  }
+  .pt tr:last-child{border-bottom:0}
+  .pt tr:hover{background:transparent}
+  .pt td{padding:0;border:0}
+  .pt td:first-child{grid-column:1;grid-row:1;font-weight:500;line-height:1.35}
+  .pt td.pt__v{grid-column:2;grid-row:1;text-align:right;font-size:1.02rem}
+  .pt td.pt__u{grid-column:1/-1;grid-row:2;font-size:.83rem;color:var(--muted);white-space:normal}
+}
+
+/* дуже вузькі екрани (320 px і менше) */
+@media (max-width:380px){
+  .btn{padding:0 16px;font-size:.95rem;white-space:normal;text-align:center;line-height:1.25}
+  .btn--lg{padding:0 18px;font-size:1rem;min-height:56px}
+  .hero__cta .btn,.phero .btn{width:100%}
+  .jump a{font-size:.84rem;padding:8px 12px}
+}
+@media (max-width:640px){ .seg{grid-template-columns:1fr} }
+@media (max-width:480px){ .strip__in{grid-template-columns:1fr} }

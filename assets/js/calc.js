@@ -32,6 +32,9 @@
     if (saved) { for (var k in saved) if (k in state && k !== 'step') state[k] = saved[k]; }
   } catch (e) {}
 
+  /* сторінка послуги відкриває калькулятор на своєму типі */
+  if (window.DULI_PREFILL && window.DULI_PREFILL.type) state.type = window.DULI_PREFILL.type;
+
   function save() {
     try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {}
   }

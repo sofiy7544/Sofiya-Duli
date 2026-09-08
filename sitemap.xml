@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://sofiy7544.github.io/Sofiya-Duli/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://sofiy7544.github.io/Sofiya-Duli/services/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://sofiy7544.github.io/Sofiya-Duli/services/uborka-kvartir/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://sofiy7544.github.io/Sofiya-Duli/services/generalna-pryburannya/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://sofiy7544.github.io/Sofiya-Duli/services/pislya-remontu/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://sofiy7544.github.io/Sofiya-Duli/services/myttya-vikon/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://sofiy7544.github.io/Sofiya-Duli/services/pryburannya-ofisu/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://sofiy7544.github.io/Sofiya-Duli/services/dodatkovi-poslugy/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
 </urlset>

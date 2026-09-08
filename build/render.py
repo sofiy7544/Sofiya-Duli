@@ -854,7 +854,7 @@ def pricing_page():
       <h2>Райони Одеси</h2>
       <p class="lead muted">У межах міста виїзд безкоштовний. Для передмістя — фіксована доплата за дорогу.</p>
     </div>
-    <div class="pt__wrap rv" style="max-width:640px">
+    <div class="pt__wrap pt__wrap--narrow rv">
       <table class="pt">
         <thead><tr><th>Район</th><th>Доплата</th></tr></thead>
         <tbody>{zones_rows}</tbody>

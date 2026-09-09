@@ -70,7 +70,7 @@ def head(title, desc, path="/", extra_ld=None):
         "url": SITE["base_url"] + "/",
         "telephone": SITE["phone"],
         "image": SITE["base_url"] + "/assets/og.jpg",
-        "priceRange": "₴₴",
+        "priceRange": "₴₴₴",
         "areaServed": {"@type": "City", "name": "Одеса"},
         "address": {"@type": "PostalAddress", "addressLocality": "Одеса", "addressCountry": "UA"},
         "openingHours": "Mo-Su 08:00-21:00",
@@ -152,6 +152,7 @@ def hero():
         ("check", "Гарантія %d години" % CLAIMS["guarantee_hours"]),
     ]
     trust_html = "".join('<div>%s<span>%s</span></div>' % (ic(i), t) for i, t in trust)
+    hero_bg = ""
     return f"""
 <section class="hero">
   <div class="wrap hero__grid">
@@ -165,7 +166,7 @@ def hero():
       <div class="hero__trust">{trust_html}</div>
     </div>
 
-    <div class="quick" id="quick">
+    <div class="quick" id="quick"{hero_bg}>
       <span class="quick__label">Порахувати за 15 секунд</span>
       <div class="quick__row">
         <h4>Тип прибирання</h4>
@@ -178,7 +179,7 @@ def hero():
       <div class="quick__out">
         <div>
           <span class="quick__label">Орієнтовно</span>
-          <div class="quick__price"><span id="qPrice">5 400</span> <small>₴</small></div>
+          <div class="quick__price"><span id="qPrice">6 900</span> <small>₴</small></div>
         </div>
         <button class="btn btn--primary" id="qGo" type="button">Уточнити</button>
       </div>
@@ -202,6 +203,14 @@ def strip():
     return '<section class="strip"><div class="wrap"><div class="strip__in">%s</div></div></section>' % html
 
 
+def svc_img(s):
+    """Фото послуги або акуратний плейсхолдер, поки фото немає."""
+    if s.get("photo"):
+        return ('<div class="svc__img"><img src="%s%s" alt="%s" loading="lazy" width="640" height="400"></div>'
+                % (BASE, s["photo"], s["name"]))
+    return '<div class="svc__img"><div class="ph">%s<span>фото послуги</span></div></div>' % ic("image")
+
+
 def services():
     cards = []
     for s in SERVICES:
@@ -211,7 +220,7 @@ def services():
         cards.append(f"""
     <article class="svc__c">
       <a class="svc__link" href="/Sofiya-Duli/services/{s['slug']}/" aria-label="{s['name']}"></a>
-      <div class="svc__img"><div class="ph">{ic('image')}<span>фото послуги</span></div></div>
+      {svc_img(s)}
       <div class="svc__b">
         <h3>{s['name']}</h3>
         <p>{s['lead']}</p>
@@ -480,7 +489,7 @@ def packages():
 
     rows = []
     for f in FREQUENCY:
-        example = 60 * 90 * f["k"]
+        example = 60 * TYPES[1]["rate"] * f["k"]
         on = " on" if f["id"] == "biweekly" else ""
         note = f["note"] or "базова ціна"
         rows.append('<div class="reg__r%s"><div><b>%s</b><br><span>%s</span></div>'
@@ -777,7 +786,7 @@ def services_hub():
         cards.append(f"""
     <article class="svc__c">
       <a class="svc__link" href="{BASE}services/{s['slug']}/" aria-label="{s['name']}"></a>
-      <div class="svc__img"><div class="ph">{ic('image')}<span>фото послуги</span></div></div>
+      {svc_img(s)}
       <div class="svc__b">
         <h3>{s['name']}</h3>
         <p>{s['lead']}</p>
@@ -828,8 +837,8 @@ def pricing_page():
     )
     crumb_html, crumb_ld = crumbs([("Головна", BASE), ("Ціни", None)])
     title = "Ціни на клінінг в Одесі — прайс-лист 2026 | DULI Service"
-    desc = ("Повний прайс-лист DULI Service: прибирання квартир від 45 ₴/м², генеральне від 90 ₴/м², "
-            "після ремонту від 130 ₴/м², миття вікон, хімчистка меблів, офіси. 75 позицій.")
+    desc = ("Повний прайс-лист DULI Service: прибирання квартир від 55 ₴/м², генеральне від 115 ₴/м², "
+            "після ремонту від 150 ₴/м², миття вікон, хімчистка меблів, офіси. 75 позицій.")
     return (head(title, desc, "/pricing/", [crumb_ld])
             + header(BASE + "#calc") + crumb_html
             + page_hero("Ціни на клінінг в Одесі",
@@ -934,7 +943,7 @@ def business_page():
     crumb_html, crumb_ld = crumbs([("Головна", BASE), ("Для бізнесу", None)])
     title = "Клінінг для бізнесу в Одесі — офіси, кафе, магазини | DULI Service"
     desc = ("Прибирання офісів, кафе, магазинів і салонів в Одесі за договором. Рахунки, акти, "
-            "безготівковий розрахунок, постійна бригада та підміна персоналу. Від 22 ₴/м².")
+            "безготівковий розрахунок, постійна бригада та підміна персоналу. Від 32 ₴/м².")
     return (head(title, desc, "/business/", [crumb_ld])
             + header(BASE + "#calc") + crumb_html
             + page_hero("Клінінг для бізнесу",

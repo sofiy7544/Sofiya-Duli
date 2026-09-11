@@ -653,8 +653,10 @@ def crumbs(items):
     return '<nav class="crumbs" aria-label="Навігація"><div class="wrap">%s</div></nav>' % "".join(parts), ld
 
 
-def page_hero(h1, intro, price_from=None, unit=None, note=None):
+def page_hero(h1, intro, price_from=None, unit=None, note=None, img=None):
     price = ""
+    if img:
+        price = '<img class="phero__img" src="%s%s" alt="" width="640" height="400">' % (BASE, img)
     if price_from:
         price = ('<div class="phero__price"><span>від</span><b>%d ₴</b><span>/ %s</span></div>' % (price_from, unit))
     return f"""
@@ -807,7 +809,7 @@ def services_hub():
             + page_hero("Послуги клінінгу в Одесі",
                         "Шість напрямків із фіксованими ставками. Оберіть свій — на сторінці буде повний "
                         "склад робіт, ціни та калькулятор.",
-                        note="Працюємо 7 днів на тиждень, виїзд у день звернення.")
+                        note="Працюємо 7 днів на тиждень, виїзд у день звернення.", img=SITE["hero_photo"])
             + f"""
 <section class="section section--surface">
   <div class="wrap"><div class="svc rv">{''.join(cards)}</div></div>
@@ -1041,7 +1043,7 @@ def about_page():
             + page_hero("Служба, яка працює на результат, а не на години",
                         "Ми свідомо відмовились від оплати «за присутність». Клієнт платить за результат: "
                         "обсяг робіт зафіксовано в чек-листі, ціна — до виїзду, а якщо щось зроблено погано, "
-                        "ми повертаємось і переробляємо.")
+                        "ми повертаємось і переробляємо.", img=SITE["hero_photo"])
             + f"""
 <section class="section section--surface">
   <div class="wrap">

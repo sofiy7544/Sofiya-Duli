@@ -405,6 +405,7 @@ p{margin:0}
 .phero h1{font-size:clamp(1.9rem,4.6vw,3.1rem);margin-bottom:16px}
 .phero__lead{max-width:52ch;margin-bottom:26px}
 .phero__note{margin-top:18px;font-size:.88rem;color:var(--muted)}
+.phero__img{width:min(440px,100%);height:auto;border-radius:var(--r-lg);border:1px solid var(--hair)}
 .phero__price{display:flex;flex-direction:column;align-items:flex-start;gap:2px;background:var(--surface);border:1px solid var(--hair);border-radius:var(--r-lg);padding:24px 30px;box-shadow:var(--sh-1)}
 .phero__price span{font-size:.85rem;color:var(--muted)}
 .phero__price b{font-size:clamp(2.1rem,4vw,2.8rem);font-weight:700;letter-spacing:-.035em;line-height:1;color:var(--brand)}
@@ -440,12 +441,14 @@ p{margin:0}
 
 @media (max-width:900px){
   .phero__in{grid-template-columns:1fr}
-  .phero__price{align-self:start}
+  .phero__img{width:min(440px,100%);height:auto;border-radius:var(--r-lg);border:1px solid var(--hair)}
+.phero__price{align-self:start}
   .inc__grid{grid-template-columns:1fr}
 }
 @media (max-width:640px){
   .inc__l{grid-template-columns:1fr}
-  .phero__price{width:100%;flex-direction:row;align-items:baseline;gap:8px}
+  .phero__img{width:min(440px,100%);height:auto;border-radius:var(--r-lg);border:1px solid var(--hair)}
+.phero__price{width:100%;flex-direction:row;align-items:baseline;gap:8px}
 }
 
 /* ── прайс-сторінка ──────────────────────────────────────── */

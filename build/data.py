@@ -19,7 +19,7 @@ SITE = {
     "hours": "Пн–Нд, 08:00–21:00",
     "base_url": "https://sofiy7544.github.io/Sofiya-Duli",
     "legal": "",                          # ПІДТВЕРДИТИ: ФОП / ТОВ для підвалу
-    "hero_photo": "",                     # шлях до фото першого екрана, напр. assets/photos/hero.webp
+    "hero_photo": "assets/illus/hero.svg",                     # шлях до фото першого екрана, напр. assets/photos/hero.webp
     "form_endpoint": "",                  # порожньо → заявка йде в Telegram; вставте URL форми для автодоставки
     "ga4": "",                            # ПІДТВЕРДИТИ: ідентифікатор GA4
 }
@@ -86,7 +86,7 @@ ZONES = [
 SERVICES = [
     {
         "slug": "uborka-kvartir", "name": "Підтримуюче прибирання", "calc": "support",
-        "photo": "",                      # assets/photos/<slug>.webp
+        "photo": "assets/illus/uborka-kvartir.svg",                      # assets/photos/<slug>.webp
         "lead": "Щоб дім залишався чистим без вашої участі.",
         "from": 55, "unit": "м²",
         "h1": "Прибирання квартир в Одесі",
@@ -112,7 +112,7 @@ SERVICES = [
     },
     {
         "slug": "generalna-pryburannya", "name": "Генеральне прибирання", "calc": "general",
-        "photo": "",                      # assets/photos/<slug>.webp
+        "photo": "assets/illus/generalna-pryburannya.svg",                      # assets/photos/<slug>.webp
         "lead": "Раз на сезон — усе зверху донизу.",
         "from": 115, "unit": "м²",
         "h1": "Генеральне прибирання в Одесі",
@@ -138,7 +138,7 @@ SERVICES = [
     },
     {
         "slug": "pislya-remontu", "name": "Прибирання після ремонту", "calc": "repair",
-        "photo": "",                      # assets/photos/<slug>.webp
+        "photo": "assets/illus/pislya-remontu.svg",                      # assets/photos/<slug>.webp
         "lead": "Забираємо будівельний пил, який осідає тижнями.",
         "from": 150, "unit": "м²",
         "h1": "Прибирання після ремонту в Одесі",
@@ -166,7 +166,7 @@ SERVICES = [
     },
     {
         "slug": "myttya-vikon", "name": "Миття вікон", "calc": "general",
-        "photo": "",                      # assets/photos/<slug>.webp
+        "photo": "assets/illus/myttya-vikon.svg",                      # assets/photos/<slug>.webp
         "lead": "Скло, рами, підвіконня, москітні сітки.",
         "from": 180, "unit": "м²",
         "h1": "Миття вікон в Одесі",
@@ -192,7 +192,7 @@ SERVICES = [
     },
     {
         "slug": "pryburannya-ofisu", "name": "Прибирання офісу", "calc": "support",
-        "photo": "",                      # assets/photos/<slug>.webp
+        "photo": "assets/illus/pryburannya-ofisu.svg",                      # assets/photos/<slug>.webp
         "lead": "До відкриття або після закриття — щоб не заважати роботі.",
         "from": 45, "unit": "м²",
         "h1": "Прибирання офісів в Одесі",
@@ -218,7 +218,7 @@ SERVICES = [
     },
     {
         "slug": "dodatkovi-poslugy", "name": "Додаткові послуги", "calc": "general",
-        "photo": "",                      # assets/photos/<slug>.webp
+        "photo": "assets/illus/dodatkovi-poslugy.svg",                      # assets/photos/<slug>.webp
         "lead": "Техніка, меблі, балкон, хімчистка.",
         "from": 450, "unit": "шт",
         "h1": "Додаткові послуги клінінгу в Одесі",

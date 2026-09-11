@@ -12,7 +12,8 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from data import (SITE, CLAIMS, TYPES, OBJECTS, EXTRAS, FREQUENCY, ZONES,
                   SERVICES, PACKAGES, STEPS, WHY, BEFORE_AFTER, FAQ, B2B_OBJECTS,
-                  PRICE_LIST, CHECKLISTS, GUARANTEES, EQUIPMENT, B2B_INCLUDED, FAQ_FULL)
+                  PRICE_LIST, CHECKLISTS, GUARANTEES, EQUIPMENT, B2B_INCLUDED, FAQ_FULL,
+                  FURNITURE, WINDOW_SASH)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = "/Sofiya-Duli/"          # префікс проєктного сайту GitHub Pages
@@ -211,35 +212,85 @@ def svc_img(s):
     return '<div class="svc__img"><div class="ph">%s<span>фото послуги</span></div></div>' % ic("image")
 
 
-def services():
-    cards = []
-    for s in SERVICES:
-        inc = "".join("<li>%s</li>" % x for x in s["includes"][:4])
-        btn = ('<a class="btn btn--ghost btn--sm" href="' + BASE + 'services/%s/" data-service="%s">Детальніше</a>'
-               % (s["slug"], s["slug"]))
-        cards.append(f"""
+def svc_card(s):
+    """Картка = потреба → результат → що входить → ціна → розрахунок."""
+    inc = "".join("<li>%s</li>" % x for x in s["includes"][:3])
+    obj = {"myttya-vikon": "windows", "dodatkovi-poslugy": "furniture", "pryburannya-ofisu": "office"}.get(s["slug"], "flat")
+    return f"""
     <article class="svc__c">
-      <a class="svc__link" href="/Sofiya-Duli/services/{s['slug']}/" aria-label="{s['name']}"></a>
-      {svc_img(s)}
+      <a class="svc__img" href="{BASE}services/{s['slug']}/" aria-label="{s['name']}">{svc_img(s)}</a>
       <div class="svc__b">
-        <h3>{s['name']}</h3>
-        <p>{s['lead']}</p>
+        <span class="svc__need">{s['need']}</span>
+        <h3><a href="{BASE}services/{s['slug']}/">{s['outcome']}</a></h3>
+        <p class="svc__what">{s['name']} · <b>від {s['from']} ₴/{s['unit']}</b></p>
         <ul class="svc__inc">{inc}</ul>
         <div class="svc__f">
-          <div class="svc__price">від {s['from']} ₴ <span>/ {s['unit']}</span></div>
-          {btn}
+          <button class="btn btn--primary btn--sm" type="button" data-calc-type="{s['calc']}" data-calc-object="{obj}" data-service="{s['slug']}">Розрахувати вартість {ic('arrow')}</button>
         </div>
       </div>
-    </article>""")
+    </article>"""
+
+
+def svc_img(s):
+    """Ілюстрація або фото послуги; поки фото немає — фірмова сцена."""
+    if s.get("photo"):
+        return ('<img src="%s%s" alt="%s" loading="lazy" width="640" height="400">' % (BASE, s["photo"], s["name"]))
+    return '<div class="ph">%s<span>фото послуги</span></div>' % ic("image")
+
+
+def services():
+    cards = "".join(svc_card(s) for s in SERVICES)
     return f"""
 <section class="section" id="services">
   <div class="wrap">
     <div class="section-head rv">
-      <span class="eyebrow">Послуги</span>
-      <h2>Оберіть, що прибрати</h2>
-      <p class="lead muted">Кожна послуга має фіксовану ставку й перелік робіт. Натисніть «Розрахувати» — калькулятор відкриється з готовим вибором.</p>
+      <span class="eyebrow">Оберіть свою ситуацію</span>
+      <h2>Який результат вам потрібен?</h2>
+      <p class="lead muted">Не «послуга з прайсу», а конкретний результат у вашому домі. Натисніть «Розрахувати» — калькулятор відкриється з готовим вибором.</p>
     </div>
-    <div class="svc rv">{''.join(cards)}</div>
+    <div class="svc rv">{cards}</div>
+  </div>
+</section>"""
+
+
+def saturday():
+    lines = ["Не витрачаєте суботу на прибирання.", "Не купуєте хімію та не шукаєте, де її зберігати.",
+             "Не тягаєте пилосос і не миєте вікна на висоті.", "Не тримаєте в голові, що ще залишилось прибрати."]
+    return f"""
+<section class="section section--surface" id="saturday">
+  <div class="wrap sat">
+    <div>
+      <span class="eyebrow">Що ви отримуєте насправді</span>
+      <h2>Поки ви займаєтесь своїми справами, ми займаємось чистотою</h2>
+    </div>
+    <div>
+      <ul class="sat__l">{''.join('<li>%s</li>' % l for l in lines)}</ul>
+      <p class="sat__end">Просто повертаєтесь у чистий дім.</p>
+      <a class="btn btn--primary btn--lg" href="#calc" data-track="cta_saturday">Хочу вільну суботу {ic('arrow')}</a>
+    </div>
+  </div>
+</section>"""
+
+
+def trust():
+    tiles = []
+    if SITE.get("rating"):
+        tiles.append(("%s / 5" % SITE["rating"], "середня оцінка клієнтів" + (" · %s відгуків" % SITE["rating_count"] if SITE.get("rating_count") else "")))
+    if SITE.get("orders_done"):
+        tiles.append((SITE["orders_done"], "виконаних прибирань"))
+    tiles += [("100 %", "своя техніка, хімія та витратники"),
+              ("%d год" % CLAIMS["guarantee_hours"], "гарантія: пропустили — повернемось і виправимо"),
+              ("до виїзду", "ціна фіксується, без доплат «за фактом»"),
+              ("постійні", "бригади, а не випадкові люди під замовлення")]
+    html = "".join('<div class="tr__i"><b>%s</b><span>%s</span></div>' % t for t in tiles[:4])
+    return f"""
+<section class="section" id="trust">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Довіра</span>
+      <h2>Чому нам довіряють свій дім?</h2>
+    </div>
+    <div class="tr rv">{html}</div>
   </div>
 </section>"""
 
@@ -275,6 +326,17 @@ def calculator(title="Скільки коштуватиме у вас",
         '<span class="opt__t"><b>%s</b></span>%s</button>'
         % (f["id"], f["name"], ('<span class="opt__p">%s</span>' % f["note"]) if f["note"] else "")
         for f in FREQUENCY
+    )
+    sashes = "".join(
+        '<button class="opt" type="button" data-set="sashes" data-val="%d" aria-pressed="false">'
+        '<span class="opt__t"><b>%d стулок</b></span><span class="opt__p">%s ₴</span></button>'
+        % (n, n, uah(n * WINDOW_SASH)) for n in (2, 4, 6, 8, 10, 14)
+    )
+    furn = "".join(
+        '<div class="cnt__r"><div class="cnt__t"><b>%s</b><span>%s ₴</span></div>'
+        '<div class="cnt__c"><button type="button" data-cnt="%s" data-d="-1" aria-label="Менше">−</button>'
+        '<output id="cnt-%s">0</output><button type="button" data-cnt="%s" data-d="1" aria-label="Більше">+</button></div></div>'
+        % (f["name"], uah(f["price"]), f["id"], f["id"], f["id"]) for f in FURNITURE
     )
     zones = "".join('<option value="%s">%s%s</option>'
                     % (z["id"], z["name"], (" · +%d ₴" % z["fee"]) if z["fee"] else "")
@@ -319,15 +381,27 @@ def calculator(title="Скільки коштуватиме у вас",
 
           <div class="calc__step" data-group>
             <span class="calc__kicker">Крок 3 із 6</span>
-            <h3 class="calc__q">Яка площа?</h3>
-            <p class="calc__hint">Приблизно — цього достатньо для розрахунку.</p>
-            <div class="calc__area">
-              <b><span id="cAreaV">60</span> м²</b>
-              <input id="cAreaN" type="number" inputmode="numeric" min="10" max="500" value="60" aria-label="Площа, м²">
+            <div id="pArea">
+              <h3 class="calc__q">Яка площа?</h3>
+              <p class="calc__hint">Приблизно — цього достатньо для розрахунку.</p>
+              <div class="calc__area">
+                <b><span id="cAreaV">60</span> м²</b>
+                <input id="cAreaN" type="number" inputmode="numeric" min="10" max="500" value="60" aria-label="Площа, м²">
+              </div>
+              <input class="range" id="cArea" type="range" min="10" max="500" step="5" value="60" aria-label="Площа повзунком">
+              <h4 style="margin:22px 0 10px;font-size:.94rem">Санвузлів</h4>
+              <div class="opts opts--2">{baths}</div>
             </div>
-            <input class="range" id="cArea" type="range" min="10" max="500" step="5" value="60" aria-label="Площа повзунком">
-            <h4 style="margin:22px 0 10px;font-size:.94rem">Санвузлів</h4>
-            <div class="opts opts--2">{baths}</div>
+            <div id="pWin" hidden>
+              <h3 class="calc__q">Скільки стулок?</h3>
+              <p class="calc__hint">Стулка — одна відкривна частина вікна. Ціна включає скло з обох боків, раму та підвіконня.</p>
+              <div class="opts opts--2">{sashes}</div>
+            </div>
+            <div id="pFurn" hidden>
+              <h3 class="calc__q">Що почистити?</h3>
+              <p class="calc__hint">Вкажіть кількість — ціна складеться автоматично.</p>
+              <div class="cnt">{furn}</div>
+            </div>
             <div class="calc__nav">
               <button class="btn btn--ghost calc__back" type="button" data-back aria-label="Назад">{ic('back')}</button>
               <button class="btn btn--primary" type="button" data-next>Далі {ic('arrow')}</button>
@@ -623,6 +697,8 @@ def scripts():
         "extras": [{"id": e["id"], "name": e["name"], "price": e["price"]} for e in EXTRAS],
         "frequency": FREQUENCY,
         "zones": ZONES,
+        "furniture": FURNITURE,
+        "sash": WINDOW_SASH,
         "telegram": SITE["telegram"],
         "formEndpoint": SITE["form_endpoint"],
     }
@@ -1125,7 +1201,7 @@ def build_home():
     desc = ("Прибирання квартир, будинків та офісів в Одесі. Розрахунок вартості онлайн за хвилину, "
             "фіксована ціна до виїзду, своя хімія та обладнання, гарантія 24 години.")
     return (head(title, desc, "/", [ld_faq]) + header() + hero() + strip() + services()
-            + calculator() + before_after() + how() + why() + packages() + b2b()
+            + saturday() + calculator() + trust() + before_after() + how() + why() + packages() + b2b()
             + faq() + final() + footer() + scripts())
 
 

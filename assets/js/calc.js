@@ -351,9 +351,12 @@
         body: JSON.stringify({ text: text, phone: phone, name: g('name') })
       }).catch(function () {});
       done(true, tg, sms);
-    } else {
+    } else if (D.telegram) {
       var w = window.open(tg, '_blank', 'noopener');
       done(false, tg, sms, !w);
+    } else {
+      done(false, '', sms, false);
+      window.location.href = sms;
     }
   });
 
@@ -363,8 +366,11 @@
     if (d) { d.hidden = false; $('cFormWrap').hidden = true; }
     var foot = $('cFoot'); if (foot) foot.hidden = true;
     var t = $('cDoneT'), pEl = $('cDoneP'), tgA = $('cTgLink'), smsA = $('cSmsLink'), alt = $('cAltP');
-    if (tgA) tgA.href = tg;
+    if (tgA) { tgA.href = tg || '#'; tgA.hidden = !tg; }
     if (smsA) smsA.href = sms;
+    if (!sent && !tg) {
+      if (pEl) pEl.textContent = 'Ми відкрили SMS із готовим текстом заявки — залишилось натиснути «Надіслати». Підтвердимо час дзвінком протягом 15 хвилин у робочі години.';
+    }
     if (sent) {
       if (t) t.textContent = 'Заявку надіслано';
       if (pEl) pEl.textContent = 'Передзвонимо протягом 15 хвилин у робочі години, щоб підтвердити час і адресу.';

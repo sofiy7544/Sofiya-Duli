@@ -17,7 +17,7 @@ from data import (SITE, CLAIMS, TYPES, OBJECTS, EXTRAS, FREQUENCY, ZONES,
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = "/Sofiya-Duli/"          # префікс проєктного сайту GitHub Pages
-TG = "https://t.me/" + SITE["telegram"]
+TG = ("https://t.me/" + SITE["telegram"]) if SITE["telegram"] else ""
 TEL = "tel:" + SITE["phone_href"]
 
 # ─────────────────────────────── іконки ───────────────────────────────
@@ -159,7 +159,7 @@ def header(cta="#calc", cur=""):
     <a class="btn btn--primary btn--block btn--lg" href="{cta}" data-track="cta_menu">Розрахувати вартість {ic('arrow')}</a>
     <div class="menu__row">
       <a class="btn btn--ghost btn--block" href="{TEL}">{ic('phone')} Подзвонити</a>
-      <a class="btn btn--ghost btn--block" href="{TG}" target="_blank" rel="noopener">{ic('send')} Telegram</a>
+      {('<a class="btn btn--ghost btn--block" href="%s" target="_blank" rel="noopener">%s Telegram</a>' % (TG, ic('send'))) if TG else ('<a class="btn btn--ghost btn--block" href="sms:%s">%s SMS</a>' % (SITE['phone_href'], ic('msg')))}
     </div>
     <p>{SITE['hours']} · Одеса та передмістя</p>
   </div>
@@ -185,7 +185,7 @@ def hero():
   <div class="wrap hero__grid">
     <div>
       <p class="hero__kicker"><b>DULI Service</b><i></i><span>Клінінг в Одесі</span><i></i><span>Квартири · Будинки · Офіси</span></p>
-      <h1>Чистий дім <em>без вашої суботи</em></h1>
+      <h1>Повертайтеся <em>в чистий дім</em></h1>
       <p class="lead hero__lead">Прибирання квартир, будинків і офісів в Одесі. Ціну бачите одразу на сайті, бригада приїжджає зі своєю хімією та технікою, а за результат відповідаємо {CLAIMS['guarantee_hours']} години.</p>
       <div class="hero__cta">
         <a class="btn btn--primary btn--lg" href="#calc" data-track="cta_hero">Розрахувати вартість {ic('arrow')}</a>
@@ -502,9 +502,9 @@ def calculator(title="Скільки коштуватиме у вас",
               <h3 class="calc__q" id="cDoneT">Заявку сформовано</h3>
               <p class="calc__hint" id="cDoneP">Ми відкрили Telegram із готовим текстом заявки — залишилось натиснути «Надіслати». Підтвердимо час дзвінком протягом 15 хвилин у робочі години.</p>
               <div class="calc__alt">
-                <a class="btn btn--primary" id="cTgLink" href="{TG}" target="_blank" rel="noopener">{ic('send')} Відкрити Telegram із заявкою</a>
-                <p id="cAltP">Немає Telegram? Текст заявки вже готовий — надішліть його SMS або просто зателефонуйте.</p>
-                <a class="btn btn--ghost" id="cSmsLink" href="sms:{SITE['phone_href']}">{ic('msg')} Надіслати SMS</a>
+                <a class="btn btn--primary" id="cTgLink" href="{TG or '#'}" target="_blank" rel="noopener"{'' if TG else ' hidden'}>{ic('send')} Відкрити Telegram із заявкою</a>
+                <p id="cAltP">{'Немає Telegram? Текст заявки вже готовий — надішліть його SMS або просто зателефонуйте.' if TG else 'Якщо SMS не відкрилось — просто зателефонуйте, ми все запишемо з ваших слів.'}</p>
+                <a class="btn {'btn--ghost' if TG else 'btn--primary'}" id="cSmsLink" href="sms:{SITE['phone_href']}">{ic('msg')} Надіслати SMS</a>
                 <a class="btn btn--ghost" href="{TEL}">{ic('phone')} Зателефонувати</a>
               </div>
             </div>
@@ -704,7 +704,9 @@ def faq():
 
 
 def final():
-    links = ['<a href="%s">%s</a>' % (TEL, SITE["phone"]), '<a href="%s" target="_blank" rel="noopener">Telegram</a>' % TG]
+    links = ['<a href="%s">%s</a>' % (TEL, SITE["phone"])]
+    if TG:
+        links.append('<a href="%s" target="_blank" rel="noopener">Telegram</a>' % TG)
     if SITE["instagram"]:
         links.append('<a href="%s" target="_blank" rel="noopener">Instagram</a>' % SITE["instagram"])
     return f"""
@@ -743,7 +745,7 @@ def footer(cta="#calc"):
       <div class="ftr__col">
         <h5>Контакти</h5>
         <a href="{TEL}">{SITE['phone']}</a>
-        <a href="{TG}" target="_blank" rel="noopener">Telegram</a>
+        {('<a href="%s" target="_blank" rel="noopener">Telegram</a>' % TG) if TG else ('<a href="sms:%s">SMS</a>' % SITE['phone_href'])}
         <p>{SITE['hours']}</p>
         <p>Одеса та передмістя</p>
       </div>
@@ -1274,7 +1276,7 @@ def privacy_page():
     <p class="lead">Коротко: ми беремо лише ім’я, телефон і адресу, використовуємо їх тільки щоб домовитись про прибирання, нікому не передаємо і видаляємо на ваш запит.</p>
 
     <h2>Хто обробляє дані</h2>
-    <p>{legal}, Одеса. Зв’язок: <a href="{TEL}">{SITE['phone']}</a>, Telegram <a href="{TG}" target="_blank" rel="noopener">@{SITE['telegram']}</a>.</p>
+    <p>{legal}, Одеса. Зв’язок: <a href="{TEL}">{SITE['phone']}</a>{(', Telegram <a href="%s" target="_blank" rel="noopener">@%s</a>' % (TG, SITE['telegram'])) if TG else ''}.</p>
 
     <h2>Які дані ми отримуємо</h2>
     <ul>
@@ -1287,7 +1289,7 @@ def privacy_page():
     <p>Щоб підтвердити замовлення, узгодити час і адресу, виконати прибирання та зв’язатися щодо гарантії. Розсилок і реклами без окремої згоди ми не надсилаємо.</p>
 
     <h2>Куди потрапляє заявка</h2>
-    <p>Форма формує текст заявки й відкриває його у вашому Telegram (або SMS) для надсилання нам. Ви самі бачите, що саме надсилаєте. Якщо на сайті підключено пряму доставку заявок, вони надходять на наш робочий номер або пошту.</p>
+    <p>Форма формує текст заявки й відкриває його у вашому месенджері або SMS для надсилання нам. Ви самі бачите, що саме надсилаєте. Якщо на сайті підключено пряму доставку заявок, вони надходять на наш робочий номер або пошту.</p>
 
     <h2>Скільки зберігаємо і як видалити</h2>
     <p>Контакти зберігаються на час виконання замовлення та гарантійного періоду. Щоб видалити дані або дізнатись, що ми зберігаємо, — напишіть або зателефонуйте за контактами вище. Виконаємо протягом 10 днів.</p>

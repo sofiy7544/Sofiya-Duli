@@ -194,19 +194,24 @@
     ].join('\n');
     track('b2b_submit', { obj: g('obj'), area: g('area') });
     var ep = (window.DULI && window.DULI.formEndpoint) || '';
-    var tg = 'https://t.me/' + window.DULI.telegram + '?text=' + encodeURIComponent(text);
+    var hasTg = !!window.DULI.telegram;
+    var tg = hasTg ? 'https://t.me/' + window.DULI.telegram + '?text=' + encodeURIComponent(text)
+                   : 'sms:' + window.DULI.phone + (/iPhone|iPad|iPod/.test(navigator.userAgent) ? '&' : '?') + 'body=' + encodeURIComponent(text);
+    var chan = hasTg ? 'Telegram' : 'SMS';
     if (ep) {
       fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({ text: text, phone: g('phone'), name: g('person') }) }).catch(function () {});
-    } else {
+    } else if (hasTg) {
       window.open(tg, '_blank', 'noopener');
+    } else {
+      window.location.href = tg;
     }
     b2b.innerHTML = '<div class="calc__done">' +
       '<h3 class="calc__q">Запит ' + (ep ? 'надіслано' : 'сформовано') + '</h3>' +
       '<p class="calc__hint">Підготуємо комерційну пропозицію протягом одного робочого дня.' +
-      (ep ? '' : ' Ми відкрили Telegram із готовим текстом — натисніть «Надіслати».') + '</p>' +
+      (ep ? '' : ' Ми відкрили ' + chan + ' із готовим текстом — натисніть «Надіслати».') + '</p>' +
       '<div class="calc__alt">' +
-      (ep ? '' : '<a class="btn btn--primary" href="' + tg + '" target="_blank" rel="noopener">Відкрити Telegram із запитом</a>') +
+      (ep ? '' : '<a class="btn btn--primary" href="' + tg + '"' + (hasTg ? ' target="_blank" rel="noopener"' : '') + '>Відкрити ' + chan + ' із запитом</a>') +
       '<a class="btn btn--ghost" href="tel:' + window.DULI.phone + '">Зателефонувати</a></div></div>';
   });
 

@@ -1201,7 +1201,8 @@ def build_home():
     desc = ("Прибирання квартир, будинків та офісів в Одесі. Розрахунок вартості онлайн за хвилину, "
             "фіксована ціна до виїзду, своя хімія та обладнання, гарантія 24 години.")
     return (head(title, desc, "/", [ld_faq]) + header() + hero() + strip() + services()
-            + saturday() + calculator() + trust() + before_after() + how() + why() + packages() + b2b()
+            + saturday() + calculator() + trust() + how() + why() + packages() + b2b()
+            # before_after() повертається, щойно з’являться власні фото: див. BEFORE_AFTER у data.py
             + faq() + final() + footer() + scripts())
 
 

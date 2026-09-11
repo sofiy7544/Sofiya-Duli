@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from data import (SITE, CLAIMS, TYPES, OBJECTS, EXTRAS, FREQUENCY, ZONES,
                   SERVICES, PACKAGES, STEPS, WHY, BEFORE_AFTER, FAQ, B2B_OBJECTS,
                   PRICE_LIST, CHECKLISTS, GUARANTEES, EQUIPMENT, B2B_INCLUDED, FAQ_FULL,
-                  FURNITURE, WINDOW_SASH)
+                  FURNITURE, WINDOW_SASH, REVIEWS)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = "/Sofiya-Duli/"          # префікс проєктного сайту GitHub Pages
@@ -37,6 +37,11 @@ _SVG = {
     "image": '<rect x="3.5" y="5" width="17" height="14" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="m4.5 17 4.2-4 3 2.6 3.3-3.4 4.5 4.4"/>',
     "swap": '<path d="M8 7 4.5 10.5 8 14M16 10 19.5 13.5 16 17"/><path d="M4.5 10.5H14M10 13.5h9.5"/>',
     "spark": '<path d="M12 4.5 13.7 9l4.5 1.7-4.5 1.7L12 17l-1.7-4.6L5.8 10.7 10.3 9 12 4.5Z"/>',
+    "chev": '<path d="m6 9.5 6 6 6-6"/>',
+    "chevr": '<path d="m9 6 6 6-6 6"/>',
+    "msg": '<path d="M4.5 5.5h15v10.5H9l-4.5 3.5V5.5Z"/><path d="M8 9.5h8M8 12.5h5"/>',
+    "send": '<path d="m4 11.5 16-7-4.5 15.5-4-6.5-7.5-2Z"/><path d="m11.5 13.5 8.5-9"/>',
+    "star": '<path d="m12 4 2.4 5 5.5.7-4 3.8 1 5.5-4.9-2.7L7.1 19l1-5.5-4-3.8L9.6 9 12 4Z"/>',
 }
 
 
@@ -73,8 +78,15 @@ def head(title, desc, path="/", extra_ld=None):
         "image": SITE["base_url"] + "/assets/og.jpg",
         "priceRange": "₴₴₴",
         "areaServed": {"@type": "City", "name": "Одеса"},
-        "address": {"@type": "PostalAddress", "addressLocality": "Одеса", "addressCountry": "UA"},
-        "openingHours": "Mo-Su 08:00-21:00",
+        "address": {"@type": "PostalAddress", "addressLocality": "Одеса", "addressRegion": "Одеська область", "addressCountry": "UA"},
+        "openingHoursSpecification": {"@type": "OpeningHoursSpecification",
+                                      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                                      "opens": "08:00", "closes": "21:00"},
+        "contactPoint": {"@type": "ContactPoint", "telephone": SITE["phone_href"], "contactType": "customer service",
+                         "availableLanguage": ["uk", "ru"]},
+        "sameAs": [u for u in (TG, SITE["instagram"]) if u],
+        "paymentAccepted": "Cash, Credit Card, Bank transfer",
+        "currenciesAccepted": "UAH",
     }
     blocks = [ld] + (extra_ld or [])
     ga = ""
@@ -101,6 +113,8 @@ def head(title, desc, path="/", extra_ld=None):
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="/Sofiya-Duli/assets/mark.png">
 <link rel="apple-touch-icon" href="/Sofiya-Duli/assets/mark.png">
+<link rel="preload" href="/Sofiya-Duli/assets/fonts/manrope-cyr.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/Sofiya-Duli/assets/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/Sofiya-Duli/assets/css/site.css">
 <script type="application/ld+json">{json.dumps(blocks, ensure_ascii=False)}</script>
 {ga}
@@ -108,36 +122,49 @@ def head(title, desc, path="/", extra_ld=None):
 <body>"""
 
 
-def header(cta="#calc"):
-    nav = "".join('<a href="%s">%s</a>' % (h, t) for t, h in NAV)
-    menu_links = "".join('<a href="%s">%s</a>' % (h, t) for t, h in NAV)
+def header(cta="#calc", cur=""):
+    """Шапка + мобільне меню + відкриття <main>. cur — шлях поточної сторінки для aria-current."""
+    def link(t, h, arrow=False):
+        curattr = ' aria-current="page"' if cur and h == cur else ""
+        return '<a href="%s"%s>%s%s</a>' % (h, curattr, t, ic("chevr") if arrow else "")
+    nav = "".join(link(t, h) for t, h in NAV)
+    menu_links = "".join(link(t, h, True) for t, h in NAV + [("Для бізнесу", BASE + "business/")])
+    menu_sub = "".join('<a href="%sservices/%s/">%s</a>' % (BASE, s["slug"], s["name"]) for s in SERVICES)
     return f"""
+<a class="skip" href="#main">Перейти до вмісту</a>
 <header class="hdr">
   <div class="wrap hdr__in">
     <a class="brand" href="/Sofiya-Duli/" aria-label="{SITE['brand']} — на головну">
       <span class="brand__mark"><img src="/Sofiya-Duli/assets/mark.jpg" alt="" width="38" height="38"></span>
       <span class="brand__txt"><b>DULI Service</b><span>Клінінг · Одеса</span></span>
     </a>
-    <nav class="nav">{nav}</nav>
+    <nav class="nav" aria-label="Основна навігація">{nav}</nav>
     <div class="hdr__cta">
       <a class="hdr__tel" href="{TEL}">{SITE['phone']}</a>
       <a class="btn btn--primary" href="{cta}">Розрахувати вартість</a>
-      <button class="burger" data-menu aria-label="Меню" aria-controls="menu">{ic('menu')}</button>
+      <a class="hdr__call" href="{TEL}" aria-label="Зателефонувати {SITE['phone']}">{ic('phone')}</a>
+      <button class="burger" type="button" data-menu aria-label="Відкрити меню" aria-expanded="false" aria-controls="menu">{ic('menu')}</button>
     </div>
   </div>
 </header>
 
-<div class="menu" id="menu">
-  <div class="wrap menu__top">
+<div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Меню сайту">
+  <div class="menu__top">
     <span class="brand__txt"><b>DULI Service</b><span>Клінінг · Одеса</span></span>
-    <button class="burger" data-menu aria-label="Закрити меню">{ic('close')}</button>
+    <button class="burger" type="button" data-menu aria-label="Закрити меню">{ic('close')}</button>
   </div>
-  <div class="wrap menu__list">{menu_links}</div>
-  <div class="wrap menu__foot">
-    <a class="btn btn--primary btn--block btn--lg" href="{cta}">Розрахувати вартість</a>
-    <a class="btn btn--ghost btn--block" href="{TEL}">{SITE['phone']}</a>
+  <nav class="menu__list" aria-label="Розділи">{menu_links}</nav>
+  <div class="menu__sub">{menu_sub}</div>
+  <div class="menu__foot">
+    <a class="btn btn--primary btn--block btn--lg" href="{cta}" data-track="cta_menu">Розрахувати вартість {ic('arrow')}</a>
+    <div class="menu__row">
+      <a class="btn btn--ghost btn--block" href="{TEL}">{ic('phone')} Подзвонити</a>
+      <a class="btn btn--ghost btn--block" href="{TG}" target="_blank" rel="noopener">{ic('send')} Telegram</a>
+    </div>
+    <p>{SITE['hours']} · Одеса та передмістя</p>
   </div>
-</div>"""
+</div>
+<main id="main">"""
 
 
 def hero():
@@ -147,34 +174,35 @@ def hero():
         for t in TYPES[:3]
     )
     trust = [
-        ("clock", "Приїжджаємо вчасно"),
-        ("box", "Своя хімія та техніка"),
-        ("shield", "Ціна фіксується до виїзду"),
-        ("check", "Гарантія %d години" % CLAIMS["guarantee_hours"]),
+        ("shield", "Ціна відома до виїзду — без доплат «за фактом»"),
+        ("box", "Своя хімія, техніка й витратники"),
+        ("clock", "Гарантія %d години: пропустили — повернемось" % CLAIMS["guarantee_hours"]),
+        ("users", "Постійні бригади, а не випадкові люди"),
     ]
     trust_html = "".join('<div>%s<span>%s</span></div>' % (ic(i), t) for i, t in trust)
-    hero_bg = ""
     return f"""
 <section class="hero">
   <div class="wrap hero__grid">
     <div>
-      <h1>Повертайтеся<br>в <em>чистий дім</em></h1>
-      <p class="lead hero__lead">Прибирання квартир, будинків і офісів в Одесі. Ціну ви дізнаєтесь тут і зараз — без дзвінків і очікування менеджера.</p>
+      <p class="hero__kicker"><b>DULI Service</b><i></i><span>Клінінг в Одесі</span><i></i><span>Квартири · Будинки · Офіси</span></p>
+      <h1>Чистий дім <em>без вашої суботи</em></h1>
+      <p class="lead hero__lead">Прибирання квартир, будинків і офісів в Одесі. Ціну бачите одразу на сайті, бригада приїжджає зі своєю хімією та технікою, а за результат відповідаємо {CLAIMS['guarantee_hours']} години.</p>
       <div class="hero__cta">
-        <a class="btn btn--primary btn--lg" href="#calc">Розрахувати вартість {ic('arrow')}</a>
-        <a class="btn btn--ghost btn--lg" href="{TEL}">{ic('phone')} {SITE['phone']}</a>
+        <a class="btn btn--primary btn--lg" href="#calc" data-track="cta_hero">Розрахувати вартість {ic('arrow')}</a>
+        <a class="btn btn--ghost btn--lg" href="{TEL}">{ic('phone')} Зателефонувати</a>
       </div>
+      <p class="hero__hint">15 секунд, без дзвінка й без зобов’язань. Від&nbsp;{uah(CLAIMS['min_order_uah']).replace(' ', '&nbsp;')}&nbsp;₴ за&nbsp;візит.</p>
       <div class="hero__trust">{trust_html}</div>
     </div>
 
-    <div class="quick" id="quick"{hero_bg}>
+    <div class="quick" id="quick">
       <span class="quick__label">Порахувати за 15 секунд</span>
       <div class="quick__row">
-        <h4>Тип прибирання</h4>
-        <div class="seg">{segs}</div>
+        <span class="quick__t" id="qTypeL">Тип прибирання</span>
+        <div class="seg" role="group" aria-labelledby="qTypeL">{segs}</div>
       </div>
       <div class="quick__row">
-        <div class="quick__area"><h4>Площа</h4><b><span id="qAreaV">60</span> м²</b></div>
+        <div class="quick__area"><span class="quick__t">Площа</span><b><span id="qAreaV">60</span> м²</b></div>
         <input class="range" id="qArea" type="range" min="20" max="300" step="5" value="60" aria-label="Площа, м²">
       </div>
       <div class="quick__out">
@@ -182,9 +210,9 @@ def hero():
           <span class="quick__label">Орієнтовно</span>
           <div class="quick__price"><span id="qPrice">6 900</span> <small>₴</small></div>
         </div>
-        <button class="btn btn--primary" id="qGo" type="button">Уточнити</button>
+        <button class="btn btn--primary" id="qGo" type="button">Уточнити {ic('arrow')}</button>
       </div>
-      <p class="quick__note">Мінімальне замовлення — {uah(CLAIMS['min_order_uah'])} ₴. Точну суму порахуємо за 5 кроків нижче.</p>
+      <p class="quick__note">Мінімальне замовлення — {uah(CLAIMS['min_order_uah'])} ₴. Точну суму з доплатами й знижкою порахуємо за 5 кроків нижче.</p>
     </div>
   </div>
 </section>"""
@@ -204,21 +232,13 @@ def strip():
     return '<section class="strip"><div class="wrap"><div class="strip__in">%s</div></div></section>' % html
 
 
-def svc_img(s):
-    """Фото послуги або акуратний плейсхолдер, поки фото немає."""
-    if s.get("photo"):
-        return ('<div class="svc__img"><img src="%s%s" alt="%s" loading="lazy" width="640" height="400"></div>'
-                % (BASE, s["photo"], s["name"]))
-    return '<div class="svc__img"><div class="ph">%s<span>фото послуги</span></div></div>' % ic("image")
-
-
-def svc_card(s):
+def svc_card(s, eager=False):
     """Картка = потреба → результат → що входить → ціна → розрахунок."""
     inc = "".join("<li>%s</li>" % x for x in s["includes"][:3])
     obj = {"myttya-vikon": "windows", "dodatkovi-poslugy": "furniture", "pryburannya-ofisu": "office"}.get(s["slug"], "flat")
     return f"""
     <article class="svc__c">
-      <a class="svc__img" href="{BASE}services/{s['slug']}/" aria-label="{s['name']}">{svc_img(s)}</a>
+      <a class="svc__img" href="{BASE}services/{s['slug']}/" aria-label="{s['name']}">{svc_img(s, eager)}</a>
       <div class="svc__b">
         <span class="svc__need">{s['need']}</span>
         <h3><a href="{BASE}services/{s['slug']}/">{s['outcome']}</a></h3>
@@ -231,24 +251,31 @@ def svc_card(s):
     </article>"""
 
 
-def svc_img(s):
-    """Ілюстрація або фото послуги; поки фото немає — фірмова сцена."""
+def svc_img(s, eager=False):
+    """Ілюстрація або фото послуги; поки фото немає — фірмова сцена.
+    eager=True для карток над згином — не гальмуємо LCP лінивим завантаженням."""
     if s.get("photo"):
-        return ('<img src="%s%s" alt="%s" loading="lazy" width="640" height="400">' % (BASE, s["photo"], s["name"]))
+        return ('<img src="%s%s" alt="%s" loading="%s"%s width="640" height="400">'
+                % (BASE, s["photo"], s["name"], "eager" if eager else "lazy",
+                   ' fetchpriority="high"' if eager else ""))
     return '<div class="ph">%s<span>фото послуги</span></div>' % ic("image")
 
 
 def services():
-    cards = "".join(svc_card(s) for s in SERVICES)
+    cards = "".join(svc_card(s, i == 0) for i, s in enumerate(SERVICES))
     return f"""
 <section class="section" id="services">
   <div class="wrap">
     <div class="section-head rv">
       <span class="eyebrow">Оберіть свою ситуацію</span>
       <h2>Який результат вам потрібен?</h2>
-      <p class="lead muted">Не «послуга з прайсу», а конкретний результат у вашому домі. Натисніть «Розрахувати» — калькулятор відкриється з готовим вибором.</p>
+      <p class="lead muted">Не «послуга з прайсу», а конкретний результат у вашому домі. Натисніть «Розрахувати» — калькулятор відкриється з готовим вибором, ціну побачите одразу.</p>
     </div>
     <div class="svc rv">{cards}</div>
+    <div class="section-cta rv">
+      <a class="btn btn--ghost" href="{BASE}services/">Усі послуги {ic('arrow')}</a>
+      <p>Не знайшли своєї ситуації? Зателефонуйте — підберемо формат за хвилину.</p>
+    </div>
   </div>
 </section>"""
 
@@ -273,30 +300,65 @@ def saturday():
 
 
 def trust():
-    tiles = []
+    """Блок довіри. Цифри (рейтинг, кількість замовлень) показуються лише коли заповнені в SITE —
+    нічого не вигадуємо. Решта — обіцянки, які клієнт може перевірити на своєму замовленні."""
+    facts = []
     if SITE.get("rating"):
-        tiles.append(("%s / 5" % SITE["rating"], "середня оцінка клієнтів" + (" · %s відгуків" % SITE["rating_count"] if SITE.get("rating_count") else "")))
+        facts.append(("%s / 5" % SITE["rating"],
+                      "середня оцінка" + (" · %s відгуків" % SITE["rating_count"] if SITE.get("rating_count") else "")))
     if SITE.get("orders_done"):
-        tiles.append((SITE["orders_done"], "виконаних прибирань"))
-    tiles += [("100 %", "своя техніка, хімія та витратники"),
-              ("%d год" % CLAIMS["guarantee_hours"], "гарантія: пропустили — повернемось і виправимо"),
-              ("до виїзду", "ціна фіксується, без доплат «за фактом»"),
-              ("постійні", "бригади, а не випадкові люди під замовлення")]
-    html = "".join('<div class="tr__i"><b>%s</b><span>%s</span></div>' % t for t in tiles[:4])
+        facts.append((SITE["orders_done"], "виконаних прибирань"))
+    facts_html = "".join('<div class="tr__i tr__fact"><b>%s</b><span>%s</span></div>' % f for f in facts)
+    items = [
+        ("shield", "Ціна фіксується до виїзду", "Сума відома до того, як бригада зайшла у двері. Більше робіт — тільки за вашою згодою."),
+        ("clock", "Гарантія %d години" % CLAIMS["guarantee_hours"], "Помітили недолік протягом доби — повертаємось і переробляємо безкоштовно."),
+        ("box", "Усе своє привозимо", "Хімія, техніка, витратники. Вам не треба нічого купувати й готувати."),
+        ("users", "Постійні бригади", "Ті самі навчені клінери, а не випадкові люди під замовлення."),
+    ]
+    items_html = "".join('<div class="tr__i">%s<b>%s</b><span>%s</span></div>' % (ic(i), t, d) for i, t, d in items)
+    slot = ""
+    if not REVIEWS:
+        slot = ('<div class="tr__slot rv">%s<span>Відгуки клієнтів з’являться тут після перших замовлень. '
+                'Публікуємо лише справжні — з іменем і джерелом.</span></div>' % ic("star"))
     return f"""
 <section class="section" id="trust">
   <div class="wrap">
     <div class="section-head rv">
       <span class="eyebrow">Довіра</span>
-      <h2>Чому нам довіряють свій дім?</h2>
+      <h2>Що ви можете перевірити на своєму замовленні</h2>
+      <p class="lead muted">Жодних «ми найкращі». Тільки те, що видно під час і після прибирання.</p>
     </div>
-    <div class="tr rv">{html}</div>
+    <div class="tr rv">{facts_html}{items_html}</div>
+    {slot}
+    <div class="section-cta rv">
+      <a class="btn btn--primary" href="#calc" data-track="cta_trust">Перевірити на замовленні {ic('arrow')}</a>
+    </div>
+  </div>
+</section>"""
+
+
+def reviews():
+    """Справжні відгуки з data.py. Порожній список — секції немає."""
+    if not REVIEWS:
+        return ""
+    cards = "".join(
+        '<div class="rev__c"><p>«%s»</p><div class="rev__m"><b>%s</b><span>· %s</span><span>· %s</span></div></div>'
+        % (r["text"], r["name"], r["meta"], r["source"]) for r in REVIEWS
+    )
+    return f"""
+<section class="section section--surface" id="reviews">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Відгуки</span>
+      <h2>Що кажуть після прибирання</h2>
+    </div>
+    <div class="rev rv">{cards}</div>
   </div>
 </section>"""
 
 
 def calculator(title="Скільки коштуватиме у вас",
-               sub="П’ять кроків і дата. Ціна перераховується одразу — нічого не треба вгадувати."):
+               sub="П’ять коротких кроків. Ціна перераховується одразу — нічого не треба вгадувати."):
     obj = "".join(
         '<button class="opt" type="button" data-set="object" data-val="%s" aria-pressed="false">'
         '<span class="opt__t"><b>%s</b></span></button>' % (o["id"], o["name"])
@@ -335,7 +397,7 @@ def calculator(title="Скільки коштуватиме у вас",
     furn = "".join(
         '<div class="cnt__r"><div class="cnt__t"><b>%s</b><span>%s ₴</span></div>'
         '<div class="cnt__c"><button type="button" data-cnt="%s" data-d="-1" aria-label="Менше">−</button>'
-        '<output id="cnt-%s">0</output><button type="button" data-cnt="%s" data-d="1" aria-label="Більше">+</button></div></div>'
+        '<output id="cnt-%s" aria-live="polite">0</output><button type="button" data-cnt="%s" data-d="1" aria-label="Більше">+</button></div></div>'
         % (f["name"], uah(f["price"]), f["id"], f["id"], f["id"]) for f in FURNITURE
     )
     zones = "".join('<option value="%s">%s%s</option>'
@@ -345,6 +407,9 @@ def calculator(title="Скільки коштуватиме у вас",
         '<button class="chip" type="button" data-set="time" data-val="%s" aria-pressed="false"><b>%s</b></button>' % (t, t)
         for t in ("09:00—12:00", "12:00—15:00", "15:00—18:00")
     )
+    names = ["Об’єкт", "Тип", "Обсяг", "Опції", "Бронювання"]
+    steps_html = "".join('<span%s>%s</span>' % (' class="on"' if i == 0 else "", n) for i, n in enumerate(names))
+    bars = "".join('<i%s></i>' % (' class="on"' if i == 0 else "") for i in range(5))
 
     return f"""
 <section class="section section--surface" id="calc">
@@ -358,29 +423,25 @@ def calculator(title="Скільки коштуватиме у вас",
     <div class="calc rv">
       <div class="calc__grid">
         <div class="calc__main">
-          <div class="calc__bar" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="calc__prog">
+            <div class="calc__steps" aria-hidden="true">{steps_html}</div>
+            <div class="calc__bar" aria-hidden="true">{bars}</div>
+            <span class="calc__kicker" id="cKicker" aria-live="polite">Крок 1 із 5 · <b>Об’єкт</b></span>
+          </div>
 
           <div class="calc__step on" data-group>
-            <span class="calc__kicker">Крок 1 із 6</span>
             <h3 class="calc__q">Що прибираємо?</h3>
             <p class="calc__hint">Від типу об’єкта залежить тарифна сітка.</p>
             <div class="opts opts--2">{obj}</div>
-            <div class="calc__nav"><button class="btn btn--primary" type="button" data-next>Далі {ic('arrow')}</button></div>
           </div>
 
           <div class="calc__step" data-group>
-            <span class="calc__kicker">Крок 2 із 6</span>
             <h3 class="calc__q">Який тип прибирання?</h3>
             <p class="calc__hint">Якщо сумніваєтесь — беріть генеральне: воно охоплює все.</p>
             <div class="opts">{typ}</div>
-            <div class="calc__nav">
-              <button class="btn btn--ghost calc__back" type="button" data-back aria-label="Назад">{ic('back')}</button>
-              <button class="btn btn--primary" type="button" data-next>Далі {ic('arrow')}</button>
-            </div>
           </div>
 
           <div class="calc__step" data-group>
-            <span class="calc__kicker">Крок 3 із 6</span>
             <div id="pArea">
               <h3 class="calc__q">Яка площа?</h3>
               <p class="calc__hint">Приблизно — цього достатньо для розрахунку.</p>
@@ -389,8 +450,8 @@ def calculator(title="Скільки коштуватиме у вас",
                 <input id="cAreaN" type="number" inputmode="numeric" min="10" max="500" value="60" aria-label="Площа, м²">
               </div>
               <input class="range" id="cArea" type="range" min="10" max="500" step="5" value="60" aria-label="Площа повзунком">
-              <h4 style="margin:22px 0 10px;font-size:.94rem">Санвузлів</h4>
-              <div class="opts opts--2">{baths}</div>
+              <p class="calc__sub" id="cBathsL">Санвузлів</p>
+              <div class="opts opts--2" role="group" aria-labelledby="cBathsL">{baths}</div>
             </div>
             <div id="pWin" hidden>
               <h3 class="calc__q">Скільки стулок?</h3>
@@ -402,74 +463,69 @@ def calculator(title="Скільки коштуватиме у вас",
               <p class="calc__hint">Вкажіть кількість — ціна складеться автоматично.</p>
               <div class="cnt">{furn}</div>
             </div>
-            <div class="calc__nav">
-              <button class="btn btn--ghost calc__back" type="button" data-back aria-label="Назад">{ic('back')}</button>
-              <button class="btn btn--primary" type="button" data-next>Далі {ic('arrow')}</button>
-            </div>
           </div>
 
           <div class="calc__step" data-group>
-            <span class="calc__kicker">Крок 4 із 6</span>
-            <h3 class="calc__q">Додати щось окремо?</h3>
-            <p class="calc__hint">Необов’язково. Ціна кожної позиції — одразу на кнопці.</p>
-            <div class="opts opts--2">{extras}</div>
-            <div class="calc__nav">
-              <button class="btn btn--ghost calc__back" type="button" data-back aria-label="Назад">{ic('back')}</button>
-              <button class="btn btn--primary" type="button" data-next>Далі {ic('arrow')}</button>
+            <h3 class="calc__q">Додати щось і як часто?</h3>
+            <p class="calc__hint">Усе необов’язково. Ціна кожної позиції — одразу на кнопці, знижка за регулярність — теж.</p>
+            <div id="pExtras">
+              <p class="calc__sub" id="cExtrasL" style="margin-top:0">Додаткові роботи</p>
+              <div class="opts opts--2" role="group" aria-labelledby="cExtrasL">{extras}</div>
             </div>
-          </div>
-
-          <div class="calc__step" data-group>
-            <span class="calc__kicker">Крок 5 із 6</span>
-            <h3 class="calc__q">Як часто прибирати?</h3>
-            <p class="calc__hint">Регулярне обслуговування дешевше — знижка враховується одразу.</p>
-            <div class="opts opts--2">{freq}</div>
+            <p class="calc__sub" id="cFreqL">Як часто прибирати?</p>
+            <div class="opts opts--2" role="group" aria-labelledby="cFreqL">{freq}</div>
             <div class="field" style="margin-top:20px">
               <label for="cZone">Район</label>
               <select id="cZone">{zones}</select>
-            </div>
-            <div class="calc__nav">
-              <button class="btn btn--ghost calc__back" type="button" data-back aria-label="Назад">{ic('back')}</button>
-              <button class="btn btn--primary" type="button" data-next>Обрати дату {ic('arrow')}</button>
             </div>
           </div>
 
           <div class="calc__step" data-group>
             <div id="cFormWrap">
-              <span class="calc__kicker">Крок 6 із 6</span>
               <h3 class="calc__q">Коли вам зручно?</h3>
-              <p class="calc__hint">Підтвердимо час дзвінком протягом 15 хвилин.</p>
-              <div class="chips" id="cDates"></div>
-              <h4 style="margin:20px 0 10px;font-size:.94rem">Час</h4>
-              <div class="chips">{times}</div>
-              <form id="cForm" style="margin-top:24px">
+              <p class="calc__hint">Підтвердимо час дзвінком протягом 15 хвилин у робочі години.</p>
+              <div class="chips" id="cDates" aria-label="Дата"></div>
+              <p class="calc__sub" id="cTimeL">Час</p>
+              <div class="chips" id="cTimes" role="group" aria-labelledby="cTimeL">{times}</div>
+              <p class="form-err" id="cWhenErr" role="alert">Оберіть дату та зручний час — так ми одразу зарезервуємо бригаду.</p>
+              <form id="cForm" style="margin-top:22px" novalidate>
                 <div class="field-row">
-                  <div class="field"><label for="fName">Ім’я</label><input id="fName" name="name" required autocomplete="name" placeholder="Як до вас звертатися"></div>
-                  <div class="field"><label for="fPhone">Телефон</label><input id="fPhone" name="phone" type="tel" required autocomplete="tel" placeholder="+380 __ ___ __ __"></div>
+                  <div class="field"><label for="fName">Ім’я</label><input id="fName" name="name" required autocomplete="name" placeholder="Як до вас звертатися" aria-describedby="fNameErr"><span class="field__err" id="fNameErr">Напишіть, як до вас звертатися.</span></div>
+                  <div class="field"><label for="fPhone">Телефон</label><input id="fPhone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" placeholder="+380 __ ___ __ __" aria-describedby="fPhoneErr"><span class="field__err" id="fPhoneErr">Перевірте номер: потрібно 10 цифр, наприклад 063 704 16 17.</span></div>
                 </div>
-                <div class="field"><label for="fAddr">Адреса</label><input id="fAddr" name="address" required placeholder="Вулиця, будинок, квартира"></div>
-                <div class="calc__nav">
-                  <button class="btn btn--ghost calc__back" type="button" data-back aria-label="Назад">{ic('back')}</button>
-                  <button class="btn btn--primary" type="submit">Забронювати прибирання</button>
-                </div>
+                <div class="field"><label for="fAddr">Адреса <small>· необов’язково, уточнимо при дзвінку</small></label><input id="fAddr" name="address" autocomplete="street-address" placeholder="Вулиця, будинок, квартира"></div>
+                <p class="consent">Натискаючи «Замовити прибирання», ви погоджуєтесь на обробку контактних даних для зв’язку щодо замовлення. <a href="{BASE}privacy/">Як ми з ними поводимось</a>.</p>
               </form>
             </div>
             <div class="calc__done" id="cDone" hidden>
               {ic('check')}
-              <h3 class="calc__q">Заявку прийнято</h3>
-              <p class="calc__hint">Передзвонимо протягом 15 хвилин у робочі години, щоб підтвердити час і адресу.</p>
-              <a class="btn btn--ghost" href="{TEL}">{ic('phone')} Зателефонувати зараз</a>
+              <h3 class="calc__q" id="cDoneT">Заявку сформовано</h3>
+              <p class="calc__hint" id="cDoneP">Ми відкрили Telegram із готовим текстом заявки — залишилось натиснути «Надіслати». Підтвердимо час дзвінком протягом 15 хвилин у робочі години.</p>
+              <div class="calc__alt">
+                <a class="btn btn--primary" id="cTgLink" href="{TG}" target="_blank" rel="noopener">{ic('send')} Відкрити Telegram із заявкою</a>
+                <p id="cAltP">Немає Telegram? Текст заявки вже готовий — надішліть його SMS або просто зателефонуйте.</p>
+                <a class="btn btn--ghost" id="cSmsLink" href="sms:{SITE['phone_href']}">{ic('msg')} Надіслати SMS</a>
+                <a class="btn btn--ghost" href="{TEL}">{ic('phone')} Зателефонувати</a>
+              </div>
             </div>
           </div>
         </div>
 
-        <aside class="calc__side">
+        <aside class="calc__side" id="cSide">
           <span class="lbl">Орієнтовна вартість</span>
           <div class="calc__sum" id="cSum">0 <small>₴</small></div>
           <span class="calc__save" id="cSave" hidden></span>
           <div class="calc__rows" id="cRows"></div>
           <p class="foot">Ціна фіксується до виїзду. Якщо роботи виявиться більше — узгодимо до початку, а не за фактом.</p>
         </aside>
+
+        <div class="calc__foot" id="cFoot">
+          <button class="btn btn--ghost calc__back" type="button" data-back aria-label="Назад" hidden>{ic('back')}</button>
+          <button class="calc__tot" type="button" data-side aria-expanded="false" aria-controls="cSide">
+            <small>Разом ≈</small><b><span id="cTot">0 ₴</span>{ic('chev')}</b>
+          </button>
+          <button class="btn btn--primary calc__next" type="button" data-next id="cNext">Далі {ic('arrow')}</button>
+        </div>
       </div>
     </div>
   </div>
@@ -524,6 +580,10 @@ def how():
       <p class="lead muted">Решту робимо ми: привозимо хімію й техніку, працюємо за чек-листом, прибираємо за собою.</p>
     </div>
     <div class="steps rv">{items}</div>
+    <div class="section-cta rv">
+      <a class="btn btn--primary" href="#calc" data-track="cta_how">Почати з розрахунку {ic('arrow')}</a>
+      <a class="btn btn--quiet" href="{BASE}how-it-works/">Чек-листи бригади {ic('arrow')}</a>
+    </div>
   </div>
 </section>"""
 
@@ -541,6 +601,10 @@ def why():
       <p class="lead muted">Жодного «індивідуального підходу». Тільки те, що ви побачите під час замовлення.</p>
     </div>
     <div class="why rv">{items}</div>
+    <div class="section-cta rv">
+      <a class="btn btn--ghost" href="{BASE}about/">Хто приїде і що привезе {ic('arrow')}</a>
+      <p>Кожна обіцянка — пункт у вашій заявці, а не слоган.</p>
+    </div>
   </div>
 </section>"""
 
@@ -556,9 +620,9 @@ def packages():
       <span class="pk__tag">{p['tag']}</span>
       <div class="pk__n">{p['name']}</div>
       <div class="pk__p">від {p['from']} ₴ <span>/ м²</span></div>
-      <p class="muted" style="font-size:.93rem">{p['lead']}</p>
+      <p class="pk__lead">{p['lead']}</p>
       <ul class="pk__l">{items}</ul>
-      <a class="btn {btn} btn--block" href="#calc">Розрахувати</a>
+      <a class="btn {btn} btn--block" href="#calc" data-track="cta_package">Розрахувати {p['name']}</a>
     </div>""")
 
     rows = []
@@ -579,14 +643,16 @@ def packages():
     </div>
     <div class="pk rv">{''.join(cards)}</div>
 
-    <div class="reg rv" style="margin-top:clamp(48px,6vw,84px)">
+    <div class="reg rv">
       <div>
         <span class="eyebrow">Регулярно</span>
-        <h2 style="margin:12px 0 14px">Один раз добре.<br>Регулярно — дешевше</h2>
+        <h2>Один раз добре.<br>Регулярно — дешевше</h2>
         <p class="lead muted">Що частіше приїжджаємо, то менше роботи за візит. Знижка застосовується автоматично й видно її одразу в калькуляторі.</p>
-        <p class="muted" style="font-size:.9rem;margin-top:16px">У прикладі — генеральне прибирання 60 м². Ваша сума залежить від площі й типу.</p>
-        <a class="btn btn--primary" href="#calc" style="margin-top:22px">Порахувати свою {ic('arrow')}</a>
-        <a class="btn btn--quiet" href="{BASE}pricing/" style="margin-top:22px;margin-left:18px">Повний прайс {ic('arrow')}</a>
+        <p class="reg__note">У прикладі — генеральне прибирання 60 м². Ваша сума залежить від площі й типу.</p>
+        <div class="reg__cta">
+          <a class="btn btn--primary" href="#calc" data-track="cta_regular">Порахувати свою {ic('arrow')}</a>
+          <a class="btn btn--quiet" href="{BASE}pricing/">Повний прайс {ic('arrow')}</a>
+        </div>
       </div>
       <div class="reg__tbl">{''.join(rows)}</div>
     </div>
@@ -601,14 +667,14 @@ def b2b():
   <div class="wrap">
     <div class="b2b rv">
       <div>
-        <span class="eyebrow" style="color:#8FD3AC">Для бізнесу</span>
-        <h2 style="margin-top:12px">Обслуговування комерційних приміщень</h2>
+        <span class="eyebrow">Для бізнесу</span>
+        <h2>Команда щоранку приходить у чистий офіс</h2>
         <p>Працюємо за договором з ФОП і ТОВ: рахунки, акти, безготівковий розрахунок. Прибираємо до відкриття або після закриття, щоб не заважати роботі.</p>
         <div class="b2b__tags">{tags}</div>
       </div>
-      <div style="display:grid;gap:12px">
-        <a class="btn btn--primary btn--lg btn--block" href="{BASE}business/">Умови для бізнесу</a>
-        <a class="btn btn--ghost btn--block" href="{TEL}" style="border-color:rgba(255,255,255,.28);color:#fff">{SITE['phone']}</a>
+      <div class="b2b__cta">
+        <a class="btn btn--primary btn--lg btn--block" href="{BASE}business/">Умови та КП за день {ic('arrow')}</a>
+        <a class="btn btn--ghost btn--block" href="{TEL}">{ic('phone')} {SITE['phone']}</a>
       </div>
     </div>
   </div>
@@ -629,6 +695,10 @@ def faq():
       <h2>Що зазвичай запитують</h2>
     </div>
     <div class="faq rv">{items}</div>
+    <div class="section-cta rv">
+      <a class="btn btn--ghost" href="{TEL}">{ic('phone')} Запитати телефоном</a>
+      <a class="btn btn--quiet" href="{BASE}faq/">Усі 17 відповідей {ic('arrow')}</a>
+    </div>
   </div>
 </section>"""
 
@@ -641,10 +711,10 @@ def final():
 <section class="section">
   <div class="wrap">
     <div class="final rv">
-      <span class="eyebrow" style="color:#8FD3AC">Почнімо</span>
-      <h2 style="margin-top:14px">Поверніть собі вечір, а дому — чистоту</h2>
-      <p>Розрахунок займає менше хвилини й ні до чого не зобов’язує.</p>
-      <a class="btn btn--primary btn--lg" href="#calc">Розрахувати вартість {ic('arrow')}</a>
+      <span class="eyebrow">Почнімо</span>
+      <h2>Поверніть собі вечір, а дому — чистоту</h2>
+      <p>Розрахунок — менше хвилини. Ціна фіксується до виїзду й ні до чого не зобов’язує.</p>
+      <a class="btn btn--primary btn--lg" href="#calc" data-track="cta_final">Розрахувати вартість {ic('arrow')}</a>
       <div class="final__links">{''.join(links)}</div>
     </div>
   </div>
@@ -657,6 +727,7 @@ def footer(cta="#calc"):
     nav_links += '<a href="%sbusiness/">Для бізнесу</a>' % BASE
     legal = SITE["legal"] or ""
     return f"""
+</main>
 <footer class="ftr">
   <div class="wrap">
     <div class="ftr__grid">
@@ -678,15 +749,15 @@ def footer(cta="#calc"):
       </div>
     </div>
     <div class="ftr__bot">
-      <span>© 2026 {SITE['brand']}{(' · ' + legal) if legal else ''}</span>
+      <span>© 2026 {SITE['brand']}{(' · ' + legal) if legal else ''} · <a href="{BASE}privacy/">Конфіденційність</a></span>
       <span>Готівка · Картка · Безготівковий розрахунок</span>
     </div>
   </div>
 </footer>
 
-<div class="bar">
-  <a class="btn btn--primary" href="{cta}">Розрахувати вартість</a>
-  <a class="bar__call" href="{TEL}" aria-label="Зателефонувати">{ic('phone')}</a>
+<div class="bar" id="bar">
+  <a class="btn btn--primary" href="{cta}" data-track="cta_bar">Розрахувати вартість {ic('arrow')}</a>
+  <a class="bar__call" href="{TEL}" aria-label="Зателефонувати {SITE['phone']}">{ic('phone')}</a>
 </div>"""
 
 
@@ -700,6 +771,7 @@ def scripts():
         "furniture": FURNITURE,
         "sash": WINDOW_SASH,
         "telegram": SITE["telegram"],
+        "phone": SITE["phone_href"],
         "formEndpoint": SITE["form_endpoint"],
     }
     return ('<script>window.DULI=%s;</script>\n'
@@ -742,8 +814,8 @@ def page_hero(h1, intro, price_from=None, unit=None, note=None, img=None):
       <h1>{h1}</h1>
       <p class="lead phero__lead">{intro}</p>
       <div class="hero__cta">
-        <a class="btn btn--primary btn--lg" href="#calc">Розрахувати вартість {ic('arrow')}</a>
-        <a class="btn btn--ghost btn--lg" href="{TEL}">{ic('phone')} {SITE['phone']}</a>
+        <a class="btn btn--primary btn--lg" href="#calc" data-track="cta_page_hero">Розрахувати вартість {ic('arrow')}</a>
+        <a class="btn btn--ghost btn--lg" href="{TEL}">{ic('phone')} Зателефонувати</a>
       </div>
       {('<p class="phero__note">%s</p>' % note) if note else ''}
     </div>
@@ -799,7 +871,7 @@ def service_page(s):
 
     return (head(s["seo_title"], s["seo_desc"], "/services/%s/" % s["slug"],
                  [crumb_ld, ld_service, ld_faq])
-            + header() + crumb_html
+            + header(cur=BASE + "services/") + crumb_html
             + page_hero(s["h1"], s["intro"], s["from"], s["unit"],
                         "Мінімальне замовлення — %s ₴. Виїзд по Одесі безкоштовний." % uah(CLAIMS["min_order_uah"]))
             + f"""
@@ -841,7 +913,7 @@ def service_page(s):
       <h2>Про цю послугу</h2>
     </div>
     <div class="faq rv">{faq_items}</div>
-    <p class="muted" style="margin-top:22px;font-size:.95rem">Решта питань — у <a href="{BASE}#faq" style="color:var(--brand)">загальному розділі</a>.</p>
+    <p class="faq-more">Решта питань — у <a href="{BASE}faq/">загальному розділі</a>, або зателефонуйте: <a href="{TEL}">{SITE['phone']}</a>.</p>
   </div>
 </section>
 
@@ -859,12 +931,12 @@ def service_page(s):
 
 def services_hub():
     cards = []
-    for s in SERVICES:
+    for i, s in enumerate(SERVICES):
         inc = "".join("<li>%s</li>" % x for x in s["includes"][:4])
         cards.append(f"""
     <article class="svc__c">
       <a class="svc__link" href="{BASE}services/{s['slug']}/" aria-label="{s['name']}"></a>
-      {svc_img(s)}
+      <div class="svc__img">{svc_img(s, i < 2)}</div>
       <div class="svc__b">
         <h3>{s['name']}</h3>
         <p>{s['lead']}</p>
@@ -877,18 +949,18 @@ def services_hub():
     </article>""")
 
     crumb_html, crumb_ld = crumbs([("Головна", BASE), ("Послуги", None)])
-    title = "Послуги клінінгу в Одесі — прибирання квартир, офісів, після ремонту | DULI Service"
+    title = "Послуги клінінгу в Одесі — ціни й розрахунок | DULI"
     desc = ("Усі послуги DULI Service в Одесі: підтримуюче та генеральне прибирання, після ремонту, "
             "миття вікон, офіси, хімчистка меблів. Ціни та онлайн-розрахунок.")
     return (head(title, desc, "/services/", [crumb_ld])
-            + header() + crumb_html
+            + header(cur=BASE + "services/") + crumb_html
             + page_hero("Послуги клінінгу в Одесі",
                         "Шість напрямків із фіксованими ставками. Оберіть свій — на сторінці буде повний "
                         "склад робіт, ціни та калькулятор.",
                         note="Працюємо 7 днів на тиждень, виїзд у день звернення.", img=SITE["hero_photo"])
             + f"""
 <section class="section section--surface">
-  <div class="wrap"><div class="svc rv">{''.join(cards)}</div></div>
+  <div class="wrap"><div class="svc svc--hub rv">{''.join(cards)}</div></div>
 </section>"""
             + calculator() + why() + final() + footer() + scripts())
 
@@ -918,7 +990,7 @@ def pricing_page():
     desc = ("Повний прайс-лист DULI Service: прибирання квартир від 55 ₴/м², генеральне від 115 ₴/м², "
             "після ремонту від 150 ₴/м², миття вікон, хімчистка меблів, офіси. 75 позицій.")
     return (head(title, desc, "/pricing/", [crumb_ld])
-            + header(BASE + "#calc") + crumb_html
+            + header(BASE + "#calc", cur=BASE + "pricing/") + crumb_html
             + page_hero("Ціни на клінінг в Одесі",
                         "Повний прайс без зірочок і дрібного шрифту. Ціна фіксується до виїзду — "
                         "якщо роботи виявиться більше, узгоджуємо це до початку, а не за фактом.",
@@ -978,7 +1050,7 @@ def how_page():
     desc = ("Як влаштоване прибирання DULI Service: п’ять кроків від заявки до приймання роботи "
             "та повні чек-листи для кожного типу прибирання.")
     return (head(title, desc, "/how-it-works/", [crumb_ld])
-            + header(BASE + "#calc") + crumb_html
+            + header(BASE + "#calc", cur=BASE + "how-it-works/") + crumb_html
             + page_hero("Як це працює",
                         "П’ять кроків, у яких від вас — два: сказати, що прибрати, і прийняти роботу. "
                         "Решту робимо ми.")
@@ -1019,11 +1091,11 @@ def business_page():
         for r in dict(PRICE_LIST)["Офіси та комерція"]
     )
     crumb_html, crumb_ld = crumbs([("Головна", BASE), ("Для бізнесу", None)])
-    title = "Клінінг для бізнесу в Одесі — офіси, кафе, магазини | DULI Service"
+    title = "Клінінг для бізнесу в Одесі — офіси, кафе, магазини | DULI"
     desc = ("Прибирання офісів, кафе, магазинів і салонів в Одесі за договором. Рахунки, акти, "
             "безготівковий розрахунок, постійна бригада та підміна персоналу. Від 32 ₴/м².")
     return (head(title, desc, "/business/", [crumb_ld])
-            + header(BASE + "#calc") + crumb_html
+            + header(BASE + "#calc", cur=BASE + "business/") + crumb_html
             + page_hero("Клінінг для бізнесу",
                         "Постійна бригада, фіксований графік і документи в порядку. Прибираємо до відкриття "
                         "або після закриття, щоб не заважати вашій команді.",
@@ -1115,7 +1187,7 @@ def about_page():
     desc = ("DULI Service — клінінгова служба в Одесі. Постійні бригади, професійна хімія та обладнання, "
             "фіксована ціна й гарантія 24 години.")
     return (head(title, desc, "/about/", [crumb_ld])
-            + header(BASE + "#calc") + crumb_html
+            + header(BASE + "#calc", cur=BASE + "about/") + crumb_html
             + page_hero("Служба, яка працює на результат, а не на години",
                         "Ми свідомо відмовились від оплати «за присутність». Клієнт платить за результат: "
                         "обсяг робіт зафіксовано в чек-листі, ціна — до виїзду, а якщо щось зроблено погано, "
@@ -1179,12 +1251,54 @@ def faq_page():
     desc = ("Відповіді на питання про прибирання: ціни, оплата, хімія, гарантії, робота з бізнесом. "
             "17 питань, на які ми відповідаємо найчастіше.")
     return (head(title, desc, "/faq/", [crumb_ld, ld_faq])
-            + header(BASE + "#calc") + crumb_html
+            + header(BASE + "#calc", cur=BASE + "faq/") + crumb_html
             + page_hero("Питання та відповіді",
                         "Зібрали те, що запитують найчастіше. Якщо вашого питання тут немає — "
                         "зателефонуйте або напишіть, відповімо швидко.")
             + '<section class="section section--surface"><div class="wrap"><div class="fgroups">%s</div></div></section>' % groups
             + final() + footer(BASE + "#calc") + scripts())
+
+
+def privacy_page():
+    legal = SITE["legal"] or "DULI Service"
+    crumb_html, crumb_ld = crumbs([("Головна", BASE), ("Конфіденційність", None)])
+    title = "Політика конфіденційності | DULI Service"
+    desc = "Які дані ми отримуємо з форм сайту DULI Service, навіщо, скільки зберігаємо та як їх видалити."
+    return (head(title, desc, "/privacy/", [crumb_ld])
+            + header(BASE + "#calc") + crumb_html
+            + f"""
+<section class="section">
+  <div class="wrap legal">
+    <span class="eyebrow">Персональні дані</span>
+    <h1 style="font-size:var(--fs-h1-page);margin:12px 0 18px">Політика конфіденційності</h1>
+    <p class="lead">Коротко: ми беремо лише ім’я, телефон і адресу, використовуємо їх тільки щоб домовитись про прибирання, нікому не передаємо і видаляємо на ваш запит.</p>
+
+    <h2>Хто обробляє дані</h2>
+    <p>{legal}, Одеса. Зв’язок: <a href="{TEL}">{SITE['phone']}</a>, Telegram <a href="{TG}" target="_blank" rel="noopener">@{SITE['telegram']}</a>.</p>
+
+    <h2>Які дані ми отримуємо</h2>
+    <ul>
+      <li>Із форми розрахунку та бронювання — ім’я, телефон, адреса (за бажанням), обрані параметри прибирання, дата й час.</li>
+      <li>Із форми для бізнесу — назва компанії, контактна особа, телефон, тип і площа об’єкта, коментар.</li>
+      <li>Технічні дані — вибір у калькуляторі зберігається у вашому браузері (localStorage), щоб ви не втратили розрахунок; на сервер він не передається.</li>
+    </ul>
+
+    <h2>Навіщо</h2>
+    <p>Щоб підтвердити замовлення, узгодити час і адресу, виконати прибирання та зв’язатися щодо гарантії. Розсилок і реклами без окремої згоди ми не надсилаємо.</p>
+
+    <h2>Куди потрапляє заявка</h2>
+    <p>Форма формує текст заявки й відкриває його у вашому Telegram (або SMS) для надсилання нам. Ви самі бачите, що саме надсилаєте. Якщо на сайті підключено пряму доставку заявок, вони надходять на наш робочий номер або пошту.</p>
+
+    <h2>Скільки зберігаємо і як видалити</h2>
+    <p>Контакти зберігаються на час виконання замовлення та гарантійного періоду. Щоб видалити дані або дізнатись, що ми зберігаємо, — напишіть або зателефонуйте за контактами вище. Виконаємо протягом 10 днів.</p>
+
+    <h2>Cookies та аналітика</h2>
+    <p>Сайт не використовує рекламних cookies. Якщо увімкнено Google Analytics, збираються знеособлені дані про відвідування сторінок; їх можна заблокувати в налаштуваннях браузера.</p>
+
+    <p class="muted" style="margin-top:28px;font-size:var(--fs-caption)">Оновлено: вересень 2026. Підстава — Закон України «Про захист персональних даних».</p>
+  </div>
+</section>"""
+            + footer(BASE + "#calc") + scripts())
 
 
 # ─────────────────────────────── збірка ───────────────────────────────
@@ -1197,11 +1311,11 @@ def build_home():
              "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in FAQ
         ],
     }
-    title = "Клінінг в Одесі — прибирання квартир, будинків і офісів | DULI Service"
+    title = "Клінінг в Одесі — прибирання квартир і офісів | DULI"
     desc = ("Прибирання квартир, будинків та офісів в Одесі. Розрахунок вартості онлайн за хвилину, "
             "фіксована ціна до виїзду, своя хімія та обладнання, гарантія 24 години.")
-    return (head(title, desc, "/", [ld_faq]) + header() + hero() + strip() + services()
-            + saturday() + calculator() + trust() + how() + why() + packages() + b2b()
+    return (head(title, desc, "/", [ld_faq]) + header(cur=BASE) + hero() + strip() + services()
+            + saturday() + calculator() + trust() + reviews() + how() + why() + packages() + b2b()
             # before_after() повертається, щойно з’являться власні фото: див. BEFORE_AFTER у data.py
             + faq() + final() + footer() + scripts())
 
@@ -1223,6 +1337,7 @@ def main():
     write("business/index.html", business_page())
     write("about/index.html", about_page())
     write("faq/index.html", faq_page())
+    write("privacy/index.html", privacy_page())
     for s in SERVICES:
         write("services/%s/index.html" % s["slug"], service_page(s))
 
@@ -1230,7 +1345,7 @@ def main():
 
     urls = ([("/", "1.0"), ("/services/", "0.9"), ("/pricing/", "0.9")]
             + [("/services/%s/" % s["slug"], "0.8") for s in SERVICES]
-            + [("/how-it-works/", "0.7"), ("/business/", "0.8"), ("/about/", "0.6"), ("/faq/", "0.7")])
+            + [("/how-it-works/", "0.7"), ("/business/", "0.8"), ("/about/", "0.6"), ("/faq/", "0.7"), ("/privacy/", "0.2")])
     body = "".join(
         '  <url><loc>%s%s</loc><changefreq>weekly</changefreq><priority>%s</priority></url>\n'
         % (SITE["base_url"], u, pr) for u, pr in urls
@@ -1241,10 +1356,10 @@ def main():
 
     nf = (head("Сторінку не знайдено | DULI Service", "Такої сторінки немає.", "/404.html")
           + header(BASE + "#calc")
-          + '<section class="section"><div class="wrap" style="text-align:center;padding:60px 0">'
+          + '<section class="section"><div class="wrap nf">'
             '<span class="eyebrow">404</span>'
-            '<h2 style="margin:14px 0">Такої сторінки немає</h2>'
-            '<p class="lead muted" style="max-width:44ch;margin:0 auto 28px">Можливо, посилання застаріло. '
+            '<h1 style="font-size:var(--fs-h2);margin:12px 0">Такої сторінки немає</h1>'
+            '<p class="lead muted">Можливо, посилання застаріло. '
             'Поверніться на головну — там є калькулятор і всі послуги.</p>'
             '<a class="btn btn--primary btn--lg" href="/Sofiya-Duli/">На головну</a>'
             '</div></section>'

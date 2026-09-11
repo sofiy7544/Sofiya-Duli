@@ -1,5 +1,7 @@
 /* DULI Service — покроковий розрахунок і бронювання.
-   Дані приходять із window.DULI (генеруються з build/data.py). */
+   Дані приходять із window.DULI (генеруються з build/data.py).
+   5 кроків: об’єкт → тип → обсяг → опції → бронювання.
+   Для вікон і меблів крок «тип» пропускається, а в «опціях» ховаються додаткові роботи. */
 (function () {
   'use strict';
   var D = window.DULI;
@@ -11,6 +13,7 @@
   var fmt = function (n) { return new Intl.NumberFormat('uk-UA').format(Math.round(n)); };
   var byId = function (list, id) { for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i]; return list[0]; };
   var track = window.duliTrack || function () {};
+  var $ = function (id) { return document.getElementById(id); };
 
   var STORE = 'duli_calc_v1';
   var state = {
@@ -88,14 +91,13 @@
     };
   }
 
-  /* ── бічна панель ─────────────────────────────────────── */
-  var elSum = document.getElementById('cSum'),
-      elRows = document.getElementById('cRows'),
-      elSave = document.getElementById('cSave');
+  /* ── підсумок: бічна панель + нижня панель ────────────── */
+  var elSum = $('cSum'), elRows = $('cRows'), elSave = $('cSave'), elTot = $('cTot');
 
   function renderSide() {
     var p = price();
     elSum.innerHTML = fmt(p.total) + ' <small>₴</small>';
+    if (elTot) elTot.textContent = fmt(p.total) + ' ₴';
 
     if (p.saving > 1) {
       elSave.hidden = false;
@@ -116,22 +118,35 @@
     }).join('');
   }
 
+  /* деталі ціни на телефоні */
+  var side = $('cSide'), totBtn = root.querySelector('[data-side]');
+  if (totBtn) totBtn.addEventListener('click', function () {
+    var open = side.classList.toggle('is-open');
+    totBtn.setAttribute('aria-expanded', String(open));
+    if (open) side.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+
   /* ── кроки ────────────────────────────────────────────── */
   var steps = Array.prototype.slice.call(root.querySelectorAll('.calc__step'));
   var bars = Array.prototype.slice.call(root.querySelectorAll('.calc__bar i'));
+  var labels = Array.prototype.slice.call(root.querySelectorAll('.calc__steps span'));
+  var NAMES = ['Об’єкт', 'Тип', 'Обсяг', 'Опції', 'Бронювання'];
   var LAST = steps.length - 1;
+  var kicker = $('cKicker'), backBtn = root.querySelector('[data-back]'), nextBtn = $('cNext');
+  var nextHTML = nextBtn ? nextBtn.innerHTML : '';
 
-  /* кроки 1 (тип) і 3 (додаткові роботи) не стосуються вікон та меблів */
-  function skip(n) { return mode() !== 'area' && (n === 1 || n === 3); }
+  /* крок «тип» не стосується вікон та меблів */
+  function skip(n) { return mode() !== 'area' && n === 1; }
   function nextOf(n) { n = n + 1; while (skip(n) && n < LAST) n++; return n; }
   function prevOf(n) { n = n - 1; while (skip(n) && n > 0) n--; return n; }
 
   function panels() {
     var m = mode();
-    var a = document.getElementById('pArea'), w = document.getElementById('pWin'), f = document.getElementById('pFurn');
+    var a = $('pArea'), w = $('pWin'), f = $('pFurn'), x = $('pExtras');
     if (a) a.hidden = m !== 'area';
     if (w) w.hidden = m !== 'windows';
     if (f) f.hidden = m !== 'furniture';
+    if (x) x.hidden = m !== 'area';
   }
 
   function show(n, silent) {
@@ -139,17 +154,34 @@
     panels();
     steps.forEach(function (s, i) { s.classList.toggle('on', i === state.step); });
     bars.forEach(function (b, i) { b.classList.toggle('on', i <= state.step); });
+    labels.forEach(function (l, i) {
+      l.classList.toggle('on', i === state.step);
+      l.classList.toggle('done', i < state.step);
+    });
+    if (kicker) kicker.innerHTML = 'Крок ' + (state.step + 1) + ' із ' + (LAST + 1) + ' · <b>' + NAMES[state.step] + '</b>';
+    if (backBtn) backBtn.hidden = state.step === 0;
+    if (nextBtn) {
+      if (state.step === LAST) {
+        nextBtn.innerHTML = 'Замовити прибирання';
+        nextBtn.setAttribute('form', 'cForm');
+        nextBtn.type = 'submit';
+      } else {
+        nextBtn.innerHTML = nextHTML;
+        nextBtn.removeAttribute('form');
+        nextBtn.type = 'button';
+      }
+    }
     if (!silent) {
-      var y = root.getBoundingClientRect().top + window.scrollY - 86;
-      if (window.scrollY > y + 260 || window.scrollY < y - 260) window.scrollTo({ top: y, behavior: 'smooth' });
+      var y = root.getBoundingClientRect().top + window.scrollY - 72;
+      if (window.scrollY > y + 200 || window.scrollY < y - 200) window.scrollTo({ top: y, behavior: 'smooth' });
       track('calc_step', { step: state.step + 1 });
     }
-    if (state.step === 5) buildDates();
+    if (state.step === LAST) buildDates();
   }
 
   root.addEventListener('click', function (e) {
     var next = e.target.closest('[data-next]');
-    if (next) {
+    if (next && next.type !== 'submit') {
       if (!state.started) { state.started = true; track('calc_start', {}); }
       show(nextOf(state.step));
       return;
@@ -162,7 +194,7 @@
       var id = cnt.dataset.cnt, cur = state.furn[id] || 0;
       cur = Math.max(0, Math.min(20, cur + parseInt(cnt.dataset.d, 10)));
       state.furn[id] = cur;
-      document.getElementById('cnt-' + id).textContent = cur;
+      $('cnt-' + id).textContent = cur;
       save(); renderSide();
       return;
     }
@@ -184,14 +216,14 @@
           b.setAttribute('aria-pressed', String(b === opt));
         });
       }
-      if (key === 'date' || key === 'time') { /* чипи дати/часу */ }
+      if (key === 'date' || key === 'time') whenError(false);
     }
     save();
     renderSide();
   });
 
   /* район — окремий елемент, слухаємо change */
-  var zoneSel = document.getElementById('cZone');
+  var zoneSel = $('cZone');
   if (zoneSel) {
     zoneSel.value = state.zone;
     zoneSel.addEventListener('change', function () {
@@ -202,7 +234,7 @@
   }
 
   /* площа */
-  var rng = document.getElementById('cArea'), inp = document.getElementById('cAreaN'), out = document.getElementById('cAreaV');
+  var rng = $('cArea'), inp = $('cAreaN'), out = $('cAreaV');
   function setArea(v, from) {
     v = Math.max(10, Math.min(500, parseInt(v, 10) || 10));
     state.area = v;
@@ -219,7 +251,7 @@
 
   /* дати */
   function buildDates() {
-    var box = document.getElementById('cDates');
+    var box = $('cDates');
     if (!box || box.dataset.built) return;
     box.dataset.built = '1';
     var days = ['нд', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
@@ -229,23 +261,63 @@
       var d = new Date(); d.setDate(d.getDate() + i);
       var v = d.toISOString().slice(0, 10);
       var lbl = i === 1 ? 'Завтра' : d.getDate() + ' ' + months[d.getMonth()];
-      html += '<button type="button" class="chip" data-set="date" data-val="' + v + '" aria-pressed="false">' +
+      html += '<button type="button" class="chip" data-set="date" data-val="' + v + '" aria-pressed="' + (state.date === v) + '">' +
               '<b>' + lbl + '</b><span>' + days[d.getDay()] + '</span></button>';
     }
     box.innerHTML = html;
   }
 
+  /* ── валідація без alert() ─────────────────────────────── */
+  function whenError(on) {
+    var err = $('cWhenErr');
+    if (err) err.classList.toggle('on', !!on);
+    var dates = $('cDates'), times = $('cTimes');
+    if (dates) dates.classList.toggle('is-err', !!on && !state.date);
+    if (times) times.classList.toggle('is-err', !!on && !state.time);
+  }
+  function fieldError(input, on) {
+    var f = input.closest('.field');
+    if (f) f.classList.toggle('is-err', !!on);
+    input.setAttribute('aria-invalid', on ? 'true' : 'false');
+  }
+  /* український номер: +380XXXXXXXXX, 380…, 0XXXXXXXXX — 10 цифр після коду країни */
+  function normPhone(v) {
+    var d = String(v || '').replace(/\D/g, '');
+    if (d.length === 12 && d.indexOf('380') === 0) return '+' + d;
+    if (d.length === 10 && d.charAt(0) === '0') return '+38' + d;
+    if (d.length === 11 && d.indexOf('80') === 0) return '+3' + d;
+    return '';
+  }
+  function validate(form) {
+    var ok = true, first = null;
+    var name = form.elements.name, phone = form.elements.phone;
+    var badName = name.value.trim().length < 2;
+    fieldError(name, badName); if (badName) { ok = false; first = first || name; }
+    var normalized = normPhone(phone.value);
+    fieldError(phone, !normalized); if (!normalized) { ok = false; first = first || phone; }
+    var badWhen = !state.date || !state.time;
+    whenError(badWhen);
+    if (badWhen) { ok = false; }
+    if (!ok) {
+      var target = badWhen ? $('cWhenErr') : first;
+      if (target && target.scrollIntoView) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (first && !badWhen) first.focus({ preventScroll: true });
+    }
+    return ok ? normalized : '';
+  }
+  ['fName', 'fPhone'].forEach(function (id) {
+    var el = $(id);
+    if (el) el.addEventListener('input', function () { fieldError(el, false); });
+  });
+
   /* ── відправлення ─────────────────────────────────────── */
-  var form = document.getElementById('cForm');
+  var form = $('cForm');
   if (form) form.addEventListener('submit', function (e) {
     e.preventDefault();
+    var phone = validate(form);
+    if (!phone) return;
     var p = price();
     var g = function (n) { return (form.elements[n].value || '').trim(); };
-
-    if (!state.date || !state.time) {
-      alert('Оберіть дату та зручний час.');
-      return;
-    }
 
     var extrasNames = state.extras.map(function (id) { return byId(D.extras, id).name; });
     var lines = [
@@ -262,31 +334,47 @@
       'Час: ' + p.hours.toFixed(1).replace('.0', '') + ' год · ' + p.crew + ' клінер(и)',
       '',
       'Ім’я: ' + g('name'),
-      'Телефон: ' + g('phone'),
-      'Адреса: ' + g('address')
+      'Телефон: ' + phone,
+      'Адреса: ' + (g('address') || 'уточнимо при дзвінку')
     ];
     var text = lines.join('\n');
 
     track('booking_submit', { total: Math.round(p.total), service: state.type, freq: state.freq });
 
+    var tg = 'https://t.me/' + D.telegram + '?text=' + encodeURIComponent(text);
+    var sms = 'sms:' + D.phone + (/iPhone|iPad|iPod/.test(navigator.userAgent) ? '&' : '?') + 'body=' + encodeURIComponent(text);
+
     if (D.formEndpoint) {
       fetch(D.formEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: text, phone: g('phone'), name: g('name') })
+        body: JSON.stringify({ text: text, phone: phone, name: g('name') })
       }).catch(function () {});
-      done();
+      done(true, tg, sms);
     } else {
-      window.open('https://t.me/' + D.telegram + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
-      done();
+      var w = window.open(tg, '_blank', 'noopener');
+      done(false, tg, sms, !w);
     }
   });
 
-  function done() {
+  function done(sent, tg, sms, blocked) {
     show(LAST, true);
-    var d = document.getElementById('cDone');
-    if (d) { d.hidden = false; document.getElementById('cFormWrap').hidden = true; }
+    var d = $('cDone');
+    if (d) { d.hidden = false; $('cFormWrap').hidden = true; }
+    var foot = $('cFoot'); if (foot) foot.hidden = true;
+    var t = $('cDoneT'), pEl = $('cDoneP'), tgA = $('cTgLink'), smsA = $('cSmsLink'), alt = $('cAltP');
+    if (tgA) tgA.href = tg;
+    if (smsA) smsA.href = sms;
+    if (sent) {
+      if (t) t.textContent = 'Заявку надіслано';
+      if (pEl) pEl.textContent = 'Передзвонимо протягом 15 хвилин у робочі години, щоб підтвердити час і адресу.';
+      if (tgA) tgA.hidden = true;
+      if (alt) alt.textContent = 'Якщо зручніше — напишіть нам самі або зателефонуйте.';
+    } else if (blocked) {
+      if (pEl) pEl.textContent = 'Браузер не дав відкрити Telegram автоматично. Натисніть кнопку нижче — текст заявки вже підставлено.';
+    }
     try { localStorage.removeItem(STORE); } catch (e) {}
+    d.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
   /* ── старт ────────────────────────────────────────────── */
@@ -297,12 +385,12 @@
   });
   if (rng) setArea(state.area);
   Object.keys(state.furn).forEach(function (id) {
-    var el = document.getElementById('cnt-' + id); if (el) el.textContent = state.furn[id];
+    var el = $('cnt-' + id); if (el) el.textContent = state.furn[id];
   });
   renderSide();
   show(0, true);
 
-  /* швидкий розрахунок у геро передає параметри сюди */
+  /* швидкий розрахунок у геро / картки послуг передають параметри сюди */
   window.duliPrefill = function (type, area, object) {
     if (type) state.type = type;
     if (area) state.area = area;

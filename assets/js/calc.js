@@ -22,6 +22,8 @@
     extras: [],
     freq: 'once',
     zone: 'prym',
+    sashes: 4,
+    furn: {},
     date: '',
     time: '',
     started: false
@@ -40,32 +42,49 @@
   }
 
   /* ── розрахунок ───────────────────────────────────────── */
+  function mode() { return byId(D.objects, state.object).mode || 'area'; }
+
   function price() {
     var t = byId(D.types, state.type),
         o = byId(D.objects, state.object),
         f = byId(D.frequency, state.freq),
         z = byId(D.zones, state.zone);
+    var m = mode(), base = 0, baths = 0, extras = 0, hours = 0, crew = 1, label = '';
 
-    var base = Math.max(state.area * t.rate * o.k, t.min * o.k);
-    var baths = Math.max(0, state.baths - 1) * 350;
-    var extras = 0;
-    state.extras.forEach(function (id) {
-      var e = byId(D.extras, id);
-      if (e && e.id === id) extras += e.price;
-    });
+    if (m === 'windows') {
+      base = Math.max(state.sashes * D.sash, 1500);
+      hours = state.sashes * 0.35;
+      label = 'Миття вікон, ' + state.sashes + ' стулок';
+    } else if (m === 'furniture') {
+      var n = 0;
+      D.furniture.forEach(function (it) {
+        var c = state.furn[it.id] || 0;
+        base += c * it.price; n += c;
+      });
+      base = Math.max(base, n ? 1500 : 0);
+      hours = n * 0.6;
+      label = 'Хімчистка та техніка, ' + n + ' поз.';
+    } else {
+      base = Math.max(state.area * t.rate * o.k, t.min * o.k);
+      baths = Math.max(0, state.baths - 1) * 350;
+      state.extras.forEach(function (id) {
+        var e = byId(D.extras, id);
+        if (e && e.id === id) extras += e.price;
+      });
+      hours = state.area / t.speed + state.extras.length * 0.5 + state.baths * 0.4;
+      crew = Math.min(4, Math.max(1, Math.ceil(state.area / 70)));
+      label = t.name + ', ' + fmt(state.area) + ' м²';
+    }
 
     var work = base + baths + extras;
     var total = work * f.k + z.fee;
     var saving = work * (1 - f.k);
-
-    var hours = state.area / t.speed + state.extras.length * 0.5 + state.baths * 0.4;
-    var crew = Math.min(4, Math.max(1, Math.ceil(state.area / 70)));
     var onsite = Math.max(2, hours / crew);
 
     return {
       base: base, baths: baths, extras: extras, zone: z.fee, saving: saving,
-      total: total, once: work + z.fee, crew: crew, hours: onsite,
-      type: t, object: o, freq: f, zoneObj: z
+      total: total, once: work + z.fee, crew: crew, hours: onsite, label: label,
+      type: t, object: o, freq: f, zoneObj: z, mode: m
     };
   }
 
@@ -85,9 +104,7 @@
       elSave.hidden = true;
     }
 
-    var rows = [
-      [p.type.name + ', ' + fmt(state.area) + ' м²', fmt(p.base) + ' ₴']
-    ];
+    var rows = [[p.label, fmt(p.base) + ' ₴']];
     if (p.baths) rows.push(['Додаткові санвузли', fmt(p.baths) + ' ₴']);
     if (p.extras) rows.push(['Додаткові роботи', fmt(p.extras) + ' ₴']);
     if (p.zone) rows.push(['Виїзд, ' + p.zoneObj.name, fmt(p.zone) + ' ₴']);
@@ -104,8 +121,22 @@
   var bars = Array.prototype.slice.call(root.querySelectorAll('.calc__bar i'));
   var LAST = steps.length - 1;
 
+  /* кроки 1 (тип) і 3 (додаткові роботи) не стосуються вікон та меблів */
+  function skip(n) { return mode() !== 'area' && (n === 1 || n === 3); }
+  function nextOf(n) { n = n + 1; while (skip(n) && n < LAST) n++; return n; }
+  function prevOf(n) { n = n - 1; while (skip(n) && n > 0) n--; return n; }
+
+  function panels() {
+    var m = mode();
+    var a = document.getElementById('pArea'), w = document.getElementById('pWin'), f = document.getElementById('pFurn');
+    if (a) a.hidden = m !== 'area';
+    if (w) w.hidden = m !== 'windows';
+    if (f) f.hidden = m !== 'furniture';
+  }
+
   function show(n, silent) {
     state.step = Math.max(0, Math.min(LAST, n));
+    panels();
     steps.forEach(function (s, i) { s.classList.toggle('on', i === state.step); });
     bars.forEach(function (b, i) { b.classList.toggle('on', i <= state.step); });
     if (!silent) {
@@ -120,11 +151,21 @@
     var next = e.target.closest('[data-next]');
     if (next) {
       if (!state.started) { state.started = true; track('calc_start', {}); }
-      show(state.step + 1);
+      show(nextOf(state.step));
       return;
     }
     var back = e.target.closest('[data-back]');
-    if (back) { show(state.step - 1); return; }
+    if (back) { show(prevOf(state.step)); return; }
+
+    var cnt = e.target.closest('[data-cnt]');
+    if (cnt) {
+      var id = cnt.dataset.cnt, cur = state.furn[id] || 0;
+      cur = Math.max(0, Math.min(20, cur + parseInt(cnt.dataset.d, 10)));
+      state.furn[id] = cur;
+      document.getElementById('cnt-' + id).textContent = cur;
+      save(); renderSide();
+      return;
+    }
 
     var opt = e.target.closest('.opt,[data-set]');
     if (!opt) return;
@@ -136,7 +177,7 @@
       if (i > -1) state.extras.splice(i, 1); else state.extras.push(val);
       opt.setAttribute('aria-pressed', i > -1 ? 'false' : 'true');
     } else {
-      state[key] = key === 'baths' ? parseInt(val, 10) : val;
+      state[key] = (key === 'baths' || key === 'sashes') ? parseInt(val, 10) : val;
       var group = opt.closest('[data-group]');
       if (group) {
         group.querySelectorAll('[data-set="' + key + '"]').forEach(function (b) {
@@ -210,9 +251,8 @@
     var lines = [
       '🧾 ЗАМОВЛЕННЯ · DULI Service',
       '',
-      'Послуга: ' + p.type.name,
-      'Об’єкт: ' + p.object.name + ', ' + state.area + ' м²',
-      'Санвузлів: ' + state.baths,
+      'Послуга: ' + p.label,
+      'Об’єкт: ' + p.object.name + (p.mode === 'area' ? ', ' + state.area + ' м², санвузлів: ' + state.baths : ''),
       'Додатково: ' + (extrasNames.length ? extrasNames.join(', ') : 'немає'),
       'Періодичність: ' + p.freq.name,
       'Район: ' + p.zoneObj.name,
@@ -256,16 +296,23 @@
     else if (key in state) b.setAttribute('aria-pressed', String(String(state[key]) === val));
   });
   if (rng) setArea(state.area);
+  Object.keys(state.furn).forEach(function (id) {
+    var el = document.getElementById('cnt-' + id); if (el) el.textContent = state.furn[id];
+  });
   renderSide();
   show(0, true);
 
   /* швидкий розрахунок у геро передає параметри сюди */
-  window.duliPrefill = function (type, area) {
+  window.duliPrefill = function (type, area, object) {
     if (type) state.type = type;
     if (area) state.area = area;
+    if (object) state.object = object;
     save();
     root.querySelectorAll('[data-set="type"]').forEach(function (b) {
       b.setAttribute('aria-pressed', String(b.dataset.val === state.type));
+    });
+    root.querySelectorAll('[data-set="object"]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.val === state.object));
     });
     if (rng) setArea(state.area);
     renderSide();

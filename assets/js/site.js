@@ -165,8 +165,11 @@
     b.addEventListener('click', function (e) {
       e.preventDefault();
       track('service_calc', { service: b.dataset.calcType });
-      if (window.duliPrefill) window.duliPrefill(b.dataset.calcType, null);
+      if (window.duliPrefill) window.duliPrefill(b.dataset.calcType, null, b.dataset.calcObject || null);
       document.getElementById('calc').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
+  });
+  document.querySelectorAll('[data-track]').forEach(function (a) {
+    a.addEventListener('click', function () { track(a.dataset.track, {}); });
   });
 })();

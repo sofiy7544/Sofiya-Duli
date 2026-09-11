@@ -22,6 +22,9 @@ SITE = {
     "hero_photo": "assets/illus/hero.svg",                     # шлях до фото першого екрана, напр. assets/photos/hero.webp
     "form_endpoint": "",                  # порожньо → заявка йде в Telegram; вставте URL форми для автодоставки
     "ga4": "",                            # ПІДТВЕРДИТИ: ідентифікатор GA4
+    "rating": "",                         # ПІДТВЕРДИТИ: напр. "4.9" — показується лише якщо заповнено
+    "rating_count": "",                   # ПІДТВЕРДИТИ: напр. "120" відгуків
+    "orders_done": "",                    # ПІДТВЕРДИТИ: напр. "2 000+" — показується лише якщо заповнено
 }
 
 # Твердження, які показуються як обіцянки сервісу.
@@ -50,8 +53,20 @@ OBJECTS = [
     {"id": "flat", "name": "Квартира", "k": 1.0},
     {"id": "house", "name": "Будинок", "k": 1.15},
     {"id": "office", "name": "Офіс", "k": 0.85},
-    {"id": "other", "name": "Інше", "k": 1.0},
+    {"id": "windows", "name": "Вікна", "k": 1.0, "mode": "windows"},
+    {"id": "furniture", "name": "Меблі та техніка", "k": 1.0, "mode": "furniture"},
 ]
+
+# Позиції для сценарію «Меблі та техніка» — рахуються поштучно
+FURNITURE = [
+    {"id": "sofa_seat", "name": "Диван, посадкове місце", "price": 650},
+    {"id": "mattress", "name": "Матрац, двобічно", "price": 1200},
+    {"id": "armchair", "name": "Крісло", "price": 600},
+    {"id": "carpet", "name": "Килим, м²", "price": 220},
+    {"id": "oven", "name": "Духова шафа", "price": 550},
+    {"id": "fridge", "name": "Холодильник усередині", "price": 450},
+]
+WINDOW_SASH = 220   # ₴ за стулку з рамою та підвіконням
 
 EXTRAS = [
     {"id": "oven", "name": "Духова шафа", "price": 550},
@@ -86,6 +101,8 @@ ZONES = [
 SERVICES = [
     {
         "slug": "uborka-kvartir", "name": "Підтримуюче прибирання", "calc": "support",
+        "need": "Хочу просто підтримувати чистоту",
+        "outcome": "Дім знову виглядає як після клінінгу — щотижня, без вашої участі",
         "photo": "assets/illus/uborka-kvartir.svg",                      # assets/photos/<slug>.webp
         "lead": "Щоб дім залишався чистим без вашої участі.",
         "from": 55, "unit": "м²",
@@ -112,6 +129,8 @@ SERVICES = [
     },
     {
         "slug": "generalna-pryburannya", "name": "Генеральне прибирання", "calc": "general",
+        "need": "Хочу, щоб усе було ідеально",
+        "outcome": "Чисто там, куди руки не доходили місяцями",
         "photo": "assets/illus/generalna-pryburannya.svg",                      # assets/photos/<slug>.webp
         "lead": "Раз на сезон — усе зверху донизу.",
         "from": 115, "unit": "м²",
@@ -138,6 +157,8 @@ SERVICES = [
     },
     {
         "slug": "pislya-remontu", "name": "Прибирання після ремонту", "calc": "repair",
+        "need": "Після ремонту все в пилу",
+        "outcome": "Заходите в нову квартиру, а не на будмайданчик",
         "photo": "assets/illus/pislya-remontu.svg",                      # assets/photos/<slug>.webp
         "lead": "Забираємо будівельний пил, який осідає тижнями.",
         "from": 150, "unit": "м²",
@@ -166,6 +187,8 @@ SERVICES = [
     },
     {
         "slug": "myttya-vikon", "name": "Миття вікон", "calc": "general",
+        "need": "Хочу чисті вікна",
+        "outcome": "У кімнаті більше світла — без розводів і слідів на рамах",
         "photo": "assets/illus/myttya-vikon.svg",                      # assets/photos/<slug>.webp
         "lead": "Скло, рами, підвіконня, москітні сітки.",
         "from": 180, "unit": "м²",
@@ -192,6 +215,8 @@ SERVICES = [
     },
     {
         "slug": "pryburannya-ofisu", "name": "Прибирання офісу", "calc": "support",
+        "need": "Треба привести до ладу офіс",
+        "outcome": "Команда щоранку приходить у чистий офіс",
         "photo": "assets/illus/pryburannya-ofisu.svg",                      # assets/photos/<slug>.webp
         "lead": "До відкриття або після закриття — щоб не заважати роботі.",
         "from": 45, "unit": "м²",
@@ -218,6 +243,8 @@ SERVICES = [
     },
     {
         "slug": "dodatkovi-poslugy", "name": "Додаткові послуги", "calc": "general",
+        "need": "Треба почистити конкретну річ",
+        "outcome": "Диван, матрац чи духовка — як нові, за один візит",
         "photo": "assets/illus/dodatkovi-poslugy.svg",                      # assets/photos/<slug>.webp
         "lead": "Техніка, меблі, балкон, хімчистка.",
         "from": 450, "unit": "шт",

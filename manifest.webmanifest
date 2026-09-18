@@ -1,0 +1,65 @@
+{
+  "name": "DULI Service — клінінг в Одесі",
+  "short_name": "DULI",
+  "lang": "uk",
+  "dir": "ltr",
+  "description": "Прибирання квартир, будинків і офісів в Одесі. Ціна відома до виїзду.",
+  "id": "/Sofiya-Duli/",
+  "start_url": "/Sofiya-Duli/?utm_source=pwa",
+  "scope": "/Sofiya-Duli/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FAF8F3",
+  "theme_color": "#FAF8F3",
+  "icons": [
+    {
+      "src": "/Sofiya-Duli/assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/Sofiya-Duli/assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/Sofiya-Duli/assets/icons/maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/Sofiya-Duli/assets/icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Розрахувати вартість",
+      "short_name": "Розрахунок",
+      "url": "/Sofiya-Duli/?utm_source=pwa#calc",
+      "icons": [
+        {
+          "src": "/Sofiya-Duli/assets/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Ціни",
+      "url": "/Sofiya-Duli/pricing/?utm_source=pwa"
+    },
+    {
+      "name": "Для бізнесу",
+      "url": "/Sofiya-Duli/business/?utm_source=pwa"
+    }
+  ],
+  "categories": [
+    "business",
+    "lifestyle"
+  ]
+}

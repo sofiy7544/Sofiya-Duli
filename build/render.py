@@ -102,7 +102,7 @@ def head(title, desc, path="/", extra_ld=None):
 <title>{title}</title>
 <meta name="description" content="{desc}">
 <link rel="canonical" href="{url}">
-<meta name="theme-color" content="#FBFBF8">
+<meta name="theme-color" content="#FAF8F3">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="uk_UA">
 <meta property="og:site_name" content="{SITE['brand']}">
@@ -115,6 +115,8 @@ def head(title, desc, path="/", extra_ld=None):
 <link rel="apple-touch-icon" href="/Sofiya-Duli/assets/mark.png">
 <link rel="preload" href="/Sofiya-Duli/assets/fonts/manrope-cyr.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/Sofiya-Duli/assets/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/Sofiya-Duli/assets/fonts/playfair-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/Sofiya-Duli/assets/fonts/playfair-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/Sofiya-Duli/assets/css/site.css">
 <script type="application/ld+json">{json.dumps(blocks, ensure_ascii=False)}</script>
 {ga}
@@ -238,7 +240,7 @@ def svc_card(s, eager=False):
     obj = {"myttya-vikon": "windows", "dodatkovi-poslugy": "furniture", "pryburannya-ofisu": "office"}.get(s["slug"], "flat")
     return f"""
     <article class="svc__c">
-      <a class="svc__img" href="{BASE}services/{s['slug']}/" aria-label="{s['name']}">{svc_img(s, eager)}</a>
+      <a class="svc__img" href="{BASE}services/{s['slug']}/" aria-label="{s['name']}">{svc_img(s, eager)}<span class="svc__pill">від <b>{s['from']} ₴</b>/{s['unit']}</span></a>
       <div class="svc__b">
         <span class="svc__need">{s['need']}</span>
         <h3><a href="{BASE}services/{s['slug']}/">{s['outcome']}</a></h3>
@@ -732,6 +734,7 @@ def footer(cta="#calc"):
 </main>
 <footer class="ftr">
   <div class="wrap">
+    <p class="ftr__claim">Чистота, яку видно. <em>Ціна, яку знаєте наперед.</em></p>
     <div class="ftr__grid">
       <div class="ftr__brand">
         <a class="brand" href="/Sofiya-Duli/">
@@ -938,7 +941,7 @@ def services_hub():
         cards.append(f"""
     <article class="svc__c">
       <a class="svc__link" href="{BASE}services/{s['slug']}/" aria-label="{s['name']}"></a>
-      <div class="svc__img">{svc_img(s, i < 2)}</div>
+      <div class="svc__img">{svc_img(s, i < 2)}<span class="svc__pill">від <b>{s['from']} ₴</b>/{s['unit']}</span></div>
       <div class="svc__b">
         <h3>{s['name']}</h3>
         <p>{s['lead']}</p>

@@ -29,10 +29,17 @@ jobs:
         with:
           enablement: true
 
+      # На сайт іде лише статика: без генератора, скілів і службових папок
+      - name: Collect site files
+        run: |
+          mkdir -p _site
+          rsync -a --exclude '.git' --exclude '.github' --exclude '.claude' \
+                --exclude 'build' --exclude '_site' --exclude '.gitignore' ./ _site/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: '_site'
 
       - name: Deploy to GitHub Pages
         id: deployment

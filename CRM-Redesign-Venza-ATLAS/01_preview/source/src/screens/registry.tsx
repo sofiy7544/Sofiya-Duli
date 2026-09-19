@@ -11,6 +11,8 @@ import { ReportsScreen } from './reports';
 import { TeamScreen } from './team';
 import { NotesScreen } from './notes';
 import { InboxScreen } from './inbox';
+import { LostReasonsScreen } from './lost-reasons';
+import { AutomationScreen, BrandingScreen, IntegrationsScreen, TemplatesScreen, UsersScreen } from './settings-sections';
 
 /** pattern → экран. Порядок: статические раньше динамических. */
 export const SCREENS: Record<string, (p: Record<string, string>) => React.ReactNode> = {
@@ -30,4 +32,10 @@ export const SCREENS: Record<string, (p: Record<string, string>) => React.ReactN
   '/team': () => <TeamScreen />,
   '/notes': () => <NotesScreen />,
   '/inbox': () => <InboxScreen />,
+  '/settings/automation': () => <AutomationScreen />,
+  '/settings/templates': () => <TemplatesScreen />,
+  '/settings/integrations': () => <IntegrationsScreen />,
+  '/settings/branding': () => <BrandingScreen />,
+  '/settings/users': () => <UsersScreen />,
+  '/insights/lost-reasons': () => <LostReasonsScreen />,
 };

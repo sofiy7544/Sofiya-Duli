@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Bell, Check, ChevronRight, Globe, KeyRound, ListX, Palette, User } from 'lucide-react';
+import { Bell, Check, ChevronRight, Globe, Image, KeyRound, ListX, Palette, Send, User, Users, Wand2 } from 'lucide-react';
 import { PageBody, PageHeader } from '@/components/shell/page';
 import { ThemeSwatches } from '@/components/overlays/preview-panel';
 import { toast } from '@/components/ui/toast';
@@ -7,20 +7,30 @@ import { InstallCard } from '@/components/shell/install';
 import { Sheet } from '@/components/ui/sheet';
 import { LOCALES, setLocale, useLocale, type LocaleCode } from '@/lib/locale';
 import { cn } from '@/lib/cn';
+import { Link } from '@/lib/router';
 
 /** /settings: оформление + разделы. Выбор темы — ThemePicker из пакета Phase 2. */
 export function SettingsScreen() {
   const locale = useLocale();
   const [langOpen, setLangOpen] = React.useState(false);
   const lang = LOCALES.find((l) => l.code === locale)!;
-  type Row = { icon: typeof User; label: string; text: string; action?: () => void };
+  type Row = { icon: typeof User; label: string; text: string; action?: () => void; href?: string };
   const rows: Row[] = [
-    { icon: User, label: 'Профиль', text: 'Имя, фото, телефон' } as Row,
+    { icon: Wand2, label: 'Автоматизация', text: 'Правила: событие — действие', href: '/settings/automation' },
+    { icon: Send, label: 'Шаблоны', text: 'Готовые сообщения клиентам', href: '/settings/templates' },
+    { icon: Users, label: 'Пользователи', text: 'Доступы сотрудников', href: '/settings/users' },
+    { icon: Image, label: 'Брендинг', text: 'Логотип и водяной знак', href: '/settings/branding' },
+    { icon: Globe, label: 'Язык', text: `${lang.flag} ${lang.label}`, action: () => setLangOpen(true) },
+    { icon: User, label: 'Профиль', text: 'Имя, фото, телефон' },
     { icon: KeyRound, label: 'Безопасность', text: 'Пароль и сессии' },
     { icon: Bell, label: 'Уведомления', text: 'Задачи, лиды, показы' },
-    { icon: Globe, label: 'Язык', text: `${lang.flag} ${lang.label}`, action: () => setLangOpen(true) },
     { icon: ListX, label: 'Причины проигрыша', text: 'Для закрытия лидов' },
   ];
+  const rowInner = (r: Row) => (<>
+    <span className="grid h-10 w-10 place-items-center rounded-[12px] bg-surface-2"><r.icon className="h-[18px] w-[18px]" aria-hidden /></span>
+    <span className="min-w-0 flex-1"><span className="block text-[15.5px] font-medium">{r.label}</span><span className="t-caption">{r.text}</span></span>
+    <ChevronRight className="h-4 w-4 text-muted-foreground" aria-hidden />
+  </>);
   return (
     <PageBody className="lg:max-w-[760px]">
       <PageHeader title="Настройки" />
@@ -32,11 +42,11 @@ export function SettingsScreen() {
       <div className="mt-4"><InstallCard /></div>
       <ul className="surface row-divider mt-4 overflow-hidden">
         {rows.map((r) => (
-          <li key={r.label}><button onClick={() => (r.action ? r.action() : toast.message(`${r.label}: экран в Preview 2`))} className="pressable flex w-full items-center gap-3.5 px-4 py-3.5 text-left">
-            <span className="grid h-10 w-10 place-items-center rounded-[12px] bg-surface-2"><r.icon className="h-[18px] w-[18px]" aria-hidden /></span>
-            <span className="min-w-0 flex-1"><span className="block text-[15.5px] font-medium">{r.label}</span><span className="t-caption">{r.text}</span></span>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" aria-hidden />
-          </button></li>
+          <li key={r.label}>
+            {r.href
+              ? <Link href={r.href} className="pressable flex w-full items-center gap-3.5 px-4 py-3.5 text-left">{rowInner(r)}</Link>
+              : <button onClick={() => (r.action ? r.action() : toast.message(`${r.label}: экран в Preview 2`))} className="pressable flex w-full items-center gap-3.5 px-4 py-3.5 text-left">{rowInner(r)}</button>}
+          </li>
         ))}
       </ul>
       <Sheet open={langOpen} onOpenChange={setLangOpen} title="Язык интерфейса" description="Меняются подписи, форматы дат и чисел." desktop="center" size="sm">

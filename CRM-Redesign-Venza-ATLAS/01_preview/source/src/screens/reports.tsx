@@ -184,7 +184,9 @@ export function ReportsScreen() {
       <section className="surface mt-4 p-4 lg:p-5">
         <div className="flex items-center justify-between gap-3">
           <h2 className="t-h2">Причины отказов</h2>
-          <span className="t-caption tabular">{lost.length} {plural(lost.length, 'лид', 'лида', 'лидов')}</span>
+          {lost.length > 0
+            ? <Link href="/insights/lost-reasons" className="tap-link text-[13px] font-medium text-primary hover:underline">Подробнее</Link>
+            : <span className="t-caption tabular">0</span>}
         </div>
         {reasons.length === 0 ? (
           <p className="t-caption mt-3">Проигранных лидов пока нет.</p>

@@ -1,0 +1,359 @@
+import * as React from 'react';
+import { AtSign, MessageCircle, Plug, Plus, Send, Trash2, Wand2 } from 'lucide-react';
+import { cn } from '@/lib/cn';
+import { adminApi, useAdminVersion, type Member, type Template } from '@/lib/mock/admin';
+import { useResource } from '@/lib/use-resource';
+import { ago } from '@/lib/format';
+import type { UserRole } from '@/lib/mock/types';
+import { PageBody, PageHeader } from '@/components/shell/page';
+import { Skeleton } from '@/components/ui/skeleton';
+import { EmptyState, ErrorState } from '@/components/ui/state';
+import { Button, IconButton } from '@/components/ui/button';
+import { ConfirmDialog, Sheet } from '@/components/ui/sheet';
+import { Field, Input, Select, Textarea } from '@/components/ui/field';
+import { Switch } from '@/components/ui/toggle';
+import { StatusBadge } from '@/components/ui/badge';
+import { toast } from '@/components/ui/toast';
+
+/**
+ * Подразделы настроек по SCREEN-MAP: автоматизация, шаблоны, интеграции,
+ * брендинг, пользователи. Права (ADMIN/MANAGER) в CRM проверяет сервер —
+ * здесь показываем те же экраны, роль переключается в панели превью.
+ */
+
+const ROLE_LABEL: Record<UserRole, string> = {
+  ADMIN: 'Администратор', MANAGER: 'Руководитель', REALTOR: 'Риелтор',
+  ASSISTANT: 'Ассистент', ANALYST: 'Аналитик', EMPLOYEE: 'Сотрудник',
+};
+
+/* ─────────────────────────── Автоматизация ─────────────────────────── */
+
+export function AutomationScreen() {
+  useAdminVersion();
+  const r = useResource(() => adminApi.rules());
+  const [open, setOpen] = React.useState(false);
+  const [confirmId, setConfirmId] = React.useState<string | null>(null);
+  const [form, setForm] = React.useState({ name: '', when: '', then: '' });
+  const [busy, setBusy] = React.useState(false);
+
+  const header = <PageHeader title="Автоматизация" back="/settings" subtitle="Правила срабатывают на события воронки"
+    actions={<IconButton label="Новое правило" onClick={() => setOpen(true)}><Plus /></IconButton>} />;
+
+  if (r.error) return <PageBody className="lg:max-w-[760px]">{header}<ErrorState error={r.error} onRetry={r.retry} what="правила" /></PageBody>;
+  if (r.loading || !r.data) return <PageBody className="lg:max-w-[760px]">{header}<Skeleton className="h-64" /></PageBody>;
+
+  const submit = async () => {
+    setBusy(true);
+    try { await adminApi.createRule(form); setOpen(false); setForm({ name: '', when: '', then: '' }); toast.success('Правило создано'); }
+    catch (e) { toast.error((e as Error).message); }
+    finally { setBusy(false); }
+  };
+
+  return (
+    <PageBody className="lg:max-w-[760px]">
+      {header}
+      {r.data.length === 0
+        ? <EmptyState icon={Wand2} title="Правил пока нет" text="Автоматизация избавляет от ручных напоминаний: событие — действие." action={<Button onClick={() => setOpen(true)}><Plus />Новое правило</Button>} />
+        : (
+          <ul className="space-y-2.5">
+            {r.data.map((rule) => (
+              <li key={rule.id} className="surface p-4">
+                <div className="flex items-start gap-3">
+                  <div className="min-w-0 flex-1">
+                    <h2 className="text-[15.5px] font-medium">{rule.name}</h2>
+                    <p className="t-caption mt-1"><b className="font-medium text-foreground/80">Когда:</b> {rule.when}</p>
+                    <p className="t-caption mt-0.5"><b className="font-medium text-foreground/80">Тогда:</b> {rule.then}</p>
+                  </div>
+                  <Switch label={`Правило «${rule.name}»`} checked={rule.enabled} onChange={() => void adminApi.toggleRule(rule.id)} />
+                </div>
+                <div className="mt-3 flex items-center justify-between">
+                  <StatusBadge tone={rule.enabled ? 'success' : 'neutral'}>{rule.enabled ? 'Включено' : 'Выключено'}</StatusBadge>
+                  <Button size="sm" variant="outline" className="text-danger-text" onClick={() => setConfirmId(rule.id)}><Trash2 />Удалить</Button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+
+      <Sheet open={open} onOpenChange={setOpen} title="Новое правило" description="Опишите событие и действие простыми словами." size="sm"
+        footer={<><Button variant="outline" onClick={() => setOpen(false)}>Отмена</Button><Button loading={busy} onClick={submit}>Создать</Button></>}>
+        <div className="space-y-3">
+          <Field label="Название">{(id, d) => <Input id={id} aria-describedby={d} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Например: лид без ответа" />}</Field>
+          <Field label="Когда" hint="Событие, после которого правило срабатывает">{(id, d) => <Input id={id} aria-describedby={d} value={form.when} onChange={(e) => setForm({ ...form, when: e.target.value })} placeholder="Лид на этапе «Новые» дольше 2 часов" />}</Field>
+          <Field label="Тогда" hint="Что система сделает">{(id, d) => <Input id={id} aria-describedby={d} value={form.then} onChange={(e) => setForm({ ...form, then: e.target.value })} placeholder="Напомнить ответственному" />}</Field>
+        </div>
+      </Sheet>
+
+      <ConfirmDialog open={confirmId !== null} onOpenChange={(v) => !v && setConfirmId(null)} title="Удалить правило?"
+        text="Автоматизация перестанет срабатывать. Действие необратимо." confirmLabel="Удалить"
+        onConfirm={async () => { if (confirmId) await adminApi.deleteRule(confirmId); setConfirmId(null); toast.success('Правило удалено'); }} />
+    </PageBody>
+  );
+}
+
+/* ───────────────────────────── Шаблоны ───────────────────────────── */
+
+const CHANNEL_ICON = { EMAIL: AtSign, TELEGRAM: Send, SMS: MessageCircle } as const;
+const CHANNEL_LABEL = { EMAIL: 'Почта', TELEGRAM: 'Telegram', SMS: 'SMS' } as const;
+const EMPTY_TEMPLATE: Omit<Template, 'updatedAt'> = { id: '', name: '', channel: 'TELEGRAM', subject: '', body: '' };
+
+export function TemplatesScreen() {
+  useAdminVersion();
+  const r = useResource(() => adminApi.templates());
+  const [edit, setEdit] = React.useState<Omit<Template, 'updatedAt'> | null>(null);
+  const [confirmId, setConfirmId] = React.useState<string | null>(null);
+  const [busy, setBusy] = React.useState(false);
+
+  const header = <PageHeader title="Шаблоны" back="/settings" subtitle="Готовые сообщения с подстановкой полей"
+    actions={<IconButton label="Новый шаблон" onClick={() => setEdit({ ...EMPTY_TEMPLATE, id: `t${Date.now()}` })}><Plus /></IconButton>} />;
+
+  if (r.error) return <PageBody className="lg:max-w-[760px]">{header}<ErrorState error={r.error} onRetry={r.retry} what="шаблоны" /></PageBody>;
+  if (r.loading || !r.data) return <PageBody className="lg:max-w-[760px]">{header}<Skeleton className="h-64" /></PageBody>;
+
+  const save = async () => {
+    if (!edit) return;
+    setBusy(true);
+    try { await adminApi.saveTemplate(edit); setEdit(null); toast.success('Шаблон сохранён'); }
+    catch (e) { toast.error((e as Error).message); }
+    finally { setBusy(false); }
+  };
+
+  return (
+    <PageBody className="lg:max-w-[760px]">
+      {header}
+      {r.data.length === 0
+        ? <EmptyState icon={Send} title="Шаблонов пока нет" text="Сохраните текст, который отправляете чаще всего." action={<Button onClick={() => setEdit({ ...EMPTY_TEMPLATE, id: `t${Date.now()}` })}><Plus />Новый шаблон</Button>} />
+        : (
+          <ul className="space-y-2.5">
+            {r.data.map((t) => {
+              const Icon = CHANNEL_ICON[t.channel];
+              return (
+                <li key={t.id} className="surface p-4">
+                  <div className="flex items-center gap-2">
+                    <Icon className="h-4 w-4 flex-none text-muted-foreground" aria-hidden />
+                    <h2 className="min-w-0 flex-1 truncate text-[15.5px] font-medium">{t.name}</h2>
+                    <StatusBadge>{CHANNEL_LABEL[t.channel]}</StatusBadge>
+                  </div>
+                  {t.subject && <p className="t-caption mt-1.5">Тема: {t.subject}</p>}
+                  <p className="mt-1.5 line-clamp-2 whitespace-pre-wrap text-[14px] text-foreground/75">{t.body}</p>
+                  <div className="mt-3 flex items-center justify-between">
+                    <span className="t-caption">Изменён {ago(t.updatedAt)}</span>
+                    <span className="flex gap-2">
+                      <Button size="sm" variant="outline" onClick={() => setEdit({ id: t.id, name: t.name, channel: t.channel, subject: t.subject ?? '', body: t.body })}>Изменить</Button>
+                      <Button size="sm" variant="outline" className="text-danger-text" onClick={() => setConfirmId(t.id)}><Trash2 />Удалить</Button>
+                    </span>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+
+      <Sheet open={edit !== null} onOpenChange={(v) => !v && setEdit(null)} title={edit?.name ? 'Шаблон' : 'Новый шаблон'}
+        description="В фигурных скобках — подстановки: {имя}, {объект}, {дата}, {время}, {бюджет}, {агент}."
+        footer={<><Button variant="outline" onClick={() => setEdit(null)}>Отмена</Button><Button loading={busy} onClick={save}>Сохранить</Button></>}>
+        {edit && (
+          <div className="space-y-3">
+            <Field label="Название">{(id, d) => <Input id={id} aria-describedby={d} value={edit.name} onChange={(e) => setEdit({ ...edit, name: e.target.value })} placeholder="Подтверждение показа" />}</Field>
+            <Field label="Канал">{(id, d) => (
+              <Select id={id} aria-describedby={d} value={edit.channel} onChange={(e) => setEdit({ ...edit, channel: e.target.value as Template['channel'] })}>
+                <option value="TELEGRAM">Telegram</option><option value="EMAIL">Почта</option><option value="SMS">SMS</option>
+              </Select>
+            )}</Field>
+            {edit.channel === 'EMAIL' && <Field label="Тема письма">{(id, d) => <Input id={id} aria-describedby={d} value={edit.subject} onChange={(e) => setEdit({ ...edit, subject: e.target.value })} />}</Field>}
+            <Field label="Текст">{(id, d) => <Textarea id={id} aria-describedby={d} rows={7} value={edit.body} onChange={(e) => setEdit({ ...edit, body: e.target.value })} />}</Field>
+          </div>
+        )}
+      </Sheet>
+
+      <ConfirmDialog open={confirmId !== null} onOpenChange={(v) => !v && setConfirmId(null)} title="Удалить шаблон?"
+        text="Отправленные сообщения останутся, шаблон пропадёт из списка." confirmLabel="Удалить"
+        onConfirm={async () => { if (confirmId) await adminApi.deleteTemplate(confirmId); setConfirmId(null); toast.success('Шаблон удалён'); }} />
+    </PageBody>
+  );
+}
+
+/* ──────────────────────────── Интеграции ──────────────────────────── */
+
+const INTEGRATIONS = [
+  { key: 'telegram', name: 'Telegram', text: 'Сообщения из бота агентства попадают в «Коммуникации».', icon: Send },
+  { key: 'whatsapp', name: 'WhatsApp Business', text: 'Переписка с клиентами и шаблоны сообщений.', icon: MessageCircle },
+  { key: 'email', name: 'Почта', text: 'Входящие заявки с сайта и переписка по объектам.', icon: AtSign },
+];
+
+export function IntegrationsScreen() {
+  return (
+    <PageBody className="lg:max-w-[760px]">
+      <PageHeader title="Интеграции" back="/settings" subtitle="Каналы, из которых приходят обращения" />
+      <ul className="space-y-2.5">
+        {INTEGRATIONS.map((i) => (
+          <li key={i.key} className="surface flex items-start gap-3 p-4">
+            <span className="grid h-10 w-10 flex-none place-items-center rounded-[12px] bg-surface-2"><i.icon className="h-[18px] w-[18px]" aria-hidden /></span>
+            <div className="min-w-0 flex-1">
+              <h2 className="text-[15.5px] font-medium">{i.name}</h2>
+              <p className="t-caption mt-0.5">{i.text}</p>
+            </div>
+            <Button size="sm" variant="outline" disabled>Подключить</Button>
+          </li>
+        ))}
+      </ul>
+      <p className="t-caption mt-4 flex items-start gap-1.5">
+        <Plug className="mt-0.5 h-3.5 w-3.5 flex-none" aria-hidden />
+        Подключение делает администратор на стороне CRM — в превью кнопки выключены намеренно. Чтобы посмотреть, как выглядит раздел с подключёнными каналами, включите «Интеграции» в панели превью.
+      </p>
+    </PageBody>
+  );
+}
+
+/* ───────────────────────────── Брендинг ───────────────────────────── */
+
+export function BrandingScreen() {
+  useAdminVersion();
+  const r = useResource(() => adminApi.branding());
+  const [name, setName] = React.useState('');
+  const [watermark, setWatermark] = React.useState(true);
+  const [opacity, setOpacity] = React.useState(35);
+  const [busy, setBusy] = React.useState(false);
+  const [ready, setReady] = React.useState(false);
+
+  React.useEffect(() => {
+    if (r.data && !ready) { setName(r.data.agencyName); setWatermark(r.data.watermark); setOpacity(r.data.watermarkOpacity); setReady(true); }
+  }, [r.data, ready]);
+
+  const header = <PageHeader title="Брендинг" back="/settings" subtitle="Логотип и подпись на презентациях объектов" />;
+  if (r.error) return <PageBody className="lg:max-w-[760px]">{header}<ErrorState error={r.error} onRetry={r.retry} what="настройки бренда" /></PageBody>;
+  if (!r.data) return <PageBody className="lg:max-w-[760px]">{header}<Skeleton className="h-64" /></PageBody>;
+
+  const save = async () => {
+    setBusy(true);
+    try { await adminApi.saveBranding({ agencyName: name, watermark, watermarkOpacity: opacity }); toast.success('Сохранено'); }
+    catch (e) { toast.error((e as Error).message); }
+    finally { setBusy(false); }
+  };
+
+  return (
+    <PageBody className="lg:max-w-[760px]">
+      {header}
+      <section className="surface p-4 lg:p-5">
+        <h2 className="t-h3">Логотип</h2>
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          <span className="grid h-16 w-16 place-items-center rounded-card bg-surface-2 text-[12px] text-muted-foreground">{r.data.logoName ? 'SVG' : 'нет'}</span>
+          <div className="min-w-0">
+            <p className="text-[14.5px]">{r.data.logoName ?? 'Логотип не загружен'}</p>
+            <p className="t-caption mt-0.5">PNG или SVG, от 512 px по длинной стороне</p>
+          </div>
+          <span className="ml-auto flex gap-2">
+            <Button size="sm" variant="outline" onClick={() => toast.message('Загрузка файла подключается в CRM')}>Заменить</Button>
+            {r.data.logoName && <Button size="sm" variant="outline" className="text-danger-text" onClick={() => void adminApi.saveBranding({ logoName: undefined }).then(() => toast.success('Логотип удалён'))}>Удалить</Button>}
+          </span>
+        </div>
+      </section>
+
+      <section className="surface mt-4 p-4 lg:p-5">
+        <h2 className="t-h3">Агентство</h2>
+        <div className="mt-3"><Field label="Название" hint="Подставляется в презентации и письма">{(id, d) => <Input id={id} aria-describedby={d} value={name} onChange={(e) => setName(e.target.value)} />}</Field></div>
+      </section>
+
+      <section className="surface mt-4 p-4 lg:p-5">
+        <div className="flex items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <h2 className="t-h3">Водяной знак на фото</h2>
+            <p className="t-caption mt-0.5">Логотип поверх фотографий объектов в PDF и презентациях.</p>
+          </div>
+          <Switch label="Водяной знак" checked={watermark} onChange={setWatermark} />
+        </div>
+        {watermark && (
+          <label className="mt-4 block">
+            <span className="t-caption">Прозрачность: {opacity}%</span>
+            <input type="range" min={10} max={80} step={5} value={opacity} onChange={(e) => setOpacity(Number(e.target.value))}
+              className="mt-2 h-2 w-full cursor-pointer appearance-none rounded-full bg-surface-2 accent-primary" />
+          </label>
+        )}
+      </section>
+
+      <div className="mt-4 flex justify-end"><Button loading={busy} onClick={save}>Сохранить</Button></div>
+    </PageBody>
+  );
+}
+
+/* ──────────────────────────── Пользователи ──────────────────────────── */
+
+export function UsersScreen() {
+  useAdminVersion();
+  const r = useResource(() => adminApi.members());
+  const [invite, setInvite] = React.useState(false);
+  const [form, setForm] = React.useState({ fullName: '', email: '', role: 'REALTOR' as UserRole });
+  const [busy, setBusy] = React.useState(false);
+  const [confirm, setConfirm] = React.useState<Member | null>(null);
+
+  const header = <PageHeader title="Пользователи" back="/settings" subtitle="Доступы сотрудников агентства"
+    actions={<IconButton label="Пригласить сотрудника" onClick={() => setInvite(true)}><Plus /></IconButton>} />;
+
+  if (r.error) return <PageBody className="lg:max-w-[860px]">{header}<ErrorState error={r.error} onRetry={r.retry} what="пользователей" /></PageBody>;
+  if (r.loading || !r.data) return <PageBody className="lg:max-w-[860px]">{header}<Skeleton className="h-64" /></PageBody>;
+
+  const send = async () => {
+    setBusy(true);
+    try { await adminApi.inviteMember(form); setInvite(false); setForm({ fullName: '', email: '', role: 'REALTOR' }); toast.success('Приглашение отправлено'); }
+    catch (e) { toast.error((e as Error).message); }
+    finally { setBusy(false); }
+  };
+
+  return (
+    <PageBody className="lg:max-w-[860px]">
+      {header}
+      <div data-hscroll className="surface overflow-x-auto">
+        <table className="w-full min-w-[620px] text-[14px]">
+          <caption className="sr-only">Сотрудники и их доступы</caption>
+          <thead>
+            <tr className="border-b border-border text-left text-[12.5px] text-muted-foreground">
+              <th scope="col" className="px-4 py-2.5 font-medium">Сотрудник</th>
+              <th scope="col" className="px-3 py-2.5 font-medium">Роль</th>
+              <th scope="col" className="px-3 py-2.5 font-medium">Был в системе</th>
+              <th scope="col" className="px-4 py-2.5 text-right font-medium">Доступ</th>
+            </tr>
+          </thead>
+          <tbody>
+            {r.data.map((m) => (
+              <tr key={m.id} className={cn('border-b border-border/70 last:border-0', !m.active && 'text-muted-foreground')}>
+                <th scope="row" className="px-4 py-2.5 text-left font-normal">
+                  <span className="block font-medium">{m.fullName}</span>
+                  <span className="t-caption block">{m.email}</span>
+                </th>
+                <td className="px-3 py-2.5">
+                  <Select aria-label={`Роль: ${m.fullName}`} value={m.role} onChange={(e) => void adminApi.setMemberRole(m.id, e.target.value as UserRole).then(() => toast.success('Роль изменена'))}>
+                    {(Object.keys(ROLE_LABEL) as UserRole[]).map((role) => <option key={role} value={role}>{ROLE_LABEL[role]}</option>)}
+                  </Select>
+                </td>
+                <td className="px-3 py-2.5 t-caption">{m.lastSeenAt ? ago(m.lastSeenAt) : '—'}</td>
+                <td className="px-4 py-2.5 text-right">
+                  {m.active
+                    ? <Button size="sm" variant="outline" onClick={() => setConfirm(m)}>Отключить</Button>
+                    : <Button size="sm" variant="outline" onClick={() => void adminApi.setMemberActive(m.id, true).then(() => toast.success('Доступ возвращён'))}>Включить</Button>}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="t-caption mt-4">Отключённый сотрудник не входит в систему, но его лиды, задачи и история остаются на месте.</p>
+
+      <Sheet open={invite} onOpenChange={setInvite} title="Пригласить сотрудника" description="Придёт письмо со ссылкой для входа." size="sm"
+        footer={<><Button variant="outline" onClick={() => setInvite(false)}>Отмена</Button><Button loading={busy} onClick={send}>Отправить</Button></>}>
+        <div className="space-y-3">
+          <Field label="Имя и фамилия">{(id, d) => <Input id={id} aria-describedby={d} value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} />}</Field>
+          <Field label="Рабочая почта">{(id, d) => <Input id={id} aria-describedby={d} type="email" inputMode="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="name@ontop.property" />}</Field>
+          <Field label="Роль">{(id, d) => (
+            <Select id={id} aria-describedby={d} value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value as UserRole })}>
+              {(Object.keys(ROLE_LABEL) as UserRole[]).map((role) => <option key={role} value={role}>{ROLE_LABEL[role]}</option>)}
+            </Select>
+          )}</Field>
+        </div>
+      </Sheet>
+
+      <ConfirmDialog open={confirm !== null} onOpenChange={(v) => !v && setConfirm(null)} title="Отключить доступ?"
+        text={confirm ? `${confirm.fullName} не сможет войти. Лиды и задачи останутся закреплены за ним.` : ''} confirmLabel="Отключить"
+        onConfirm={async () => { if (confirm) await adminApi.setMemberActive(confirm.id, false); setConfirm(null); toast.success('Доступ отключён'); }} />
+    </PageBody>
+  );
+}

@@ -12,6 +12,7 @@ import { TeamScreen } from './team';
 import { NotesScreen } from './notes';
 import { InboxScreen } from './inbox';
 import { LostReasonsScreen } from './lost-reasons';
+import { BriefingScreen } from './briefing';
 import { AutomationScreen, BrandingScreen, IntegrationsScreen, TemplatesScreen, UsersScreen } from './settings-sections';
 
 /** pattern → экран. Порядок: статические раньше динамических. */
@@ -38,4 +39,5 @@ export const SCREENS: Record<string, (p: Record<string, string>) => React.ReactN
   '/settings/branding': () => <BrandingScreen />,
   '/settings/users': () => <UsersScreen />,
   '/insights/lost-reasons': () => <LostReasonsScreen />,
+  '/briefing': () => <BriefingScreen />,
 };

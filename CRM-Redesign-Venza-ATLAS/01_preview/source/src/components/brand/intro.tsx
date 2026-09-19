@@ -13,9 +13,16 @@ import bgPoster from '@/assets/login-bg-poster.jpg';
  */
 export const INTRO_EVENT = 'otp-intro-replay';
 
+/** «Экономия трафика» в системе: показываем постер вместо 3 МБ видео. */
+const prefersSaveData = () => {
+  const c = (navigator as unknown as { connection?: { saveData?: boolean } }).connection;
+  return c?.saveData === true;
+};
+
 export function FilmLogin({ onSuccess }: { onSuccess: () => void }) {
   const { family, isDark } = useTheme();
   const dark = family === 'atlas' || isDark;
+  const [saveData] = React.useState(prefersSaveData);
   const [run, setRun] = React.useState(0);
   React.useEffect(() => { const f = () => setRun((r) => r + 1); addEventListener(INTRO_EVENT, f); return () => removeEventListener(INTRO_EVENT, f); }, []);
   /* Пока открыт вход, страница и системные полосы тёмные: в установленном
@@ -28,10 +35,16 @@ export function FilmLogin({ onSuccess }: { onSuccess: () => void }) {
   return (
     <div key={run} className="signin">
       <div className="signin__bg" aria-hidden>
-        <video poster={bgPoster} autoPlay muted loop playsInline preload="auto" onCanPlay={(e) => void e.currentTarget.play().catch(() => {})}>
-          <source src={bgLoop} type="video/mp4" />
-          <source src={bgLoopWebm} type="video/webm" />
-        </video>
+        {saveData ? (
+          <img src={bgPoster} alt="" />
+        ) : (
+          <video poster={bgPoster} autoPlay muted loop playsInline preload="metadata" onCanPlay={(e) => void e.currentTarget.play().catch(() => {})}>
+            {/* WebM первым: он легче (1,7 МБ против 2,9 МБ) и его берут Chrome, Firefox и Android.
+                Safari не умеет WebM и переходит к mp4 — лишнего никто не качает. */}
+            <source src={bgLoopWebm} type="video/webm" />
+            <source src={bgLoop} type="video/mp4" />
+          </video>
+        )}
       </div>
       <main className="signin__center">
         <LoginPanel dark={dark} onSuccess={onSuccess} />

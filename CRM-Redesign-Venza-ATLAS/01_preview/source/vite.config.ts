@@ -5,6 +5,8 @@ import path from 'node:path';
 
 // SINGLE=1 → один самодостаточный index.html (для публикации ссылки-превью)
 export default defineConfig({
+  // Относительные пути к ассетам: сборка работает из любой подпапки (например /Sofiya-Duli/crm/), а не только из корня домена.
+  base: './',
   plugins: [react(), ...(process.env.SINGLE ? [viteSingleFile()] : [])],
   resolve: { alias: { '@': path.resolve(__dirname, 'src') } },
   // Встраиваем ассеты только в однофайловой сборке; обычная отдаёт шрифты и видео отдельными файлами (кэшируются)

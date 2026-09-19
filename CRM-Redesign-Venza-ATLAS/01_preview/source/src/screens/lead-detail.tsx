@@ -172,7 +172,7 @@ function NextAction({ lead, onShowing }: { lead: Lead; onShowing: () => void }) 
     <section className={cn('rounded-card p-4', overdue ? 'border border-danger/25 bg-danger/8' : 'bg-primary-soft')}>
       <h2 className={cn('text-[13px] font-medium', overdue ? 'text-danger-text' : 'text-primary')}>{overdue ? 'Следующее действие просрочено' : 'Следующее действие'}</h2>
       {lead.nextActionAt ? <p className="mt-1 text-[17px] font-semibold tabular">{relDay(lead.nextActionAt)}, {time(lead.nextActionAt)}</p> : <p className="mt-1 text-[15px]">Не запланировано</p>}
-      {lead.interestNote && <p className="t-caption mt-1 text-[14px]">{lead.interestNote}</p>}
+      {lead.interestNote && <p className="mt-1 text-[14px] text-foreground/70">{lead.interestNote}</p>}
       {!lead.nextActionAt && <Button size="sm" variant="outline" className="mt-3" onClick={onShowing}><CalendarPlus />Запланировать</Button>}
     </section>
   );

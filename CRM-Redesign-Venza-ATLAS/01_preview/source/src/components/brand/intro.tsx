@@ -79,17 +79,17 @@ function LoginPanel({ dark, onSuccess }: { dark: boolean; onSuccess: () => void 
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!/^\S+@\S+\.\S+$/.test(email)) return setError('Enter a valid email');
-    if (password.length < 8) return setError('Password: at least 8 characters');
+    if (!/^\S+@\S+\.\S+$/.test(email)) return setError('Проверьте адрес почты');
+    if (password.length < 8) return setError('Пароль: не меньше 8 символов');
     setError(null); setBusy(true);
     await new Promise((r) => setTimeout(r, 700));
-    if (password === 'wrongpass') { setBusy(false); return setError('Incorrect email or password'); }
+    if (password === 'wrongpass') { setBusy(false); return setError('Неверная почта или пароль'); }
     setLeaving(true); setTimeout(onSuccess, 520);
   };
 
   const sendReset = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!/^\S+@\S+\.\S+$/.test(email)) return setError('Enter a valid email');
+    if (!/^\S+@\S+\.\S+$/.test(email)) return setError('Проверьте адрес почты');
     setError(null); setBusy(true);
     await new Promise((r) => setTimeout(r, 700));
     setBusy(false); setMode('sent'); // ответ одинаковый для любой почты — иначе форма выдаёт, кто есть в базе
@@ -102,37 +102,39 @@ function LoginPanel({ dark, onSuccess }: { dark: boolean; onSuccess: () => void 
       {mode === 'sent' ? (
         <div className="glassin__sent">
           <span className="glassin__sent-icon" aria-hidden><MailCheck /></span>
-          <p className="glassin__sent-title">Check your inbox</p>
-          <p className="glassin__sent-text">If an account exists for <b>{email}</b>, a reset link is on its way. The link is valid for 30 minutes.</p>
-          <button type="button" className="glassin__go" onClick={() => { setMode('signin'); setError(null); }}>Back to sign in</button>
+          <p className="glassin__sent-title">Проверьте почту</p>
+          <p className="glassin__sent-text">Если аккаунт для <b>{email}</b> существует, ссылка для восстановления уже отправлена. Она действует 30 минут.</p>
+          <button type="button" className="glassin__go" onClick={() => { setMode('signin'); setError(null); }}>Вернуться ко входу</button>
         </div>
       ) : (<>
       <label className={`glassin__field ${error && !/^\S+@\S+\.\S+$/.test(email) ? 'glassin__field--error' : ''}`}>
         <Mail className="glassin__icon" aria-hidden />
-        <input type="email" autoComplete="email" inputMode="email" placeholder="Email" aria-label="Email"
+        <input type="email" autoComplete="email" inputMode="email" placeholder="Почта" aria-label="Почта"
           value={email} onChange={(e) => { setEmail(e.target.value); setError(null); }} />
       </label>
 
       {mode === 'signin' && (
       <label className="glassin__field">
         <Lock className="glassin__icon" aria-hidden />
-        <input ref={passRef} type={show ? 'text' : 'password'} autoComplete="current-password" maxLength={128} placeholder="Password" aria-label="Password"
+        <input ref={passRef} type={show ? 'text' : 'password'} autoComplete="current-password" maxLength={128} placeholder="Пароль" aria-label="Пароль"
           value={password} onChange={(e) => { setPassword(e.target.value); setError(null); }} />
-        <button type="button" className="glassin__eye" onClick={() => setShow(!show)} aria-label={show ? 'Hide password' : 'Show password'}>
+        <button type="button" className="glassin__eye" onClick={() => setShow(!show)} aria-label={show ? 'Скрыть пароль' : 'Показать пароль'}>
           {show ? <EyeOff aria-hidden /> : <Eye aria-hidden />}
         </button>
       </label>)}
 
-      {error && <p role="alert" className="glassin__error">{error}</p>}
+      {error
+        ? <p role="alert" className="glassin__error">{error}</p>
+        : mode === 'signin' && <p className="glassin__hint">Демо-доступ: пароль любой, от 8 символов</p>}
 
       <button type="submit" className="glassin__go" disabled={busy}>
         {busy ? <Loader2 className="glassin__spin" aria-hidden /> : null}
-        {busy ? (mode === 'reset' ? 'Sending…' : 'Signing in…') : mode === 'reset' ? 'Send reset link' : 'Sign in'}
+        {busy ? (mode === 'reset' ? 'Отправляем…' : 'Входим…') : mode === 'reset' ? 'Отправить ссылку' : 'Войти'}
       </button>
 
       <button type="button" className="glassin__link"
         onClick={() => { setError(null); setMode(mode === 'reset' ? 'signin' : 'reset'); if (mode === 'signin') setPassword(''); }}>
-        {mode === 'reset' ? 'Back to sign in' : 'Forgot password?'}
+        {mode === 'reset' ? 'Вернуться ко входу' : 'Забыли пароль?'}
       </button>
       </>)}
     </form>

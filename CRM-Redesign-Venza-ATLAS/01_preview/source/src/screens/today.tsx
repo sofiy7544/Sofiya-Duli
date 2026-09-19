@@ -18,6 +18,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState, ErrorState } from '@/components/ui/state';
 import { TaskCheck } from '@/components/ui/toggle';
 import { StatusBadge, STAGE_DOT } from '@/components/ui/badge';
+import { BriefingCard } from '@/components/today/briefing';
 import { toast } from '@/components/ui/toast';
 
 /**
@@ -88,6 +89,7 @@ export function TodayScreen({ firstEntry }: { firstEntry?: boolean }) {
           <Kpi loading={r.loading} icon={Handshake} label="Бюджеты в работе" value={d ? money(pipelineBudget, 'EUR', true) : undefined} sub="сумма «до» активных лидов" href="/leads" className="col-span-2 sm:col-span-1" />
         </div>
         {revenueStrip}
+        <BriefingCard loading={r.loading} tasks={todayTasks} events={d?.events ?? []} leads={d?.activeLeads ?? []} />
 
         <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
           <div className="min-w-0 space-y-4">

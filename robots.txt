@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /crm/
 
 Sitemap: https://sofiy7544.github.io/Sofiya-Duli/sitemap.xml

@@ -34,7 +34,8 @@ jobs:
         run: |
           mkdir -p _site
           rsync -a --exclude '.git' --exclude '.github' --exclude '.claude' \
-                --exclude 'build' --exclude '_site' --exclude '.gitignore' ./ _site/
+                --exclude 'build' --exclude '_site' --exclude '.gitignore' \
+                --exclude 'CRM-Redesign-Venza-ATLAS' ./ _site/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

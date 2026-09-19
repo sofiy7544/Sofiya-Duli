@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ArrowLeft, Bell, Plus, Search } from 'lucide-react';
+import { ArrowLeft, Bell, Plus, Search, Zap } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { useRouter } from '@/lib/router';
 import { useTheme } from '@/lib/theme/provider';
@@ -19,11 +19,15 @@ export function PageHeader({ title, subtitle, back, actions, large = true, child
         <div className="flex-1" />
         <div className="flex items-center gap-1.5 lg:hidden">
           {actions}
+          <IconButton label="Быстрый захват лида" onClick={() => ui.set({ quickCreate: 'capture' })}
+            className="bg-primary text-primary-foreground hover:bg-primary/90"><Zap /></IconButton>
           <IconButton label="Поиск" onClick={() => ui.set({ search: true })}><Search /></IconButton>
         </div>
         <div className="hidden items-center gap-2 lg:flex">
           {actions}
-          <IconButton label="Уведомления" className="relative"><Bell /><span aria-hidden className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-danger ring-2 ring-background" /></IconButton>
+          <IconButton label="Быстрый захват лида" onClick={() => ui.set({ quickCreate: 'capture' })}
+            className="bg-primary text-primary-foreground hover:bg-primary/90"><Zap /></IconButton>
+          <IconButton label="Уведомления" className="relative" onClick={() => ui.set({ notifications: true })}><Bell /><span aria-hidden className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-danger ring-2 ring-background" /></IconButton>
           <Button size="sm" onClick={() => ui.set({ quickCreate: 'menu' })}><Plus />Создать</Button>
         </div>
       </div>

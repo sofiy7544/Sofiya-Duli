@@ -5,6 +5,7 @@ import { Sidebar } from './sidebar';
 import { MobileNav } from './mobile-nav';
 import { Fab } from './page';
 import { QuickCreate } from '@/components/overlays/quick-create';
+import { NotificationsPanel } from '@/components/overlays/notifications';
 import { SearchOverlay } from '@/components/overlays/search';
 
 /** (app)/layout.tsx: оболочка + глобальные оверлеи, смонтированные один раз. */
@@ -21,6 +22,7 @@ export function AppShell({ children, routeKey, fab = true }: { children: React.R
       <MobileNav />
       {fab && <Fab />}
       <QuickCreate />
+      <NotificationsPanel />
       <SearchOverlay />
     </div>
   );

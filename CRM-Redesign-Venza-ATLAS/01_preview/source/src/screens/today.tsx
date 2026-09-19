@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AlertTriangle, ArrowUpRight, CalendarDays, CheckSquare, ChevronRight, Eye, Handshake, Phone, Sparkles, Users, Workflow } from 'lucide-react';
+import { AlertTriangle, ArrowUpRight, Bell, CalendarDays, CheckSquare, ChevronRight, Eye, Handshake, Phone, Sparkles, Users, Workflow, Zap } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { api } from '@/lib/mock/api';
 import { store } from '@/lib/mock/store';
@@ -13,7 +13,7 @@ import { PageBody } from '@/components/shell/page';
 import { dealsApi } from '@/lib/mock/deals';
 import { ui } from '@/components/shell/ui-state';
 import { Avatar } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { Button, IconButton } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState, ErrorState } from '@/components/ui/state';
 import { TaskCheck } from '@/components/ui/toggle';
@@ -198,7 +198,12 @@ function TitleBlock({ family, part, name, now }: { family: string; part: { greet
     <header className={cn('safe-top relative', family === 'atlas' ? 'mb-4 pt-3 lg:pt-0' : 'mb-5 pt-5 lg:pt-0')}>
       <p className={cn('first-letter:uppercase', family === 'atlas' ? 't-caption text-[13px]' : 'text-[15px] text-muted-foreground')}>{dayLong(now)}</p>
       <h1 className={cn(family === 'atlas' ? 't-h1 mt-0.5' : 't-hero mt-1')}>{part.greet}, {name}</h1>
-      <div className="absolute right-0 top-[calc(env(safe-area-inset-top)+12px)] flex items-center gap-2 lg:hidden"><span className="w-9" /></div>
+      {/* «Молния» и колокольчик — как в работающей CRM: быстрый захват и уведомления в шапке дня. */}
+      <div className="absolute right-0 top-[calc(env(safe-area-inset-top)+12px)] flex items-center gap-1.5">
+        <IconButton label="Быстрый захват лида" onClick={() => ui.set({ quickCreate: 'capture' })}
+          className="bg-primary text-primary-foreground hover:bg-primary/90"><Zap /></IconButton>
+        <IconButton label="Уведомления" onClick={() => ui.set({ notifications: true })}><Bell /></IconButton>
+      </div>
     </header>
   );
 }

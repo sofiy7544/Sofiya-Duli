@@ -4,6 +4,7 @@ import { cn } from '@/lib/cn';
 import { api, ApiError } from '@/lib/mock/api';
 import { useRouter } from '@/lib/router';
 import { Sheet } from '@/components/ui/sheet';
+import { QuickCapture } from './quick-capture';
 import { Button } from '@/components/ui/button';
 import { Field, Input, Select } from '@/components/ui/field';
 import { toast } from '@/components/ui/toast';
@@ -15,11 +16,13 @@ import { TASK_TYPE_LABEL } from '@/lib/labels';
 export function QuickCreate() {
   const { quickCreate } = useUI();
   const open = quickCreate !== null;
-  const titles = { menu: 'Создать', lead: 'Новый лид', task: 'Новая задача' } as const;
+  const titles = { menu: 'Создать', lead: 'Новый лид', task: 'Новая задача', capture: 'Быстрый захват лида' } as const;
   return (
     <Sheet open={open} onOpenChange={(o) => !o && ui.set({ quickCreate: null })} title={quickCreate ? titles[quickCreate] : ''}
-      description={quickCreate === 'lead' ? 'Клиент и лид создадутся одним действием.' : undefined} desktop="side" size="sm">
+      description={quickCreate === 'lead' ? 'Клиент и лид создадутся одним действием.'
+        : quickCreate === 'capture' ? 'Контакт, объект и действие за один сабмит. Остальное — потом.' : undefined} desktop="side" size="sm">
       {quickCreate === 'menu' && <Menu />}
+      {quickCreate === 'capture' && <QuickCapture />}
       {quickCreate === 'lead' && <LeadQuickForm />}
       {quickCreate === 'task' && <TaskQuickForm />}
     </Sheet>

@@ -7,6 +7,8 @@ import { TasksScreen } from './tasks';
 import { CalendarScreen } from './calendar';
 import { SettingsScreen } from './settings';
 import { DealDetailScreen, DealNewScreen, DealsScreen } from './deals';
+import { ReportsScreen } from './reports';
+import { TeamScreen } from './team';
 
 /** pattern → экран. Порядок: статические раньше динамических. */
 export const SCREENS: Record<string, (p: Record<string, string>) => React.ReactNode> = {
@@ -22,4 +24,6 @@ export const SCREENS: Record<string, (p: Record<string, string>) => React.ReactN
   '/deals': () => <DealsScreen />,
   '/deals/new': () => <DealNewScreen />,
   '/deals/:id': (p) => <DealDetailScreen id={p.id} />,
+  '/reports': () => <ReportsScreen />,
+  '/team': () => <TeamScreen />,
 };

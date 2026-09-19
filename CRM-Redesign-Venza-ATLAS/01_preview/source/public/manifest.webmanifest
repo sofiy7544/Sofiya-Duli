@@ -1,0 +1,26 @@
+{
+  "id": "/",
+  "name": "On Top Property CRM",
+  "short_name": "On Top",
+  "description": "CRM агентства недвижимости: лиды, объекты, показы и сделки",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#121A24",
+  "theme_color": "#F5F7FA",
+  "lang": "ru",
+  "dir": "ltr",
+  "categories": ["business", "productivity"],
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Сегодня", "url": "./#/today", "icons": [{ "src": "./icon-192.png", "sizes": "192x192" }] },
+    { "name": "Лиды", "url": "./#/leads", "icons": [{ "src": "./icon-192.png", "sizes": "192x192" }] },
+    { "name": "Объекты", "url": "./#/properties", "icons": [{ "src": "./icon-192.png", "sizes": "192x192" }] }
+  ]
+}

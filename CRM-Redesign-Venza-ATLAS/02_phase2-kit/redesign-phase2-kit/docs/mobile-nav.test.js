@@ -1,0 +1,13 @@
+const assert=require('assert'); const N=require(require('fs').existsSync('./build/lib/navigation/mobile-nav.js')?'./build/lib/navigation/mobile-nav.js':'./build/mobile-nav.js');
+let n=0; const eq=(a,b,m)=>{assert.deepStrictEqual(a,b,m);n++;};
+eq(N.PRIMARY_NAV.map(i=>i.key),['today','leads','properties','tasks'],'4 primary + more');
+const keys=c=>N.getMoreItems(c).map(i=>i.key);
+eq(keys({role:'ADMIN',integrationsEnabled:true}),['clients','deals','calendar','notes','communications','team','reports','settings'],'admin+flag: all 8 in order');
+eq(keys({role:'REALTOR',integrationsEnabled:false}),['clients','deals','calendar','notes','settings'],'realtor, flag off');
+eq(keys({role:undefined,integrationsEnabled:false}),['clients','deals','calendar','notes','settings'],'no role → no admin items');
+eq(keys({role:'MANAGER',integrationsEnabled:true}),['clients','deals','calendar','notes','communications','settings'],'manager: reports/team stay ADMIN-only');
+const s=N.getActiveSlot;
+eq([s('/today'),s('/dashboard/x'),s('/pipeline'),s('/leads/123'),s('/inventory/9'),s('/tasks')],['today','today','leads','leads','properties','tasks'],'primary + legacy');
+eq([s('/clients/5/edit'),s('/contacts'),s('/insights/lost-reasons'),s('/profile'),s('/settings/users'),s('/calendar')],Array(6).fill('more'),'more slot');
+eq([s('/login'),s('/leadsfoo'),s('/')],[null,null,null],'no false prefix match');
+console.log('NAV TESTS PASSED:',n);

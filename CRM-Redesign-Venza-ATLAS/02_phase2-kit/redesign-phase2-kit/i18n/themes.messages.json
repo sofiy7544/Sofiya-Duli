@@ -1,0 +1,7 @@
+{
+  "ru": { "themes": { "label": "Тема оформления", "system": "Стандарт", "light": "Светлая", "dark": "Тёмная", "sepia": "Сепия", "atlas": "ATLAS", "venza": "Venza" } },
+  "uk": { "themes": { "label": "Тема оформлення", "system": "Стандарт", "light": "Світла", "dark": "Темна", "sepia": "Сепія", "atlas": "ATLAS", "venza": "Venza" } },
+  "en": { "themes": { "label": "Appearance", "system": "Standard", "light": "Light", "dark": "Dark", "sepia": "Sepia", "atlas": "ATLAS", "venza": "Venza" } },
+  "fr": { "themes": { "label": "Apparence", "system": "Standard", "light": "Clair", "dark": "Sombre", "sepia": "Sépia", "atlas": "ATLAS", "venza": "Venza" } },
+  "it": { "themes": { "label": "Aspetto", "system": "Standard", "light": "Chiaro", "dark": "Scuro", "sepia": "Seppia", "atlas": "ATLAS", "venza": "Venza" } }
+}

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ru" data-theme="atlas" data-family="atlas">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="On Top" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 393px) and (device-height: 852px)" href="./splash-iphone-15-16.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 390px) and (device-height: 844px)" href="./splash-iphone-13-14.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 428px) and (device-height: 926px)" href="./splash-iphone-max.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px)" href="./splash-iphone-x.png" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#F5F7FA" />
+    <title>On Top Property — CRM</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23344A39'/><path d='M9 21l7-11 7 11' stroke='%23F7F4EC' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+    <script>
+      (function(){try{var t=localStorage.getItem('crm-preview-theme')||'atlas';var A=['atlas','sepia','venza'];if(A.indexOf(t)<0)t='atlas';
+      var r=document.documentElement;
+      r.classList.remove('dark');r.dataset.theme=t;r.dataset.family=t==='atlas'?'atlas':t==='venza'?'venza':'classic';}catch(e){}})();
+    </script>
+  </head>
+  <body class="font-sans bg-background text-foreground antialiased">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

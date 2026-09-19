@@ -1,0 +1,296 @@
+/* ==========================================================================
+   CRM — 6 тем оформления (Phase 2: theme foundation)
+   Стандарт(system) · Светлая(light) · Тёмная(dark) · Сепия(sepia) · ATLAS · Venza
+   Подключается в globals.css ПОСЛЕ существующих блоков тем:
+     @import '../styles/themes.css';   (или вставить содержимое в конец @layer base)
+   Легаси-блоки midnight/arctic/graphite/ocean/lavender/rose можно временно оставить —
+   они недостижимы: bootstrap и провайдер мигрируют эти значения.
+   Цвета — HSL-триплеты, как в текущей архитектуре (hsl(var(--x) / <alpha>)).
+   ========================================================================== */
+
+:root,
+:root[data-theme='system'],
+:root[data-theme='light'] {
+  --background: 220 42.9% 98.6%;
+  --surface: 0 0% 100%;
+  --surface-2: 210 33.3% 96.5%;
+  --foreground: 222.5 42.9% 11%;
+  --primary: 210.9 100% 44.9%;
+  --primary-foreground: 0 0% 100%;
+  --primary-soft: 213 100% 96.1%;
+  --accent: 254.9 92.3% 64.1%;
+  --accent-foreground: 0 0% 100%;
+  --muted: 210 30% 96.1%;
+  --muted-foreground: 216.4 14.0% 44.9%;
+  --border: 218.2 24.4% 91.2%;
+  --input: 218.2 24.4% 91.2%;
+  --ring: 210.9 100% 44.9%;
+  --success: 142.1 70.6% 45.3%;
+  --warning: 32.1 94.6% 43.7%;
+  --danger: 0 72.2% 50.6%;
+  --info: 221.2 83.2% 53.3%;
+  --success-text: 142.2 70.7% 28.4%;
+  --warning-text: 32.3 94.5% 31.5%;
+  --danger-text: 0 70.4% 45.1%;
+  --info-text: 221.2 83.2% 51.7%;
+
+  /* AA: все пары текст/фон ≥ 4.5:1 (проверено tools/contrast-gate.py) */
+  /* family: classic — значения = текущий продакшен, чтобы не было регрессий */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: var(--font-sans);
+  --radius: 0.875rem;
+  --radius-control: 0.875rem;   /* rounded-xl  */
+  --radius-card: 1.125rem;      /* rounded-2xl */
+  --radius-sheet: 1.5rem;       /* rounded-3xl */
+  --radius-modal: 1.125rem;
+  --scrim: 0 0% 0%;
+  --scrim-opacity: 0.45;
+  --motion-tap: 100ms; --motion-tab: 160ms; --motion-dropdown: 160ms;
+  --motion-accordion: 200ms; --motion-row: 200ms; --motion-modal: 220ms;
+  --motion-sheet: 280ms; --motion-toast-in: 180ms; --motion-toast-out: 160ms;
+  --motion-page: 200ms; --motion-skeleton: 1100ms;
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --page-enter-y: 8px; --page-enter-x: 0px; --page-enter-opacity: 0;
+
+  color-scheme: light;
+}
+
+:root.dark,
+:root[data-theme='dark'] {
+  --background: 222 27.8% 7.1%;
+  --surface: 222.9 25% 11%;
+  --surface-2: 221.2 21.6% 14.5%;
+  --foreground: 216 33.3% 97.1%;
+  --primary: 210.8 100% 62.9%;
+  --primary-foreground: 221.1 46.3% 8%;
+  --primary-soft: 210.8 70.6% 20%;
+  --accent: 255 95.1% 76.1%;
+  --accent-foreground: 221.1 46.3% 8%;
+  --muted: 224 19.5% 15.1%;
+  --muted-foreground: 216 18.2% 73.1%;
+  --border: 222.4 15.9% 21%;
+  --input: 222.4 15.9% 21%;
+  --ring: 210.8 100% 62.9%;
+  --success: 158.1 64.4% 51.6%;
+  --warning: 43.3 96.4% 56.3%;
+  --danger: 0 90.6% 70.8%;
+  --info: 213.1 93.9% 67.8%;
+  --success-text: 158.1 64.4% 51.6%;
+  --warning-text: 43.3 96.4% 56.3%;
+  --danger-text: 0 90.6% 70.8%;
+  --info-text: 213.1 93.9% 67.8%;
+
+  --scrim-opacity: 0.6;
+  --glass-bg: rgba(18, 24, 36, .62); --glass-strong-bg: rgba(18, 24, 36, .82); --glass-border: rgba(255, 255, 255, .08);
+  --shadow-card: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.4);
+  --shadow-lift: 0 16px 40px rgba(0,0,0,.6), 0 6px 16px rgba(0,0,0,.45);
+  color-scheme: dark;
+}
+
+:root[data-theme='sepia'] {
+  --background: 40 36.6% 92%;
+  --surface: 40 42.9% 95.9%;
+  --surface-2: 36.7 32.1% 89%;
+  --foreground: 27.9 30.4% 18%;
+  --primary: 24.1 70.3% 38.2%;
+  --primary-foreground: 34.3 46.7% 97.1%;
+  --primary-soft: 29 50.8% 88%;
+  --accent: 17.8 65% 43.7%;
+  --accent-foreground: 34.3 46.7% 97.1%;
+  --muted: 36.7 27.3% 87.1%;
+  --muted-foreground: 29.1 18.1% 37.4%;
+  --border: 35 21.4% 78%;
+  --input: 35 21.4% 78%;
+  --ring: 24.1 70.3% 38.2%;
+  --success: 102.1 36.6% 35.9%;
+  --warning: 35.2 80.6% 36.5%;
+  --danger: 8.1 59.1% 44.1%;
+  --info: 208.2 40.3% 41.4%;
+  --success-text: 102.1 36.6% 30.7%;
+  --warning-text: 35.1 80.5% 29.3%;
+  --danger-text: 8.1 59.1% 41.7%;
+  --info-text: 208.2 40.3% 38.6%;
+
+  --glass-bg: rgba(250, 244, 232, .78); --glass-strong-bg: rgba(250, 244, 232, .9); --glass-border: rgba(120, 90, 50, .14);
+  --shadow-card: 0 1px 2px rgba(83,48,16,.06), 0 6px 20px rgba(83,48,16,.07);
+  --shadow-lift: 0 8px 24px rgba(83,48,16,.10), 0 24px 48px rgba(83,48,16,.10);
+  color-scheme: light;
+}
+
+:root[data-theme='atlas'] {
+  --background: 216 33.3% 97.1%;
+  --surface: 0 0% 100%;
+  --surface-2: 210 30.8% 94.9%;
+  --foreground: 213.8 28.6% 11%;
+  --primary: 207.3 61.1% 35.3%;
+  --primary-foreground: 0 0% 100%;
+  --primary-soft: 206.2 53.3% 94.1%;
+  --accent: 39.9 58.8% 55.3%;
+  --accent-foreground: 216 26.3% 14.9%;
+  --muted: 210 30.8% 94.9%;
+  --muted-foreground: 212.1 12.1% 43.5%;
+  --border: 210 25% 89%;
+  --input: 210 25% 89%;
+  --ring: 207.3 61.1% 35.3%;
+  --success: 149 49.2% 36.3%;
+  --warning: 37.4 60.8% 47.1%;
+  --danger: 0 54.4% 53.5%;
+  --info: 208.8 58.1% 48.6%;
+  --success-text: 149.0 49.2% 30.3%;
+  --warning-text: 37.6 60.8% 32.7%;
+  --danger-text: 0.0 54.7% 47.2%;
+  --info-text: 208.8 57.8% 40.9%;
+
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: var(--font-sans);
+
+  --at-sidebar-bg: #121A24; --at-sidebar-surface: #182331; --at-sidebar-text: #F4F7FA;
+  --at-sidebar-muted: #9AA7B5; --at-sidebar-active: #223653; --at-sidebar-border: #253241;
+  --at-stage-new: #EDF4FB; --at-stage-contacted: #F2EEFB; --at-stage-qualified: #FFF5DD;
+  --at-stage-selection: #EAF5EE; --at-stage-showing: #EAF2FB; --at-stage-negotiation: #F5ECF7;
+  --at-stage-won: #E7F5EC; --at-stage-lost: #F8ECEC;
+
+  --radius: 0.75rem; --radius-control: 0.625rem; --radius-card: 0.75rem;
+  --radius-modal: 1rem; --radius-sheet: 1.125rem;
+  --glass-bg: rgba(255,255,255,.78); --glass-strong-bg: rgba(255,255,255,.9); --glass-border: rgba(20,27,36,.06);
+  --shadow-soft: 0 1px 4px rgba(20,27,36,.06);
+  --shadow-card: 0 4px 14px rgba(20,27,36,.07);
+  --shadow-lift: 0 8px 22px rgba(18,26,36,.14);
+  --scrim: 214 29% 11%; --scrim-opacity: 0.42;
+
+  --motion-tap: 80ms; --motion-tab: 140ms; --motion-dropdown: 150ms; --motion-accordion: 180ms;
+  --motion-row: 160ms; --motion-modal: 200ms; --motion-sheet: 240ms; --motion-toast-in: 160ms;
+  --motion-toast-out: 140ms; --motion-page: 190ms; --motion-skeleton: 1000ms; --motion-sidebar: 220ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --page-enter-y: 4px; --page-enter-x: 0px; --page-enter-opacity: 0.97;
+  color-scheme: light;
+}
+
+:root[data-theme='venza'] {
+  --background: 43.6 40.7% 94.7%;
+  --surface: 45 100% 99.2%;
+  --surface-2: 42.9 33.3% 91.8%;
+  --foreground: 132 8.2% 12%;
+  --primary: 133.6 17.5% 24.7%;
+  --primary-foreground: 0 0% 100%;
+  --primary-soft: 96 22.7% 91.4%;
+  --accent: 38.9 45.2% 59.2%;
+  --accent-foreground: 140 7.5% 15.7%;
+  --muted: 42.9 33.3% 91.8%;
+  --muted-foreground: 120.0 2.3% 41.3%;
+  --border: 40 23.1% 87.3%;
+  --input: 40 23.1% 87.3%;
+  --ring: 94.3 13.5% 40.8%;
+  --success: 144.2 33% 36.9%;
+  --warning: 36.3 60.2% 45.3%;
+  --danger: 2.9 51.4% 52.4%;
+  --info: 215.3 31.5% 50.2%;
+  --success-text: 144.2 33.0% 32.9%;
+  --warning-text: 36.3 60.0% 32.5%;
+  --danger-text: 2.8 51.2% 45.8%;
+  --info-text: 216.0 33.3% 43.5%;
+
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+
+  --vz-primary-hover: #2B3E30; --vz-olive: #66765A; --vz-sage: #A6B09A; --vz-sand: #DED3C0; --vz-clay: #C8B7A2;
+  --vz-success-soft: #E8F3EB; --vz-warning-soft: #FBF1DD; --vz-danger-soft: #FBE9E7; --vz-info-soft: #EAF0F7;
+  --vz-weather-clear: #E7C66B; --vz-weather-cloudy: #AAB1A8; --vz-weather-rain: #70889A; --vz-weather-evening: #9B806A;
+
+  --radius: 1.125rem; --radius-control: 0.875rem; --radius-card: 1.125rem;
+  --radius-modal: 1.375rem; --radius-sheet: 1.5rem;
+  --glass-bg: rgba(255,254,251,.74); --glass-strong-bg: rgba(255,254,251,.88); --glass-border: rgba(37,43,39,.06);
+  --shadow-soft: 0 2px 10px rgba(37,43,39,.05);
+  --shadow-card: 0 2px 10px rgba(37,43,39,.05);
+  --shadow-lift: 0 10px 28px rgba(37,43,39,.09);
+  --shadow-fab: 0 8px 22px rgba(52,74,57,.18);
+  --scrim: 135 8% 12%; --scrim-opacity: 0.28;
+
+  --motion-tap: 100ms; --motion-tab: 180ms; --motion-dropdown: 180ms; --motion-accordion: 240ms;
+  --motion-row: 220ms; --motion-modal: 240ms; --motion-sheet: 300ms; --motion-toast-in: 220ms;
+  --motion-toast-out: 180ms; --motion-page: 280ms; --motion-skeleton: 1200ms; --motion-counter: 420ms;
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --page-enter-y: 0px; --page-enter-x: 18px; --page-enter-opacity: 0.96;
+  color-scheme: light;
+}
+
+
+/* ---------- Типографика семейств ---------- */
+html { font-family: var(--font-sans); }
+:root[data-family='venza'] .font-display,
+:root[data-family='venza'] .heading-page { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.01em; }
+:root[data-family='atlas'] .heading-page { letter-spacing: -0.02em; font-weight: 700; }
+.text-numeric, .tabular-nums { font-variant-numeric: tabular-nums; }
+
+/* ---------- Функциональная анимация, завязанная на токены семейства ---------- */
+@keyframes crm-page-enter {
+  from { opacity: var(--page-enter-opacity); transform: translate3d(var(--page-enter-x), var(--page-enter-y), 0); }
+  to   { opacity: 1; transform: none; }
+}
+.crm-page-enter { animation: crm-page-enter var(--motion-page) var(--ease-emphasized) both; }
+
+@keyframes crm-sheet-up   { from { transform: translate3d(0, 100%, 0); } to { transform: none; } }
+@keyframes crm-sheet-down { from { transform: none; } to { transform: translate3d(0, 100%, 0); } }
+@keyframes crm-scrim-in   { from { opacity: 0; } to { opacity: 1; } }
+@keyframes crm-pop-in     { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
+
+/* Тема переключается без «прокатки» цветов по всем элементам: см. theme-provider (класс theme-switching). */
+:root.theme-switching *, :root.theme-switching *::before, :root.theme-switching *::after { transition: none !important; }
+
+/* ---------- Reduced motion (обязательно, §13) ---------- */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --page-enter-x: 0px; --page-enter-y: 0px; --page-enter-opacity: 0;
+    --motion-page: 120ms; --motion-sheet: 120ms; --motion-modal: 120ms; --motion-counter: 0ms;
+  }
+  @keyframes crm-sheet-up   { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes crm-sheet-down { from { opacity: 1; } to { opacity: 0; } }
+  @keyframes crm-pop-in     { from { opacity: 0; } to { opacity: 1; } }
+  [data-parallax] { transform: none !important; }
+}
+
+/* ---------- Нижняя навигация: одна структура, оформление по семье ---------- */
+.crm-bottom-nav {
+  border-radius: var(--radius-card);
+  background: var(--glass-strong-bg, hsl(var(--surface) / .9));
+  border: 1px solid var(--glass-border, hsl(var(--border)));
+  box-shadow: var(--shadow-lift);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  padding: 6px;
+}
+.crm-bottom-nav__item {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  width: 100%; min-height: 54px; border-radius: calc(var(--radius-card) - 6px);
+  color: hsl(var(--muted-foreground));
+  transition: color var(--motion-tab) var(--ease-standard), background-color var(--motion-tab) var(--ease-standard), transform var(--motion-tap) var(--ease-standard);
+  -webkit-tap-highlight-color: transparent;
+}
+.crm-bottom-nav__item:active { transform: scale(.94); }
+.crm-bottom-nav__item:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 1px; }
+.crm-bottom-nav__icon { display: grid; place-items: center; height: 28px; width: 44px; border-radius: 999px; transition: background-color var(--motion-tab) var(--ease-standard); }
+.crm-bottom-nav__label { font-size: 10.5px; line-height: 14px; font-weight: 500; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crm-bottom-nav__item[data-active] { color: hsl(var(--foreground)); }
+.crm-bottom-nav__item[data-active] .crm-bottom-nav__icon { background: hsl(var(--primary-soft)); color: hsl(var(--primary)); }
+
+/* ATLAS: плотнее, строже, тёмная полоса как у сайдбара */
+:root[data-family='atlas'] .crm-bottom-nav {
+  left: 0; right: 0; bottom: 0; border-radius: 0; border: 0; border-top: 1px solid var(--at-sidebar-border);
+  background: var(--at-sidebar-bg); box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none;
+  padding: 4px 4px max(4px, env(safe-area-inset-bottom));
+}
+:root[data-family='atlas'] .crm-bottom-nav__item { min-height: 52px; color: var(--at-sidebar-muted); border-radius: 8px; }
+:root[data-family='atlas'] .crm-bottom-nav__item[data-active] { color: var(--at-sidebar-text); background: var(--at-sidebar-active); }
+:root[data-family='atlas'] .crm-bottom-nav__item[data-active] .crm-bottom-nav__icon { background: transparent; color: var(--at-sidebar-text); }
+
+/* Venza: спокойная плавающая «таблетка», больше воздуха */
+:root[data-family='venza'] .crm-bottom-nav { left: 16px; right: 16px; padding: 8px; border-radius: 26px; box-shadow: var(--shadow-lift); }
+:root[data-family='venza'] .crm-bottom-nav__item[data-active] .crm-bottom-nav__icon { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
+
+@media (prefers-reduced-motion: reduce) { .crm-bottom-nav__item:active { transform: none; } }

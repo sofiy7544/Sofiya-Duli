@@ -1,6 +1,6 @@
 /* Сервис-воркер: приложение открывается мгновенно и работает без сети.
    Стратегия: HTML — сеть с откатом в кэш, остальное — кэш с фоновым обновлением. */
-const CACHE = 'otp-crm-v1';
+const CACHE = 'otp-crm-v2';
 const CORE = ['./', './manifest.webmanifest', './apple-touch-icon.png', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', (e) => {

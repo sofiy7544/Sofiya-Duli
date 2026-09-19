@@ -3,6 +3,23 @@ import { getDesignFamily, normalizeTheme, resolveIsDark, type DesignFamily, type
 
 /** Упрощённый ThemeProvider превью. Тот же контракт, что и в пакете Phase 2 (theme, setTheme, isDark, family). */
 const KEY = 'crm-preview-theme';
+
+/** Цвет системных полос (статус-бар, зона Home, панель Safari) на экране входа: он тёмный, а не в цвете темы. */
+const SIGNIN_CHROME = '#05070A';
+
+/**
+ * Приводит meta[name=theme-color] к текущему экрану.
+ * Вызывается и провайдером, и экраном входа, чтобы белая полоса не появлялась
+ * ни при старте, ни при смене темы.
+ */
+export function syncChromeColor() {
+  const root = document.documentElement;
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (!meta) return;
+  if (root.dataset.screen === 'signin') { meta.setAttribute('content', SIGNIN_CHROME); return; }
+  const bg = getComputedStyle(root).getPropertyValue('--background').trim();
+  meta.setAttribute('content', bg ? `hsl(${bg})` : '#fff');
+}
 type Ctx = { theme: Theme; setTheme: (t: Theme) => void; isDark: boolean; family: DesignFamily; reducedMotion: boolean };
 const ThemeCtx = React.createContext<Ctx | null>(null);
 
@@ -24,8 +41,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     r.classList.toggle('dark', dark);
     r.dataset.theme = theme; r.dataset.family = getDesignFamily(theme);
     r.style.colorScheme = dark ? 'dark' : 'light';
-    const meta = document.querySelector('meta[name="theme-color"]');
-    meta?.setAttribute('content', getComputedStyle(r).getPropertyValue('--background') ? `hsl(${getComputedStyle(r).getPropertyValue('--background').trim()})` : '#fff');
+    syncChromeColor();
     requestAnimationFrame(() => requestAnimationFrame(() => r.classList.remove('theme-switching')));
   }, [theme, sysDark]);
 

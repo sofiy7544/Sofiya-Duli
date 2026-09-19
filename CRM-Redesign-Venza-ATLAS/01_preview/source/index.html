@@ -13,7 +13,9 @@
     <link rel="apple-touch-startup-image" media="(device-width: 428px) and (device-height: 926px)" href="./splash-iphone-max.png" />
     <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px)" href="./splash-iphone-x.png" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="theme-color" content="#F5F7FA" />
+    <!-- Приложение открывается на тёмном экране входа, поэтому стартовый цвет системных полос тёмный.
+         После входа ThemeProvider меняет его на цвет темы (см. syncChromeColor). -->
+    <meta name="theme-color" content="#05070A" />
     <title>On Top Property — CRM</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23344A39'/><path d='M9 21l7-11 7 11' stroke='%23F7F4EC' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
     <script>

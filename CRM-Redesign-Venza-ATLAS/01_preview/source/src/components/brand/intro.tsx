@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Eye, EyeOff, Loader2, Lock, Mail, MailCheck } from 'lucide-react';
-import { useTheme } from '@/lib/theme/provider';
+import { syncChromeColor, useTheme } from '@/lib/theme/provider';
 import { detectTenant, PLATFORM } from '@/lib/tenants';
 import bgLoop from '@/assets/login-bg-loop.mp4';
 import bgLoopWebm from '@/assets/login-bg-loop.webm';
@@ -18,6 +18,13 @@ export function FilmLogin({ onSuccess }: { onSuccess: () => void }) {
   const dark = family === 'atlas' || isDark;
   const [run, setRun] = React.useState(0);
   React.useEffect(() => { const f = () => setRun((r) => r + 1); addEventListener(INTRO_EVENT, f); return () => removeEventListener(INTRO_EVENT, f); }, []);
+  /* Пока открыт вход, страница и системные полосы тёмные: в установленном
+     приложении и в Safari иначе видна светлая полоса у нижнего края. */
+  React.useEffect(() => {
+    document.documentElement.dataset.screen = 'signin';
+    syncChromeColor();
+    return () => { delete document.documentElement.dataset.screen; syncChromeColor(); };
+  }, []);
   return (
     <div key={run} className="signin">
       <div className="signin__bg" aria-hidden>

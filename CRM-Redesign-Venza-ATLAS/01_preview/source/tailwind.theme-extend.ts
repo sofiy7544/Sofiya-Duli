@@ -19,6 +19,7 @@ export const themeExtend = {
       DEFAULT: c('primary'),
       foreground: c('primary-foreground'),
       soft: c('primary-soft'), // было не смаплено
+      text: c('primary-text'),  // текст на мягкой подложке: у primary такого токена не было
     },
     accent: { DEFAULT: c('accent'), foreground: c('accent-foreground') },
     muted: { DEFAULT: c('muted'), foreground: c('muted-foreground') },

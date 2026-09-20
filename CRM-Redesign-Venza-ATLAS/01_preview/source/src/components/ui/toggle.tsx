@@ -4,7 +4,11 @@ import { cn } from '@/lib/cn';
 export function Switch({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label: string }) {
   return (
     <button type="button" role="switch" aria-checked={checked} aria-label={label} onClick={() => onChange(!checked)}
-      className={cn('relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors duration-tab ease-standard', checked ? 'bg-primary' : 'bg-muted-foreground/30')}>
+      /* Вид остаётся 48×28, но зона нажатия растянута до 44px по высоте —
+         иначе в переключатель трудно попасть пальцем. */
+      className={cn('relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors duration-tab ease-standard',
+        'before:absolute before:left-0 before:top-1/2 before:h-11 before:w-full before:-translate-y-1/2 before:content-[""]',
+        checked ? 'bg-primary' : 'bg-muted-foreground/30')}>
       <span className={cn('absolute left-0.5 h-6 w-6 rounded-full bg-white shadow-soft transition-transform duration-tab ease-emphasized', checked && 'translate-x-5')} />
     </button>
   );

@@ -31,7 +31,7 @@ export function ActivityTimeline({ clientId, leadId }: { clientId?: string; lead
             {items.map((a, i) => { const Icon = ICON[a.type]; return (
               <li key={a.id} className="relative flex gap-3 pb-3">
                 {i < items.length - 1 && <span aria-hidden className="absolute bottom-0 left-[17px] top-10 w-px bg-border" />}
-                <span className={cn('grid h-9 w-9 shrink-0 place-items-center rounded-full', a.type === 'STAGE' ? 'bg-primary-soft text-primary' : 'bg-surface-2 text-muted-foreground')}><Icon className="h-4 w-4" aria-hidden /></span>
+                <span className={cn('grid h-9 w-9 shrink-0 place-items-center rounded-full', a.type === 'STAGE' ? 'bg-primary-soft text-primary-text' : 'bg-surface-2 text-muted-foreground')}><Icon className="h-4 w-4" aria-hidden /></span>
                 <div className="min-w-0 flex-1 pt-0.5">
                   <div className="flex items-baseline gap-2"><span className="text-[13.5px] font-semibold">{TYPE_LABEL[a.type]}</span><span className="t-caption tabular">{time(a.at)}</span><span className="t-caption ml-auto truncate">{users.find((u) => u.id === a.userId)?.fullName.split(' ')[0]}</span></div>
                   <p className="mt-0.5 text-[14.5px] leading-[21px]">{a.text}</p>

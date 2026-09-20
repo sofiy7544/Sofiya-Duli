@@ -221,7 +221,7 @@ function VzKpi({ label, value, note, warn, loading, href }: { label: string; val
 function Kpi({ icon: Icon, label, value, sub, subTone, loading, href, className }: { icon: typeof Users; label: string; value?: number | string; sub: string; subTone?: 'danger'; loading: boolean; href: string; className?: string }) {
   return (
     <Link href={href} className={cn('pressable surface flex items-start gap-3 p-3.5', className)}>
-      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[9px] bg-primary-soft text-primary"><Icon className="h-[18px] w-[18px]" aria-hidden /></span>
+      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[9px] bg-primary-soft text-primary-text"><Icon className="h-[18px] w-[18px]" aria-hidden /></span>
       <span className="min-w-0">
         <span className="block truncate text-[12.5px] font-medium text-muted-foreground">{label}</span>
         {loading || value === undefined ? <Skeleton className="my-1 h-6 w-12" /> : <span className="block text-[22px] font-bold leading-7 tabular tracking-[-0.03em]">{value}</span>}
@@ -236,12 +236,12 @@ function UrgentBlock({ overdue, nameOf, compact }: { overdue: Task[]; nameOf: (i
   if (!t) return null;
   return (
     <section aria-label="Срочно" className={cn('relative overflow-hidden text-primary-foreground', compact ? 'rounded-card border border-danger/25 bg-danger/8 p-4 !text-foreground' : 'rounded-[22px] bg-primary p-5')}>
-      <div className={cn('flex items-center gap-2 text-[13px] font-medium', compact ? 'text-danger-text' : 'opacity-85')}><AlertTriangle className="h-4 w-4" aria-hidden />Просрочено со вчера</div>
+      <div className={cn('flex items-center gap-2 text-[13px] font-medium', compact ? 'text-danger-text' : 'text-primary-foreground')}><AlertTriangle className="h-4 w-4" aria-hidden />Просрочено со вчера</div>
       <p className={cn('mt-1.5', compact ? 'text-[16px] font-semibold' : 'font-display text-[22px] font-semibold leading-7 tracking-[-0.01em]')}>{t.title}</p>
-      <p className="mt-1 text-[14px] opacity-80">{nameOf(t.clientId)}{overdue.length > 1 && `, и ещё ${overdue.length - 1}`}</p>
+      <p className={cn('mt-1 text-[14px]', compact ? 'text-foreground/80' : 'text-primary-foreground')}>{nameOf(t.clientId)}{overdue.length > 1 && `, и ещё ${overdue.length - 1}`}</p>
       <div className="mt-4 flex gap-2">
-        <Link href={t.clientId ? `/clients/${t.clientId}` : '/tasks'} className={cn('inline-flex h-11 items-center lg:h-10 gap-1.5 px-4 text-[14px] font-semibold transition-colors', compact ? 'rounded-control bg-surface border border-border hover:bg-surface-2' : 'rounded-full bg-white/15 backdrop-blur hover:bg-white/25')}><Phone className="h-4 w-4" aria-hidden />Связаться</Link>
-        <Link href="/tasks" className="inline-flex h-11 items-center lg:h-10 gap-1 rounded-full px-3 text-[14px] font-medium opacity-90 hover:opacity-100">Все задачи<ChevronRight className="h-4 w-4" aria-hidden /></Link>
+        <Link href={t.clientId ? `/clients/${t.clientId}` : '/tasks'} className={cn('inline-flex h-11 items-center lg:h-10 gap-1.5 px-4 text-[14px] font-semibold transition-colors', compact ? 'rounded-control bg-surface border border-border hover:bg-surface-2' : 'rounded-full bg-primary-foreground text-primary-text hover:brightness-95')}><Phone className="h-4 w-4" aria-hidden />Связаться</Link>
+        <Link href="/tasks" className={cn('inline-flex h-11 items-center lg:h-10 gap-1 rounded-full px-3 text-[14px] font-medium', compact ? 'text-foreground' : 'text-primary-foreground')}>Все задачи<ChevronRight className="h-4 w-4" aria-hidden /></Link>
       </div>
     </section>
   );

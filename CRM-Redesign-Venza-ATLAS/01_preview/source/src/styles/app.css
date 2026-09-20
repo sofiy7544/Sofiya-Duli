@@ -296,6 +296,14 @@ html[data-screen='signin'], html[data-screen='signin'] body { background: #05070
 }
 
 /* Текстовые ссылки внутри строк: область нажатия ≥ 40px без изменения вёрстки */
+/* Ползунок: дорожка тонкая, а нажимать можно по всей высоте поля. */
+.range-control::-webkit-slider-runnable-track { height: 8px; border-radius: 999px; background: hsl(var(--surface-2)); }
+.range-control::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; margin-top: -7px;
+  border-radius: 999px; background: hsl(var(--primary)); box-shadow: var(--shadow-soft); }
+.range-control::-moz-range-track { height: 8px; border-radius: 999px; background: hsl(var(--surface-2)); }
+.range-control::-moz-range-thumb { width: 22px; height: 22px; border: 0; border-radius: 999px; background: hsl(var(--primary)); }
+.range-control:focus-visible::-webkit-slider-thumb { outline: 2px solid hsl(var(--ring) / .55); outline-offset: 2px; }
+
 .tap-link { display: inline-flex; align-items: center; min-height: 44px; padding-block: 10px; margin-block: -10px; }
 
 /* Десктоп: плотные таблицы остаются читаемыми, шапка не уезжает */

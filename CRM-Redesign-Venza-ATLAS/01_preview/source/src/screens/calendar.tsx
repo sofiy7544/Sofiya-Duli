@@ -103,7 +103,7 @@ export function CalendarScreen() {
                   {on(d).map((e) => { const s = new Date(e.startsAt), en = new Date(e.endsAt); const top = ((s.getHours() - 8) * 60 + s.getMinutes()) / 60 * 56; const h = Math.max(26, (en.getTime() - s.getTime()) / 3_600_000 * 56 - 2); return (
                     <button key={e.id} onClick={() => setSelected(e)} className="absolute inset-x-1 overflow-hidden rounded-[8px] border-l-[3px] px-2 py-1 text-left text-[12px] leading-4 shadow-soft transition-transform duration-tap hover:brightness-[.98] active:scale-[.98]"
                       style={{ top, height: h, background: `hsl(${KIND_COLOR[e.kind]} / .13)`, borderColor: `hsl(${KIND_COLOR[e.kind]})` }}>
-                      <span className="block truncate font-semibold">{e.title}</span><span className="block truncate text-foreground/70 tabular">{time(e.startsAt)}</span>
+                      <span className="block truncate font-semibold">{e.title}</span><span className="block truncate text-foreground/85 tabular">{time(e.startsAt)}</span>
                     </button>); })}
                 </div>
               ))}

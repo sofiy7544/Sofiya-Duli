@@ -60,7 +60,7 @@ export function InstallCard() {
   return (
     <>
       <div className="surface flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
-        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-[12px] bg-primary-soft text-primary"><Download className="h-5 w-5" aria-hidden /></span>
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-[12px] bg-primary-soft text-primary-text"><Download className="h-5 w-5" aria-hidden /></span>
         <div className="min-w-0 flex-1">
           <div className="text-[15.5px] font-medium">Установить на телефон</div>
           <div className="t-caption">Откроется во весь экран, без панели браузера. Работает и без сети.</div>

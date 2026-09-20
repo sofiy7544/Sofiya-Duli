@@ -38,7 +38,7 @@ function Menu() {
     <div className="space-y-2">
       {items.map((it) => (
         <button key={it.key} onClick={() => ui.set({ quickCreate: it.key })} className="pressable surface flex w-full items-center gap-3.5 p-3.5 text-left">
-          <span className="grid h-11 w-11 place-items-center rounded-[13px] bg-primary-soft text-primary"><it.icon className="h-5 w-5" aria-hidden /></span>
+          <span className="grid h-11 w-11 place-items-center rounded-[13px] bg-primary-soft text-primary-text"><it.icon className="h-5 w-5" aria-hidden /></span>
           <span className="flex-1"><span className="block text-[15.5px] font-semibold">{it.title}</span><span className="t-caption">{it.text}</span></span>
           <ChevronRight className="h-4 w-4 text-muted-foreground" aria-hidden />
         </button>
@@ -89,7 +89,7 @@ function LeadQuickForm() {
           {PRIORITIES.map((p) => (
             <button key={p.value} type="button" aria-pressed={v.priority === p.value} onClick={() => setV({ ...v, priority: p.value })}
               className={cn('flex h-12 items-center justify-center gap-1.5 rounded-control border text-[14px] font-medium transition-[background-color,border-color,color] duration-tab',
-                v.priority === p.value ? 'border-primary bg-primary-soft text-primary' : 'border-border bg-surface text-muted-foreground hover:text-foreground')}>
+                v.priority === p.value ? 'border-primary bg-primary-soft text-primary-text' : 'border-border bg-surface text-muted-foreground hover:text-foreground')}>
               <p.icon className="h-4 w-4" aria-hidden />{p.label}
             </button>
           ))}
@@ -126,7 +126,7 @@ function TaskQuickForm() {
         <div className="flex flex-wrap gap-2">
           {presets.map((p) => (
             <button key={p.k} type="button" aria-pressed={v.when === p.k} onClick={() => setV({ ...v, when: p.k })}
-              className={cn('h-10 rounded-full border px-4 text-[14px] font-medium transition-colors duration-tab', v.when === p.k ? 'border-primary bg-primary-soft text-primary' : 'border-border bg-surface text-muted-foreground')}>{p.l}</button>
+              className={cn('h-10 rounded-full border px-4 text-[14px] font-medium transition-colors duration-tab', v.when === p.k ? 'border-primary bg-primary-soft text-primary-text' : 'border-border bg-surface text-muted-foreground')}>{p.l}</button>
           ))}
         </div>
       </fieldset>

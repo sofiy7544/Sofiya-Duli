@@ -7,7 +7,7 @@ import { PRIORITY_LABEL, PROPERTY_STATUS_LABEL, STAGE_LABEL } from '@/lib/labels
 export type Tone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'accent';
 const TONE: Record<Tone, string> = {
   neutral: 'bg-muted text-muted-foreground',
-  primary: 'bg-primary-soft text-primary',
+  primary: 'bg-primary-soft text-primary-text',
   success: 'bg-success/12 text-success-text',
   warning: 'bg-warning/14 text-warning-text',
   danger: 'bg-danger/10 text-danger-text',

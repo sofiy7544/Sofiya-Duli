@@ -16,6 +16,7 @@
   --surface-2: 210 33.3% 96.5%;
   --foreground: 222.5 42.9% 11%;
   --primary: 210.9 100% 44.9%;
+  --primary-text: 210.9 100% 44.9%;
   --primary-foreground: 0 0% 100%;
   --primary-soft: 213 100% 96.1%;
   --accent: 254.9 92.3% 64.1%;
@@ -64,6 +65,7 @@
   --surface-2: 221.2 21.6% 14.5%;
   --foreground: 216 33.3% 97.1%;
   --primary: 210.8 100% 62.9%;
+  --primary-text: 210.8 100% 62.9%;
   --primary-foreground: 221.1 46.3% 8%;
   --primary-soft: 210.8 70.6% 20%;
   --accent: 255 95.1% 76.1%;
@@ -108,10 +110,11 @@
   --warning: 35.2 80.6% 36.5%;
   --danger: 8.1 59.1% 44.1%;
   --info: 208.2 40.3% 41.4%;
-  --success-text: 102.1 36.6% 30.7%;
+  --success-text: 102.1 36.6% 26.5%;
   --warning-text: 35.1 80.5% 29.3%;
   --danger-text: 8.1 59.1% 41.7%;
   --info-text: 208.2 40.3% 38.6%;
+  --primary-text: 24.1 70.3% 31.5%;
 
   --glass-bg: rgba(250, 244, 232, .78); --glass-strong-bg: rgba(250, 244, 232, .9); --glass-border: rgba(120, 90, 50, .14);
   --shadow-card: 0 1px 2px rgba(83,48,16,.06), 0 6px 20px rgba(83,48,16,.07);
@@ -142,6 +145,7 @@
   --warning-text: 37.6 60.8% 32.7%;
   --danger-text: 0.0 54.7% 47.2%;
   --info-text: 208.8 57.8% 40.9%;
+  --primary-text: 207.3 61.1% 30.5%;
 
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-display: var(--font-sans);
@@ -176,6 +180,7 @@
   --surface-2: 42.9 33.3% 91.8%;
   --foreground: 132 8.2% 12%;
   --primary: 133.6 17.5% 24.7%;
+  --primary-text: 133.6 17.5% 24.7%;
   --primary-foreground: 0 0% 100%;
   --primary-soft: 96 22.7% 91.4%;
   --accent: 38.9 45.2% 59.2%;
@@ -189,7 +194,7 @@
   --warning: 36.3 60.2% 45.3%;
   --danger: 2.9 51.4% 52.4%;
   --info: 215.3 31.5% 50.2%;
-  --success-text: 144.2 33.0% 32.9%;
+  --success-text: 144.2 33.0% 27.5%;
   --warning-text: 36.3 60.0% 32.5%;
   --danger-text: 2.8 51.2% 45.8%;
   --info-text: 216.0 33.3% 43.5%;

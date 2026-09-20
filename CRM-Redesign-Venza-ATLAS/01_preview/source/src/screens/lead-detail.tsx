@@ -237,7 +237,7 @@ export function ScheduleShowingSheet({ open, onOpenChange, client, defaultProper
             </button>))}</div>
         </fieldset>
         <fieldset><legend className="mb-2 text-[13px] font-medium">День</legend>
-          <div className="grid grid-cols-3 gap-2">{[0, 1, 2].map((k) => <button key={k} onClick={() => setDay(k)} aria-pressed={day === k} className={cn('h-10 min-w-0 truncate rounded-full border px-2 text-[14px] font-medium', day === k ? 'border-primary bg-primary-soft text-primary' : 'border-border bg-surface')}>{relDay(new Date(Date.now() + k * 86_400_000).toISOString())}</button>)}</div>
+          <div className="grid grid-cols-3 gap-2">{[0, 1, 2].map((k) => <button key={k} onClick={() => setDay(k)} aria-pressed={day === k} className={cn('h-10 min-w-0 truncate rounded-full border px-2 text-[14px] font-medium', day === k ? 'border-primary bg-primary-soft text-primary-text' : 'border-border bg-surface')}>{relDay(new Date(Date.now() + k * 86_400_000).toISOString())}</button>)}</div>
         </fieldset>
         <Field label="Время" hint="Длительность 60 минут">{(id) => <Input id={id} type="time" step={900} value={hour} onChange={(e) => setHour(e.target.value)} className="tabular" />}</Field>
         {conflict && <div role="status" className="rounded-control border border-warning/35 bg-warning/12 px-3.5 py-3 text-[14px] text-warning-text">Пересекается с «{conflict.title}» в {time(conflict.startsAt)}. Показ можно назначить, но проверьте расписание.</div>}

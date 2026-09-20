@@ -19,7 +19,7 @@ const VARIANT: Record<NonNullable<ButtonProps['variant']>, string> = {
   link: 'text-primary underline-offset-4 hover:underline px-0 h-auto',
   destructive: 'bg-danger text-white shadow-soft hover:brightness-105',
   glass: 'material border border-[var(--glass-border)] text-foreground',
-  soft: 'bg-primary-soft text-primary hover:brightness-[.98]',
+  soft: 'bg-primary-soft text-primary-text hover:brightness-[.98]',
 };
 const SIZE: Record<NonNullable<ButtonProps['size']>, string> = {
   default: 'h-12 px-5 text-[15px] lg:h-11',

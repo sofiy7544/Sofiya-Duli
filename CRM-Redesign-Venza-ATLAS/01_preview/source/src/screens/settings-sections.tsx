@@ -265,8 +265,9 @@ export function BrandingScreen() {
         {watermark && (
           <label className="mt-4 block">
             <span className="t-caption">Прозрачность: {opacity}%</span>
+            {/* Сам ползунок высотой 44px — иначе цель нажатия всего 8px по высоте дорожки. */}
             <input type="range" min={10} max={80} step={5} value={opacity} onChange={(e) => setOpacity(Number(e.target.value))}
-              className="mt-2 h-2 w-full cursor-pointer appearance-none rounded-full bg-surface-2 accent-primary" />
+              className="range-control mt-1 h-11 w-full cursor-pointer appearance-none bg-transparent accent-primary" />
           </label>
         )}
       </section>

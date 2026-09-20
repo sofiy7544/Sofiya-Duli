@@ -232,12 +232,34 @@ html[data-screen='signin'], html[data-screen='signin'] body { background: #05070
    поэтому окно входа не уезжает под панель. */
 .signin { position: fixed; inset: 0; height: 100svh; height: 100lvh; overflow: hidden; background: #05070A; }
 .signin__bg { position: absolute; inset: 0; }
-.signin__bg video, .signin__bg img { width: 100%; height: 100%; object-fit: cover; animation: signin-drift 26s ease-in-out infinite alternate; will-change: transform; }
+/* Движение начинается с первого кадра и не ждёт видео: кадр появляется
+   крупным и «оседает» до рабочего масштаба, а дальше идёт бесконечный
+   медленный наезд. Первые секунды это постер (60 КБ, он предзагружен в
+   index.html) — видео подхватывает то же движение, когда догрузится, потому
+   что анимация висит на самом элементе <video>, а постер — его атрибут.
+   Только transform и opacity: фильтры на полноэкранном видео роняют кадры
+   на старых iPhone. */
+.signin__bg video, .signin__bg img { width: 100%; height: 100%; object-fit: cover; will-change: transform;
+  animation: signin-fade 700ms ease-out both,
+             signin-enter 2600ms cubic-bezier(.18, .55, .3, 1) both,
+             signin-drift 26s ease-in-out infinite alternate;
+  /* --signin-t — сколько вход уже шёл на заставке в index.html (величина
+     отрицательная). Отрицательная задержка включает анимацию с середины,
+     поэтому приложение продолжает движение, а не начинает его заново. */
+  animation-delay: var(--signin-t, 0ms), var(--signin-t, 0ms), calc(2600ms + var(--signin-t, 0ms)); }
+/* Проявление отдельной анимацией: у наезда своя, медленная кривая, и если
+   свести их в одну, кадр так же медленно и светлеет — секунду висит тусклым. */
+@keyframes signin-fade { from { opacity: .35; } to { opacity: 1; } }
+@keyframes signin-enter {
+  from { transform: scale(1.22) translate3d(0, 1.4%, 0); }
+  to   { transform: scale(1.04) translate3d(0, 0, 0); }
+}
 @keyframes signin-drift { from { transform: scale(1.04); } to { transform: scale(1.12); } }
 /* Автозапуск отклонён (на iPhone так в режиме энергосбережения): вместо видео
    виден постер. Чтобы кадр не выглядел замершим, наезд идёт заметно быстрее —
-   до первого касания, после которого видео всё-таки запускается. */
-.signin__bg[data-still] video, .signin__bg[data-still] img { animation-duration: 14s; }
+   до первого касания, после которого видео всё-таки запускается. Вход при
+   этом остаётся прежней длины — длительности перечислены по анимациям. */
+.signin__bg[data-still] video, .signin__bg[data-still] img { animation-duration: 700ms, 2600ms, 14s; }
 /* Низ и верх уходят ровно в #05070A — цвет системных полос (theme-color).
    Панель Safari и зона Home закрашиваются им же, поэтому стык кадра
    с хромом браузера не виден: картинка не обрывается прямоугольником. */
@@ -310,8 +332,10 @@ html[data-screen='signin'], html[data-screen='signin'] body { background: #05070
 @keyframes spin { to { transform: rotate(360deg); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .signin__bg video { animation: none; display: none; }
-  .signin__bg img { animation: none; }   /* постер остаётся: он неподвижен */
+  /* Видео здесь не рисуется вовсе: при «уменьшить движение» компонент ставит
+     постер (intro.tsx). Раньше правило прятало видео, а постера в разметке не
+     было — и экран входа оставался пустым чёрным. */
+  .signin__bg video, .signin__bg img { animation: none; transform: scale(1.04); }
   .glassin { animation: none; }
 }
 

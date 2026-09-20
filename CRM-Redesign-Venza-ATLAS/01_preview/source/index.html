@@ -16,6 +16,10 @@
     <!-- Приложение открывается на тёмном экране входа, поэтому стартовый цвет системных полос тёмный.
          После входа ThemeProvider меняет его на цвет темы (см. syncChromeColor). -->
     <meta name="theme-color" content="#05070A" />
+    <!-- Постер экрана входа — первое, что видит человек. Предзагрузка тянет его
+         параллельно со скриптом, а не после отрисовки: иначе первые кадры
+         движения идут по пустому чёрному фону. -->
+    <link rel="preload" as="image" fetchpriority="high" href="/src/assets/login-bg-poster.jpg" />
     <title>On Top Property — CRM</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23344A39'/><path d='M9 21l7-11 7 11' stroke='%23F7F4EC' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
     <script>
@@ -26,9 +30,34 @@
       r.classList.toggle('dark',dark);r.style.colorScheme=dark?'dark':'light';
       r.dataset.theme=t;r.dataset.family=t==='atlas'?'atlas':t==='venza'?'venza':'classic';}catch(e){}})();
     </script>
+    <!-- Заставка до запуска приложения. Первое впечатление не должно ждать
+         550 КБ скрипта: этот кадр рисуется сразу после разбора HTML, а постер
+         к этому моменту уже тянется предзагрузкой. Кривые и числа те же, что
+         у .signin__bg в src/styles/app.css — там анимация подхватывается
+         ровно с того места, где её застал React (переменная --signin-t),
+         поэтому в момент запуска приложения кадр не дёргается. -->
+    <style>
+      #boot { position: fixed; inset: 0; background: #05070A; overflow: hidden; }
+      #boot > i { position: absolute; inset: 0; display: block;
+        background: url(/src/assets/login-bg-poster.jpg) 50% 50% / cover no-repeat;
+        animation: boot-fade 700ms ease-out both, boot-enter 2600ms cubic-bezier(.18, .55, .3, 1) both; }
+      @keyframes boot-fade { from { opacity: .35 } to { opacity: 1 } }
+      @keyframes boot-enter { from { transform: scale(1.22) translate3d(0, 1.4%, 0) } to { transform: scale(1.04) } }
+      @media (prefers-reduced-motion: reduce) { #boot > i { animation: boot-fade 300ms linear both; transform: scale(1.04) } }
+    </style>
   </head>
   <body class="font-sans bg-background text-foreground antialiased">
-    <div id="root"></div>
+    <div id="root"><div id="boot" aria-hidden="true"><i></i></div></div>
+    <script>
+      /* Заставка — кадр экрана входа. По глубокой ссылке (#/tasks и прочие)
+         открывается не он, и фотографию входа показывать нельзя.
+         Постер подставлен прямо в CSS выше: обычный скрипт ждёт загрузки
+         внешней таблицы стилей, и на медленной сети кадр появлялся бы на
+         секунду-полторы позже, чем мог. */
+      (function () {
+        if (location.hash && location.hash.indexOf('#/login') !== 0) document.getElementById('boot').remove();
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

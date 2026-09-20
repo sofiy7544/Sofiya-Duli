@@ -13,17 +13,36 @@ import bgPoster from '@/assets/login-bg-poster.jpg';
  */
 export const INTRO_EVENT = 'otp-intro-replay';
 
-/** «Экономия трафика» в системе: показываем постер вместо 3 МБ видео. */
-const prefersSaveData = () => {
+/**
+ * Когда вместо видео показываем неподвижный постер:
+ *  — «Экономия трафика» в системе: не тянем 3 МБ ради фона;
+ *  — «Уменьшить движение»: движущийся фон — ровно то, от чего человек
+ *    отказался в настройках. Раньше CSS просто прятал видео, а постера в
+ *    разметке не было, и экран входа оставался пустым чёрным.
+ */
+const prefersPoster = () => {
   const c = (navigator as unknown as { connection?: { saveData?: boolean } }).connection;
-  return c?.saveData === true;
+  return c?.saveData === true || matchMedia('(prefers-reduced-motion: reduce)').matches;
 };
 
 export function FilmLogin({ onSuccess }: { onSuccess: () => void }) {
   const { family, isDark } = useTheme();
   const dark = family === 'atlas' || isDark;
-  const [saveData] = React.useState(prefersSaveData);
+  const [poster] = React.useState(prefersPoster);
   const [run, setRun] = React.useState(0);
+  /* Заставка в index.html уже проигрывала вход, пока грузился скрипт.
+     Спрашиваем у браузера, сколько её анимация успела пройти, и продолжаем
+     с той же секунды — иначе кадр прыгнул бы обратно на старт. Читаем до
+     первой отрисовки: React очистит #root только на коммите.
+     При повторном заходе на вход (выход из CRM, «показать заново») заставки
+     уже нет и вход играется целиком. */
+  const enteredAt = React.useMemo(() => {
+    if (run) return 0;
+    const el = document.querySelector('#boot > i');
+    const a = el?.getAnimations?.().find((x) => (x as CSSAnimation).animationName === 'boot-enter');
+    const t = typeof a?.currentTime === 'number' ? a.currentTime : 0;
+    return Math.min(2600, Math.max(0, Math.round(t)));
+  }, [run]);
   React.useEffect(() => { const f = () => setRun((r) => r + 1); addEventListener(INTRO_EVENT, f); return () => removeEventListener(INTRO_EVENT, f); }, []);
   /* Пока открыт вход, страница и системные полосы тёмные: в установленном
      приложении и в Safari иначе видна светлая полоса у нижнего края. */
@@ -52,8 +71,9 @@ export function FilmLogin({ onSuccess }: { onSuccess: () => void }) {
 
   return (
     <div key={run} className="signin">
-      <div className="signin__bg" data-still={blocked ? '' : undefined} aria-hidden>
-        {saveData ? (
+      <div className="signin__bg" data-still={blocked ? '' : undefined} aria-hidden
+        style={{ '--signin-t': `-${enteredAt}ms` } as React.CSSProperties}>
+        {poster ? (
           <img src={bgPoster} alt="" />
         ) : (
           <video ref={video} poster={bgPoster} autoPlay muted loop playsInline preload="auto" onCanPlay={start} onError={() => setBlocked(true)}>

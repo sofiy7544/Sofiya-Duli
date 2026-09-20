@@ -19,6 +19,7 @@ import { EmptyState, ErrorState } from '@/components/ui/state';
 import { TaskCheck } from '@/components/ui/toggle';
 import { StatusBadge, STAGE_DOT } from '@/components/ui/badge';
 import { BriefingCard } from '@/components/today/briefing';
+import { HeaderBrand } from '@/components/brand/header-brand';
 import { toast } from '@/components/ui/toast';
 
 /**
@@ -195,15 +196,21 @@ export function TodayScreen({ firstEntry }: { firstEntry?: boolean }) {
 
 function TitleBlock({ family, part, name, now }: { family: string; part: { greet: string }; name: string; now: Date }) {
   return (
-    <header className={cn('safe-top relative', family === 'atlas' ? 'mb-4 pt-3 lg:pt-0' : 'mb-5 pt-5 lg:pt-0')}>
-      <p className={cn('first-letter:uppercase', family === 'atlas' ? 't-caption text-[13px]' : 'text-[15px] text-muted-foreground')}>{dayLong(now)}</p>
-      <h1 className={cn(family === 'atlas' ? 't-h1 mt-0.5' : 't-hero mt-1')}>{part.greet}, {name}</h1>
-      {/* «Молния» и колокольчик — как в работающей CRM: быстрый захват и уведомления в шапке дня. */}
-      <div className="absolute right-0 top-[calc(env(safe-area-inset-top)+12px)] flex items-center gap-1.5">
-        <IconButton label="Быстрый захват лида" onClick={() => ui.set({ quickCreate: 'capture' })}
-          className="bg-primary text-primary-foreground hover:bg-primary/90"><Zap /></IconButton>
-        <IconButton label="Уведомления" onClick={() => ui.set({ notifications: true })}><Bell /></IconButton>
+    <header className={cn('safe-top relative', family === 'atlas' ? 'mb-4 pt-1 lg:pt-0' : 'mb-5 pt-2 lg:pt-0')}>
+      {/* Знак слева, «молния» и колокольчик справа — как в работающей CRM:
+          быстрый захват и уведомления в шапке дня. На десктопе строка снова
+          прижата к правому верхнему углу: бренд там уже есть в сайдбаре. */}
+      <div className="flex min-h-[44px] items-center lg:absolute lg:right-0 lg:top-3 lg:min-h-0">
+        <HeaderBrand compact />
+        <div className="flex-1 lg:hidden" />
+        <div className="flex items-center gap-1.5">
+          <IconButton label="Быстрый захват лида" onClick={() => ui.set({ quickCreate: 'capture' })}
+            className="bg-primary text-primary-foreground hover:bg-primary/90"><Zap /></IconButton>
+          <IconButton label="Уведомления" onClick={() => ui.set({ notifications: true })}><Bell /></IconButton>
+        </div>
       </div>
+      <p className={cn('mt-0.5 first-letter:uppercase', family === 'atlas' ? 't-caption text-[13px]' : 'text-[15px] text-muted-foreground')}>{dayLong(now)}</p>
+      <h1 className={cn(family === 'atlas' ? 't-h1 mt-0.5' : 't-hero mt-1')}>{part.greet}, {name}</h1>
     </header>
   );
 }

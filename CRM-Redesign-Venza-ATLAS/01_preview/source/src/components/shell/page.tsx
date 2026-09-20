@@ -4,6 +4,7 @@ import { cn } from '@/lib/cn';
 import { useRouter } from '@/lib/router';
 import { useTheme } from '@/lib/theme/provider';
 import { Button, IconButton } from '@/components/ui/button';
+import { HeaderBrand } from '@/components/brand/header-brand';
 import { ui } from './ui-state';
 
 /** Шапка страницы. Один H1 на страницу (исправляет дубль Topbar+page из CRM). */
@@ -16,6 +17,8 @@ export function PageHeader({ title, subtitle, back, actions, large = true, child
     <header className={cn('safe-top', family === 'atlas' ? 'mb-4 lg:mb-5' : 'mb-5 lg:mb-7')}>
       <div className="flex min-h-[52px] items-center gap-2 pt-2 lg:pt-0">
         {back && <IconButton label="Назад" onClick={() => router.back(back)} variant={family === 'venza' ? 'outline' : 'ghost'} className={cn('-ml-1 rounded-full', family === 'venza' && 'bg-surface')}><ArrowLeft /></IconButton>}
+        {/* Знак агентства: на телефоне слева в шапке было пусто. */}
+        <HeaderBrand className={back ? 'pl-1.5' : undefined} />
         <div className="flex-1" />
         <div className="flex items-center gap-1.5 lg:hidden">
           {actions}

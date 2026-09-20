@@ -38,11 +38,13 @@ export function FilmLogin({ onSuccess }: { onSuccess: () => void }) {
         {saveData ? (
           <img src={bgPoster} alt="" />
         ) : (
-          <video poster={bgPoster} autoPlay muted loop playsInline preload="metadata" onCanPlay={(e) => void e.currentTarget.play().catch(() => {})}>
-            {/* WebM первым: он легче (1,7 МБ против 2,9 МБ) и его берут Chrome, Firefox и Android.
-                Safari не умеет WebM и переходит к mp4 — лишнего никто не качает. */}
-            <source src={bgLoopWebm} type="video/webm" />
+          <video poster={bgPoster} autoPlay muted loop playsInline preload="auto" onCanPlay={(e) => void e.currentTarget.play().catch(() => {})}>
+            {/* mp4 первым. Ставить WebM вперёд ради экономии 1,2 МБ оказалось
+                ошибкой: Safari на iPhone заявляет поддержку WebM, но фон
+                не проигрывается — вместо движения остаётся постер.
+                Надёжность кадра важнее веса файла. */}
             <source src={bgLoop} type="video/mp4" />
+            <source src={bgLoopWebm} type="video/webm" />
           </video>
         )}
       </div>

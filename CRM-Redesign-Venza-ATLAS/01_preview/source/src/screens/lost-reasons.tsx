@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { ThumbsDown } from 'lucide-react';
 import { api } from '@/lib/mock/api';
 import { store } from '@/lib/mock/store';
@@ -5,6 +6,8 @@ import { useResource } from '@/lib/use-resource';
 import { Link } from '@/lib/router';
 import { ago, plural } from '@/lib/format';
 import { SOURCE_LABEL } from '@/lib/labels';
+import { DEFAULT_PERIOD, inPeriod, normalizePeriod, PERIODS, PERIOD_HINT, PERIOD_LABEL, PERIOD_STORAGE_KEY, type Period } from '@/lib/period';
+import { SegmentedControl } from '@/components/ui/segmented';
 import type { Lead } from '@/lib/mock/types';
 import { PageBody, PageHeader } from '@/components/shell/page';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -25,14 +28,25 @@ export function LostReasonsScreen() {
   const r = useResource(() => api.leads());
   const clients = store.db.clients;
   const nameOf = (id?: string) => clients.find((c) => c.id === id)?.fullName ?? 'Без имени';
+  /* Период тот же, что на «Отчётах»: экран открывается оттуда, и смена
+     периода не должна теряться при переходе. */
+  const [period, setPeriodState] = React.useState<Period>(() => {
+    try { return normalizePeriod(localStorage.getItem(PERIOD_STORAGE_KEY)); } catch { return DEFAULT_PERIOD; }
+  });
+  const setPeriod = (p: Period) => { try { localStorage.setItem(PERIOD_STORAGE_KEY, p); } catch { /* ignore */ } setPeriodState(p); };
 
-  const header = <PageHeader title="Причины отказов" back="/reports" subtitle="Почему лиды уходят и откуда они приходили" />;
+  const header = (
+    <PageHeader title="Причины отказов" back="/reports" subtitle={`Почему лиды уходят · ${PERIOD_HINT[period]}`}>
+      <SegmentedControl<Period> label="Период" size="sm" className="w-full sm:w-auto" value={period} onChange={setPeriod}
+        options={PERIODS.map((p) => ({ value: p, label: PERIOD_LABEL[p] }))} />
+    </PageHeader>
+  );
   if (r.error) return <PageBody className="lg:max-w-[860px]">{header}<ErrorState error={r.error} onRetry={r.retry} what="причины отказов" /></PageBody>;
   if (r.loading || !r.data) return <PageBody className="lg:max-w-[860px]">{header}<Skeleton className="h-64" /><Skeleton className="mt-4 h-64" /></PageBody>;
 
-  const lost: Lead[] = r.data.filter((l) => l.stage === 'LOST');
+  const lost: Lead[] = r.data.filter((l) => l.stage === 'LOST' && inPeriod(l.createdAt, period));
   if (lost.length === 0) {
-    return <PageBody className="lg:max-w-[860px]">{header}<EmptyState icon={ThumbsDown} title="Проигранных лидов нет" text="Как только лид закроется с причиной, разбор появится здесь." /></PageBody>;
+    return <PageBody className="lg:max-w-[860px]">{header}<EmptyState icon={ThumbsDown} title="Проигранных лидов нет" text={`За ${PERIOD_HINT[period]} проигранных лидов нет. Выберите период шире.`} /></PageBody>;
   }
 
   const reasons = top(count(lost.map((l) => l.lostReason?.trim() || 'Причина не указана')));

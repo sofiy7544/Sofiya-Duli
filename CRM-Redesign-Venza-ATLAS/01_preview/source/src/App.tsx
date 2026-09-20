@@ -19,7 +19,11 @@ function Routes() {
   const [firstEntry, setFirstEntry] = React.useState(false);
   let path = route.path;
 
-  const legacyTarget = Object.entries(LEGACY).find(([from]) => path === from || (from !== '/' && path.startsWith(from + '/')));
+  /* Свой маршрут сильнее легаси-алиаса: /insights ⇒ /reports, но
+     /insights/lost-reasons — настоящий экран и редиректить его нельзя. */
+  const hasOwnScreen = Object.keys(SCREENS).some((pattern) => matchRoute(pattern, path));
+  const legacyTarget = hasOwnScreen ? undefined
+    : Object.entries(LEGACY).find(([from]) => path === from || (from !== '/' && path.startsWith(from + '/')));
   React.useEffect(() => { if (legacyTarget) navigate(path.replace(legacyTarget[0], legacyTarget[1]).replace('//', '/'), { replace: true }); });
   if (legacyTarget) return null;
 

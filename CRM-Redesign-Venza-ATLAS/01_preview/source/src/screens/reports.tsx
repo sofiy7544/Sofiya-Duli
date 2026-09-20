@@ -7,6 +7,8 @@ import { useResource } from '@/lib/use-resource';
 import { Link } from '@/lib/router';
 import { money, plural } from '@/lib/format';
 import { SOURCE_LABEL, STAGES_ACTIVE, STAGE_LABEL } from '@/lib/labels';
+import { DEFAULT_PERIOD, inPeriod, normalizePeriod, PERIODS, PERIOD_HINT, PERIOD_LABEL, PERIOD_STORAGE_KEY, type Period } from '@/lib/period';
+import { SegmentedControl } from '@/components/ui/segmented';
 import type { Lead, SourceType } from '@/lib/mock/types';
 import { PageBody, PageHeader } from '@/components/shell/page';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -35,21 +37,42 @@ export function ReportsScreen() {
   const r = useResource(() => api.leads());
   const d = useResource(() => dealsApi.list());
   const [asTable, setAsTable] = React.useState(false);
+  const [period, setPeriodState] = React.useState<Period>(() => {
+    try { return normalizePeriod(localStorage.getItem(PERIOD_STORAGE_KEY)); } catch { return DEFAULT_PERIOD; }
+  });
+  const setPeriod = (p: Period) => { try { localStorage.setItem(PERIOD_STORAGE_KEY, p); } catch { /* ignore */ } setPeriodState(p); };
+
+  const periodFilter = (
+    <SegmentedControl<Period> label="Период отчёта" size="sm" className="w-full sm:w-auto" value={period} onChange={setPeriod}
+      options={PERIODS.map((p) => ({ value: p, label: PERIOD_LABEL[p] }))} />
+  );
 
   if (r.error) return <PageBody><PageHeader title="Отчёты" /><ErrorState error={r.error} onRetry={r.retry} what="отчёты" /></PageBody>;
   if (r.loading || !r.data) {
     return (
-      <PageBody><PageHeader title="Отчёты" />
+      <PageBody><PageHeader title="Отчёты">{periodFilter}</PageHeader>
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">{[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-[92px]" />)}</div>
         <Skeleton className="mt-4 h-64" /><Skeleton className="mt-4 h-64" />
       </PageBody>
     );
   }
 
-  const leads = r.data;
-  const deals = d.data ?? [];
-  if (leads.length === 0) {
+  const allLeads = r.data;
+  /* Лиды — по дате появления: отчёт отвечает, что принёс период, а не что в нём закрылось.
+     Сделки — по дате закрытия: выручка относится к моменту закрытия. */
+  const leads = allLeads.filter((l) => inPeriod(l.createdAt, period));
+  const deals = (d.data ?? []).filter((x) => (x.status === 'COMPLETED' ? inPeriod(x.closedAt ?? x.createdAt, period) : inPeriod(x.createdAt, period)));
+
+  if (allLeads.length === 0) {
     return <PageBody><PageHeader title="Отчёты" /><EmptyState icon={BarChart3} title="Пока нечего показывать" text="Отчёты появятся, когда в воронку попадут первые лиды." /></PageBody>;
+  }
+  if (leads.length === 0) {
+    return (
+      <PageBody><PageHeader title="Отчёты" subtitle={`Период: ${PERIOD_HINT[period]}`}>{periodFilter}</PageHeader>
+        <EmptyState icon={BarChart3} title="За этот период данных нет"
+          text={`Лиды за ${PERIOD_HINT[period]} не найдены. Выберите более широкий период — например, «Всё время».`} />
+      </PageBody>
+    );
   }
 
   const won = leads.filter((l) => l.stage === 'WON');
@@ -95,7 +118,10 @@ export function ReportsScreen() {
 
   return (
     <PageBody>
-      <PageHeader title="Отчёты" subtitle={`Воронка, каналы и агенты · ${leads.length} ${plural(leads.length, 'лид', 'лида', 'лидов')} всего`} />
+      <PageHeader title="Отчёты"
+        subtitle={`${PERIOD_HINT[period]} · ${leads.length} ${plural(leads.length, 'лид', 'лида', 'лидов')}${period === 'all' ? '' : ` из ${allLeads.length}`}`}>
+        {periodFilter}
+      </PageHeader>
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatTile label="В работе" value={String(active.length)} hint={`${money(active.reduce((a, l) => a + avg(l), 0), 'EUR', true)} бюджетов`} />

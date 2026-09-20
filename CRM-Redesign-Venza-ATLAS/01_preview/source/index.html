@@ -20,8 +20,11 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23344A39'/><path d='M9 21l7-11 7 11' stroke='%23F7F4EC' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
     <script>
       (function(){try{var t=localStorage.getItem('crm-preview-theme')||'atlas';var A=['atlas','sepia','venza'];if(A.indexOf(t)<0)t='atlas';
+      var m=localStorage.getItem('crm-preview-mode')||'light';
+      var dark=m==='dark'||(m==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);
       var r=document.documentElement;
-      r.classList.remove('dark');r.dataset.theme=t;r.dataset.family=t==='atlas'?'atlas':t==='venza'?'venza':'classic';}catch(e){}})();
+      r.classList.toggle('dark',dark);r.style.colorScheme=dark?'dark':'light';
+      r.dataset.theme=t;r.dataset.family=t==='atlas'?'atlas':t==='venza'?'venza':'classic';}catch(e){}})();
     </script>
   </head>
   <body class="font-sans bg-background text-foreground antialiased">

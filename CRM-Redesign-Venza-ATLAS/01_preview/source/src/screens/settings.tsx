@@ -6,12 +6,16 @@ import { toast } from '@/components/ui/toast';
 import { InstallCard } from '@/components/shell/install';
 import { Sheet } from '@/components/ui/sheet';
 import { LOCALES, setLocale, useLocale, type LocaleCode } from '@/lib/locale';
+import { MODE_OPTIONS, type Mode } from '@/lib/theme/themes';
+import { useTheme } from '@/lib/theme/provider';
+import { SegmentedControl } from '@/components/ui/segmented';
 import { cn } from '@/lib/cn';
 import { Link } from '@/lib/router';
 
 /** /settings: оформление + разделы. Выбор темы — ThemePicker из пакета Phase 2. */
 export function SettingsScreen() {
   const locale = useLocale();
+  const { mode, setMode } = useTheme();
   const [langOpen, setLangOpen] = React.useState(false);
   const lang = LOCALES.find((l) => l.code === locale)!;
   type Row = { icon: typeof User; label: string; text: string; action?: () => void; href?: string };
@@ -38,6 +42,12 @@ export function SettingsScreen() {
         <div className="mb-3 flex items-center gap-2"><Palette className="h-[18px] w-[18px] text-primary" aria-hidden /><h2 className="t-h3">Оформление</h2></div>
         <p className="t-caption mb-4">Меняется только внешний вид. Разделы и навигация остаются прежними.</p>
         <ThemeSwatches />
+        {/* Режим — отдельно от темы: тёмный вариант есть у каждой из трёх. */}
+        <div className="mt-5">
+          <h3 className="t-h3 mb-2 text-[15px]">Режим</h3>
+          <SegmentedControl<Mode> label="Режим оформления" className="w-full sm:w-auto" value={mode} onChange={setMode}
+            options={MODE_OPTIONS.map((o) => ({ value: o.value, label: o.label }))} />
+        </div>
       </section>
       <div className="mt-4"><InstallCard /></div>
       <ul className="surface row-divider mt-4 overflow-hidden">

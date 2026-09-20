@@ -1,29 +1,117 @@
-import colorsys, json
-def hsl(h):
-    h=h.lstrip('#'); r,g,b=[int(h[i:i+2],16)/255 for i in (0,2,4)]
-    H,L,S=colorsys.rgb_to_hls(r,g,b)
-    return f"{round(H*360,1):g} {round(S*100,1):g}% {round(L*100,1):g}%"
-T={
-"light":dict(background="#FAFBFD",surface="#FFFFFF",surface_2="#F3F6F9",foreground="#101728",primary="#006FE5",primary_foreground="#FFFFFF",primary_soft="#EBF4FF",accent="#794FF8",accent_foreground="#FFFFFF",muted="#F2F5F8",muted_foreground="#657286",border="#E3E7EE",input="#E3E7EE",ring="#006FE5",success="#22C55E",warning="#D97706",danger="#DC2626",info="#2563EB",success_text="#178640",warning_text="#B06105",danger_text="#C42222",info_text="#2563EB"),
-"dark":dict(background="#0D1017",surface="#151923",surface_2="#1D222D",foreground="#F5F7FA",primary="#429EFF",primary_foreground="#0B111E",primary_soft="#0F3257",accent="#A588FC",accent_foreground="#0B111E",muted="#1F232E",muted_foreground="#AEB8C7",border="#2D323E",input="#2D323E",ring="#429EFF",success="#34D399",warning="#FBBF24",danger="#F87171",info="#60A5FA",success_text="#34D399",warning_text="#FBBF24",danger_text="#F87171",info_text="#60A5FA"),
-"sepia":dict(background="#F2EDE3",surface="#F9F6F0",surface_2="#ECE5DA",foreground="#3C2D20",primary="#A6541D",primary_foreground="#FBF8F4",primary_soft="#F0E0D1",accent="#B85227",accent_foreground="#FBF8F4",muted="#E7E0D5",muted_foreground="#72604F",border="#D3C9BB",input="#D3C9BB",ring="#A6541D",success="#4E7D3A",warning="#A86A12",danger="#B3402E",info="#3F6C94",success_text="#4E7D3A",warning_text="#9D6311",danger_text="#B3402E",info_text="#3F6C94"),
-"atlas":dict(background="#F5F7FA",surface="#FFFFFF",surface_2="#EEF2F6",foreground="#141B24",primary="#235F91",primary_foreground="#FFFFFF",primary_soft="#E8F1F8",accent="#D0A34A",accent_foreground="#1C2430",muted="#EEF2F6",muted_foreground="#667382",border="#DCE3EA",input="#DCE3EA",ring="#235F91",success="#2F8A5B",warning="#C18A2F",danger="#C94848",info="#347FC4",success_text="#2D8457",warning_text="#986D25",danger_text="#C74040",info_text="#2F72B0"),
-"venza":dict(background="#F7F4EC",surface="#FFFEFB",surface_2="#F1EDE3",foreground="#1C211D",primary="#344A39",primary_foreground="#FFFFFF",primary_soft="#E8EEE4",accent="#C6A568",accent_foreground="#252B27",muted="#F1EDE3",muted_foreground="#6A6F6A",border="#E6E1D7",input="#E6E1D7",ring="#66765A",success="#3F7D58",warning="#B9822E",danger="#C44D47",info="#5879A8",success_text="#3F7D58",warning_text="#986B26",danger_text="#C0443E",info_text="#5070A0"),
-}
-out={k:{n.replace('_','-'):hsl(v) for n,v in d.items()} for k,d in T.items()}
-json.dump(out,open('tokens.json','w'),indent=1)
+"""Гейт контраста.
+
+Читает токены прямо из src/styles/themes.css — единственного источника правды.
+Раньше палитры дублировались здесь хексами и успели разойтись со стилями,
+поэтому гейт проверял не то, что видит пользователь.
+
+Проверяем две группы:
+  PAIRS  — текст на чистой поверхности и фоне;
+  PLATES — текст на цветной плашке (bg-success/12 и т.п. поверх поверхности).
+Вторая группа важнее: именно на плашках контраст и проваливался.
+"""
+import colorsys, json, re, sys
+from pathlib import Path
+
+CSS = Path(__file__).resolve().parent.parent / 'src' / 'styles' / 'themes.css'
+
+# Семейства и их тёмные варианты: селектор → имя в отчёте.
+SELECTORS = [
+    (r":root\[data-theme='atlas'\]\s*\{", 'atlas'),
+    (r":root\[data-theme='atlas'\]\.dark\s*\{", 'atlas-dark'),
+    (r":root\[data-theme='sepia'\]\s*\{", 'sepia'),
+    (r":root\[data-theme='sepia'\]\.dark\s*\{", 'sepia-dark'),
+    (r":root\[data-theme='venza'\]\s*\{", 'venza'),
+    (r":root\[data-theme='venza'\]\.dark\s*\{", 'venza-dark'),
+]
+
+NEEDED = ['background', 'surface', 'surface-2', 'foreground', 'primary', 'primary-foreground',
+          'primary-soft', 'primary-text', 'accent', 'accent-foreground', 'muted', 'muted-foreground',
+          'border', 'success', 'warning', 'danger', 'info',
+          'success-text', 'warning-text', 'danger-text', 'info-text']
+
+
+def hsl_to_hex(value: str) -> str:
+    h, s, l = re.match(r'([\d.]+)\s+([\d.]+)%\s+([\d.]+)%', value.strip()).groups()
+    r, g, b = colorsys.hls_to_rgb(float(h) / 360, float(l) / 100, float(s) / 100)
+    return '#' + ''.join(f'{round(c * 255):02x}' for c in (r, g, b))
+
+
+def parse() -> dict:
+    css = CSS.read_text(encoding='utf-8')
+    out = {}
+    for pattern, name in SELECTORS:
+        m = re.search(pattern, css)
+        if not m:
+            continue
+        body = css[m.end():css.index('\n}', m.end())]
+        tokens = dict(re.findall(r'--([a-z0-9-]+):\s*([^;]+);', body))
+        pal = {}
+        for key in NEEDED:
+            raw = tokens.get(key)
+            if raw is None:
+                continue
+            raw = raw.strip()
+            if raw.startswith('var('):                      # ссылка на другой токен
+                ref = re.match(r'var\(--([a-z0-9-]+)\)', raw).group(1)
+                raw = tokens.get(ref, '').strip()
+            if re.match(r'^[\d.]+\s+[\d.]+%\s+[\d.]+%$', raw):
+                pal[key] = hsl_to_hex(raw)
+        missing = [k for k in NEEDED if k not in pal]
+        if missing:
+            print(f'{name}: не найдены токены — {", ".join(missing)}')
+        out[name] = pal
+    return out
+
 
 def lum(h):
-    h=h.lstrip('#'); c=[int(h[i:i+2],16)/255 for i in (0,2,4)]
-    c=[x/12.92 if x<=.03928 else ((x+.055)/1.055)**2.4 for x in c]; return .2126*c[0]+.7152*c[1]+.0722*c[2]
-def cr(a,b):
-    la,lb=sorted([lum(a),lum(b)],reverse=True); return (la+.05)/(lb+.05)
-PAIRS=[("foreground","background"),("foreground","surface"),("foreground","surface_2"),("muted_foreground","background"),("muted_foreground","surface"),
-("primary_foreground","primary"),("accent_foreground","accent"),("primary","surface"),("primary","background"),
-("success_text","surface"),("warning_text","surface"),("danger_text","surface"),("info_text","surface"),("danger_text","background")]
-fail=0
-for k,d in T.items():
-    for a,b in PAIRS:
-        c=cr(d[a],d[b]); flag="OK" if c>=4.5 else "FAIL"; fail+=c<4.5
-        if c<4.5 or a in("primary_foreground","danger_text","muted_foreground"): print(f"{k:6s} {a:18s}/{b:10s} {c:5.2f} {flag}")
-print("AA FAILS:",fail); assert fail==0
+    h = h.lstrip('#')
+    c = [int(h[i:i + 2], 16) / 255 for i in (0, 2, 4)]
+    c = [x / 12.92 if x <= .03928 else ((x + .055) / 1.055) ** 2.4 for x in c]
+    return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]
+
+
+def cr(a, b):
+    la, lb = sorted([lum(a), lum(b)], reverse=True)
+    return (la + .05) / (lb + .05)
+
+
+def blend(color, alpha, base):
+    """Плашка color/alpha поверх base — реальный фон, на котором лежит текст."""
+    c, b = color.lstrip('#'), base.lstrip('#')
+    return '#' + ''.join(f'{round(int(c[i:i+2],16)*alpha + int(b[i:i+2],16)*(1-alpha)):02x}' for i in (0, 2, 4))
+
+
+PAIRS = [('foreground', 'background'), ('foreground', 'surface'), ('foreground', 'surface-2'),
+         ('muted-foreground', 'background'), ('muted-foreground', 'surface'),
+         ('primary-foreground', 'primary'), ('accent-foreground', 'accent'),
+         ('success-text', 'surface'), ('warning-text', 'surface'),
+         ('danger-text', 'surface'), ('info-text', 'surface'), ('danger-text', 'background')]
+
+# Прозрачности — как в components/ui/badge.tsx
+PLATES = [('success-text', 'success', .12), ('warning-text', 'warning', .14),
+          ('danger-text', 'danger', .10), ('info-text', 'info', .10),
+          ('primary-text', 'primary-soft', 1.0)]
+
+themes = parse()
+fail = 0
+for name, pal in themes.items():
+    for a, b in PAIRS:
+        if a not in pal or b not in pal:
+            continue
+        c = cr(pal[a], pal[b])
+        if c < 4.5:
+            fail += 1
+            print(f'{name:11s} {a:18s}/{b:12s} {c:5.2f} FAIL')
+    for txt, plate, alpha in PLATES:
+        if txt not in pal or plate not in pal:
+            continue
+        bg = blend(pal[plate], alpha, pal['surface']) if alpha < 1 else pal[plate]
+        c = cr(pal[txt], bg)
+        if c < 4.5:
+            fail += 1
+            print(f'{name:11s} {txt:18s}/плашка {plate:9s} {c:5.2f} FAIL')
+
+json.dump(themes, open(Path(__file__).parent / 'tokens.json', 'w'), indent=1, ensure_ascii=False)
+print(f'Тем проверено: {len(themes)}')
+print('AA FAILS:', fail)
+sys.exit(1 if fail else 0)

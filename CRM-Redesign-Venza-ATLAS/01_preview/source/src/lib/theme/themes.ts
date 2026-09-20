@@ -31,10 +31,32 @@ export function getDesignFamily(theme: Theme): DesignFamily {
   return 'classic';
 }
 
-/** Тёмная тема удалена: ни одна из тем не включает класс `.dark`. */
-export function resolveIsDark(_theme: Theme, _systemPrefersDark: boolean): boolean {
-  return false;
+/**
+ * Режим оформления живёт отдельно от семейства: тема задаёт характер
+ * (ATLAS / Сепия / Venza), режим — светлый или тёмный. Поэтому тёмный
+ * вариант есть у каждой темы, а не вместо неё.
+ */
+export const MODES = ['light', 'dark', 'system'] as const;
+export type Mode = (typeof MODES)[number];
+export const MODE_STORAGE_KEY = 'crm-preview-mode';
+export const DEFAULT_MODE: Mode = 'light';
+
+export function isMode(value: unknown): value is Mode {
+  return typeof value === 'string' && (MODES as readonly string[]).includes(value);
 }
+export function normalizeMode(value: unknown): Mode {
+  return isMode(value) ? value : DEFAULT_MODE;
+}
+
+export function resolveIsDark(mode: Mode, systemPrefersDark: boolean): boolean {
+  return mode === 'dark' || (mode === 'system' && systemPrefersDark);
+}
+
+export const MODE_OPTIONS: ReadonlyArray<{ value: Mode; label: string }> = [
+  { value: 'light', label: 'Светлый' },
+  { value: 'dark', label: 'Тёмный' },
+  { value: 'system', label: 'Как в системе' },
+];
 
 /** Порядок и подписи в селекторе. labelKey — ключ next-intl в неймспейсе `themes`. */
 export const THEME_OPTIONS: ReadonlyArray<{

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { getDesignFamily, normalizeTheme, resolveIsDark, type DesignFamily, type Theme } from './themes';
+import { getDesignFamily, MODE_STORAGE_KEY, normalizeMode, normalizeTheme, resolveIsDark, type DesignFamily, type Mode, type Theme } from './themes';
 
 /** Упрощённый ThemeProvider превью. Тот же контракт, что и в пакете Phase 2 (theme, setTheme, isDark, family). */
 const KEY = 'crm-preview-theme';
@@ -20,11 +20,12 @@ export function syncChromeColor() {
   const bg = getComputedStyle(root).getPropertyValue('--background').trim();
   meta.setAttribute('content', bg ? `hsl(${bg})` : '#fff');
 }
-type Ctx = { theme: Theme; setTheme: (t: Theme) => void; isDark: boolean; family: DesignFamily; reducedMotion: boolean };
+type Ctx = { theme: Theme; setTheme: (t: Theme) => void; mode: Mode; setMode: (m: Mode) => void; isDark: boolean; family: DesignFamily; reducedMotion: boolean };
 const ThemeCtx = React.createContext<Ctx | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = React.useState<Theme>(() => { try { return normalizeTheme(localStorage.getItem(KEY) ?? 'atlas'); } catch { return 'atlas'; } });
+  const [mode, setModeState] = React.useState<Mode>(() => { try { return normalizeMode(localStorage.getItem(MODE_STORAGE_KEY)); } catch { return 'light'; } });
   const [sysDark, setSysDark] = React.useState(() => matchMedia('(prefers-color-scheme: dark)').matches);
   const [reducedMotion, setRM] = React.useState(() => matchMedia('(prefers-reduced-motion: reduce)').matches);
 
@@ -36,17 +37,19 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   React.useEffect(() => {
-    const r = document.documentElement, dark = resolveIsDark(theme, sysDark);
+    const r = document.documentElement, dark = resolveIsDark(mode, sysDark);
     r.classList.add('theme-switching');
     r.classList.toggle('dark', dark);
     r.dataset.theme = theme; r.dataset.family = getDesignFamily(theme);
     r.style.colorScheme = dark ? 'dark' : 'light';
     syncChromeColor();
     requestAnimationFrame(() => requestAnimationFrame(() => r.classList.remove('theme-switching')));
-  }, [theme, sysDark]);
+  }, [theme, mode, sysDark]);
 
   const setTheme = React.useCallback((t: Theme) => { try { localStorage.setItem(KEY, t); } catch { /* ignore */ } setThemeState(t); }, []);
-  const value = React.useMemo(() => ({ theme, setTheme, isDark: resolveIsDark(theme, sysDark), family: getDesignFamily(theme), reducedMotion }), [theme, setTheme, sysDark, reducedMotion]);
+  const setMode = React.useCallback((m: Mode) => { try { localStorage.setItem(MODE_STORAGE_KEY, m); } catch { /* ignore */ } setModeState(m); }, []);
+  const value = React.useMemo(() => ({ theme, setTheme, mode, setMode, isDark: resolveIsDark(mode, sysDark), family: getDesignFamily(theme), reducedMotion }),
+    [theme, setTheme, mode, setMode, sysDark, reducedMotion]);
   return <ThemeCtx.Provider value={value}>{children}</ThemeCtx.Provider>;
 }
 export function useTheme() { const c = React.useContext(ThemeCtx); if (!c) throw new Error('useTheme outside provider'); return c; }

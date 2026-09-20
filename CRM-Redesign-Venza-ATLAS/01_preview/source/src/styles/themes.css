@@ -228,6 +228,117 @@
 
 /* ---------- Типографика семейств ---------- */
 html { font-family: var(--font-sans); }
+/* ══════════ Тёмный режим ══════════
+   Семейство остаётся в data-theme, режим включается классом .dark.
+   Каждая палитра держит тон своего семейства: ATLAS — сине-графитовый,
+   «Сепия» — тёплый коричневый, Venza — глубокий зелёный.
+   Текстовые токены на тёмном светлее фона, а не темнее: инверсия роли,
+   а не автоматический переворот светлой палитры. */
+
+:root[data-theme='atlas'].dark {
+  --background: 213 30% 8.4%;
+  --surface: 213 26% 12%;
+  --surface-2: 213 24% 16%;
+  --foreground: 210 30% 94%;
+  --primary: 205 62% 61%;
+  --primary-foreground: 213 35% 8%;
+  --primary-soft: 208 42% 18%;
+  --primary-text: 205 70% 76%;
+  --accent: 40 55% 64%;
+  --accent-foreground: 213 35% 10%;
+  --muted: 213 24% 16%;
+  --muted-foreground: 211 18% 72%;
+  --border: 213 20% 24%;
+  --input: 213 20% 24%;
+  --ring: 205 62% 61%;
+  --success: 152 42% 46%;
+  --warning: 38 72% 58%;
+  --danger: 0 62% 65%;
+  --info: 205 62% 61%;
+  --success-text: 152 52% 68%;
+  --warning-text: 38 80% 72%;
+  --danger-text: 0 75% 78%;
+  --info-text: 205 70% 76%;
+
+  --at-sidebar-bg: #0B1017; --at-sidebar-surface: #121A24; --at-sidebar-text: #EAF0F6;
+  --at-sidebar-muted: #8896A6; --at-sidebar-active: #1D3552; --at-sidebar-border: #202B37;
+  /* Плашки этапов воронки: в светлой теме это пастель, в тёмной — приглушённые
+     подложки того же оттенка, иначе текст ложится на светлое пятно. */
+  --at-stage-new: #16222E; --at-stage-contacted: #1E1B2E; --at-stage-qualified: #2A2317;
+  --at-stage-selection: #16261D; --at-stage-showing: #17222F; --at-stage-negotiation: #261A29;
+  --at-stage-won: #14241A; --at-stage-lost: #2A1A1A;
+  --glass-bg: rgba(18,26,36,.78); --glass-strong-bg: rgba(18,26,36,.92); --glass-border: rgba(234,240,246,.09);
+  --shadow-soft: 0 1px 4px rgba(0,0,0,.45);
+  --shadow-card: 0 4px 14px rgba(0,0,0,.5);
+  --shadow-lift: 0 8px 22px rgba(0,0,0,.6);
+  --scrim: 213 40% 4%; --scrim-opacity: 0.62;
+}
+
+:root[data-theme='sepia'].dark {
+  --background: 28 24% 8%;
+  --surface: 28 22% 11%;
+  --surface-2: 28 20% 15%;
+  --foreground: 32 34% 91%;
+  --primary: 27 62% 58%;
+  --primary-foreground: 28 40% 8%;
+  --primary-soft: 24 40% 17%;
+  --primary-text: 27 70% 72%;
+  --accent: 20 58% 58%;
+  --accent-foreground: 28 40% 9%;
+  --muted: 28 20% 15%;
+  --muted-foreground: 30 16% 70%;
+  --border: 28 18% 23%;
+  --input: 28 18% 23%;
+  --ring: 27 62% 58%;
+  --success: 100 36% 50%;
+  --warning: 38 66% 56%;
+  --danger: 6 62% 63%;
+  --info: 205 38% 62%;
+  --success-text: 100 46% 70%;
+  --warning-text: 38 74% 70%;
+  --danger-text: 6 74% 76%;
+  --info-text: 205 46% 76%;
+
+  --glass-bg: rgba(31,25,19,.78); --glass-strong-bg: rgba(31,25,19,.92); --glass-border: rgba(243,234,222,.09);
+  --shadow-soft: 0 1px 4px rgba(0,0,0,.45);
+  --shadow-card: 0 4px 14px rgba(0,0,0,.5);
+  --shadow-lift: 0 10px 28px rgba(0,0,0,.6);
+  --scrim: 28 34% 4%; --scrim-opacity: 0.62;
+}
+
+:root[data-theme='venza'].dark {
+  --background: 132 12% 7.5%;
+  --surface: 132 11% 10.5%;
+  --surface-2: 132 10% 14.5%;
+  --foreground: 120 14% 92%;
+  --primary: 136 20% 62%;
+  --primary-foreground: 132 18% 8%;
+  --primary-soft: 136 20% 16%;
+  --primary-text: 136 26% 76%;
+  --accent: 39 45% 65%;
+  --accent-foreground: 132 18% 9%;
+  --muted: 132 10% 14.5%;
+  --muted-foreground: 120 7% 70%;
+  --border: 132 9% 22%;
+  --input: 132 9% 22%;
+  --ring: 136 20% 62%;
+  --success: 144 33% 50%;
+  --warning: 36 60% 58%;
+  --danger: 3 55% 64%;
+  --info: 215 32% 62%;
+  --success-text: 144 40% 72%;
+  --warning-text: 36 68% 72%;
+  --danger-text: 3 70% 78%;
+  --info-text: 215 40% 78%;
+
+  --vz-success-soft: #16241B; --vz-warning-soft: #2A2216; --vz-danger-soft: #2A1A18; --vz-info-soft: #17202B;
+  --glass-bg: rgba(23,28,24,.78); --glass-strong-bg: rgba(23,28,24,.92); --glass-border: rgba(234,240,234,.09);
+  --shadow-soft: 0 1px 4px rgba(0,0,0,.45);
+  --shadow-card: 0 4px 14px rgba(0,0,0,.5);
+  --shadow-lift: 0 10px 28px rgba(0,0,0,.6);
+  --scrim: 132 20% 3%; --scrim-opacity: 0.62;
+}
+
 :root[data-family='venza'] .font-display,
 :root[data-family='venza'] .heading-page { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.01em; }
 :root[data-family='atlas'] .heading-page { letter-spacing: -0.02em; font-weight: 700; }

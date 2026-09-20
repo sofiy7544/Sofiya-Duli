@@ -58,27 +58,25 @@ export function SignalRow({ s, compact }: { s: Signal; compact?: boolean }) {
 
   return (
     <div className={cn('px-4 py-3', compact ? '' : 'lg:px-5')}>
-      <div className="flex items-start gap-3">
+      {/* Вся строка — одна цель нажатия: раньше заголовок и стрелка были
+          отдельными ссылками по 16-39px, в них трудно попасть пальцем. */}
+      <Link href={s.href} className="flex min-h-[44px] items-start gap-3">
         <span className={cn('mt-0.5 flex-none', TONE[s.severity])}><Icon className="h-[18px] w-[18px]" aria-hidden /></span>
-        <div className="min-w-0 flex-1">
-          <Link href={s.href} className="block">
-            <span className="block truncate text-[14.5px] font-medium">{s.title}</span>
-            <span className="t-caption block">{s.why}</span>
-          </Link>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-[14.5px] font-medium">{s.title}</span>
+          <span className="t-caption block">{s.why}</span>
+        </span>
+        <ChevronRight className="mt-0.5 h-4 w-4 flex-none text-muted-foreground" aria-hidden />
+      </Link>
+      <div className="pl-[30px]">
           {/* В карточке на «Сегодня» — одно действие, чтобы блок не разрастался; остальные на /briefing. */}
           <div className="mt-2 flex flex-wrap gap-1.5">
             {(compact ? s.actions.slice(0, 1) : s.actions).map((a) => a.kind === 'open' ? (
-              <Link key={a.label} href={a.href}>
-                <Button size="sm" variant="outline">{a.label}</Button>
-              </Link>
+              <Link key={a.label} href={a.href} className="inline-flex h-11 items-center justify-center gap-2 rounded-control border border-border bg-surface px-3.5 text-sm font-medium transition-colors hover:bg-surface-2 lg:h-9">{a.label}</Link>
             ) : (
               <Button key={a.label} size="sm" variant="outline" loading={busy === a.label} onClick={() => void run(a)}>{a.label}</Button>
             ))}
-          </div>
         </div>
-        <Link href={s.href} aria-label={`Открыть: ${s.title}`} className="flex-none pt-0.5">
-          <ChevronRight className="h-4 w-4 text-muted-foreground" aria-hidden />
-        </Link>
       </div>
     </div>
   );

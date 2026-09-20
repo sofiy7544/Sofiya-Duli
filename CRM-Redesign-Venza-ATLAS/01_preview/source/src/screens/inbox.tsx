@@ -40,7 +40,7 @@ export function InboxScreen() {
         <PageHeader title="Коммуникации" />
         <EmptyState icon={MessagesSquare} title="Мессенджеры не подключены"
           text="Когда администратор подключит Telegram, WhatsApp или почту, переписка появится здесь."
-          action={<Link href="/settings"><Button variant="outline" size="sm">Открыть настройки</Button></Link>} />
+          action={<Link href="/settings" className="inline-flex h-11 items-center justify-center gap-2 rounded-control border border-border bg-surface px-3.5 text-sm font-medium transition-colors hover:bg-surface-2 lg:h-9">Открыть настройки</Link>} />
       </PageBody>
     );
   }
@@ -147,7 +147,7 @@ function Thread({ c }: { c: Conversation }) {
             {c.duplicateOf.reason} с карточкой{' '}
             <Link href={`/clients/${c.duplicateOf.clientId}`} className="tap-link font-medium text-primary hover:underline">{c.duplicateOf.name}</Link>.
             <div className="mt-2 flex flex-wrap gap-2">
-              <Link href={`/clients/${c.duplicateOf.clientId}`}><Button size="sm" variant="outline">Открыть карточку</Button></Link>
+              <Link href={`/clients/${c.duplicateOf.clientId}`} className="inline-flex h-11 items-center justify-center gap-2 rounded-control border border-border bg-surface px-3.5 text-sm font-medium transition-colors hover:bg-surface-2 lg:h-9">Открыть карточку</Link>
               <Button size="sm" variant="outline" onClick={() => toast.success('Обращение привязано к карточке клиента')}>Это тот же человек</Button>
             </div>
           </div>

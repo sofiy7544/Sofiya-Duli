@@ -64,7 +64,7 @@ export function BarRow({ label, value, max, color, right, href }: {
   );
   if (!href) return <div>{body}</div>;
   return (
-    <Link href={href} className="block rounded-control py-0.5 outline-offset-2 transition-colors hover:bg-surface-2/60">
+    <Link href={href} className="block rounded-control py-1.5 outline-offset-2 transition-colors hover:bg-surface-2/60">
       {body}
     </Link>
   );

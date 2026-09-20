@@ -51,7 +51,7 @@ export function PropertyStatusBadge({ status, className }: { status: PropertySta
 export function Chip({ selected, children, onClick, className, count }: { selected?: boolean; children: React.ReactNode; onClick?: () => void; className?: string; count?: number }) {
   return (
     <button type="button" aria-pressed={selected} onClick={onClick}
-      className={cn('inline-flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3.5 text-[13.5px] font-medium transition-[background-color,color,border-color,transform] duration-tab ease-standard active:scale-[0.96]',
+      className={cn('inline-flex h-11 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3.5 text-[13.5px] font-medium lg:h-9 transition-[background-color,color,border-color,transform] duration-tab ease-standard active:scale-[0.96]',
         selected ? 'border-transparent bg-foreground text-background [:root[data-family=venza]_&]:bg-primary [:root[data-family=venza]_&]:text-primary-foreground [:root[data-family=atlas]_&]:bg-primary [:root[data-family=atlas]_&]:text-primary-foreground' : 'border-border bg-surface text-foreground hover:bg-surface-2',
         className)}>
       {children}{count !== undefined && <span className={cn('tabular text-[12px]', selected ? 'opacity-75' : 'text-muted-foreground')}>{count}</span>}

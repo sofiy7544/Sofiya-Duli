@@ -240,8 +240,8 @@ function UrgentBlock({ overdue, nameOf, compact }: { overdue: Task[]; nameOf: (i
       <p className={cn('mt-1.5', compact ? 'text-[16px] font-semibold' : 'font-display text-[22px] font-semibold leading-7 tracking-[-0.01em]')}>{t.title}</p>
       <p className="mt-1 text-[14px] opacity-80">{nameOf(t.clientId)}{overdue.length > 1 && `, и ещё ${overdue.length - 1}`}</p>
       <div className="mt-4 flex gap-2">
-        <Link href={t.clientId ? `/clients/${t.clientId}` : '/tasks'} className={cn('inline-flex h-10 items-center gap-1.5 px-4 text-[14px] font-semibold transition-colors', compact ? 'rounded-control bg-surface border border-border hover:bg-surface-2' : 'rounded-full bg-white/15 backdrop-blur hover:bg-white/25')}><Phone className="h-4 w-4" aria-hidden />Связаться</Link>
-        <Link href="/tasks" className="inline-flex h-10 items-center gap-1 rounded-full px-3 text-[14px] font-medium opacity-90 hover:opacity-100">Все задачи<ChevronRight className="h-4 w-4" aria-hidden /></Link>
+        <Link href={t.clientId ? `/clients/${t.clientId}` : '/tasks'} className={cn('inline-flex h-11 items-center lg:h-10 gap-1.5 px-4 text-[14px] font-semibold transition-colors', compact ? 'rounded-control bg-surface border border-border hover:bg-surface-2' : 'rounded-full bg-white/15 backdrop-blur hover:bg-white/25')}><Phone className="h-4 w-4" aria-hidden />Связаться</Link>
+        <Link href="/tasks" className="inline-flex h-11 items-center lg:h-10 gap-1 rounded-full px-3 text-[14px] font-medium opacity-90 hover:opacity-100">Все задачи<ChevronRight className="h-4 w-4" aria-hidden /></Link>
       </div>
     </section>
   );

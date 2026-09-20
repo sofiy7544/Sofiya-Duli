@@ -38,7 +38,8 @@
   .t-h2 { font-family: var(--font-display); font-size: 22px; line-height: 28px; font-weight: 600; letter-spacing: -0.012em; }
   .t-h3 { font-size: 17px; line-height: 23px; font-weight: 600; letter-spacing: -0.012em; }
   .t-caption { font-size: 13px; line-height: 18px; color: hsl(var(--muted-foreground)); }
-  .t-micro { font-size: 11px; line-height: 15px; font-weight: 500; color: hsl(var(--muted-foreground)); }
+  /* 12px — нижняя граница для читаемого текста; 11px давало сообщения ниже нормы на телефоне. */
+  .t-micro { font-size: 12px; line-height: 16px; font-weight: 500; color: hsl(var(--muted-foreground)); }
   .t-num { font-family: var(--font-display); font-variant-numeric: lining-nums tabular-nums; letter-spacing: -0.02em; }
 
   :root[data-family='atlas'] .t-hero { font-size: 28px; line-height: 34px; font-weight: 700; letter-spacing: -0.024em; }
@@ -113,6 +114,9 @@
 @media (prefers-reduced-motion: reduce) {
   .pressable:active { transform: none; }
   .skeleton::after { animation: none; opacity: .0; }
+  /* Переход между страницами — горизонтальный сдвиг: именно такое движение
+     вызывает укачивание, поэтому здесь остаётся только проявление. */
+  .page-forward, .page-back, .page-fade { animation: page-fade 120ms linear both; }
   .stagger > * { animation: page-fade 120ms linear both; animation-delay: 0ms !important; }
   .drag-lift { transform: none; }
   .settle, .count-in { animation: none; }
@@ -286,7 +290,7 @@ html[data-screen='signin'], html[data-screen='signin'] body { background: #05070
 }
 
 /* Текстовые ссылки внутри строк: область нажатия ≥ 40px без изменения вёрстки */
-.tap-link { display: inline-flex; align-items: center; min-height: 40px; padding-block: 8px; margin-block: -8px; }
+.tap-link { display: inline-flex; align-items: center; min-height: 44px; padding-block: 10px; margin-block: -10px; }
 
 /* Десктоп: плотные таблицы остаются читаемыми, шапка не уезжает */
 @media (min-width: 1024px) {

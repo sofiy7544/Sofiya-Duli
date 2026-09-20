@@ -40,7 +40,7 @@ export function SegmentedControl<T extends string>({ value, onChange, options, l
           <button key={o.value} ref={(el) => { refs.current[o.value] = el; }} role="tab" type="button" aria-selected={active} tabIndex={active ? 0 : -1}
             onClick={() => onChange(o.value)}
             className={cn('relative z-[1] inline-flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-[calc(var(--radius-control)-4px)] font-medium transition-colors duration-tab',
-              size === 'sm' ? 'h-9 px-3 text-[13px] lg:h-8' : 'h-11 px-3.5 text-sm lg:h-9', active ? 'text-foreground' : 'text-muted-foreground hover:text-foreground')}>
+              size === 'sm' ? 'h-11 px-3 text-[13px] lg:h-8' : 'h-11 px-3.5 text-sm lg:h-9', active ? 'text-foreground' : 'text-muted-foreground hover:text-foreground')}>
             {o.label}
             {o.count !== undefined && <span className={cn('tabular text-[12px]', active ? 'text-muted-foreground' : 'text-muted-foreground/80')}>{o.count}</span>}
           </button>

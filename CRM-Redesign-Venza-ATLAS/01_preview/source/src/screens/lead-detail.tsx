@@ -10,6 +10,7 @@ import { budget, money, relDay, time } from '@/lib/format';
 import { CLIENT_TYPE_LABEL, PURPOSE_LABEL, SOURCE_LABEL, STAGES_ACTIVE, STAGE_LABEL, TASK_TYPE_LABEL } from '@/lib/labels';
 import type { Client, Lead, Task } from '@/lib/mock/types';
 import { PageBody, PageHeader } from '@/components/shell/page';
+import { ui } from '@/components/shell/ui-state';
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { PriorityMark, StageBadge, STAGE_DOT } from '@/components/ui/badge';
@@ -55,7 +56,7 @@ export function LeadDetailScreen({ id }: { id: string }) {
     if (lead.stage !== 'NEGOTIATION' && lead.stage !== 'WON' && lead.stage !== 'LOST') await api.moveLead(lead.id, 'NEGOTIATION').catch(() => {});
     router.navigate(`/deals/new?leadId=${lead.id}`);
   };
-  const actions = <QuickActions client={client} onCall={() => setCall(true)} onRemind={() => setRemind(true)} onTask={() => toast.message('Задача: форма из Quick Create с привязкой к лиду')} onShowing={() => setShowing(true)} />;
+  const actions = <QuickActions client={client} onCall={() => setCall(true)} onRemind={() => setRemind(true)} onTask={() => ui.set({ quickCreate: 'task' })} onShowing={() => setShowing(true)} />;
   const controls = <LeadControls lead={lead} canAssign={settings.role === 'ADMIN' || settings.role === 'MANAGER'} onStage={() => setStageOpen(true)} onReady={readyToBuy} />;
   const overlays = (<>
     <StageSheet lead={lead} open={stageOpen} onOpenChange={setStageOpen} onPick={(s) => move(lead, s)} />

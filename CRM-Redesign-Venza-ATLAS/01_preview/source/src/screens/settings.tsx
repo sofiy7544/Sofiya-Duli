@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Bell, Check, ChevronRight, Globe, Image, KeyRound, ListX, Palette, Send, User, Users, Wand2 } from 'lucide-react';
+import { Bell, Check, ChevronRight, Globe, Image, ListX, Palette, Plug, Send, User, Users, Wand2 } from 'lucide-react';
 import { PageBody, PageHeader } from '@/components/shell/page';
 import { ThemeSwatches } from '@/components/overlays/preview-panel';
 import { toast } from '@/components/ui/toast';
@@ -24,11 +24,11 @@ export function SettingsScreen() {
     { icon: Send, label: 'Шаблоны', text: 'Готовые сообщения клиентам', href: '/settings/templates' },
     { icon: Users, label: 'Пользователи', text: 'Доступы сотрудников', href: '/settings/users' },
     { icon: Image, label: 'Брендинг', text: 'Логотип и водяной знак', href: '/settings/branding' },
+    { icon: Plug, label: 'Интеграции', text: 'Telegram, WhatsApp, почта', href: '/settings/integrations' },
     { icon: Globe, label: 'Язык', text: `${lang.flag} ${lang.label}`, action: () => setLangOpen(true) },
-    { icon: User, label: 'Профиль', text: 'Имя, фото, телефон', href: '/profile' },
-    { icon: KeyRound, label: 'Безопасность', text: 'Пароль и сессии' },
+    { icon: User, label: 'Профиль', text: 'Имя, фото, телефон, пароль', href: '/profile' },
     { icon: Bell, label: 'Уведомления', text: 'Задачи, лиды, показы' },
-    { icon: ListX, label: 'Причины проигрыша', text: 'Для закрытия лидов' },
+    { icon: ListX, label: 'Причины проигрыша', text: 'Справочник и разбор отказов', href: '/insights/lost-reasons' },
   ];
   const rowInner = (r: Row) => (<>
     <span className="grid h-10 w-10 place-items-center rounded-[12px] bg-surface-2"><r.icon className="h-[18px] w-[18px]" aria-hidden /></span>
@@ -59,7 +59,7 @@ export function SettingsScreen() {
           </li>
         ))}
       </ul>
-      <Sheet open={langOpen} onOpenChange={setLangOpen} title="Язык интерфейса" description="Меняются подписи, форматы дат и чисел." desktop="center" size="sm">
+      <Sheet open={langOpen} onOpenChange={setLangOpen} title="Язык интерфейса" description="Пока меняются форматы дат и чисел: подписи интерфейса переводятся в CRM." desktop="center" size="sm">
         <ul role="radiogroup" aria-label="Язык интерфейса" className="space-y-1">
           {LOCALES.map((l) => {
             const on = l.code === locale;

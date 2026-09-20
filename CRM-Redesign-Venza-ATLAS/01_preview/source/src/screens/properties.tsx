@@ -61,7 +61,7 @@ export function PropertiesScreen() {
         </div>
       ) : !items.length ? (
         <EmptyState icon={Building} title={debounced || activeFilterCount(filters) ? 'Под фильтры ничего не подходит' : 'Объектов пока нет'} text={debounced || activeFilterCount(filters) ? 'Сбросьте фильтры или измените запрос.' : 'Добавьте первый объект — с фото он будет выглядеть как на сайте.'}
-          action={activeFilterCount(filters) || debounced ? <Button variant="outline" size="sm" onClick={() => { setFilters({}); setTerm(''); }}>Сбросить</Button> : <Button onClick={() => toast.message('Форма объекта: PropertyForm')}>Добавить объект</Button>} />
+          action={activeFilterCount(filters) || debounced ? <Button variant="outline" size="sm" onClick={() => { setFilters({}); setTerm(''); }}>Сбросить</Button> : <Button onClick={() => router.navigate('/properties/new')}>Добавить объект</Button>} />
       ) : (
         <ul className={cn('grid gap-4', family === 'atlas' ? 'sm:grid-cols-2 xl:grid-cols-4 lg:gap-3' : 'sm:grid-cols-2 xl:grid-cols-3 lg:gap-6')}>
           {items.map((p) => <li key={p.id}><PropertyCard p={p} /></li>)}

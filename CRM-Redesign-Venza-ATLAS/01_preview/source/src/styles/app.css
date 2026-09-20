@@ -240,8 +240,24 @@ html[data-screen='signin'], html[data-screen='signin'] body { background: #05070
 .signin__bg::after { content: ''; position: absolute; inset: 0;
   background:
     radial-gradient(72% 48% at 50% 50%, rgba(6,10,16,.6), rgba(6,10,16,.26) 72%),
-    linear-gradient(180deg, #05070A 0%, rgba(5,7,10,.62) 7%, rgba(6,10,16,.26) 42%,
-                    rgba(5,7,10,.72) 82%, rgba(5,7,10,.94) 94%, #05070A 100%); }
+    linear-gradient(180deg,
+      #05070A 0%, rgba(5,7,10,.66) 3.5%, rgba(6,10,16,.30) 9%,
+      rgba(6,10,16,.26) 50%,
+      rgba(6,10,16,.30) 91%, rgba(5,7,10,.66) 96.5%, #05070A 100%); }
+
+/* В браузере снизу лежит панель Safari — затемнение там длиннее, чтобы стык
+   с её фоном не читался. В установленном приложении панели нет, и удлинять
+   нечего: иначе снизу видна чёрная полоса, которой нет сверху. */
+@media (display-mode: browser) {
+  .signin__bg::after {
+    background:
+      radial-gradient(72% 48% at 50% 50%, rgba(6,10,16,.6), rgba(6,10,16,.26) 72%),
+      linear-gradient(180deg,
+        #05070A 0%, rgba(5,7,10,.66) 3.5%, rgba(6,10,16,.30) 9%,
+        rgba(6,10,16,.26) 50%,
+        rgba(6,10,16,.34) 84%, rgba(5,7,10,.72) 93%, #05070A 100%);
+  }
+}
 .signin__center { position: absolute; inset: 0 0 auto; height: 100svh; height: 100dvh; display: grid; place-items: center; padding: max(1.5rem, env(safe-area-inset-top)) 1.25rem max(1.5rem, env(safe-area-inset-bottom)); }
 
 .glassin { position: relative; width: min(84vw, 330px); display: flex; flex-direction: column; gap: 10px;

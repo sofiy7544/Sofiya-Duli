@@ -11,6 +11,8 @@ import { toast } from '@/components/ui/toast';
 import { ui, useUI } from '@/components/shell/ui-state';
 import type { Priority, TaskType } from '@/lib/mock/types';
 import { TASK_TYPE_LABEL } from '@/lib/labels';
+import { defaultDue, duePresets, toLocalInput } from '@/lib/due';
+import { relDay, time } from '@/lib/format';
 
 /** Quick Create: меню → форма. Поля и правила = LeadForm/QuickCapture и createTaskSchema CRM. */
 export function QuickCreate() {
@@ -105,18 +107,21 @@ function LeadQuickForm() {
 }
 
 function TaskQuickForm() {
-  const [v, setV] = React.useState({ title: '', type: 'CALL' as TaskType, when: 'today18' });
+  const presets = React.useMemo(() => duePresets(), []);
+  const [v, setV] = React.useState({ title: '', type: 'CALL' as TaskType, due: toLocalInput(defaultDue(presets)) });
   const [error, setError] = React.useState<string | null>(null);
+  const [dueError, setDueError] = React.useState<string | null>(null);
   const [busy, setBusy] = React.useState(false);
-  const presets = [{ k: 'in1h', l: 'Через час' }, { k: 'today18', l: 'Сегодня, 18:00' }, { k: 'tomorrow10', l: 'Завтра, 10:00' }];
-  const dueAt = () => { const d = new Date(); if (v.when === 'in1h') d.setHours(d.getHours() + 1, 0, 0, 0); else if (v.when === 'today18') d.setHours(18, 0, 0, 0); else { d.setDate(d.getDate() + 1); d.setHours(10, 0, 0, 0); } return d.toISOString(); };
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!v.title.trim()) { setError('Введите название задачи'); return; }
+    const at = new Date(v.due);
+    if (!v.due || Number.isNaN(at.getTime())) { setDueError('Укажите срок'); return; }
     setBusy(true);
-    try { await api.createTask({ title: v.title.trim(), type: v.type, dueAt: dueAt() }); ui.set({ quickCreate: null }); toast.success('Задача создана'); }
+    try { await api.createTask({ title: v.title.trim(), type: v.type, dueAt: at.toISOString() }); ui.set({ quickCreate: null }); toast.success('Задача создана'); }
     catch (err) { toast.error((err as Error).message); } finally { setBusy(false); }
   };
+  const iso = v.due && !Number.isNaN(new Date(v.due).getTime()) ? new Date(v.due).toISOString() : null;
   return (
     <form onSubmit={submit} className="space-y-4" noValidate>
       <Field label="Что сделать" required error={error}>{(id, d) => <Input id={id} aria-describedby={d} invalid={!!error} value={v.title} maxLength={200} onChange={(e) => { setV({ ...v, title: e.target.value }); setError(null); }} placeholder="Позвонить и подтвердить показ" />}</Field>
@@ -124,11 +129,22 @@ function TaskQuickForm() {
       <fieldset>
         <legend className="mb-1.5 text-[13px] font-medium">Срок</legend>
         <div className="flex flex-wrap gap-2">
-          {presets.map((p) => (
-            <button key={p.k} type="button" aria-pressed={v.when === p.k} onClick={() => setV({ ...v, when: p.k })}
-              className={cn('h-10 rounded-full border px-4 text-[14px] font-medium transition-colors duration-tab', v.when === p.k ? 'border-primary bg-primary-soft text-primary-text' : 'border-border bg-surface text-muted-foreground')}>{p.l}</button>
-          ))}
+          {presets.map((p) => {
+            const on = v.due === toLocalInput(p.at);
+            return (
+              <button key={p.k} type="button" aria-pressed={on} onClick={() => { setV({ ...v, due: toLocalInput(p.at) }); setDueError(null); }}
+                className={cn('h-11 rounded-full border px-4 text-[14px] font-medium transition-colors duration-tab', on ? 'border-primary bg-primary-soft text-primary-text' : 'border-border bg-surface text-muted-foreground')}>{p.label}</button>
+            );
+          })}
         </div>
+        {/* Точное время — системным полем: на iPhone это тот же барабан, что в будильнике. */}
+        <div className="mt-3">
+          <Field label="или точное время" error={dueError}>
+            {(id, d) => <Input id={id} aria-describedby={d} invalid={!!dueError} type="datetime-local" value={v.due}
+              onChange={(e) => { setV({ ...v, due: e.target.value }); setDueError(null); }} />}
+          </Field>
+        </div>
+        {iso && !dueError && <p className="t-caption mt-2">Напомню {relDay(iso).toLowerCase()} в {time(iso)}</p>}
       </fieldset>
       <div className="flex gap-2.5 pt-2">
         <Button type="button" variant="outline" className="flex-1" onClick={() => ui.set({ quickCreate: 'menu' })}>Назад</Button>

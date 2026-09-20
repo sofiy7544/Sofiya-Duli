@@ -32,13 +32,31 @@ export function FilmLogin({ onSuccess }: { onSuccess: () => void }) {
     syncChromeColor();
     return () => { delete document.documentElement.dataset.screen; syncChromeColor(); };
   }, []);
+  /* В режиме энергосбережения iPhone запрещает автозапуск даже беззвучного
+     видео: play() отклоняется, и вместо движения остаётся постер. Системе
+     нужен жест — поэтому при отказе пробуем ещё раз по первому касанию
+     экрана. Пользователь ничего не нажимает специально: хватает тапа по
+     полю ввода. */
+  const video = React.useRef<HTMLVideoElement>(null);
+  const [blocked, setBlocked] = React.useState(false);
+  const start = React.useCallback(() => {
+    video.current?.play().then(() => setBlocked(false)).catch(() => setBlocked(true));
+  }, []);
+  React.useEffect(() => {
+    if (!blocked) return;
+    const retry = () => start();
+    addEventListener('pointerdown', retry, { once: true });
+    addEventListener('keydown', retry, { once: true });
+    return () => { removeEventListener('pointerdown', retry); removeEventListener('keydown', retry); };
+  }, [blocked, start]);
+
   return (
     <div key={run} className="signin">
-      <div className="signin__bg" aria-hidden>
+      <div className="signin__bg" data-still={blocked ? '' : undefined} aria-hidden>
         {saveData ? (
           <img src={bgPoster} alt="" />
         ) : (
-          <video poster={bgPoster} autoPlay muted loop playsInline preload="auto" onCanPlay={(e) => void e.currentTarget.play().catch(() => {})}>
+          <video ref={video} poster={bgPoster} autoPlay muted loop playsInline preload="auto" onCanPlay={start} onError={() => setBlocked(true)}>
             {/* mp4 первым. Ставить WebM вперёд ради экономии 1,2 МБ оказалось
                 ошибкой: Safari на iPhone заявляет поддержку WebM, но фон
                 не проигрывается — вместо движения остаётся постер.

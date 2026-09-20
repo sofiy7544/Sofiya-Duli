@@ -234,6 +234,10 @@ html[data-screen='signin'], html[data-screen='signin'] body { background: #05070
 .signin__bg { position: absolute; inset: 0; }
 .signin__bg video, .signin__bg img { width: 100%; height: 100%; object-fit: cover; animation: signin-drift 26s ease-in-out infinite alternate; will-change: transform; }
 @keyframes signin-drift { from { transform: scale(1.04); } to { transform: scale(1.12); } }
+/* Автозапуск отклонён (на iPhone так в режиме энергосбережения): вместо видео
+   виден постер. Чтобы кадр не выглядел замершим, наезд идёт заметно быстрее —
+   до первого касания, после которого видео всё-таки запускается. */
+.signin__bg[data-still] video, .signin__bg[data-still] img { animation-duration: 14s; }
 /* Низ и верх уходят ровно в #05070A — цвет системных полос (theme-color).
    Панель Safari и зона Home закрашиваются им же, поэтому стык кадра
    с хромом браузера не виден: картинка не обрывается прямоугольником. */

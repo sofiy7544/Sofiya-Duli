@@ -3,18 +3,13 @@ import { BellRing, PhoneCall, PhoneMissed, PhoneOff } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { api } from '@/lib/mock/api';
 import { relDay, time } from '@/lib/format';
+import { duePresets, toLocalInput } from '@/lib/due';
 import { Sheet } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Field, Input, Textarea } from '@/components/ui/field';
 import { toast } from '@/components/ui/toast';
 
-/** Пресеты перезвона / напоминания (как в PersonQuickActions CRM). */
-function presets() {
-  const at = (days: number, h: number, m = 0) => { const d = new Date(); d.setDate(d.getDate() + days); d.setHours(h, m, 0, 0); return d.toISOString(); };
-  const inH = (h: number) => { const d = new Date(Date.now() + h * 3_600_000); d.setMinutes(0, 0, 0); return d.toISOString(); };
-  return [{ k: '1h', label: 'Через час', at: inH(1) }, { k: 'eve', label: 'Сегодня, 18:00', at: at(0, 18) }, { k: 'tmr', label: 'Завтра, 10:00', at: at(1, 10) }, { k: '3d', label: 'Через 3 дня', at: at(3, 10) }];
-}
-const toLocalInput = (iso: string) => { const d = new Date(iso); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 16); };
+/* Пресеты перезвона и напоминания — те же, что у срока задачи: см. lib/due. */
 
 /** CallDispositionDialog: результат* (ответил / нет ответа / занято) + заметка + перезвон (пресет или точное время) → задача. */
 export function CallDispositionSheet({ open, onOpenChange, clientId, leadId, name, phone }: { open: boolean; onOpenChange: (o: boolean) => void; clientId: string; leadId?: string; name: string; phone: string }) {
@@ -22,7 +17,7 @@ export function CallDispositionSheet({ open, onOpenChange, clientId, leadId, nam
   const [note, setNote] = React.useState(''); const [preset, setPreset] = React.useState<string | null>(null); const [exact, setExact] = React.useState('');
   const [error, setError] = React.useState<string | null>(null); const [busy, setBusy] = React.useState(false);
   React.useEffect(() => { if (open) { setOutcome(null); setNote(''); setPreset(null); setExact(''); setError(null); } }, [open]);
-  const list = presets();
+  const list = duePresets();
   const callbackAt = exact ? new Date(exact).toISOString() : list.find((p) => p.k === preset)?.at;
   const tiles = [
     { v: 'answered' as const, label: 'Ответил', icon: PhoneCall, cls: 'border-success/40 bg-success/12 text-success-text' },
@@ -47,7 +42,7 @@ export function CallDispositionSheet({ open, onOpenChange, clientId, leadId, nam
         </fieldset>
         <Field label="Заметка">{(id) => <Textarea id={id} value={note} onChange={(e) => setNote(e.target.value)} placeholder="О чём договорились" className="min-h-[80px]" />}</Field>
         <fieldset><legend className="mb-2 text-[13px] font-medium">Перезвонить</legend>
-          <div className="flex flex-wrap gap-2">{list.map((p) => <button key={p.k} aria-pressed={preset === p.k && !exact} onClick={() => { setPreset(preset === p.k ? null : p.k); setExact(''); }} className={cn('h-10 rounded-full border px-3.5 text-[14px] font-medium', preset === p.k && !exact ? 'border-primary bg-primary-soft text-primary-text' : 'border-border bg-surface')}>{p.label}</button>)}</div>
+          <div className="flex flex-wrap gap-2">{list.map((p) => <button key={p.k} aria-pressed={preset === p.k && !exact} onClick={() => { setPreset(preset === p.k ? null : p.k); setExact(''); }} className={cn('h-11 rounded-full border px-3.5 text-[14px] font-medium', preset === p.k && !exact ? 'border-primary bg-primary-soft text-primary-text' : 'border-border bg-surface')}>{p.label}</button>)}</div>
           <div className="mt-3"><Field label="или точное время">{(id) => <Input id={id} type="datetime-local" value={exact} onChange={(e) => { setExact(e.target.value); setPreset(null); }} />}</Field></div>
           {callbackAt && <p className="t-caption mt-2 flex items-center gap-1.5"><BellRing className="h-3.5 w-3.5" aria-hidden />Создастся задача «Перезвонить» на {relDay(callbackAt).toLowerCase()}, {time(callbackAt)}</p>}
         </fieldset>
@@ -64,7 +59,7 @@ export function RemindSheet({ open, onOpenChange, leadId, current }: { open: boo
     <Sheet open={open} onOpenChange={onOpenChange} title="Напомнить" description="Время следующего действия по лиду." desktop="center" size="sm"
       footer={<><Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>Отмена</Button><Button className="flex-[2]" disabled={!value} loading={busy} onClick={async () => { setBusy(true); const iso = new Date(value).toISOString(); await api.updateLead(leadId, { nextActionAt: iso }); setBusy(false); onOpenChange(false); toast.success(`Напомню ${relDay(iso).toLowerCase()} в ${time(iso)}`); }}>Сохранить</Button></>}>
       <div className="space-y-4">
-        <div className="flex flex-wrap gap-2">{presets().map((p) => <button key={p.k} aria-pressed={value === toLocalInput(p.at)} onClick={() => setValue(toLocalInput(p.at))} className={cn('h-10 rounded-full border px-3.5 text-[14px] font-medium', value === toLocalInput(p.at) ? 'border-primary bg-primary-soft text-primary-text' : 'border-border bg-surface')}>{p.label}</button>)}</div>
+        <div className="flex flex-wrap gap-2">{duePresets().map((p) => <button key={p.k} aria-pressed={value === toLocalInput(p.at)} onClick={() => setValue(toLocalInput(p.at))} className={cn('h-11 rounded-full border px-3.5 text-[14px] font-medium', value === toLocalInput(p.at) ? 'border-primary bg-primary-soft text-primary-text' : 'border-border bg-surface')}>{p.label}</button>)}</div>
         <Field label="Дата и время">{(id) => <Input id={id} type="datetime-local" value={value} onChange={(e) => setValue(e.target.value)} />}</Field>
       </div>
     </Sheet>

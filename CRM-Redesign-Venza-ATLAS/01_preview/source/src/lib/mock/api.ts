@@ -21,6 +21,21 @@ const page = <T,>(items: T[]): Paginated<T> => ({ items, total: items.length, pa
 const emptyPage = { items: [], total: 0, page: 1, pageSize: 50 };
 const q = (s: string) => s.toLowerCase().trim();
 
+
+/** Проверки полей клиента и объекта. Ошибки формулируются так, чтобы их можно было показать рядом с полем. */
+function validateClient(c: Pick<Client, 'fullName' | 'primaryPhone' | 'email'>) {
+  if (c.fullName.trim().length < 2) throw new ApiError('Имя — минимум 2 символа', 400);
+  if (!/^[+0-9()\-\s]{6,32}$/.test(c.primaryPhone)) throw new ApiError('Телефон: 6–32 символа, цифры, +, скобки и дефис', 400);
+  if (c.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(c.email)) throw new ApiError('Проверьте адрес почты', 400);
+}
+function validateProperty(p: Pick<Property, 'title' | 'district' | 'address' | 'area' | 'price'>) {
+  if (p.title.trim().length < 3) throw new ApiError('Название — минимум 3 символа', 400);
+  if (!p.district.trim()) throw new ApiError('Укажите район', 400);
+  if (!p.address.trim()) throw new ApiError('Укажите адрес', 400);
+  if (!(p.area > 0)) throw new ApiError('Площадь должна быть больше нуля', 400);
+  if (!(p.price > 0)) throw new ApiError('Цена должна быть больше нуля', 400);
+}
+
 export const api = {
   /** GET /api/reports/dashboard + today-tasks + upcoming-showings + recent-activity */
   today: () => respond(() => {
@@ -109,6 +124,40 @@ export const api = {
     const l: Lead = { id: `l${Date.now()}`, clientId: c.id, stage: 'NEW', priority: input.priority, assignedUserId: 'u1', source: 'MANUAL', purpose: 'LIVING', budgetMax: input.budgetMax, budgetCurrency: 'EUR', createdAt: new Date().toISOString() };
     store.mutate((d) => { d.clients.unshift(c); d.leads.unshift(l); d.activities.unshift({ id: `a${Date.now()}`, type: 'CREATED', text: 'Новый лид', at: l.createdAt, userId: 'u1', clientId: c.id, leadId: l.id }); });
     return l;
+  },
+  /** POST /api/clients — карточка клиента целиком, а не быстрое создание */
+  async createClient(input: Omit<Client, 'id' | 'createdAt' | 'isArchived' | 'isBlacklisted'>) {
+    await wait(500);
+    validateClient(input);
+    const c: Client = { ...input, id: `c${Date.now()}`, isArchived: false, isBlacklisted: false, createdAt: new Date().toISOString() };
+    store.mutate((d) => { d.clients.unshift(c); d.activities.unshift({ id: `a${Date.now()}`, type: 'CREATED', text: 'Клиент добавлен', at: c.createdAt, userId: 'u1', clientId: c.id }); });
+    return c;
+  },
+  /** PATCH /api/clients/:id */
+  async updateClient(id: string, patch: Partial<Client>) {
+    await wait(450);
+    const cur = store.db.clients.find((c) => c.id === id);
+    if (!cur) throw new ApiError('Клиент не найден', 404);
+    validateClient({ ...cur, ...patch });
+    store.mutate((d) => { Object.assign(d.clients.find((c) => c.id === id)!, patch); });
+    return { ...cur, ...patch } as Client;
+  },
+  /** POST /api/properties */
+  async createProperty(input: Omit<Property, 'id' | 'createdAt' | 'photos'>) {
+    await wait(500);
+    validateProperty(input);
+    const p: Property = { ...input, id: `p${Date.now()}`, photos: [], createdAt: new Date().toISOString() };
+    store.mutate((d) => { d.properties.unshift(p); });
+    return p;
+  },
+  /** PATCH /api/properties/:id */
+  async updateProperty(id: string, patch: Partial<Property>) {
+    await wait(450);
+    const cur = store.db.properties.find((p) => p.id === id);
+    if (!cur) throw new ApiError('Объект не найден', 404);
+    validateProperty({ ...cur, ...patch });
+    store.mutate((d) => { Object.assign(d.properties.find((p) => p.id === id)!, patch); });
+    return { ...cur, ...patch } as Property;
   },
   /** POST /api/clients/:id/note */
   async addNote(clientId: string, text: string, leadId?: string) {

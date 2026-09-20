@@ -13,15 +13,24 @@ import { NotesScreen } from './notes';
 import { InboxScreen } from './inbox';
 import { LostReasonsScreen } from './lost-reasons';
 import { BriefingScreen } from './briefing';
+import { ClientFormScreen } from './client-form';
+import { PropertyFormScreen } from './property-form';
+import { LeadFormScreen } from './lead-form';
+import { ProfileScreen } from './profile';
 import { AutomationScreen, BrandingScreen, IntegrationsScreen, TemplatesScreen, UsersScreen } from './settings-sections';
 
 /** pattern → экран. Порядок: статические раньше динамических. */
 export const SCREENS: Record<string, (p: Record<string, string>) => React.ReactNode> = {
   '/leads': () => <LeadsScreen />,
+  '/leads/new': () => <LeadFormScreen />,
   '/leads/:id': (p) => <LeadDetailScreen id={p.id} />,
   '/clients': () => <ClientsScreen />,
+  '/clients/new': () => <ClientFormScreen />,
+  '/clients/:id/edit': (p) => <ClientFormScreen id={p.id} />,
   '/clients/:id': (p) => <ClientDetailScreen id={p.id} />,
   '/properties': () => <PropertiesScreen />,
+  '/properties/new': () => <PropertyFormScreen />,
+  '/properties/:id/edit': (p) => <PropertyFormScreen id={p.id} />,
   '/properties/:id': (p) => <PropertyDetailScreen id={p.id} />,
   '/tasks': () => <TasksScreen />,
   '/calendar': () => <CalendarScreen />,
@@ -40,4 +49,5 @@ export const SCREENS: Record<string, (p: Record<string, string>) => React.ReactN
   '/settings/users': () => <UsersScreen />,
   '/insights/lost-reasons': () => <LostReasonsScreen />,
   '/briefing': () => <BriefingScreen />,
+  '/profile': () => <ProfileScreen />,
 };

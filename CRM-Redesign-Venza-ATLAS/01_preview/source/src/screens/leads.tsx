@@ -12,7 +12,7 @@ import { leadUrgency } from '@/lib/lead-urgency';
 import type { Lead, LeadStage } from '@/lib/mock/types';
 import { PageBody, PageHeader } from '@/components/shell/page';
 import { ui } from '@/components/shell/ui-state';
-import { Button } from '@/components/ui/button';
+import { Button, IconButton } from '@/components/ui/button';
 import { Chip, STAGE_DOT } from '@/components/ui/badge';
 import { SegmentedControl } from '@/components/ui/segmented';
 import { RowsSkeleton, Skeleton } from '@/components/ui/skeleton';
@@ -25,6 +25,7 @@ import { StageSheet, useStageMove } from '@/components/overlays/lead-stage';
 
 /** /leads. Desktop: канбан (DnD). Mobile: чипы этапов + список. Bulk-действия и фильтр ответственного — ADMIN. */
 export function LeadsScreen() {
+  const router = useRouter();
   const { family } = useTheme();
   const isDesktop = useIsDesktop();
   const settings = usePreviewSettings();
@@ -61,7 +62,10 @@ export function LeadsScreen() {
 
   const header = (
     <PageHeader title="Лиды" subtitle={r.data ? `${active.length} ${plural(active.length, 'активный', 'активных', 'активных')}` : 'Загружаем воронку'}
-      actions={isDesktop ? <SegmentedControl label="Вид" size="sm" value={view} onChange={setView} options={[{ value: 'board', label: 'Канбан' }, { value: 'list', label: 'Список' }]} /> : undefined} />
+      actions={<>
+        {isDesktop && <SegmentedControl label="Вид" size="sm" value={view} onChange={setView} options={[{ value: 'board', label: 'Канбан' }, { value: 'list', label: 'Список' }]} />}
+        <IconButton label="Новый лид" onClick={() => router.navigate('/leads/new')}><Plus /></IconButton>
+      </>} />
   );
 
   const body = () => {

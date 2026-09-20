@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import { ArrowLeft, BedDouble, Building, CalendarPlus, ChevronLeft, ChevronRight, FileDown, Heart, Layers, MapPin, MoreHorizontal, Pencil, Ruler, Search, Share2, Trash2, X } from 'lucide-react';
+import { ArrowLeft, BedDouble, Building, CalendarPlus, Plus, ChevronLeft, ChevronRight, FileDown, Heart, Layers, MapPin, MoreHorizontal, Pencil, Ruler, Search, Share2, Trash2, X } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { api } from '@/lib/mock/api';
 import { store, usePreviewSettings } from '@/lib/mock/store';
@@ -25,6 +25,7 @@ import { PropertyMedia } from '@/components/domain/property-media';
 import { FilterButton, FiltersSheet, activeFilterCount, type FilterValue } from '@/components/domain/filters';
 
 export function PropertiesScreen() {
+  const router = useRouter();
   const { family } = useTheme();
   const [scope, setScope] = React.useState<'all' | 'mine'>('all');
   const [term, setTerm] = React.useState(''); const [debounced, setDebounced] = React.useState('');
@@ -43,7 +44,8 @@ export function PropertiesScreen() {
 
   return (
     <PageBody wide={family === 'atlas'}>
-      <PageHeader title="Объекты" subtitle={r.data ? `${r.data.total} ${plural(r.data.total, 'объект', 'объекта', 'объектов')}` : ' '} />
+      <PageHeader title="Объекты" subtitle={r.data ? `${r.data.total} ${plural(r.data.total, 'объект', 'объекта', 'объектов')}` : ' '}
+        actions={<IconButton label="Новый объект" onClick={() => router.navigate('/properties/new')}><Plus /></IconButton>} />
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <SegmentedControl label="Чьи объекты" value={scope} onChange={setScope} options={[{ value: 'all', label: 'Все' }, { value: 'mine', label: 'Мои' }]} />
         <div className="relative order-last w-full sm:order-none sm:ml-auto sm:w-[280px]">
@@ -197,7 +199,7 @@ export function PropertyDetailScreen({ id }: { id: string }) {
     <Sheet open={menu} onOpenChange={setMenu} title={p.title} desktop="center" size="sm">
       <div className="space-y-3">
         <div className="surface-quiet p-1.5">
-          <button disabled={!canEdit} className="pressable flex min-h-[54px] w-full items-center gap-3.5 rounded-control px-3 text-left text-[16px] font-medium disabled:opacity-45" onClick={() => { setMenu(false); toast.message('Форма объекта: PropertyForm'); }}><Pencil className="h-5 w-5 text-primary" />Редактировать</button>
+          <button disabled={!canEdit} className="pressable flex min-h-[54px] w-full items-center gap-3.5 rounded-control px-3 text-left text-[16px] font-medium disabled:opacity-45" onClick={() => { setMenu(false); router.navigate(`/properties/${p.id}/edit`); }}><Pencil className="h-5 w-5 text-primary" />Редактировать</button>
           <button className="pressable flex min-h-[54px] w-full items-center gap-3.5 rounded-control px-3 text-left text-[16px] font-medium" onClick={() => { setMenu(false); setPdf(true); }}><FileDown className="h-5 w-5 text-primary" />Скачать PDF</button>
         </div>
         {canEdit ? <div className="surface-quiet p-1.5"><button className="pressable flex min-h-[54px] w-full items-center gap-3.5 rounded-control px-3 text-left text-[16px] font-medium text-danger-text" onClick={() => { setMenu(false); setDel(true); }}><Trash2 className="h-5 w-5" />Удалить объект</button></div>

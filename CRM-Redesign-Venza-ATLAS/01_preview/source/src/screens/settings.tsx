@@ -25,7 +25,7 @@ export function SettingsScreen() {
     { icon: Users, label: 'Пользователи', text: 'Доступы сотрудников', href: '/settings/users' },
     { icon: Image, label: 'Брендинг', text: 'Логотип и водяной знак', href: '/settings/branding' },
     { icon: Globe, label: 'Язык', text: `${lang.flag} ${lang.label}`, action: () => setLangOpen(true) },
-    { icon: User, label: 'Профиль', text: 'Имя, фото, телефон' },
+    { icon: User, label: 'Профиль', text: 'Имя, фото, телефон', href: '/profile' },
     { icon: KeyRound, label: 'Безопасность', text: 'Пароль и сессии' },
     { icon: Bell, label: 'Уведомления', text: 'Задачи, лиды, показы' },
     { icon: ListX, label: 'Причины проигрыша', text: 'Для закрытия лидов' },

@@ -4,7 +4,7 @@ import { cn } from '@/lib/cn';
 import { api } from '@/lib/mock/api';
 import { store, usePreviewSettings, users } from '@/lib/mock/store';
 import { useResource } from '@/lib/use-resource';
-import { Link } from '@/lib/router';
+import { Link, useRouter } from '@/lib/router';
 import { useIsDesktop, useTheme } from '@/lib/theme/provider';
 import { budget, relDay } from '@/lib/format';
 import { CLIENT_TYPE_LABEL, PROPERTY_TYPE_LABEL, SOURCE_LABEL, STAGE_LABEL } from '@/lib/labels';
@@ -26,6 +26,7 @@ import { DetailSkeleton, QuickActions, ScheduleShowingSheet } from './lead-detai
 type Status = 'active' | 'archived' | 'blacklisted';
 
 export function ClientsScreen() {
+  const router = useRouter();
   const { family } = useTheme();
   const isDesktop = useIsDesktop();
   const [status, setStatus] = React.useState<Status>('active');
@@ -79,7 +80,8 @@ export function ClientsScreen() {
   const total = r.data?.total;
   return (
     <PageBody wide={family === 'atlas'}>
-      <PageHeader title="Клиенты" subtitle={total !== undefined ? `${total} в разделе` : ' '} />
+      <PageHeader title="Клиенты" subtitle={total !== undefined ? `${total} в разделе` : ' '}
+        actions={<IconButton label="Новый клиент" onClick={() => router.navigate('/clients/new')}><UserPlus /></IconButton>} />
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
         <SegmentedControl<Status> label="Статус клиентов" value={status} onChange={setStatus} className="w-full sm:w-auto"
           options={[{ value: 'active', label: 'Активные' }, { value: 'archived', label: 'Архив' }, { value: 'blacklisted', label: 'Чёрный список' }]} />
@@ -96,6 +98,7 @@ export function ClientsScreen() {
 }
 
 export function ClientDetailScreen({ id }: { id: string }) {
+  const router = useRouter();
   const { family } = useTheme();
   const isDesktop = useIsDesktop();
   const settings = usePreviewSettings();
@@ -121,7 +124,7 @@ export function ClientDetailScreen({ id }: { id: string }) {
     <Sheet open={menu} onOpenChange={setMenu} title={c.fullName} desktop="center" size="sm">
       <div className="space-y-3">
         <div className="surface-quiet p-1.5">
-          <button className={menuRow} onClick={() => { setMenu(false); toast.message('Форма редактирования: ClientForm'); }}><Pencil className="h-5 w-5 text-primary" />Редактировать</button>
+          <button className={menuRow} onClick={() => { setMenu(false); router.navigate(`/clients/${id}/edit`); }}><Pencil className="h-5 w-5 text-primary" />Редактировать</button>
           <button className={menuRow} onClick={() => { setMenu(false); setConfirm('archive'); }}>{c.isArchived ? <ArchiveRestore className="h-5 w-5 text-primary" /> : <Archive className="h-5 w-5 text-primary" />}{c.isArchived ? 'Вернуть из архива' : 'В архив'}</button>
           {canMerge && <button className={menuRow} onClick={() => { setMenu(false); setMergeOpen(true); }}><GitMerge className="h-5 w-5 text-primary" />Объединить с дублем</button>}
         </div>

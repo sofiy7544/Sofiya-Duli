@@ -78,36 +78,38 @@ export const clients: Client[] = [
    13 — гостиная с кирпичом, 14 — бассейн во дворе, 15 — тренажёрный зал,
    16 — балкон с видом на город, 17 и 19 — спальня с панорамным окном,
    18 — кухня с кирпичной стеной, 20 — вид из окна на город, 21 — бассейн
-   на крыше, 22 — лобби, 23 — фасад новой башни. */
+   на крыше, 22 — лобби, 23 — фасад новой башни, 24 — гостиная семейной
+   квартиры, 25 — вид на город с террасы, 26–29 — квартира без мебели
+   (гостиная, кухня, коридор, комната). */
 export const properties: Property[] = [
   { id: 'p1', type: 'HOUSE', status: 'AVAILABLE', title: 'Вилла с панорамой залива', district: 'Villefranche-sur-Mer', address: '675 Av. des Caroubiers', rooms: 5, area: 280, price: 4_900_000, currency: 'EUR', ownerUserId: 'u1',
     description: 'Вилла расположена в престижном районе с панорамным видом на залив. На первом уровне — просторная гостиная с выходом на террасу, кухня-столовая и гостевая спальня. На втором — четыре спальни, каждая со своей ванной. Сад 900 м², бассейн, гараж на две машины.',
     photos: [{ id: 'ph1', art: 0 }, { id: 'ph2', art: 6 }, { id: 'ph3', art: 13 }, { id: 'ph4', art: 7 }], features: ['Вид на море', 'Бассейн', 'Гараж', 'Сад 900 м²'], createdAt: ago(60 * DAY) },
   { id: 'p2', type: 'APARTMENT', status: 'IN_SHOWING', title: 'Апартаменты у набережной', district: 'Cap d’Ail', address: '12 Bd de la Mer', rooms: 3, floor: 4, totalFloors: 6, area: 118, price: 1_650_000, currency: 'EUR', ownerUserId: 'u2',
     description: 'Светлые апартаменты в резиденции у набережной, пять минут пешком до Монако. Две спальни, гостиная с лоджией, консьерж и подземный паркинг. Во дворе резиденции — бассейн и зона отдыха, на минус первом этаже — тренажёрный зал для жильцов.',
-    photos: [{ id: 'ph5', art: 14 }, { id: 'ph6', art: 15 }, { id: 'ph7', art: 2 }, { id: 'ph8', art: 8 }], features: ['Консьерж', 'Бассейн', 'Зал', 'Паркинг'], createdAt: ago(35 * DAY) },
+    photos: [{ id: 'ph5', art: 14 }, { id: 'ph6', art: 24 }, { id: 'ph7', art: 15 }, { id: 'ph8', art: 2 }, { id: 'ph9', art: 8 }], features: ['Консьерж', 'Бассейн', 'Зал', 'Паркинг'], createdAt: ago(35 * DAY) },
   { id: 'p3', type: 'APARTMENT', status: 'AVAILABLE', title: 'Студия с кирпичной стеной', district: 'Menton', address: '4 Rue Partouneaux', rooms: 1, floor: 2, totalFloors: 5, area: 42, price: 390_000, currency: 'EUR', ownerUserId: 'u1',
     description: 'Компактная студия после ремонта: кирпичная стена, дубовый пол, встроенная кухня. Подходит под сдачу в аренду — рядом набережная и вокзал.',
-    photos: [{ id: 'ph9', art: 10 }, { id: 'ph10', art: 18 }, { id: 'ph11', art: 9 }], features: ['После ремонта', 'Под аренду'], createdAt: ago(20 * DAY) },
+    photos: [{ id: 'ph10', art: 10 }, { id: 'ph11', art: 18 }, { id: 'ph12', art: 9 }], features: ['После ремонта', 'Под аренду'], createdAt: ago(20 * DAY) },
   { id: 'p4', type: 'HOUSE', status: 'RESERVED', title: 'Дом в оливковой роще', district: 'Èze', address: 'Chemin des Oliviers 8', rooms: 4, area: 210, price: 2_750_000, currency: 'EUR', ownerUserId: 'u3',
     description: 'Каменный дом среди оливковых деревьев, 10 минут до пляжа. Отреставрирован в 2022 году: новая кровля, окна и инженерия.',
-    photos: [{ id: 'ph12', art: 11 }, { id: 'ph13', art: 3 }, { id: 'ph14', art: 4 }], features: ['Реставрация 2022', 'Сад', 'Камин'], createdAt: ago(48 * DAY) },
+    photos: [{ id: 'ph13', art: 11 }, { id: 'ph14', art: 3 }, { id: 'ph15', art: 4 }], features: ['Реставрация 2022', 'Сад', 'Камин'], createdAt: ago(48 * DAY) },
   { id: 'p5', type: 'APARTMENT', status: 'AVAILABLE', title: 'Пентхаус на Promenade', district: 'Nice', address: '88 Promenade des Anglais', rooms: 4, floor: 9, totalFloors: 9, area: 186, price: 3_200_000, currency: 'EUR', ownerUserId: 'u2',
     description: 'Пентхаус с террасой по периметру и прямым видом на набережную. Спальня с панорамным остеклением в пол, два санузла, гардеробная, место в подземном паркинге.',
-    photos: [{ id: 'ph15', art: 12 }, { id: 'ph16', art: 17 }, { id: 'ph17', art: 19 }, { id: 'ph18', art: 7 }], features: ['Терраса 90 м²', 'Панорамные окна', 'Вид на море', 'Лифт'], createdAt: ago(15 * DAY) },
+    photos: [{ id: 'ph16', art: 12 }, { id: 'ph17', art: 25 }, { id: 'ph18', art: 17 }, { id: 'ph19', art: 19 }, { id: 'ph20', art: 7 }], features: ['Терраса 90 м²', 'Панорамные окна', 'Вид на море', 'Лифт'], createdAt: ago(15 * DAY) },
   { id: 'p6', type: 'APARTMENT', status: 'AVAILABLE', title: 'Квартира в старом городе', district: 'Sanremo', address: 'Via Palazzo 31', rooms: 3, floor: 3, totalFloors: 4, area: 96, price: 540_000, currency: 'EUR', ownerUserId: 'u3',
     description: 'Квартира с высокими потолками в доме XIX века, в двух шагах от моря. Кирпичная кладка в гостиной сохранена при ремонте, из спальни выход на балкон с видом на крыши старого города.',
-    photos: [{ id: 'ph19', art: 13 }, { id: 'ph20', art: 16 }, { id: 'ph21', art: 5 }], features: ['Потолки 3,6 м', 'Балкон', 'Исторический дом'], createdAt: ago(8 * DAY) },
+    photos: [{ id: 'ph21', art: 13 }, { id: 'ph22', art: 16 }, { id: 'ph23', art: 5 }], features: ['Потолки 3,6 м', 'Балкон', 'Исторический дом'], createdAt: ago(8 * DAY) },
   { id: 'p7', type: 'COMMERCIAL', status: 'AVAILABLE', title: 'Бутик на первой линии', district: 'Beaulieu-sur-Mer', address: '2 Bd Maréchal Leclerc', area: 74, price: 980_000, currency: 'EUR', ownerUserId: 'u1',
-    description: 'Коммерческое помещение с витринами на набережную, действующий арендатор с договором до 2028 года.', photos: [{ id: 'ph22', art: 4 }], features: ['Арендатор до 2028', 'Витрины'], createdAt: ago(27 * DAY) },
+    description: 'Коммерческое помещение с витринами на набережную, действующий арендатор с договором до 2028 года.', photos: [{ id: 'ph24', art: 4 }], features: ['Арендатор до 2028', 'Витрины'], createdAt: ago(27 * DAY) },
   { id: 'p8', type: 'LAND', status: 'AVAILABLE', title: 'Участок под виллу', district: 'Roquebrune-Cap-Martin', address: 'Av. Winston Churchill', area: 1400, price: 1_950_000, currency: 'EUR', ownerUserId: 'u2',
-    description: 'Участок с разрешением на строительство виллы 300 м², вид на мыс. Коммуникации подведены.', photos: [{ id: 'ph23', art: 6 }], features: ['Разрешение на стройку', 'Вид на мыс'], createdAt: ago(40 * DAY) },
+    description: 'Участок с разрешением на строительство виллы 300 м², вид на мыс. Коммуникации подведены.', photos: [{ id: 'ph25', art: 6 }], features: ['Разрешение на стройку', 'Вид на мыс'], createdAt: ago(40 * DAY) },
   { id: 'p10', type: 'APARTMENT', status: 'AVAILABLE', title: 'Апартаменты в новой башне', district: 'Nice', address: '14 Rue de la Tour', rooms: 2, floor: 21, totalFloors: 28, area: 78, price: 1_180_000, currency: 'EUR', ownerUserId: 'u2',
-    description: 'Новостройка со сдачей в этом году: панорамное остекление, бассейн на крыше, лобби с консьержем круглосуточно. С двадцать первого этажа виден город до самого холма, вечером — огни бульвара.',
-    photos: [{ id: 'ph24', art: 23 }, { id: 'ph25', art: 22 }, { id: 'ph26', art: 21 }, { id: 'ph27', art: 20 }],
-    features: ['Новостройка', 'Бассейн на крыше', 'Консьерж 24/7', 'Панорамные окна'], createdAt: ago(5 * DAY) },
+    description: 'Новостройка со сдачей в этом году: панорамное остекление, бассейн на крыше, лобби с консьержем круглосуточно. С двадцать первого этажа виден город до самого холма, вечером — огни бульвара. Квартира сдаётся без мебели, с кухней и техникой.',
+    photos: [{ id: 'ph26', art: 23 }, { id: 'ph27', art: 22 }, { id: 'ph28', art: 21 }, { id: 'ph29', art: 26 }, { id: 'ph30', art: 27 }, { id: 'ph31', art: 28 }, { id: 'ph32', art: 29 }, { id: 'ph33', art: 20 }],
+    features: ['Новостройка', 'Без мебели', 'Бассейн на крыше', 'Консьерж 24/7'], createdAt: ago(5 * DAY) },
   { id: 'p9', type: 'APARTMENT', status: 'SOLD', title: 'Апартаменты в Лугано', district: 'Lugano', address: 'Riva Paradiso 5', rooms: 3, floor: 5, totalFloors: 7, area: 124, price: 1_420_000, currency: 'CHF', ownerUserId: 'u1',
-    description: 'Апартаменты с видом на озеро. Продано в этом квартале.', photos: [{ id: 'ph28', art: 1 }], features: ['Вид на озеро'], createdAt: ago(90 * DAY) },
+    description: 'Апартаменты с видом на озеро. Продано в этом квартале.', photos: [{ id: 'ph34', art: 1 }], features: ['Вид на озеро'], createdAt: ago(90 * DAY) },
 ];
 
 export const leads: Lead[] = [

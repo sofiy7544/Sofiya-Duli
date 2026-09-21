@@ -24,6 +24,8 @@ let deals: Deal[] = [
     payments: [{ id: 'pay2', amount: 35_500, paidAt: ago(20), type: 'COMMISSION' }], documents: [{ id: 'doc2', name: 'Договор купли-продажи.pdf', type: 'CONTRACT', size: '1,2 МБ', addedAt: ago(21) }, { id: 'doc3', name: 'Паспорт покупателя.jpg', type: 'PASSPORT', size: '640 КБ', addedAt: ago(40) }] },
   { id: 'd3', leadId: 'l1', clientId: 'c1', propertyId: 'p1', userId: 'u1', amount: 4_750_000, currency: 'EUR', commissionPercent: 3, status: 'ACTIVE', createdAt: ago(1), payments: [], documents: [] },
   { id: 'd4', leadId: 'l12', clientId: 'c11', propertyId: 'p6', userId: 'u3', amount: 520_000, currency: 'EUR', commissionPercent: 3, status: 'CANCELLED', createdAt: ago(100), closedAt: ago(80), payments: [], documents: [] },
+  { id: 'd5', leadId: 'l14', clientId: 'c16', propertyId: 'p8', userId: 'u2', amount: 1_900_000, currency: 'EUR', commissionPercent: 2.5, status: 'ACTIVE', createdAt: ago(9),
+    payments: [{ id: 'pay3', amount: 20_000, paidAt: ago(7), type: 'DEPOSIT', note: 'Задаток по участку' }], documents: [{ id: 'doc4', name: 'Разрешение на строительство.pdf', type: 'OTHER', size: '870 КБ', addedAt: ago(8) }] },
 ];
 const subs = new Set<() => void>(); let v = 0;
 const emit = () => { v++; subs.forEach((s) => s()); };

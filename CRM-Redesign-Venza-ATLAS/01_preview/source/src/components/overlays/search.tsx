@@ -78,7 +78,7 @@ export function SearchOverlay() {
                   <span className="grid h-9 w-9 place-items-center rounded-[10px] bg-surface-2 text-muted-foreground"><n.icon className="h-[18px] w-[18px]" aria-hidden /></span>
                   <span className="text-[15px] font-medium">{n.label}</span>
                 </button>); })}
-              <p className="t-caption px-3 pt-4">Введите от 2 символов. Попробуйте «Милан» или «вилла».</p>
+              <p className="t-caption px-3 pt-4">Введите от 2 символов. Попробуйте «Крыловы» или «вилла».</p>
             </>)}
             {busy && <div className="space-y-2 p-3" aria-label="Ищем">{[0, 1, 2].map((i) => <div key={i} className="flex items-center gap-3"><div className="skeleton h-9 w-9 rounded-full" /><div className="skeleton h-3.5 flex-1" /></div>)}</div>}
             {res && !busy && res.clients.length + res.properties.length === 0 && (

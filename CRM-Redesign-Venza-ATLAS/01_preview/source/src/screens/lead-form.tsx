@@ -84,7 +84,7 @@ export function LeadFormScreen() {
             <>
               <Field label="Имя и фамилия" required error={errors.fullName}>
                 {(fid, d) => <Input id={fid} aria-describedby={d} invalid={!!errors.fullName} value={v.fullName}
-                  onChange={(e) => patch({ fullName: e.target.value })} placeholder="Ирина Ковальчук" autoComplete="name" />}
+                  onChange={(e) => patch({ fullName: e.target.value })} placeholder="Ирина Савчук" autoComplete="name" />}
               </Field>
               <Field label="Телефон" required error={errors.primaryPhone}>
                 {(fid, d) => <Input id={fid} aria-describedby={d} invalid={!!errors.primaryPhone} type="tel" inputMode="tel"

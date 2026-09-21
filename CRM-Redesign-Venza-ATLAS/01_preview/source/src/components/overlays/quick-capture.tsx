@@ -113,7 +113,7 @@ export function QuickCapture() {
           <div className="space-y-3">
             <Field label="ФИО" error={errors.fullName}>
               {(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.fullName} value={v.fullName}
-                onChange={(e) => setV({ ...v, fullName: e.target.value })} placeholder="Ирина Ковальчук" autoComplete="name" />}
+                onChange={(e) => setV({ ...v, fullName: e.target.value })} placeholder="Ирина Савчук" autoComplete="name" />}
             </Field>
             <Field label="Телефон" error={errors.phone}>
               {(id, d) => (

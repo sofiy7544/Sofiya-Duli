@@ -24,13 +24,13 @@ const MIN = 60_000;
 const back = (ms: number) => new Date(Date.now() - ms).toISOString();
 
 let items: Conversation[] = [
-  { id: 'i1', channel: 'TELEGRAM', author: 'Ирина Ковальчук', handle: '@irynak', status: 'new',
+  { id: 'i1', channel: 'TELEGRAM', author: 'Ирина Савчук', handle: '@iryna_s', status: 'new',
     messages: [
       { id: 'm1', at: back(18 * MIN), text: 'Добрый день! Смотрю двушку в вашем объявлении на набережной. Она ещё актуальна?', mine: false },
       { id: 'm2', at: back(12 * MIN), text: 'И какой этаж? Хотелось бы повыше.', mine: false },
     ] },
-  { id: 'i2', channel: 'WHATSAPP', author: 'Максим Дорош', handle: '+380 67 214-88-10', status: 'new',
-    duplicateOf: { clientId: 'c1', name: 'Максим Дорош', reason: 'Совпадает телефон' },
+  { id: 'i2', channel: 'WHATSAPP', author: 'Adrien Lacroix', handle: '+33 6 39 98 14 02', status: 'new',
+    duplicateOf: { clientId: 'c1', name: 'Adrien Lacroix', reason: 'Совпадает телефон' },
     messages: [
       { id: 'm3', at: back(55 * MIN), text: 'Здравствуйте, подтверждаю показ в субботу. Приедем вдвоём с женой.', mine: false },
       { id: 'm4', at: back(50 * MIN), text: 'Принято, записала вас на 16:30.', mine: true },
@@ -39,7 +39,7 @@ let items: Conversation[] = [
     messages: [
       { id: 'm5', at: back(4 * 60 * MIN), text: 'Buongiorno! Ищем помещение под студию, 120–150 м², желательно с отдельным входом. Бюджет до 900 тыс. €.', mine: false },
     ] },
-  { id: 'i4', channel: 'INSTAGRAM', author: 'kateryna.home', handle: '@kateryna.home', status: 'qualified',
+  { id: 'i4', channel: 'INSTAGRAM', author: 'chiara.home', handle: '@chiara.home', status: 'qualified',
     messages: [
       { id: 'm6', at: back(26 * 60 * MIN), text: 'Подскажите, а рассрочка от застройщика есть?', mine: false },
       { id: 'm7', at: back(25 * 60 * MIN), text: 'Да, до 18 месяцев. Пришлю таблицу в личные сообщения.', mine: true },

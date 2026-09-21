@@ -89,7 +89,7 @@ export function ClientFormScreen({ id }: { id?: string }) {
           <FormRow>
             <Field label="Имя и фамилия" required error={errors.fullName}>
               {(fid, d) => <Input id={fid} aria-describedby={d} invalid={!!errors.fullName} value={v.fullName}
-                onChange={(e) => patch({ fullName: e.target.value })} placeholder="Ирина Ковальчук" autoComplete="name" />}
+                onChange={(e) => patch({ fullName: e.target.value })} placeholder="Ирина Савчук" autoComplete="name" />}
             </Field>
           </FormRow>
           <Field label="Телефон" required error={errors.primaryPhone}>

@@ -112,6 +112,7 @@ function LeadQuickForm() {
 }
 
 function TaskQuickForm() {
+  const router = useRouter();
   const presets = React.useMemo(() => duePresets(), []);
   const [v, setV] = React.useState({ title: '', type: 'CALL' as TaskType, due: toLocalInput(defaultDue(presets)) });
   const [error, setError] = React.useState<string | null>(null);
@@ -123,7 +124,13 @@ function TaskQuickForm() {
     const at = new Date(v.due);
     if (!v.due || Number.isNaN(at.getTime())) { setDueError('Укажите срок'); return; }
     setBusy(true);
-    try { await api.createTask({ title: v.title.trim(), type: v.type, dueAt: at.toISOString() }); ui.set({ quickCreate: null }); toast.success('Задача создана'); }
+    try {
+      const task = await api.createTask({ title: v.title.trim(), type: v.type, dueAt: at.toISOString() });
+      ui.set({ quickCreate: null });
+      // Срок по умолчанию часто не сегодняшний, и задача попадает во вкладку, которую
+      // никто не открыл: без этой кнопки после «Задача создана» список не меняется.
+      toast.success('Задача создана', { action: { label: 'Показать', onClick: () => { ui.set({ focusTask: task.id }); router.navigate('/tasks'); } } });
+    }
     catch (err) { toast.error((err as Error).message); } finally { setBusy(false); }
   };
   const iso = v.due && !Number.isNaN(new Date(v.due).getTime()) ? new Date(v.due).toISOString() : null;

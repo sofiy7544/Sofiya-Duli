@@ -21,6 +21,25 @@ const page = <T,>(items: T[]): Paginated<T> => ({ items, total: items.length, pa
 const emptyPage = { items: [], total: 0, page: 1, pageSize: 50 };
 const q = (s: string) => s.toLowerCase().trim();
 
+/**
+ * Поиск не должен зависеть от раскладки и диакритики: риелтор пишет «Ницца» и «Эз»,
+ * а в базе стоят Nice и Èze. В CRM это решается полем search_vector с синонимами —
+ * здесь тот же приём в миниатюре.
+ */
+const PLACE_ALIASES: Record<string, string> = {
+  nice: 'ницца ница', menton: 'ментон', monaco: 'монако', eze: 'эз эза', sanremo: 'сан-ремо санремо',
+  'cap d’ail': 'кап-дай кап д’ай кап дай', 'villefranche-sur-mer': 'вильфранш вильфранш-сюр-мер',
+  'roquebrune-cap-martin': 'рокбрюн рокебрюн кап-мартен', 'beaulieu-sur-mer': 'больё болье больё-сюр-мер',
+  lugano: 'лугано', cannes: 'канны', antibes: 'антиб', 'saint-tropez': 'сен-тропе',
+};
+/** ё→е, диакритика и апострофы прочь: «Больё» и «Beaulieu» должны сходиться с любым вводом. */
+const norm = (s: string) => s.toLowerCase().trim().replace(/ё/g, 'е')
+  .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[’'`]/g, ' ').replace(/\s+/g, ' ');
+/** Ключи словаря приводим той же нормализацией, иначе «Èze» и «Cap d’Ail» в него не попадают. */
+const ALIASES = new Map(Object.entries(PLACE_ALIASES).map(([k, v]) => [norm(k), v]));
+const searchText = (p: { title: string; district: string; address?: string }) =>
+  norm([p.title, p.district, p.address ?? '', ALIASES.get(norm(p.district)) ?? ''].join(' '));
+
 
 /** Проверки полей клиента и объекта. Ошибки формулируются так, чтобы их можно было показать рядом с полем. */
 function validateClient(c: Pick<Client, 'fullName' | 'primaryPhone' | 'email'>) {
@@ -214,10 +233,18 @@ export const api = {
   /** Глобальный поиск палитры: contacts / leads / properties (≥ 2 символов, debounce 250) */
   async search(term: string) {
     await wait(180);
-    const s = q(term); if (s.length < 2) return { clients: [], properties: [] };
+    const s = norm(term); if (s.length < 2) return { clients: [], leads: [], properties: [] };
+    const digits = s.replace(/\D/g, '');
+    const clients = store.db.clients.filter((c) => norm(c.fullName).includes(s)
+      || (!!c.email && norm(c.email).includes(s))
+      || (digits.length >= 3 && c.primaryPhone.replace(/\D/g, '').includes(digits)));
+    const hit = new Set(clients.map((c) => c.id));
+    // Лид ищется по человеку из карточки: риелтор помнит имя, а не номер сделки.
+    const leads = store.db.leads.filter((l) => hit.has(l.clientId) && l.stage !== 'WON' && l.stage !== 'LOST');
     return {
-      clients: store.db.clients.filter((c) => q(c.fullName).includes(s) || c.primaryPhone.replace(/\s/g, '').includes(s.replace(/\s/g, ''))).slice(0, 5),
-      properties: store.db.properties.filter((p) => q(p.title + ' ' + p.district).includes(s)).slice(0, 5),
+      clients: clients.slice(0, 5),
+      leads: leads.slice(0, 5),
+      properties: store.db.properties.filter((p) => searchText(p).includes(s)).slice(0, 5),
     };
   },
   /** PATCH /api/clients/:id { isArchived } */

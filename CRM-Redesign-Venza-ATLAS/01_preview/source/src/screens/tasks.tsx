@@ -10,7 +10,7 @@ import { relDay, sameDay, time } from '@/lib/format';
 import { TASK_TYPE_LABEL } from '@/lib/labels';
 import type { Task } from '@/lib/mock/types';
 import { PageBody, PageHeader } from '@/components/shell/page';
-import { ui } from '@/components/shell/ui-state';
+import { ui, useUI } from '@/components/shell/ui-state';
 import { Button } from '@/components/ui/button';
 import { SegmentedControl } from '@/components/ui/segmented';
 import { RowsSkeleton } from '@/components/ui/skeleton';
@@ -27,6 +27,7 @@ export function TasksScreen() {
   const isDesktop = useIsDesktop();
   const r = useResource(() => api.tasks());
   const [filter, setFilter] = React.useState<Filter>('today');
+  const { focusTask } = useUI();
   const [pending, setPending] = React.useState<Record<string, boolean>>({});
   const now = new Date(); const start = new Date(now); start.setHours(0, 0, 0, 0);
   const all = r.data ?? [];
@@ -38,6 +39,25 @@ export function TasksScreen() {
     done: all.filter((t) => !!t.completedAt),
   };
   const items = buckets[filter];
+
+  /* Задача из тоста «Показать»: открываем вкладку, в которой она лежит, и подсвечиваем строку. */
+  React.useEffect(() => {
+    if (!focusTask || !r.data) return;
+    const t = r.data.find((x) => x.id === focusTask);
+    if (!t) return;
+    const bucket: Filter = t.completedAt ? 'done'
+      : new Date(t.dueAt) < start ? 'overdue'
+      : sameDay(new Date(t.dueAt), now) ? 'today' : 'upcoming';
+    setFilter(bucket);
+    const id = setTimeout(() => ui.set({ focusTask: null }), 2600);
+    return () => clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusTask, r.data]);
+  React.useEffect(() => {
+    if (!focusTask) return;
+    const el = document.getElementById(`task-${focusTask}`);
+    el?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }, [focusTask, filter]);
 
   const toggle = async (t: Task) => {
     const next = !isDone(t);
@@ -61,7 +81,7 @@ export function TasksScreen() {
           <table className="w-full min-w-[720px] text-[14px]">
             <thead><tr className="border-b border-border text-left text-[12.5px] text-muted-foreground"><th scope="col" className="w-12 px-4 py-2.5"><span className="sr-only">Статус</span></th>{['Задача', 'Тип', 'Клиент', 'Срок', 'Ответственный'].map((h) => <th key={h} scope="col" className="px-3 py-2.5 font-medium">{h}</th>)}</tr></thead>
             <tbody>{items.map((t) => { const done = isDone(t); const over = !done && new Date(t.dueAt) < now; return (
-              <tr key={t.id} className={cn('border-b border-border/70 last:border-0 transition-opacity duration-row', done && 'opacity-60')}>
+              <tr key={t.id} id={`task-${t.id}`} className={cn('border-b border-border/70 last:border-0 transition-[opacity,background-color] duration-row', done && 'opacity-60', focusTask === t.id && 'bg-primary-soft')}>
                 <td className="px-4 py-1.5"><TaskCheck checked={done} onChange={() => toggle(t)} label={t.title} /></td>
                 <td className={cn('px-3 py-2 font-medium', done && 'line-through decoration-muted-foreground/60')}>{t.title}</td>
                 <td className="px-3 py-2"><StatusBadge>{TASK_TYPE_LABEL[t.type]}</StatusBadge></td>
@@ -76,7 +96,7 @@ export function TasksScreen() {
     return (
       <ul className="surface row-divider overflow-hidden">
         {items.map((t) => { const done = isDone(t); const over = !done && new Date(t.dueAt) < now; return (
-          <li key={t.id} className="flex items-center gap-3 px-4 py-3">
+          <li key={t.id} id={`task-${t.id}`} className={cn('flex items-center gap-3 px-4 py-3 transition-colors duration-500', focusTask === t.id && 'bg-primary-soft')}>
             <TaskCheck checked={done} onChange={() => toggle(t)} label={t.title} />
             <div className="min-w-0 flex-1">
               <p className={cn('text-[15.5px] font-medium leading-[22px]', done && 'line-through decoration-muted-foreground/60')}>{t.title}</p>

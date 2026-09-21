@@ -9,6 +9,42 @@ const Ctx = React.createContext<{ route: RouteState; navigate: (to: string, opts
 
 const readPath = () => (window.location.hash.replace(/^#/, '') || '/login').split('?')[0];
 
+/**
+ * Позиция прокрутки для каждого экрана истории.
+ *
+ * Списки в CRM длинные (клиентов под полсотни), и при возврате из карточки
+ * браузер SPA-страницу не восстанавливает: человек каждый раз оказывался
+ * в начале списка и искал, где остановился. Храним позицию по «глубина+путь»
+ * и возвращаем её, когда список дорисовался: данные приходят с задержкой,
+ * и сразу после рендера страница ещё короткая.
+ */
+const scrollMemory = new Map<string, number>();
+const scrollKey = (depth: number, path: string) => `${depth}:${path}`;
+/* Запись идёт внутри updater-а setRoute — только там видна предыдущая запись истории.
+   Значение одно и то же при любом числе вызовов, поэтому двойной прогон в StrictMode безопасен. */
+
+function restoreScroll(top: number) {
+  if (top <= 0) { window.scrollTo({ top: 0 }); return; }
+  /* Список приходит с задержкой мока (~0,65 с) и дорисовывается ещё несколько кадров,
+     а каждый такой рендер сбрасывает прокрутку. Поэтому не «поставить один раз»,
+     а удерживать позицию, пока она не закрепится — и сразу отпустить, если человек
+     начал крутить сам. */
+  const deadline = performance.now() + 2500;
+  let settled = 0, stop = false;
+  const release = () => { stop = true; };
+  addEventListener('wheel', release, { once: true, passive: true });
+  addEventListener('touchstart', release, { once: true, passive: true });
+  const tick = () => {
+    if (stop) return done();
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const target = Math.min(top, Math.max(0, max));
+    if (Math.abs(window.scrollY - top) < 2) settled++; else { settled = 0; window.scrollTo({ top: target }); }
+    if (settled < 3 && performance.now() < deadline) requestAnimationFrame(tick); else done();
+  };
+  const done = () => { removeEventListener('wheel', release); removeEventListener('touchstart', release); };
+  requestAnimationFrame(tick);
+}
+
 export function RouterProvider({ children }: { children: React.ReactNode }) {
   const [route, setRoute] = React.useState<RouteState>(() => ({ path: readPath(), depth: (history.state?.depth as number) ?? 0, direction: 'none' }));
 
@@ -16,7 +52,9 @@ export function RouterProvider({ children }: { children: React.ReactNode }) {
     if (history.state?.depth === undefined) history.replaceState({ depth: 0 }, '');
     const onPop = () => {
       const depth = (history.state?.depth as number) ?? 0;
-      setRoute((r) => ({ path: readPath(), depth, direction: depth < r.depth ? 'back' : 'forward' }));
+      const path = readPath();
+      setRoute((r) => { scrollMemory.set(scrollKey(r.depth, r.path), window.scrollY); return { path, depth, direction: depth < r.depth ? 'back' : 'forward' }; });
+      restoreScroll(scrollMemory.get(scrollKey(depth, path)) ?? 0);
     };
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
@@ -26,6 +64,7 @@ export function RouterProvider({ children }: { children: React.ReactNode }) {
     setRoute((r) => {
       const path = to.split('?')[0];
       if (to === r.path) return r;
+      scrollMemory.set(scrollKey(r.depth, r.path), window.scrollY);
       const depth = opts?.replace ? r.depth : r.depth + 1;
       if (opts?.replace) history.replaceState({ depth }, '', `#${to}`); else history.pushState({ depth }, '', `#${to}`);
       return { path, depth, direction: opts?.replace ? 'none' : isDeeper(r.path, path) ? 'forward' : 'none' };

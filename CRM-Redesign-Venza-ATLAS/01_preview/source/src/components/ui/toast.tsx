@@ -24,7 +24,10 @@ export function Toaster() {
   const [, force] = React.useReducer((x: number) => x + 1, 0);
   React.useEffect(() => { subs.add(force); return () => { subs.delete(force); }; }, []);
   return (
-    <div aria-live="polite" className="pointer-events-none fixed inset-x-0 bottom-[calc(max(0.75rem,env(safe-area-inset-bottom))+84px)] z-[90] flex flex-col items-center gap-2 px-4 lg:bottom-6 lg:right-6 lg:left-auto lg:items-end">
+    /* На телефоне тост поднят выше FAB: на 84 px он ложился ровно на кнопку «Создать»,
+       и пока тост висел (3–5 с), тап по кнопке уходил в него. 152 px = 88 (низ FAB
+       у venza) + 56 (высота) + 8. */
+    <div aria-live="polite" className="pointer-events-none fixed inset-x-0 bottom-[calc(max(0.75rem,env(safe-area-inset-bottom))+152px)] z-[90] flex flex-col items-center gap-2 px-4 lg:bottom-6 lg:right-6 lg:left-auto lg:items-end">
       {items.map((t) => {
         const Icon = t.kind === 'success' ? CheckCircle2 : t.kind === 'error' ? AlertCircle : Info;
         return (

@@ -5,6 +5,7 @@ import { useRouter } from '@/lib/router';
 import { useTheme } from '@/lib/theme/provider';
 import { Button, IconButton } from '@/components/ui/button';
 import { HeaderBrand } from '@/components/brand/header-brand';
+import { useAlertCount } from '@/components/overlays/notifications';
 import { ui } from './ui-state';
 
 /** Шапка страницы. Один H1 на страницу (исправляет дубль Topbar+page из CRM). */
@@ -30,7 +31,7 @@ export function PageHeader({ title, subtitle, back, actions, large = true, child
           {actions}
           <IconButton label="Быстрый захват лида" onClick={() => ui.set({ quickCreate: 'capture' })}
             className="bg-primary text-primary-foreground hover:bg-primary/90"><Zap /></IconButton>
-          <IconButton label="Уведомления" className="relative" onClick={() => ui.set({ notifications: true })}><Bell /><span aria-hidden className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-danger ring-2 ring-background" /></IconButton>
+          <NotificationsButton />
           <Button size="sm" onClick={() => ui.set({ quickCreate: 'menu' })}><Plus />Создать</Button>
         </div>
       </div>
@@ -40,6 +41,17 @@ export function PageHeader({ title, subtitle, back, actions, large = true, child
       </div>
       {children && <div className="mt-4">{children}</div>}
     </header>
+  );
+}
+
+/** Колокольчик с точкой. Точка — только когда есть что показать. */
+export function NotificationsButton({ className }: { className?: string }) {
+  const alerts = useAlertCount();
+  return (
+    <IconButton label={alerts ? `Уведомления: ${alerts}` : 'Уведомления'} className={cn('relative', className)} onClick={() => ui.set({ notifications: true })}>
+      <Bell />
+      {alerts > 0 && <span aria-hidden className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-danger ring-2 ring-background" />}
+    </IconButton>
   );
 }
 

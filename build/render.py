@@ -293,11 +293,14 @@ def saturday():
     return f"""
 <section class="section section--surface" id="saturday">
   <div class="wrap sat">
-    <div>
+    <div class="sat__head">
       <span class="eyebrow">Що ви отримуєте насправді</span>
       <h2>Поки ви займаєтесь своїми справами, ми займаємось чистотою</h2>
     </div>
-    <div>
+    <figure class="sat__ph rv">
+      <img src="{BASE}assets/photos/stove-45-640.jpg" srcset="{BASE}assets/photos/stove-45-640.jpg 640w, {BASE}assets/photos/stove-45-1200.jpg 1200w" sizes="(min-width: 900px) 40vw, 100vw" width="640" height="800" loading="lazy" alt="Клінер у рукавичках миє варильну поверхню: плита в піні, поруч губка">
+    </figure>
+    <div class="sat__body">
       <ul class="sat__l">{''.join('<li>%s</li>' % l for l in lines)}</ul>
       <p class="sat__end">Просто повертаєтесь у чистий дім.</p>
       <a class="btn btn--primary btn--lg" href="#calc" data-track="cta_saturday">Хочу вільну суботу {ic('arrow')}</a>
@@ -811,10 +814,16 @@ def crumbs(items):
     return '<nav class="crumbs" aria-label="Навігація"><div class="wrap">%s</div></nav>' % "".join(parts), ld
 
 
-def page_hero(h1, intro, price_from=None, unit=None, note=None, img=None):
+def page_hero(h1, intro, price_from=None, unit=None, note=None, img=None, img_alt=""):
     price = ""
     if img:
-        price = '<img class="phero__img" src="%s%s" alt="" width="640" height="400">' % (BASE, img)
+        if img.endswith("-640.jpg"):
+            big = img.replace("-640.jpg", "-1200.jpg")
+            price = ('<img class="phero__img phero__img--photo" src="%s%s" srcset="%s%s 640w, %s%s 1200w" '
+                     'sizes="(min-width: 900px) 440px, 100vw" alt="%s" width="640" height="400" fetchpriority="high">'
+                     % (BASE, img, BASE, img, BASE, big, img_alt))
+        else:
+            price = '<img class="phero__img" src="%s%s" alt="" width="640" height="400">' % (BASE, img)
     if price_from:
         price = ('<div class="phero__price"><span>від</span><b>%d ₴</b><span>/ %s</span></div>' % (price_from, unit))
     return f"""
@@ -1063,7 +1072,8 @@ def how_page():
             + header(BASE + "#calc", cur=BASE + "how-it-works/") + crumb_html
             + page_hero("Як це працює",
                         "П’ять кроків, у яких від вас — два: сказати, що прибрати, і прийняти роботу. "
-                        "Решту робимо ми.")
+                        "Решту робимо ми.", img="assets/photos/tools-1610-640.jpg",
+                        img_alt="Відра з водою, парова швабра та засоби для прибирання на підлозі перед початком роботи")
             + f"""
 <section class="section section--surface">
   <div class="wrap"><div class="hsteps rv">{steps_html}</div></div>
@@ -1201,7 +1211,8 @@ def about_page():
             + page_hero("Служба, яка працює на результат, а не на години",
                         "Ми свідомо відмовились від оплати «за присутність». Клієнт платить за результат: "
                         "обсяг робіт зафіксовано в чек-листі, ціна — до виїзду, а якщо щось зроблено погано, "
-                        "ми повертаємось і переробляємо.", img=SITE["hero_photo"])
+                        "ми повертаємось і переробляємо.", img="assets/photos/stove-1610-640.jpg",
+                        img_alt="Клінер миє варильну поверхню: плита в піні, рожеві рукавички")
             + f"""
 <section class="section section--surface">
   <div class="wrap">

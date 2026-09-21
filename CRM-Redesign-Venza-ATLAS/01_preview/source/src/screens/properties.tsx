@@ -12,6 +12,7 @@ import { PROPERTY_STATUS_LABEL, PROPERTY_TYPE_LABEL } from '@/lib/labels';
 import type { Property, PropertyStatus, PropertyType } from '@/lib/mock/types';
 import { PageBody, PageHeader } from '@/components/shell/page';
 import { ui } from '@/components/shell/ui-state';
+import { EventFormSheet } from '@/components/overlays/event-form';
 import { Avatar } from '@/components/ui/avatar';
 import { Button, IconButton } from '@/components/ui/button';
 import { PropertyStatusBadge } from '@/components/ui/badge';
@@ -111,6 +112,7 @@ export function PropertyDetailScreen({ id }: { id: string }) {
   const [lightbox, setLightbox] = React.useState<number | null>(null);
   const [pdf, setPdf] = React.useState(false);
   const [menu, setMenu] = React.useState(false);
+  const [showing, setShowing] = React.useState(false);
   const [del, setDel] = React.useState(false);
   const [slide, setSlide] = React.useState(0);
   const track = React.useRef<HTMLDivElement>(null);
@@ -189,7 +191,7 @@ export function PropertyDetailScreen({ id }: { id: string }) {
   const actions = (
     <div className="flex gap-2">
       <Button variant="outline" className="flex-1" onClick={() => setPdf(true)}><FileDown />PDF</Button>
-      <Button className="flex-[1.6]" onClick={() => toast.message('Выберите клиента в карточке лида, чтобы назначить показ')}><CalendarPlus />Назначить показ</Button>
+      <Button className="flex-[1.6]" onClick={() => setShowing(true)}><CalendarPlus />Назначить показ</Button>
     </div>
   );
 
@@ -206,6 +208,7 @@ export function PropertyDetailScreen({ id }: { id: string }) {
           : <p className="t-caption px-1">Редактировать и удалять может ответственный или администратор.</p>}
       </div>
     </Sheet>
+    <EventFormSheet open={showing} onOpenChange={setShowing} kind="SHOWING" propertyId={p.id} />
     <ConfirmDialog open={del} onOpenChange={setDel} title="Удалить объект?" text="Объект и все фото будут удалены. Показы по нему останутся в истории клиентов." confirmLabel="Удалить" onConfirm={() => { setDel(false); router.navigate('/properties', { replace: true }); toast.success('Объект удалён'); }} />
   </>);
 

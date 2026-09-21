@@ -2,6 +2,8 @@ import * as React from 'react';
 import { AtSign, MessageCircle, Plug, Plus, Send, Trash2, Wand2 } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { adminApi, useAdminVersion, type Member, type Template } from '@/lib/mock/admin';
+import { usePreviewSettings } from '@/lib/mock/store';
+import { FormGrid } from '@/components/shell/form-shell';
 import { useResource } from '@/lib/use-resource';
 import { ago } from '@/lib/format';
 import type { UserRole } from '@/lib/mock/types';
@@ -208,6 +210,7 @@ export function IntegrationsScreen() {
 /* ───────────────────────────── Брендинг ───────────────────────────── */
 
 export function BrandingScreen() {
+  const logoRef = React.useRef<HTMLInputElement>(null);
   useAdminVersion();
   const r = useResource(() => adminApi.branding());
   const [name, setName] = React.useState('');
@@ -236,6 +239,13 @@ export function BrandingScreen() {
       {header}
       <section className="surface p-4 lg:p-5">
         <h2 className="t-h3">Логотип</h2>
+        <input ref={logoRef} type="file" accept="image/png,image/svg+xml" className="sr-only" aria-label="Файл логотипа"
+          onChange={(e) => {
+            const f = e.target.files?.[0]; if (!f) return;
+            e.target.value = '';
+            if (f.size > 2 * 1024 * 1024) { toast.error('Файл больше 2 МБ'); return; }
+            void adminApi.saveBranding({ logoName: f.name }).then(() => toast.success(`Логотип «${f.name}» загружен`));
+          }} />
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <span className="grid h-16 w-16 place-items-center rounded-card bg-surface-2 text-[12px] text-muted-foreground">{r.data.logoName ? 'SVG' : 'нет'}</span>
           <div className="min-w-0">
@@ -243,7 +253,7 @@ export function BrandingScreen() {
             <p className="t-caption mt-0.5">PNG или SVG, от 512 px по длинной стороне</p>
           </div>
           <span className="ml-auto flex gap-2">
-            <Button size="sm" variant="outline" onClick={() => toast.message('Загрузка файла подключается в CRM')}>Заменить</Button>
+            <Button size="sm" variant="outline" onClick={() => logoRef.current?.click()}>Заменить</Button>
             {r.data.logoName && <Button size="sm" variant="outline" className="text-danger-text" onClick={() => void adminApi.saveBranding({ logoName: undefined }).then(() => toast.success('Логотип удалён'))}>Удалить</Button>}
           </span>
         </div>
@@ -355,6 +365,112 @@ export function UsersScreen() {
       <ConfirmDialog open={confirm !== null} onOpenChange={(v) => !v && setConfirm(null)} title="Отключить доступ?"
         text={confirm ? `${confirm.fullName} не сможет войти. Лиды и задачи останутся закреплены за ним.` : ''} confirmLabel="Отключить"
         onConfirm={async () => { if (confirm) await adminApi.setMemberActive(confirm.id, false); setConfirm(null); toast.success('Доступ отключён'); }} />
+    </PageBody>
+  );
+}
+
+/* ------------------------------ Уведомления ------------------------------ */
+
+/**
+ * /settings/notifications. В работающей CRM такого экрана нет: колокольчик
+ * показывает всё подряд. Здесь набор событий взят из того, что CRM уже умеет
+ * считать (см. components/overlays/notifications.tsx), и разложен по каналам.
+ *
+ * Тихие часы — одним переключателем и двумя полями времени: ночной показ
+ * переносить некуда, а будить риелтора в три ночи незачем.
+ */
+type NotifyChannel = 'push' | 'email' | 'telegram';
+type NotifyKey = 'tasksDue' | 'tasksOverdue' | 'leadNew' | 'leadUnassigned' | 'showingSoon' | 'dealStage';
+
+const NOTIFY_ROWS: { key: NotifyKey; title: string; text: string }[] = [
+  { key: 'tasksDue', title: 'Задачи на сегодня', text: 'Утром списком, без звука' },
+  { key: 'tasksOverdue', title: 'Просроченные задачи', text: 'Как только срок прошёл' },
+  { key: 'leadNew', title: 'Новый лид', text: 'С сайта, из Instagram и вручную' },
+  { key: 'leadUnassigned', title: 'Лид без ответственного', text: 'Через 30 минут после появления' },
+  { key: 'showingSoon', title: 'Показ скоро', text: 'За час до начала' },
+  { key: 'dealStage', title: 'Сделка сменила этап', text: 'Только по своим сделкам' },
+];
+const NOTIFY_CHANNEL: Record<NotifyChannel, string> = { push: 'Push', email: 'Почта', telegram: 'Telegram' };
+
+export function NotificationsSettingsScreen() {
+  const settings = usePreviewSettings();
+  const [rows, setRows] = React.useState<Record<NotifyKey, boolean>>({
+    tasksDue: true, tasksOverdue: true, leadNew: true, leadUnassigned: true, showingSoon: true, dealStage: false,
+  });
+  const [channels, setChannels] = React.useState<Record<NotifyChannel, boolean>>({ push: true, email: false, telegram: false });
+  const [quiet, setQuiet] = React.useState({ on: true, from: '21:00', to: '08:00' });
+  const [busy, setBusy] = React.useState(false);
+  const [dirty, setDirty] = React.useState(false);
+  const touch = <T,>(set: (v: T) => void) => (v: T) => { set(v); setDirty(true); };
+
+  const save = async () => {
+    setBusy(true);
+    await new Promise((r) => setTimeout(r, 450));
+    setBusy(false); setDirty(false);
+    toast.success('Уведомления сохранены');
+  };
+
+  return (
+    <PageBody className="lg:max-w-[760px]">
+      <PageHeader title="Уведомления" back="/settings" subtitle="Что присылать и куда" />
+
+      <section className="surface p-4 lg:p-5">
+        <h2 className="t-h3 text-[15px]">О чём сообщать</h2>
+        <ul className="row-divider mt-2">
+          {NOTIFY_ROWS.map((row) => (
+            <li key={row.key} className="flex items-center gap-3 py-3">
+              <span className="min-w-0 flex-1">
+                <span className="block text-[15px] font-medium">{row.title}</span>
+                <span className="t-caption">{row.text}</span>
+              </span>
+              <Switch label={row.title} checked={rows[row.key]} onChange={touch((v: boolean) => setRows({ ...rows, [row.key]: v }))} />
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="surface mt-4 p-4 lg:p-5">
+        <h2 className="t-h3 text-[15px]">Куда присылать</h2>
+        <p className="t-caption mt-1">Колокольчик в CRM работает всегда — это дополнительные каналы.</p>
+        <ul className="row-divider mt-2">
+          {(Object.keys(NOTIFY_CHANNEL) as NotifyChannel[]).map((ch) => {
+            const off = ch === 'telegram' && !settings.integrationsEnabled;
+            return (
+              <li key={ch} className="flex items-center gap-3 py-3">
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[15px] font-medium">{NOTIFY_CHANNEL[ch]}</span>
+                  {off && <span className="t-caption">Появится, когда администратор подключит мессенджеры</span>}
+                </span>
+                {off
+                  ? <span className="t-caption shrink-0">выключено</span>
+                  : <Switch label={NOTIFY_CHANNEL[ch]} checked={channels[ch]} onChange={touch((v: boolean) => setChannels({ ...channels, [ch]: v }))} />}
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+
+      <section className="surface mt-4 p-4 lg:p-5">
+        <div className="flex items-center gap-3">
+          <span className="min-w-0 flex-1">
+            <span className="block text-[15px] font-medium">Тихие часы</span>
+            <span className="t-caption">Ночью уведомления придут утром. Просрочку всё равно покажет колокольчик.</span>
+          </span>
+          <Switch label="Тихие часы" checked={quiet.on} onChange={touch((v: boolean) => setQuiet({ ...quiet, on: v }))} />
+        </div>
+        {quiet.on && (
+          <div className="mt-3">
+            <FormGrid>
+              <Field label="С">{(id) => <Input id={id} type="time" value={quiet.from} onChange={(e) => { setQuiet({ ...quiet, from: e.target.value }); setDirty(true); }} />}</Field>
+              <Field label="До">{(id) => <Input id={id} type="time" value={quiet.to} onChange={(e) => { setQuiet({ ...quiet, to: e.target.value }); setDirty(true); }} />}</Field>
+            </FormGrid>
+          </div>
+        )}
+      </section>
+
+      <div className="mt-5 flex justify-end">
+        <Button loading={busy} disabled={!dirty} onClick={save}>Сохранить</Button>
+      </div>
     </PageBody>
   );
 }

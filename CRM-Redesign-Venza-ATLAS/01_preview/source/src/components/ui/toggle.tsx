@@ -3,13 +3,15 @@ import { cn } from '@/lib/cn';
 
 export function Switch({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label: string }) {
   return (
+    /* Сама кнопка 48×44 — норма цели нажатия, — а дорожка 48×28 внутри.
+       Раньше зона растягивалась псевдоэлементом, но в плотных списках сверху
+       ложился соседний ряд, и палец попадал в него: прогон это поймал на
+       строках «Push» и «Тихие часы». */
     <button type="button" role="switch" aria-checked={checked} aria-label={label} onClick={() => onChange(!checked)}
-      /* Вид остаётся 48×28, но зона нажатия растянута до 44px по высоте —
-         иначе в переключатель трудно попасть пальцем. */
-      className={cn('relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors duration-tab ease-standard',
-        'before:absolute before:left-0 before:top-1/2 before:h-11 before:w-full before:-translate-y-1/2 before:content-[""]',
-        checked ? 'bg-primary' : 'bg-muted-foreground/30')}>
-      <span className={cn('absolute left-0.5 h-6 w-6 rounded-full bg-white shadow-soft transition-transform duration-tab ease-emphasized', checked && 'translate-x-5')} />
+      className="inline-flex h-11 w-12 shrink-0 items-center rounded-full">
+      <span aria-hidden className={cn('relative h-7 w-12 rounded-full transition-colors duration-tab ease-standard', checked ? 'bg-primary' : 'bg-muted-foreground/30')}>
+        <span className={cn('absolute left-0.5 top-0.5 h-6 w-6 rounded-full bg-white shadow-soft transition-transform duration-tab ease-emphasized', checked && 'translate-x-5')} />
+      </span>
     </button>
   );
 }

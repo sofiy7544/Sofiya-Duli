@@ -36,6 +36,8 @@ function Menu() {
     { key: 'lead' as const, icon: UserPlus, title: 'Лид', text: 'Новый запрос клиента в воронку' },
     { key: 'task' as const, icon: CheckSquare, title: 'Задача', text: 'Звонок, показ или напоминание' },
   ];
+  /* Событие открывается своим листом: он же переносит существующие. */
+  const openEvent = () => ui.set({ quickCreate: null, eventForm: true });
   return (
     <div className="space-y-2">
       {items.map((it) => (
@@ -45,9 +47,12 @@ function Menu() {
           <ChevronRight className="h-4 w-4 text-muted-foreground" aria-hidden />
         </button>
       ))}
-      <div className="surface-quiet flex items-center gap-3 p-3.5 text-[13.5px] text-muted-foreground">
-        <CalendarPlus className="h-[18px] w-[18px] shrink-0" aria-hidden />Показ назначается из карточки лида или клиента — там уже выбран клиент.
-      </div>
+      <button onClick={openEvent} className="pressable surface flex w-full items-center gap-3.5 p-3.5 text-left">
+        <span className="grid h-11 w-11 place-items-center rounded-[13px] bg-primary-soft text-primary-text"><CalendarPlus className="h-5 w-5" aria-hidden /></span>
+        <span className="flex-1"><span className="block text-[15.5px] font-semibold">Событие</span><span className="t-caption">Показ, встреча или звонок в календарь</span></span>
+        <ChevronRight className="h-4 w-4 text-muted-foreground" aria-hidden />
+      </button>
+      <p className="t-caption px-1">В карточке лида или клиента показ назначается быстрее: клиент там уже выбран.</p>
     </div>
   );
 }

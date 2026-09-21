@@ -10,6 +10,7 @@ import { sameDay, time } from '@/lib/format';
 import { EVENT_KIND_LABEL } from '@/lib/labels';
 import type { CalendarEvent, EventKind } from '@/lib/mock/types';
 import { PageBody, PageHeader } from '@/components/shell/page';
+import { EventFormSheet } from '@/components/overlays/event-form';
 import { Button, IconButton } from '@/components/ui/button';
 import { SegmentedControl } from '@/components/ui/segmented';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -31,6 +32,8 @@ export function CalendarScreen() {
   const [view, setView] = React.useState<View>(isDesktop ? 'week' : 'agenda');
   const [cursor, setCursor] = React.useState(new Date());
   const [selected, setSelected] = React.useState<CalendarEvent | null>(null);
+  const [create, setCreate] = React.useState(false);
+  const [move, setMove] = React.useState<CalendarEvent | null>(null);
   const events = r.data ?? [];
   const weekStart = startOfWeek(cursor);
   const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
@@ -139,20 +142,30 @@ export function CalendarScreen() {
 
   return (
     <PageBody wide={family === 'atlas'}>
-      <PageHeader title="Календарь" actions={<Button size="sm" variant="soft" className="lg:hidden" onClick={() => toast.message('Новое событие: EventDialog')}><Plus />Событие</Button>} />
+      <PageHeader title="Календарь" actions={<Button size="sm" variant="soft" onClick={() => setCreate(true)}><Plus />Событие</Button>} />
       {toolbar}{weekStrip}{body()}
-      <EventSheet event={selected} onClose={() => setSelected(null)} />
+      <EventSheet event={selected} onClose={() => setSelected(null)} onMove={(e) => { setSelected(null); setMove(e); }} onDone={r.retry} />
+      <EventFormSheet open={create} onOpenChange={setCreate} onDone={r.retry} />
+      <EventFormSheet open={!!move} onOpenChange={(o) => !o && setMove(null)} move={move} onDone={r.retry} />
     </PageBody>
   );
 }
 
 /** EventDialog: сделки/дедлайны — только просмотр (readOnly), остальное можно перенести. */
-function EventSheet({ event, onClose }: { event: CalendarEvent | null; onClose: () => void }) {
+function EventSheet({ event, onClose, onMove, onDone }: { event: CalendarEvent | null; onClose: () => void; onMove: (e: CalendarEvent) => void; onDone: () => void }) {
+  const [busy, setBusy] = React.useState(false);
   const client = event?.clientId ? store.db.clients.find((c) => c.id === event.clientId) : null;
   const property = event?.propertyId ? store.db.properties.find((p) => p.id === event.propertyId) : null;
   return (
     <Sheet open={!!event} onOpenChange={(o) => !o && onClose()} title={event?.title ?? ''} description={event ? `${EVENT_KIND_LABEL[event.kind]}, ${new Date(event.startsAt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })}, ${time(event.startsAt)}–${time(event.endsAt)}` : undefined} desktop="side" size="sm"
-      footer={event && !event.readOnly ? <><Button variant="outline" className="flex-1" onClick={() => { onClose(); toast.message('Перенос: выберите новое время'); }}>Перенести</Button><Button className="flex-1" onClick={() => { onClose(); toast.success('Отмечено как проведённое'); }}>Проведено</Button></> : undefined}>
+      footer={event && !event.readOnly ? <>
+        <Button variant="outline" className="flex-1" onClick={() => onMove(event)}>Перенести</Button>
+        <Button className="flex-1" loading={busy} onClick={async () => {
+          setBusy(true);
+          try { await api.completeEvent(event.id); onClose(); onDone(); toast.success('Отмечено как проведённое'); }
+          catch (err) { toast.error((err as Error).message); }
+          finally { setBusy(false); }
+        }}>Проведено</Button></> : undefined}>
       {event && (
         <div className="space-y-3">
           {event.readOnly && <div className="flex items-center gap-2 rounded-control bg-surface-2 px-3.5 py-3 text-[14px] text-muted-foreground"><Lock className="h-4 w-4" aria-hidden />Событие сделки. Изменяется в карточке сделки.</div>}

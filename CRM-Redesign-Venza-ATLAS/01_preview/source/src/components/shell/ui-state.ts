@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react';
 /** Глобальные оверлеи — как stores/ui-store.ts в CRM (zustand). */
-type S = { search: boolean; quickCreate: null | 'menu' | 'lead' | 'task' | 'capture'; preview: boolean; more: boolean; notifications: boolean };
-let s: S = { search: false, quickCreate: null, preview: false, more: false, notifications: false };
+type S = { search: boolean; quickCreate: null | 'menu' | 'lead' | 'task' | 'capture'; preview: boolean; more: boolean; notifications: boolean; eventForm: boolean };
+let s: S = { search: false, quickCreate: null, preview: false, more: false, notifications: false, eventForm: false };
 const subs = new Set<() => void>();
 export const ui = {
   get: () => s,

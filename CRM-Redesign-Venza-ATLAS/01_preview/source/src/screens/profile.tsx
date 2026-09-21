@@ -14,6 +14,11 @@ import { toast } from '@/components/ui/toast';
  */
 export function ProfileScreen() {
   const me = currentUser();
+  /* Фото выбирается системным диалогом и показывается из object URL.
+     На сервер оно, разумеется, не уходит: в превью сервера нет. */
+  const fileRef = React.useRef<HTMLInputElement>(null);
+  const [photo, setPhoto] = React.useState<string | null>(null);
+  React.useEffect(() => () => { if (photo) URL.revokeObjectURL(photo); }, [photo]);
   const initial = React.useMemo(() => ({ fullName: me.fullName, email: me.email, phone: '+380 67 000 00 00' }), [me.fullName, me.email]);
   const { value: v, patch, dirty } = useDirty(initial);
   const [busy, setBusy] = React.useState(false);
@@ -37,11 +42,22 @@ export function ProfileScreen() {
 
       <section className="surface p-4 lg:p-5">
         <div className="flex items-center gap-4">
-          <Avatar name={v.fullName || me.fullName} size={64} />
+          <Avatar name={v.fullName || me.fullName} size={64} src={photo ?? undefined} />
           <div className="min-w-0">
             <p className="text-[15px] font-medium">{v.fullName || me.fullName}</p>
             <p className="t-caption mt-0.5">{me.role === 'ADMIN' ? 'Администратор' : 'Риелтор'}</p>
-            <Button size="sm" variant="outline" className="mt-2" onClick={() => toast.message('Загрузка фото подключается в CRM')}>Сменить фото</Button>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <Button size="sm" variant="outline" onClick={() => fileRef.current?.click()}>{photo ? 'Другое фото' : 'Сменить фото'}</Button>
+              {photo && <Button size="sm" variant="outline" className="text-danger-text" onClick={() => { URL.revokeObjectURL(photo); setPhoto(null); }}>Убрать</Button>}
+            </div>
+            <input ref={fileRef} type="file" accept="image/*" className="sr-only" aria-label="Фото профиля"
+              onChange={(e) => {
+                const f = e.target.files?.[0]; if (!f) return;
+                if (f.size > 5 * 1024 * 1024) { toast.error('Файл больше 5 МБ'); return; }
+                if (photo) URL.revokeObjectURL(photo);
+                setPhoto(URL.createObjectURL(f)); e.target.value = '';
+                toast.success('Фото выбрано. В CRM оно уйдёт на сервер при сохранении');
+              }} />
           </div>
         </div>
 

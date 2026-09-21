@@ -1,4 +1,4 @@
-import { ChevronRight, LayoutGrid } from 'lucide-react';
+import { Bell, ChevronRight, LayoutGrid } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { Link, usePathname } from '@/lib/router';
 import { PRIMARY_NAV, getActiveSlot, getMoreItems, isItemActive } from '@/lib/navigation/mobile-nav';
@@ -41,6 +41,20 @@ export function MobileNav() {
 
       <Sheet open={more} onOpenChange={(o) => ui.set({ more: o })} title="Ещё">
         <ul className="-mx-2">
+          {/* Колокольчик на телефоне был только на «Сегодня» — на остальных
+              экранах уведомления были недоступны. В шапке для него нет места
+              (там уже до четырёх кнопок), поэтому он здесь, первой строкой. */}
+          <li>
+            <button type="button" onClick={() => ui.set({ more: false, notifications: true })}
+              className="pressable flex min-h-[56px] w-full items-center gap-3.5 rounded-control px-2.5 text-left">
+              <span className="relative grid h-10 w-10 place-items-center rounded-[12px] bg-surface-2 text-foreground">
+                <Bell className="h-[19px] w-[19px]" aria-hidden />
+                <span aria-hidden className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-danger ring-2 ring-surface" />
+              </span>
+              <span className="flex-1 text-[16px] font-medium">Уведомления</span>
+              <ChevronRight className="h-4 w-4 text-muted-foreground" aria-hidden />
+            </button>
+          </li>
           {moreItems.map((it) => {
             const Icon = NAV_ICON[it.key]; const on = isItemActive(it, pathname);
             return (

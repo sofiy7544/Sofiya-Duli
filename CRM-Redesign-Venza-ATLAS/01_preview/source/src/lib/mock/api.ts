@@ -1,6 +1,6 @@
 import { store } from './store';
-import type { Activity, CalendarEvent, Client, Lead, LeadStage, Paginated, Property, Task } from './types';
-import { isStageTransitionAllowed } from '../labels';
+import type { Activity, CalendarEvent, Client, EventKind, Lead, LeadStage, Paginated, Property, Task } from './types';
+import { EVENT_KIND_LABEL, isStageTransitionAllowed } from '../labels';
 
 /**
  * Mock-API. Сигнатуры и формы ответов совпадают с реальным `apps/web/src/lib/api.ts`
@@ -168,6 +168,49 @@ export const api = {
   activities: (by: { clientId?: string; leadId?: string }) => respond(() => store.db.activities.filter((a) => (by.leadId ? a.leadId === by.leadId : a.clientId === by.clientId)).sort((a, b) => b.at.localeCompare(a.at)), [] as Activity[]),
   /** GET /api/showings?from&to (+ задачи/сделки в календаре) */
   events: () => respond(() => [...store.db.events], [] as CalendarEvent[]),
+  /** POST /api/showings — событие календаря: показ, встреча, звонок */
+  async createEvent(input: { kind: EventKind; title: string; startsAt: string; minutes: number; clientId?: string; propertyId?: string }) {
+    await wait(450);
+    if (input.title.trim().length < 3) throw new ApiError('Название — минимум 3 символа', 400);
+    const start = new Date(input.startsAt);
+    if (Number.isNaN(start.getTime())) throw new ApiError('Проверьте дату и время', 400);
+    if (!(input.minutes > 0)) throw new ApiError('Длительность должна быть больше нуля', 400);
+    const event: CalendarEvent = {
+      id: `e${Date.now()}`, kind: input.kind, title: input.title.trim(),
+      startsAt: start.toISOString(), endsAt: new Date(start.getTime() + input.minutes * 60_000).toISOString(),
+      clientId: input.clientId || undefined, propertyId: input.propertyId || undefined, userId: 'u1',
+    };
+    store.mutate((d) => {
+      d.events.push(event);
+      if (event.clientId) d.activities.unshift({ id: `a${Date.now()}`, type: event.kind === 'SHOWING' ? 'SHOWING' : 'NOTE', text: `${EVENT_KIND_LABEL[event.kind]}: ${event.title}`, at: new Date().toISOString(), userId: 'u1', clientId: event.clientId });
+    });
+    return event;
+  },
+  /** PATCH /api/showings/:id — перенос. Длительность сохраняется: меняется только начало. */
+  async moveEvent(id: string, startsAt: string) {
+    await wait(420);
+    const cur = store.db.events.find((e) => e.id === id);
+    if (!cur) throw new ApiError('Событие не найдено', 404);
+    if (cur.readOnly) throw new ApiError('Событие сделки переносится в карточке сделки', 409);
+    const start = new Date(startsAt);
+    if (Number.isNaN(start.getTime())) throw new ApiError('Проверьте дату и время', 400);
+    const span = new Date(cur.endsAt).getTime() - new Date(cur.startsAt).getTime();
+    store.mutate((d) => {
+      const e = d.events.find((x) => x.id === id)!;
+      e.startsAt = start.toISOString(); e.endsAt = new Date(start.getTime() + span).toISOString();
+    });
+    return { ...cur, startsAt: start.toISOString(), endsAt: new Date(start.getTime() + span).toISOString() };
+  },
+  /** PATCH /api/showings/:id { status: DONE } — из календаря уходит, в истории клиента остаётся. */
+  async completeEvent(id: string) {
+    await wait(380);
+    const cur = store.db.events.find((e) => e.id === id);
+    if (!cur) throw new ApiError('Событие не найдено', 404);
+    store.mutate((d) => {
+      d.events = d.events.filter((e) => e.id !== id);
+      if (cur.clientId) d.activities.unshift({ id: `a${Date.now()}`, type: cur.kind === 'SHOWING' ? 'SHOWING' : 'NOTE', text: `${EVENT_KIND_LABEL[cur.kind]} проведён: ${cur.title}`, at: new Date().toISOString(), userId: 'u1', clientId: cur.clientId });
+    });
+  },
   /** Глобальный поиск палитры: contacts / leads / properties (≥ 2 символов, debounce 250) */
   async search(term: string) {
     await wait(180);

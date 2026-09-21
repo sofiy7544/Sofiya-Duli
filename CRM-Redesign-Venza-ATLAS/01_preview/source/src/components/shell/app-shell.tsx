@@ -7,10 +7,14 @@ import { Fab } from './page';
 import { QuickCreate } from '@/components/overlays/quick-create';
 import { NotificationsPanel } from '@/components/overlays/notifications';
 import { SearchOverlay } from '@/components/overlays/search';
+import { EventFormSheet } from '@/components/overlays/event-form';
+import { Hotkeys } from './hotkeys';
+import { ui, useUI } from './ui-state';
 
 /** (app)/layout.tsx: оболочка + глобальные оверлеи, смонтированные один раз. */
 export function AppShell({ children, routeKey, fab = true }: { children: React.ReactNode; routeKey: string; fab?: boolean }) {
   const { route } = useRouter();
+  const { eventForm } = useUI();
   const anim = route.direction === 'forward' ? 'page-forward' : route.direction === 'back' ? 'page-back' : 'page-fade';
   return (
     <div className="flex min-h-dvh">
@@ -24,6 +28,8 @@ export function AppShell({ children, routeKey, fab = true }: { children: React.R
       <QuickCreate />
       <NotificationsPanel />
       <SearchOverlay />
+      <EventFormSheet open={eventForm} onOpenChange={(o) => ui.set({ eventForm: o })} />
+      <Hotkeys />
     </div>
   );
 }

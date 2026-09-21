@@ -140,10 +140,11 @@ export function LeadDetailScreen({ id }: { id: string }) {
 
 export function QuickActions({ client, onTask, onShowing, onCall, onRemind }: { client: Client; onTask: () => void; onShowing: () => void; onCall?: () => void; onRemind?: () => void }) {
   const settings = usePreviewSettings();
+  const router = useRouter();
   const items = [
     onCall ? { label: 'Звонок', icon: PhoneCall, onClick: onCall } : { label: 'Позвонить', icon: Phone, href: `tel:${client.primaryPhone.replace(/\s/g, '')}` },
     onRemind ? { label: 'Напомнить', icon: BellRing, onClick: onRemind } : null,
-    settings.integrationsEnabled ? { label: 'Написать', icon: MessageCircle, onClick: () => toast.message('Откроется чат клиента') } : client.email ? { label: 'Почта', icon: Mail, href: `mailto:${client.email}` } : null,
+    settings.integrationsEnabled ? { label: 'Написать', icon: MessageCircle, onClick: () => router.navigate('/inbox') } : client.email ? { label: 'Почта', icon: Mail, href: `mailto:${client.email}` } : null,
     onRemind ? null : { label: 'Задача', icon: CheckSquare, onClick: onTask },
     { label: 'Показ', icon: CalendarPlus, onClick: onShowing },
   ].filter(Boolean) as { label: string; icon: typeof Phone; href?: string; onClick?: () => void }[];
@@ -229,7 +230,19 @@ export function ScheduleShowingSheet({ open, onOpenChange, client, defaultProper
   const conflict = store.db.events.find((e) => Math.abs(new Date(e.startsAt).getTime() - d.getTime()) < 60 * 60_000);
   return (
     <Sheet open={open} onOpenChange={onOpenChange} title="Назначить показ" description={client.fullName} desktop="side" size="sm"
-      footer={<><Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>Отмена</Button><Button className="flex-[2]" loading={busy} onClick={async () => { setBusy(true); await new Promise((r) => setTimeout(r, 500)); setBusy(false); onOpenChange(false); toast.success('Показ назначен'); }}>Назначить</Button></>}>
+      footer={<><Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>Отмена</Button><Button className="flex-[2]" loading={busy} onClick={async () => {
+        /* Показ создаётся по-настоящему: появляется в календаре и в истории
+           клиента. Раньше здесь был только тост, и назначенного показа потом
+           нигде не было. */
+        setBusy(true);
+        const property = store.db.properties.find((p) => p.id === propertyId);
+        try {
+          await api.createEvent({ kind: 'SHOWING', title: `Показ · ${property?.title ?? client.fullName}`, startsAt: d.toISOString(), minutes: 60, clientId: client.id, propertyId });
+          onOpenChange(false);
+          toast.success(`Показ назначен: ${relDay(d.toISOString()).toLowerCase()}, ${time(d.toISOString())}`);
+        } catch (err) { toast.error((err as Error).message); }
+        finally { setBusy(false); }
+      }}>Назначить</Button></>}>
       <div className="space-y-5">
         <fieldset><legend className="mb-2 text-[13px] font-medium">Объект</legend>
           <div className="space-y-2">{store.db.properties.filter((p) => p.status !== 'SOLD').slice(0, 4).map((p) => (

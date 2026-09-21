@@ -17,7 +17,7 @@ import { ClientFormScreen } from './client-form';
 import { PropertyFormScreen } from './property-form';
 import { LeadFormScreen } from './lead-form';
 import { ProfileScreen } from './profile';
-import { AutomationScreen, BrandingScreen, IntegrationsScreen, TemplatesScreen, UsersScreen } from './settings-sections';
+import { AutomationScreen, BrandingScreen, IntegrationsScreen, TemplatesScreen, UsersScreen, NotificationsSettingsScreen } from './settings-sections';
 
 /** pattern → экран. Порядок: статические раньше динамических. */
 export const SCREENS: Record<string, (p: Record<string, string>) => React.ReactNode> = {
@@ -45,6 +45,7 @@ export const SCREENS: Record<string, (p: Record<string, string>) => React.ReactN
   '/settings/automation': () => <AutomationScreen />,
   '/settings/templates': () => <TemplatesScreen />,
   '/settings/integrations': () => <IntegrationsScreen />,
+  '/settings/notifications': () => <NotificationsSettingsScreen />,
   '/settings/branding': () => <BrandingScreen />,
   '/settings/users': () => <UsersScreen />,
   '/insights/lost-reasons': () => <LostReasonsScreen />,

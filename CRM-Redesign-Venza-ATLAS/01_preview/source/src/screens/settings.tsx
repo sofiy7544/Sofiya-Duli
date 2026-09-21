@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Bell, Check, ChevronRight, Globe, Image, ListX, Palette, Plug, Send, User, Users, Wand2 } from 'lucide-react';
+import { Bell, Check, ChevronRight, Globe, Image, ListX, LogOut, Palette, Plug, Send, User, Users, Wand2 } from 'lucide-react';
 import { PageBody, PageHeader } from '@/components/shell/page';
 import { ThemeSwatches } from '@/components/overlays/preview-panel';
 import { toast } from '@/components/ui/toast';
@@ -10,10 +10,14 @@ import { MODE_OPTIONS, type Mode } from '@/lib/theme/themes';
 import { useTheme } from '@/lib/theme/provider';
 import { SegmentedControl } from '@/components/ui/segmented';
 import { cn } from '@/lib/cn';
-import { Link } from '@/lib/router';
+import { Link, useRouter } from '@/lib/router';
+import { Button } from '@/components/ui/button';
+import { ConfirmDialog } from '@/components/ui/sheet';
 
 /** /settings: оформление + разделы. Выбор темы — ThemePicker из пакета Phase 2. */
 export function SettingsScreen() {
+  const router = useRouter();
+  const [signOut, setSignOut] = React.useState(false);
   const locale = useLocale();
   const { mode, setMode } = useTheme();
   const [langOpen, setLangOpen] = React.useState(false);
@@ -27,7 +31,7 @@ export function SettingsScreen() {
     { icon: Plug, label: 'Интеграции', text: 'Telegram, WhatsApp, почта', href: '/settings/integrations' },
     { icon: Globe, label: 'Язык', text: `${lang.flag} ${lang.label}`, action: () => setLangOpen(true) },
     { icon: User, label: 'Профиль', text: 'Имя, фото, телефон, пароль', href: '/profile' },
-    { icon: Bell, label: 'Уведомления', text: 'Задачи, лиды, показы' },
+    { icon: Bell, label: 'Уведомления', text: 'Задачи, лиды, показы', href: '/settings/notifications' },
     { icon: ListX, label: 'Причины проигрыша', text: 'Справочник и разбор отказов', href: '/insights/lost-reasons' },
   ];
   const rowInner = (r: Row) => (<>
@@ -55,10 +59,20 @@ export function SettingsScreen() {
           <li key={r.label}>
             {r.href
               ? <Link href={r.href} className="pressable flex w-full items-center gap-3.5 px-4 py-3.5 text-left">{rowInner(r)}</Link>
-              : <button onClick={() => (r.action ? r.action() : toast.message(`${r.label}: экран в Preview 2`))} className="pressable flex w-full items-center gap-3.5 px-4 py-3.5 text-left">{rowInner(r)}</button>}
+              : <button onClick={r.action} className="pressable flex w-full items-center gap-3.5 px-4 py-3.5 text-left">{rowInner(r)}</button>}
           </li>
         ))}
       </ul>
+      {/* Выход — внизу и отдельно от разделов: в CRM он в меню пользователя,
+          а меню пользователя здесь нет. Через подтверждение: промах по нему
+          выбрасывал бы из CRM посреди работы. */}
+      <div className="mt-4">
+        <Button variant="outline" className="w-full text-danger-text" onClick={() => setSignOut(true)}><LogOut />Выйти из аккаунта</Button>
+      </div>
+      <ConfirmDialog open={signOut} onOpenChange={setSignOut} title="Выйти из аккаунта?"
+        text="Понадобится войти заново. Несохранённые формы закроются." confirmLabel="Выйти"
+        onConfirm={() => { setSignOut(false); router.navigate('/login', { replace: true }); }} />
+
       <Sheet open={langOpen} onOpenChange={setLangOpen} title="Язык интерфейса" description="Пока меняются форматы дат и чисел: подписи интерфейса переводятся в CRM." desktop="center" size="sm">
         <ul role="radiogroup" aria-label="Язык интерфейса" className="space-y-1">
           {LOCALES.map((l) => {

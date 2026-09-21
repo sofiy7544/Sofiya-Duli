@@ -6,12 +6,12 @@ import { AppShell } from '@/components/shell/app-shell';
 import { Toaster } from '@/components/ui/toast';
 import { PreviewPanel } from '@/components/overlays/preview-panel';
 import { TodayScreen } from '@/screens/today';
-import { ForbiddenScreen, PlaceholderScreen } from '@/screens/placeholder';
+import { ForbiddenScreen, NotFoundScreen, PlaceholderScreen } from '@/screens/placeholder';
 import { SCREENS } from '@/screens/registry';
 import { FilmLogin } from '@/components/brand/intro';
 
 /** Маршруты = маршруты CRM (app/(app)/*). Легаси-алиасы редиректят так же, как next.config/redirect-страницы. */
-const LEGACY: Record<string, string> = { '/': '/today', '/dashboard': '/today', '/pipeline': '/leads', '/pool': '/leads', '/contacts': '/clients', '/inventory': '/properties', '/insights': '/reports', '/qualify': '/inbox' };
+const LEGACY: Record<string, string> = { '/': '/today', '/dashboard': '/today', '/pipeline': '/leads', '/pool': '/leads', '/contacts': '/clients', '/inventory': '/properties', '/insights': '/reports', '/qualify': '/inbox', '/admin': '/settings/users' };
 
 function Routes() {
   const { route, navigate } = useRouter();
@@ -38,7 +38,7 @@ function Routes() {
   if ((path === '/team' || path === '/reports') && settings.role !== 'ADMIN') screen = <ForbiddenScreen />;
   if (!screen) {
     const section = ({ '/deals': 'deals', '/notes': 'notes', '/inbox': 'communications', '/team': 'team', '/reports': 'reports' } as const)[path];
-    screen = section ? <PlaceholderScreen section={section} /> : <PlaceholderScreen section="today" />;
+    screen = section ? <PlaceholderScreen section={section} /> : <NotFoundScreen path={path} />;
   }
   const hasStickyCta = /^\/(leads|properties)\/[^/]+$/.test(path) || path === '/deals/new';
   return <AppShell routeKey={path} fab={!hasStickyCta}>{screen}</AppShell>;

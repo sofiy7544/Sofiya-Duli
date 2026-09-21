@@ -274,13 +274,18 @@ html[data-screen='signin'], html[data-screen='signin'] body { background: #05070
    скрывает кадр целиком — поймано замером, под затемнением вместо фотографии
    оказался ровный #05070A. */
 .signin__bg::after { content: ''; position: absolute; inset: 0;
+  /* Цвет края и следующей за ним ступени. В браузере край уходит в цвет
+     системных полос, чтобы стык с ними не читался; в установленном
+     приложении оба значения слабее — см. режим приложения ниже. */
+  --edge: #05070A;
+  --edge-2: rgba(5,7,10,.66);
   background-repeat: no-repeat;
   background-image:
     radial-gradient(72% 48% at 50% 50%, rgba(6,10,16,.6), rgba(6,10,16,.26) 72%),
     linear-gradient(180deg,
-      #05070A 0%, rgba(5,7,10,.66) 3.5%, rgba(6,10,16,.30) 9%,
+      var(--edge) 0%, var(--edge-2) 3.5%, rgba(6,10,16,.30) 9%,
       rgba(6,10,16,.26) 50%,
-      rgba(6,10,16,.30) 91%, rgba(5,7,10,.66) 96.5%, #05070A 100%),
+      rgba(6,10,16,.30) 91%, var(--edge-2) 96.5%, var(--edge) 100%),
     linear-gradient(#05070A, #05070A);
   background-size: 100% 100dvh, 100% 100dvh, 100% calc(100lvh - 100dvh);
   background-position: 0 0, 0 0, 0 100%; }
@@ -388,9 +393,23 @@ html[data-screen='signin'], html[data-screen='signin'] body { background: #05070
   body { padding-top: env(safe-area-inset-top); }
   .crm-bottom-nav { bottom: max(env(safe-area-inset-bottom), 10px); }
 
-  /* Высота экрана постоянна — динамическая панель адреса отсутствует. */
-  .signin { height: 100svh; }
-  .signin__center { height: 100svh; }
+  /* Высота — от inset: 0, без вьюпорт-единиц. Здесь нет динамической панели
+     адреса, зато единицы расходятся: на iPhone 16 в установленном приложении
+     100svh оказался на 93px короче экрана, и снизу проступал фон страницы —
+     та самая чёрная полоса над полосой Home. Фиксированный слой с inset: 0 —
+     это ровно экран, что бы ни отдавали svh и dvh. */
+  .signin { height: auto; }
+  .signin__center { inset: 0; height: auto; }
+
+  /* Затемнение — по самому слою, а не по dvh: полосы браузера тут нет, под
+     неё нечего подгонять. И край неполный: сплошной #05070A внизу читался
+     чёрным куском, хотя ничего не прикрывал — полоса Home и так видна поверх
+     кадра. Сверху ровно столько же: статус-бару хватает для контраста. */
+  .signin__bg::after {
+    --edge: rgba(5,7,10,.62);
+    --edge-2: rgba(5,7,10,.46);
+    background-size: 100% 100%, 100% 100%, 0 0;
+  }
 
   /* Резиновый отскок обнажал светлый фон под тёмным экраном входа. */
   html, body { overscroll-behavior: none; }

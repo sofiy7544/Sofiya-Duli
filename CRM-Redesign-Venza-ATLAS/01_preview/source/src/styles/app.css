@@ -262,29 +262,38 @@ html[data-screen='signin'], html[data-screen='signin'] body { background: #05070
 .signin__bg[data-still] video, .signin__bg[data-still] img { animation-duration: 700ms, 2600ms, 14s; }
 /* Низ и верх уходят ровно в #05070A — цвет системных полос (theme-color).
    Панель Safari и зона Home закрашиваются им же, поэтому стык кадра
-   с хромом браузера не виден: картинка не обрывается прямоугольником. */
+   с хромом браузера не виден: картинка не обрывается прямоугольником.
+
+   Затемнение считается от ВИДИМОЙ высоты (background-size: 100dvh), а не от
+   всей подложки: кадр растянут на 100lvh и уходит под панель Safari, поэтому
+   раньше нижний спуск градиента обрывался за экраном. Сверху он успевал дойти
+   до #05070A, снизу — нет, и низ выглядел светлее верха. Полоса ниже видимой
+   области закрашена ровным #05070A — отдельным третьим слоем высотой
+   (100lvh - 100dvh) у нижнего края, чтобы под панелью браузера не просвечивала
+   фотография. Слоем, а не background-color: цвет фона красит весь бокс и
+   скрывает кадр целиком — поймано замером, под затемнением вместо фотографии
+   оказался ровный #05070A. */
 .signin__bg::after { content: ''; position: absolute; inset: 0;
-  background:
+  background-repeat: no-repeat;
+  background-image:
     radial-gradient(72% 48% at 50% 50%, rgba(6,10,16,.6), rgba(6,10,16,.26) 72%),
     linear-gradient(180deg,
       #05070A 0%, rgba(5,7,10,.66) 3.5%, rgba(6,10,16,.30) 9%,
       rgba(6,10,16,.26) 50%,
-      rgba(6,10,16,.30) 91%, rgba(5,7,10,.66) 96.5%, #05070A 100%); }
+      rgba(6,10,16,.30) 91%, rgba(5,7,10,.66) 96.5%, #05070A 100%),
+    linear-gradient(#05070A, #05070A);
+  background-size: 100% 100dvh, 100% 100dvh, 100% calc(100lvh - 100dvh);
+  background-position: 0 0, 0 0, 0 100%; }
 
-/* В браузере снизу лежит панель Safari — затемнение там длиннее, чтобы стык
-   с её фоном не читался. В установленном приложении панели нет, и удлинять
-   нечего: иначе снизу видна чёрная полоса, которой нет сверху. */
-@media (display-mode: browser) {
-  .signin__bg::after {
-    background:
-      radial-gradient(72% 48% at 50% 50%, rgba(6,10,16,.6), rgba(6,10,16,.26) 72%),
-      linear-gradient(180deg,
-        #05070A 0%, rgba(5,7,10,.66) 3.5%, rgba(6,10,16,.30) 9%,
-        rgba(6,10,16,.26) 50%,
-        rgba(6,10,16,.34) 84%, rgba(5,7,10,.72) 93%, #05070A 100%);
-  }
-}
-.signin__center { position: absolute; inset: 0 0 auto; height: 100svh; height: 100dvh; display: grid; place-items: center; padding: max(1.5rem, env(safe-area-inset-top)) 1.25rem max(1.5rem, env(safe-area-inset-bottom)); }
+/* Отдельного, более длинного спуска для браузера больше нет: пока градиент
+   считался от всей подложки, низ приходилось удлинять на глаз, и кадр выходил
+   несимметричным. Теперь он и так заканчивается ровно у панели Safari. */
+/* Поля сверху и снизу одинаковые — по большей из врезок. Разные поля сдвигали
+   центр: на iPhone верхняя врезка 59px, нижняя 0, и окно стояло ниже середины
+   примерно на 17px. Окно маленькое, запас по высоте есть — берём максимум и
+   держим настоящий центр. */
+.signin__center { position: absolute; inset: 0 0 auto; height: 100svh; height: 100dvh; display: grid; place-items: center;
+  padding: max(1.5rem, env(safe-area-inset-top), env(safe-area-inset-bottom)) 1.25rem; }
 
 .glassin { position: relative; width: min(84vw, 330px); display: flex; flex-direction: column; gap: 10px;
   padding: 18px 16px 16px; border-radius: 24px;

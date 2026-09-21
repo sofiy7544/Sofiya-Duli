@@ -26,6 +26,18 @@ let deals: Deal[] = [
   { id: 'd4', leadId: 'l12', clientId: 'c11', propertyId: 'p6', userId: 'u3', amount: 520_000, currency: 'EUR', commissionPercent: 3, status: 'CANCELLED', createdAt: ago(100), closedAt: ago(80), payments: [], documents: [] },
   { id: 'd5', leadId: 'l14', clientId: 'c16', propertyId: 'p8', userId: 'u2', amount: 1_900_000, currency: 'EUR', commissionPercent: 2.5, status: 'ACTIVE', createdAt: ago(9),
     payments: [{ id: 'pay3', amount: 20_000, paidAt: ago(7), type: 'DEPOSIT', note: 'Задаток по участку' }], documents: [{ id: 'doc4', name: 'Разрешение на строительство.pdf', type: 'OTHER', size: '870 КБ', addedAt: ago(8) }] },
+  /* Сделки по сгенерированным лидам: без них экран «Сделки» выглядел пустым
+     на фоне сорока лидов. Лиды выбраны те, что стоят на «Переговорах» и
+     «Выиграно» — в CRM сделка заводится только с них. */
+  { id: 'd6', leadId: 'l22', clientId: 'c24', propertyId: 'p5', userId: 'u2', amount: 3_050_000, currency: 'EUR', commissionPercent: 3, status: 'ACTIVE', createdAt: ago(12),
+    payments: [{ id: 'pay4', amount: 30_000, paidAt: ago(10), type: 'DEPOSIT', note: 'Задаток' }], documents: [{ id: 'doc5', name: 'Предварительный договор.pdf', type: 'CONTRACT', size: '310 КБ', addedAt: ago(10) }] },
+  { id: 'd7', leadId: 'l27', clientId: 'c29', propertyId: 'p3', userId: 'u1', amount: 385_000, currency: 'EUR', commissionPercent: 3, status: 'COMPLETED', createdAt: ago(48), closedAt: ago(15),
+    payments: [{ id: 'pay5', amount: 11_550, paidAt: ago(14), type: 'COMMISSION' }], documents: [{ id: 'doc6', name: 'Договор купли-продажи.pdf', type: 'CONTRACT', size: '980 КБ', addedAt: ago(15) }] },
+  { id: 'd8', leadId: 'l37', clientId: 'c39', propertyId: 'p6', userId: 'u3', amount: 530_000, currency: 'EUR', commissionPercent: 2.5, status: 'ACTIVE', createdAt: ago(6), payments: [], documents: [] },
+  { id: 'd9', leadId: 'l42', clientId: 'c44', propertyId: 'p7', userId: 'u1', amount: 960_000, currency: 'EUR', commissionPercent: 3, status: 'COMPLETED', createdAt: ago(75), closedAt: ago(33),
+    payments: [{ id: 'pay6', amount: 14_400, paidAt: ago(32), type: 'COMMISSION', note: 'Половина комиссии' }, { id: 'pay7', amount: 14_400, paidAt: ago(20), type: 'COMMISSION', note: 'Остаток' }],
+    documents: [{ id: 'doc7', name: 'Акт приёма-передачи.pdf', type: 'OTHER', size: '420 КБ', addedAt: ago(33) }] },
+  { id: 'd10', leadId: 'l31', clientId: 'c33', propertyId: 'p2', userId: 'u2', amount: 1_600_000, currency: 'EUR', commissionPercent: 3, status: 'CANCELLED', createdAt: ago(40), closedAt: ago(26), payments: [], documents: [] },
 ];
 const subs = new Set<() => void>(); let v = 0;
 const emit = () => { v++; subs.forEach((s) => s()); };

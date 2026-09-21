@@ -30,7 +30,7 @@ export const users: User[] = [
   { id: 'u3', fullName: 'Сергей Лисовой', role: 'REALTOR', email: 'sergey@agency.demo' },
 ];
 
-export const clients: Client[] = [
+const coreClients: Client[] = [
   { id: 'c1', fullName: 'Adrien Lacroix', primaryPhone: '+33 6 39 98 14 02', email: 'a.lacroix@mail.demo', type: 'BUYER', source: 'INSTAGRAM', assignedUserId: 'u1', isArchived: false, isBlacklisted: false, createdAt: ago(41 * DAY),
     notes: 'Ищет дом для семьи: нужен вид на воду, терраса и парковка на две машины. Решение принимает вместе с женой.',
     preferences: { propertyType: 'HOUSE', districts: ['Villefranche-sur-Mer', 'Cap d’Ail'], rooms: { min: 4 }, price: { min: 3_500_000, max: 5_500_000 }, currency: 'EUR' } },
@@ -112,7 +112,7 @@ export const properties: Property[] = [
     description: 'Апартаменты с видом на озеро. Продано в этом квартале.', photos: [{ id: 'ph34', art: 1 }], features: ['Вид на озеро'], createdAt: ago(90 * DAY) },
 ];
 
-export const leads: Lead[] = [
+const coreLeads: Lead[] = [
   { id: 'l1', clientId: 'c1', stage: 'SHOWING', priority: 'hot', assignedUserId: 'u1', source: 'INSTAGRAM', purpose: 'LIVING', budgetMin: 3_500_000, budgetMax: 5_500_000, budgetCurrency: 'EUR', interestPropertyId: 'p1', interestNote: 'Второй показ с супругой', nextActionAt: at(0, 16, 30), lastContactAt: ago(DAY), createdAt: ago(41 * DAY) },
   { id: 'l2', clientId: 'c2', stage: 'NEGOTIATION', priority: 'hot', assignedUserId: 'u2', source: 'REFERRAL', purpose: 'LIVING', budgetMax: 1_800_000, budgetCurrency: 'EUR', interestPropertyId: 'p2', interestNote: 'Торг по цене и сроку выхода на сделку', nextActionAt: at(0, 12), lastContactAt: ago(3 * HOUR), createdAt: ago(24 * DAY) },
   { id: 'l3', clientId: 'c3', stage: 'SELECTION', priority: 'warm', assignedUserId: 'u1', source: 'WEBSITE', purpose: 'INVESTMENT', budgetMax: 900_000, budgetCurrency: 'EUR', interestPropertyId: 'p3', nextActionAt: at(-1, 11), lastContactAt: ago(4 * DAY), createdAt: ago(19 * DAY) },
@@ -131,7 +131,7 @@ export const leads: Lead[] = [
   { id: 'l16', clientId: 'c18', stage: 'CONTACTED', priority: 'warm', assignedUserId: 'u3', source: 'INSTAGRAM', purpose: 'INVESTMENT', budgetMax: 800_000, budgetCurrency: 'EUR', interestPropertyId: 'p6', nextActionAt: at(4, 12), lastContactAt: ago(3 * DAY), createdAt: ago(9 * DAY) },
 ];
 
-export const tasks: Task[] = [
+const coreTasks: Task[] = [
   { id: 't1', title: 'Подтвердить время второго показа', type: 'CALL', dueAt: at(0, 15, 30), userId: 'u1', clientId: 'c1', leadId: 'l1' },
   { id: 't2', title: 'Отправить подборку в Ницце', type: 'FOLLOWUP', dueAt: at(-1, 17), userId: 'u1', clientId: 'c3', leadId: 'l3' },
   { id: 't3', title: 'Подготовить встречное предложение', type: 'CUSTOM', dueAt: at(0, 13), userId: 'u2', clientId: 'c2', leadId: 'l2' },
@@ -148,7 +148,7 @@ export const tasks: Task[] = [
   { id: 't14', title: 'Ответить на заявку с сайта', type: 'CALL', dueAt: at(0, 11), userId: 'u1', clientId: 'c17', leadId: 'l15' },
 ];
 
-export const events: CalendarEvent[] = [
+const coreEvents: CalendarEvent[] = [
   { id: 'e1', kind: 'CALL', title: 'Звонок: второй показ', startsAt: at(0, 10), endsAt: at(0, 10, 15), clientId: 'c1', userId: 'u1' },
   { id: 'e2', kind: 'MEETING', title: 'Встреча с продавцом', startsAt: at(0, 11, 30), endsAt: at(0, 12, 30), clientId: 'c14', userId: 'u1' },
   { id: 'e3', kind: 'SHOWING', title: 'Показ: дом в оливковой роще', startsAt: at(0, 14), endsAt: at(0, 15), clientId: 'c13', propertyId: 'p4', userId: 'u1' },
@@ -166,7 +166,7 @@ export const events: CalendarEvent[] = [
   { id: 'e15', kind: 'SHOWING', title: 'Показ: апартаменты в новой башне', startsAt: at(2, 17), endsAt: at(2, 18), clientId: 'c17', propertyId: 'p10', userId: 'u1' },
 ];
 
-export const activities: Activity[] = [
+const coreActivities: Activity[] = [
   { id: 'a1', type: 'CREATED', text: 'Новый лид с сайта', at: ago(2 * HOUR), userId: 'u2', clientId: 'c9', leadId: 'l8' },
   { id: 'a2', type: 'STAGE', text: 'Этап: Переговоры', at: ago(3 * HOUR), userId: 'u2', clientId: 'c2', leadId: 'l2' },
   { id: 'a3', type: 'CALL', text: 'Звонок: отвечен. Хотят второй показ с супругой в 16:30.', at: ago(20 * HOUR), userId: 'u1', clientId: 'c1', leadId: 'l1' },
@@ -180,3 +180,149 @@ export const activities: Activity[] = [
   { id: 'a11', type: 'NOTE', text: 'Инвестор просит объекты только с действующим арендатором.', at: ago(DAY), userId: 'u1', clientId: 'c10', leadId: 'l9' },
   { id: 'a12', type: 'STAGE', text: 'Этап: Подбор', at: ago(2 * DAY), userId: 'u3', clientId: 'c15', leadId: 'l13' },
 ];
+
+/* ---------------------------- Объём для теста ----------------------------
+ * Ядро выше написано руками: на него ссылаются заметки, коммуникации и сделки,
+ * и в нём видно, как выглядит подробно заполненная карточка.
+ *
+ * Дальше — генерация по фиксированному правилу, без Math.random: демо должно
+ * выглядеть одинаково при каждой загрузке. Иначе скриншоты, показ клиенту и
+ * прогон проверок расходятся, а «почему у меня другие цифры» — первый вопрос
+ * на демонстрации.
+ */
+const NAMES = [
+  'Андрей Ковач', 'Irène Dupont', 'Marco Romano', 'Оксана Кравченко', 'Julien Lefèvre',
+  'Дмитрий Нестеренко', 'Giulia Bianchi', 'Наталья Савицкая', 'Claire Moreau', 'Tomasz Wójcik',
+  'Валерия Демченко', 'Ferran Soler', 'Karolina Nowak', 'Игорь Карпенко', 'Alice Girard',
+  'Матвей Лебедев', 'Paolo Conti', 'Grzegorz Kaczmarek', 'Юлия Мороз', 'Antoine Mercier',
+  'Sara Ricci', 'Владимир Сидоренко', 'Hanna Schmidt', 'Luca Greco', 'Ольга Литвин',
+  'Felix Bauer', 'Camille Rousseau', 'Богдан Панченко', 'Beatrix Weiss', 'Jean-Marc Bernard',
+];
+const pad = (n: number, len = 2) => String(n).padStart(len, '0');
+/** Телефоны — из тех же нерабочих диапазонов, что и в ядре. */
+const phoneOf = (k: number) => [
+  `+33 6 39 98 ${pad(10 + (k % 80))} ${pad(20 + ((k * 3) % 70))}`,
+  `+380 67 000 ${pad(10 + (k % 80))} ${pad(20 + ((k * 7) % 70))}`,
+  `+39 351 000 ${pad(12 + (k % 80))} ${pad(30 + ((k * 5) % 60))}`,
+  `+44 7700 900${pad(100 + ((k * 7) % 800), 3)}`,
+  `+48 500 000 ${pad(120 + ((k * 5) % 800), 3)}`,
+][k % 5];
+
+const SOURCES = ['INSTAGRAM', 'WEBSITE', 'REFERRAL', 'FACEBOOK', 'TELEGRAM', 'MANUAL'] as const;
+const OWNERS = ['u1', 'u2', 'u3', 'u1', 'u2'] as const;
+const DISTRICTS = ['Nice', 'Menton', 'Cap d’Ail', 'Sanremo', 'Èze', 'Beaulieu-sur-Mer', 'Villefranche-sur-Mer'];
+
+const extraClients: Client[] = NAMES.map((fullName, k) => ({
+  id: `c${19 + k}`,
+  fullName,
+  primaryPhone: phoneOf(k),
+  email: k % 3 === 0 ? `client${19 + k}@mail.demo` : undefined,
+  type: (k % 7 === 0 ? 'INVESTOR' : k % 11 === 0 ? 'SELLER' : 'BUYER') as Client['type'],
+  source: SOURCES[k % SOURCES.length],
+  assignedUserId: OWNERS[k % OWNERS.length],
+  isArchived: k === 26,
+  isBlacklisted: false,
+  createdAt: ago((3 + k * 6) * DAY),
+  preferences: { districts: [DISTRICTS[k % DISTRICTS.length]], price: { max: 600_000 + (k % 9) * 350_000 }, currency: 'EUR' },
+}));
+
+/* Этапы раздаём так, чтобы в каждой колонке канбана было что показать,
+   а «Новых» осталось столько, сколько риелтор успевает разобрать за день. */
+const STAGE_CYCLE = ['CONTACTED', 'SELECTION', 'QUALIFIED', 'SHOWING', 'NEW', 'NEGOTIATION', 'CONTACTED', 'SELECTION', 'QUALIFIED', 'SHOWING', 'WON', 'QUALIFIED', 'NEW', 'SELECTION', 'LOST'] as const;
+const PRIORITY_CYCLE = ['warm', 'hot', 'cold', 'warm', 'hot'] as const;
+const PURPOSE_CYCLE = ['LIVING', 'INVESTMENT', 'RELOCATION'] as const;
+const PROPS = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8', 'p10'];
+
+const extraLeads: Lead[] = extraClients.slice(0, 28).map((c, k) => {
+  const stage = STAGE_CYCLE[k % STAGE_CYCLE.length];
+  const active = stage !== 'WON' && stage !== 'LOST';
+  const budgetMax = 600_000 + (k % 9) * 350_000;
+  return {
+    id: `l${17 + k}`,
+    clientId: c.id,
+    stage,
+    priority: PRIORITY_CYCLE[k % PRIORITY_CYCLE.length],
+    assignedUserId: c.assignedUserId,
+    source: c.source,
+    purpose: PURPOSE_CYCLE[k % PURPOSE_CYCLE.length],
+    budgetMin: k % 3 === 0 ? Math.round(budgetMax * 0.6) : undefined,
+    budgetMax,
+    budgetCurrency: 'EUR',
+    interestPropertyId: k % 2 === 0 ? PROPS[k % PROPS.length] : undefined,
+    nextActionAt: active ? at((k % 9) - 2, 9 + (k % 9), (k % 2) * 30) : undefined,
+    lastContactAt: ago(((k % 12) + 1) * DAY),
+    createdAt: c.createdAt,
+    lostReason: stage === 'LOST' ? ['Дорого', 'Купил через другое агентство', 'Передумал переезжать'][k % 3] : undefined,
+  };
+});
+
+const TASK_TITLES = [
+  'Перезвонить по подборке', 'Отправить планировки', 'Согласовать время показа', 'Уточнить бюджет',
+  'Запросить выписку по объекту', 'Подготовить сравнение двух вариантов', 'Напомнить о встрече',
+  'Собрать обратную связь после показа', 'Отправить договор бронирования', 'Проверить документы продавца',
+];
+const TASK_TYPES = ['CALL', 'FOLLOWUP', 'SHOWING', 'CUSTOM'] as const;
+const DUE_OFFSETS = [-3, -1, 0, 0, 1, 2, 3, 4, 6, 9];
+
+const extraTasks: Task[] = extraLeads.map((l, k) => ({
+  id: `t${15 + k}`,
+  title: TASK_TITLES[k % TASK_TITLES.length],
+  type: TASK_TYPES[k % TASK_TYPES.length],
+  dueAt: at(DUE_OFFSETS[k % DUE_OFFSETS.length], 10 + (k % 8), (k % 2) * 30),
+  userId: l.assignedUserId ?? 'u1',
+  clientId: l.clientId,
+  leadId: l.id,
+  completedAt: k % 7 === 3 ? ago((k % 5 + 1) * HOUR) : undefined,
+}));
+
+/* Календарь на месяц вперёд и две недели назад: в режиме «Месяц» пустая сетка
+   выглядит так, будто агентство не работает. Выходные пропускаем. */
+const EVENT_KINDS = ['SHOWING', 'MEETING', 'CALL', 'SHOWING', 'DEADLINE'] as const;
+const EVENT_TITLES: Record<string, string> = {
+  SHOWING: 'Показ', MEETING: 'Встреча', CALL: 'Звонок', DEADLINE: 'Дедлайн по оферте',
+};
+const extraEvents: CalendarEvent[] = [];
+for (let day = -14, n = 0; day <= 21; day++) {
+  const d = new Date(now); d.setDate(d.getDate() + day);
+  if (d.getDay() === 0 || d.getDay() === 6) continue;
+  const count = 1 + ((day + 14) % 3);
+  for (let i = 0; i < count; i++, n++) {
+    const kind = EVENT_KINDS[n % EVENT_KINDS.length];
+    const client = extraClients[n % extraClients.length];
+    const property = PROPS[n % PROPS.length];
+    const hour = 9 + ((n * 2) % 9);
+    extraEvents.push({
+      id: `e${16 + n}`,
+      kind,
+      title: kind === 'SHOWING' ? `Показ: ${['вилла', 'апартаменты', 'студия', 'дом', 'пентхаус', 'квартира'][n % 6]}` : `${EVENT_TITLES[kind]}: ${client.fullName}`,
+      startsAt: at(day, hour, (n % 2) * 30),
+      endsAt: at(day, hour + (kind === 'CALL' ? 0 : 1), (n % 2) * 30 + (kind === 'CALL' ? 20 : 0)),
+      clientId: client.id,
+      propertyId: kind === 'SHOWING' ? property : undefined,
+      userId: OWNERS[n % OWNERS.length],
+      readOnly: kind === 'DEADLINE',
+    });
+  }
+}
+
+const ACTIVITY_TEXTS = [
+  'Звонок: отвечен, договорились о подборке', 'Отправлены три варианта по почте',
+  'Показ состоялся, просит смету на ремонт', 'Этап: Подбор', 'Клиент переносит решение на месяц',
+  'Уточнили бюджет: верхняя граница выросла', 'Звонок: не дозвонились',
+];
+const ACTIVITY_TYPES = ['CALL', 'NOTE', 'SHOWING', 'STAGE', 'NOTE', 'NOTE', 'CALL'] as const;
+const extraActivities: Activity[] = extraLeads.map((l, k) => ({
+  id: `a${13 + k}`,
+  type: ACTIVITY_TYPES[k % ACTIVITY_TYPES.length],
+  text: ACTIVITY_TEXTS[k % ACTIVITY_TEXTS.length],
+  at: ago(((k % 10) + 1) * 6 * HOUR),
+  userId: l.assignedUserId ?? 'u1',
+  clientId: l.clientId,
+  leadId: l.id,
+}));
+
+export const clients: Client[] = [...coreClients, ...extraClients];
+export const leads: Lead[] = [...coreLeads, ...extraLeads];
+export const tasks: Task[] = [...coreTasks, ...extraTasks];
+export const events: CalendarEvent[] = [...coreEvents, ...extraEvents];
+export const activities: Activity[] = [...coreActivities, ...extraActivities];

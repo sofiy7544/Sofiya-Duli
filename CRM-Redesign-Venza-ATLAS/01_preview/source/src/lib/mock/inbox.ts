@@ -44,6 +44,26 @@ let items: Conversation[] = [
       { id: 'm6', at: back(26 * 60 * MIN), text: 'Подскажите, а рассрочка от застройщика есть?', mine: false },
       { id: 'm7', at: back(25 * 60 * MIN), text: 'Да, до 18 месяцев. Пришлю таблицу в личные сообщения.', mine: true },
     ] },
+  { id: 'i5', channel: 'TELEGRAM', author: 'Богдан Панченко', handle: '@b_panchenko', status: 'new',
+    messages: [
+      { id: 'm8', at: back(2 * 60 * MIN), text: 'Здравствуйте! Видел студию в Ментоне за 390. Она под аренду сдаётся сейчас?', mine: false },
+      { id: 'm9', at: back(100 * MIN), text: 'И можно ли посмотреть в выходные?', mine: false },
+    ] },
+  { id: 'i6', channel: 'EMAIL', author: 'Hanna Schmidt', handle: 'h.schmidt@mail.demo', status: 'new',
+    duplicateOf: { clientId: 'c41', name: 'Hanna Schmidt', reason: 'Совпадает почта' },
+    messages: [
+      { id: 'm10', at: back(6 * 60 * MIN), text: 'Guten Tag! Мы с мужем ищем две спальни у моря до 900 тысяч. Готовы приехать на просмотр в следующем месяце.', mine: false },
+    ] },
+  { id: 'i7', channel: 'WHATSAPP', author: 'Luca Greco', handle: '+39 351 000 35 70', status: 'dismissed',
+    messages: [
+      { id: 'm11', at: back(3 * 24 * 60 * MIN), text: 'Сколько стоит разместить объявление у вас на сайте?', mine: false },
+      { id: 'm12', at: back(3 * 24 * 60 * MIN - 40 * MIN), text: 'Мы работаем только с продажей через договор, размещение отдельно не продаём.', mine: true },
+    ] },
+  { id: 'i8', channel: 'INSTAGRAM', author: 'marta.k.home', handle: '@marta.k.home', status: 'qualified',
+    messages: [
+      { id: 'm13', at: back(28 * 60 * MIN), text: 'Участок в Рокбрюне ещё актуален? Интересует разрешение на строительство.', mine: false },
+      { id: 'm14', at: back(27 * 60 * MIN), text: 'Актуален, разрешение действует до 2028. Отправила документы в личные сообщения.', mine: true },
+    ] },
 ];
 
 const subs = new Set<() => void>(); let v = 0;

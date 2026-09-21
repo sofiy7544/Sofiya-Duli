@@ -80,7 +80,9 @@ const coreClients: Client[] = [
    18 — кухня с кирпичной стеной, 20 — вид из окна на город, 21 — бассейн
    на крыше, 22 — лобби, 23 — фасад новой башни, 24 — гостиная семейной
    квартиры, 25 — вид на город с террасы, 26–29 — квартира без мебели
-   (гостиная, кухня, коридор, комната). */
+   (гостиная, кухня, коридор, комната), 30 — бассейн резиденции,
+   31 и 32 — студии с мебелью, 33 — спальня с видом на город,
+   34 и 35 — гостиная и спальня современных апартаментов. */
 export const properties: Property[] = [
   { id: 'p1', type: 'HOUSE', status: 'AVAILABLE', title: 'Вилла с панорамой залива', district: 'Villefranche-sur-Mer', address: '675 Av. des Caroubiers', rooms: 5, area: 280, price: 4_900_000, currency: 'EUR', ownerUserId: 'u1',
     description: 'Вилла расположена в престижном районе с панорамным видом на залив. На первом уровне — просторная гостиная с выходом на террасу, кухня-столовая и гостевая спальня. На втором — четыре спальни, каждая со своей ванной. Сад 900 м², бассейн, гараж на две машины.',
@@ -108,14 +110,22 @@ export const properties: Property[] = [
     description: 'Новостройка со сдачей в этом году: панорамное остекление, бассейн на крыше, лобби с консьержем круглосуточно. С двадцать первого этажа виден город до самого холма, вечером — огни бульвара. Квартира сдаётся без мебели, с кухней и техникой.',
     photos: [{ id: 'ph26', art: 23 }, { id: 'ph27', art: 22 }, { id: 'ph28', art: 21 }, { id: 'ph29', art: 26 }, { id: 'ph30', art: 27 }, { id: 'ph31', art: 28 }, { id: 'ph32', art: 29 }, { id: 'ph33', art: 20 }],
     features: ['Новостройка', 'Без мебели', 'Бассейн на крыше', 'Консьерж 24/7'], createdAt: ago(5 * DAY) },
+  { id: 'p11', type: 'APARTMENT', status: 'IN_SHOWING', title: 'Апартаменты в резиденции с бассейном', district: 'Cap d’Ail', address: '9 Av. des Cigales', rooms: 3, floor: 6, totalFloors: 11, area: 104, price: 1_450_000, currency: 'EUR', ownerUserId: 'u2',
+    description: 'Резиденция 2024 года: бассейн и зона отдыха во дворе, охрана, подземный паркинг. Квартира продаётся с мебелью — можно заезжать или сразу сдавать.',
+    photos: [{ id: 'ph34', art: 34 }, { id: 'ph35', art: 35 }, { id: 'ph36', art: 33 }, { id: 'ph37', art: 30 }],
+    features: ['С мебелью', 'Бассейн', 'Охрана', 'Паркинг'], createdAt: ago(11 * DAY) },
+  { id: 'p12', type: 'APARTMENT', status: 'AVAILABLE', title: 'Студия под аренду', district: 'Nice', address: '27 Rue Gioffredo', rooms: 1, floor: 3, totalFloors: 6, area: 36, price: 295_000, currency: 'EUR', ownerUserId: 'u3',
+    description: 'Студия с мебелью и техникой, балкон, десять минут пешком до вокзала. Сдаётся круглый год, доходность около 4,5% — вариант для инвестора, а не для жизни.',
+    photos: [{ id: 'ph38', art: 32 }, { id: 'ph39', art: 31 }],
+    features: ['С мебелью', 'Под аренду', 'Балкон'], createdAt: ago(6 * DAY) },
   { id: 'p9', type: 'APARTMENT', status: 'SOLD', title: 'Апартаменты в Лугано', district: 'Lugano', address: 'Riva Paradiso 5', rooms: 3, floor: 5, totalFloors: 7, area: 124, price: 1_420_000, currency: 'CHF', ownerUserId: 'u1',
-    description: 'Апартаменты с видом на озеро. Продано в этом квартале.', photos: [{ id: 'ph34', art: 1 }], features: ['Вид на озеро'], createdAt: ago(90 * DAY) },
+    description: 'Апартаменты с видом на озеро. Продано в этом квартале.', photos: [{ id: 'ph40', art: 1 }], features: ['Вид на озеро'], createdAt: ago(90 * DAY) },
 ];
 
 const coreLeads: Lead[] = [
   { id: 'l1', clientId: 'c1', stage: 'SHOWING', priority: 'hot', assignedUserId: 'u1', source: 'INSTAGRAM', purpose: 'LIVING', budgetMin: 3_500_000, budgetMax: 5_500_000, budgetCurrency: 'EUR', interestPropertyId: 'p1', interestNote: 'Второй показ с супругой', nextActionAt: at(0, 16, 30), lastContactAt: ago(DAY), createdAt: ago(41 * DAY) },
   { id: 'l2', clientId: 'c2', stage: 'NEGOTIATION', priority: 'hot', assignedUserId: 'u2', source: 'REFERRAL', purpose: 'LIVING', budgetMax: 1_800_000, budgetCurrency: 'EUR', interestPropertyId: 'p2', interestNote: 'Торг по цене и сроку выхода на сделку', nextActionAt: at(0, 12), lastContactAt: ago(3 * HOUR), createdAt: ago(24 * DAY) },
-  { id: 'l3', clientId: 'c3', stage: 'SELECTION', priority: 'warm', assignedUserId: 'u1', source: 'WEBSITE', purpose: 'INVESTMENT', budgetMax: 900_000, budgetCurrency: 'EUR', interestPropertyId: 'p3', nextActionAt: at(-1, 11), lastContactAt: ago(4 * DAY), createdAt: ago(19 * DAY) },
+  { id: 'l3', clientId: 'c3', stage: 'SELECTION', priority: 'warm', assignedUserId: 'u1', source: 'WEBSITE', purpose: 'INVESTMENT', budgetMax: 900_000, budgetCurrency: 'EUR', interestPropertyId: 'p12', nextActionAt: at(-1, 11), lastContactAt: ago(4 * DAY), createdAt: ago(19 * DAY) },
   { id: 'l4', clientId: 'c4', stage: 'QUALIFIED', priority: 'warm', assignedUserId: 'u3', source: 'FACEBOOK', purpose: 'RELOCATION', budgetMax: 1_200_000, budgetCurrency: 'EUR', nextActionAt: at(1, 10), lastContactAt: ago(2 * DAY), createdAt: ago(10 * DAY) },
   { id: 'l5', clientId: 'c5', stage: 'CONTACTED', priority: 'cold', assignedUserId: 'u1', source: 'TELEGRAM', purpose: 'LIVING', budgetMax: 750_000, budgetCurrency: 'EUR', nextActionAt: at(0, 18), lastContactAt: ago(6 * DAY), createdAt: ago(7 * DAY) },
   { id: 'l6', clientId: 'c6', stage: 'NEW', priority: 'warm', assignedUserId: null, source: 'MANUAL', purpose: 'LIVING', budgetCurrency: 'EUR', createdAt: ago(3 * DAY) },
@@ -125,7 +135,7 @@ const coreLeads: Lead[] = [
   { id: 'l10', clientId: 'c13', stage: 'CONTACTED', priority: 'hot', assignedUserId: 'u1', source: 'INSTAGRAM', purpose: 'RELOCATION', budgetMax: 2_900_000, budgetCurrency: 'EUR', interestPropertyId: 'p4', interestNote: 'Школа рядом — обязательное условие', nextActionAt: at(0, 14), lastContactAt: ago(20 * HOUR), createdAt: ago(DAY) },
   { id: 'l11', clientId: 'c7', stage: 'WON', priority: 'warm', assignedUserId: 'u1', source: 'REFERRAL', purpose: 'LIVING', budgetCurrency: 'CHF', interestPropertyId: 'p9', createdAt: ago(72 * DAY) },
   { id: 'l12', clientId: 'c11', stage: 'LOST', priority: 'cold', assignedUserId: 'u3', source: 'FACEBOOK', purpose: 'LIVING', budgetCurrency: 'EUR', lostReason: 'Купил через другое агентство', createdAt: ago(124 * DAY) },
-  { id: 'l13', clientId: 'c15', stage: 'SELECTION', priority: 'hot', assignedUserId: 'u3', source: 'TELEGRAM', purpose: 'LIVING', budgetMax: 2_100_000, budgetCurrency: 'EUR', interestPropertyId: 'p2', interestNote: 'Просит подборку из трёх вариантов к пятнице', nextActionAt: at(1, 13), lastContactAt: ago(2 * DAY), createdAt: ago(16 * DAY) },
+  { id: 'l13', clientId: 'c15', stage: 'SELECTION', priority: 'hot', assignedUserId: 'u3', source: 'TELEGRAM', purpose: 'LIVING', budgetMax: 2_100_000, budgetCurrency: 'EUR', interestPropertyId: 'p11', interestNote: 'Просит подборку из трёх вариантов к пятнице', nextActionAt: at(1, 13), lastContactAt: ago(2 * DAY), createdAt: ago(16 * DAY) },
   { id: 'l14', clientId: 'c16', stage: 'SHOWING', priority: 'warm', assignedUserId: 'u2', source: 'REFERRAL', purpose: 'INVESTMENT', budgetMax: 2_200_000, budgetCurrency: 'EUR', interestPropertyId: 'p8', nextActionAt: at(3, 11), lastContactAt: ago(5 * DAY), createdAt: ago(52 * DAY) },
   { id: 'l15', clientId: 'c17', stage: 'NEW', priority: 'warm', assignedUserId: 'u1', source: 'WEBSITE', purpose: 'LIVING', budgetMax: 1_300_000, budgetCurrency: 'EUR', interestPropertyId: 'p10', interestNote: 'Заявка по новостройке с сайта', createdAt: ago(4 * HOUR) },
   { id: 'l16', clientId: 'c18', stage: 'CONTACTED', priority: 'warm', assignedUserId: 'u3', source: 'INSTAGRAM', purpose: 'INVESTMENT', budgetMax: 800_000, budgetCurrency: 'EUR', interestPropertyId: 'p6', nextActionAt: at(4, 12), lastContactAt: ago(3 * DAY), createdAt: ago(9 * DAY) },
@@ -164,6 +174,8 @@ const coreEvents: CalendarEvent[] = [
   { id: 'e13', kind: 'MEETING', title: 'Подбор вариантов с клиентом', startsAt: at(1, 13), endsAt: at(1, 14), clientId: 'c15', userId: 'u3' },
   { id: 'e14', kind: 'CALL', title: 'Заявка с сайта: первый контакт', startsAt: at(0, 11), endsAt: at(0, 11, 20), clientId: 'c17', userId: 'u1' },
   { id: 'e15', kind: 'SHOWING', title: 'Показ: апартаменты в новой башне', startsAt: at(2, 17), endsAt: at(2, 18), clientId: 'c17', propertyId: 'p10', userId: 'u1' },
+  { id: 'e16', kind: 'SHOWING', title: 'Показ: резиденция с бассейном', startsAt: at(1, 11), endsAt: at(1, 12), clientId: 'c15', propertyId: 'p11', userId: 'u3' },
+  { id: 'e17', kind: 'MEETING', title: 'Инвестор: расчёт доходности по студии', startsAt: at(3, 16), endsAt: at(3, 17), clientId: 'c3', propertyId: 'p12', userId: 'u1' },
 ];
 
 const coreActivities: Activity[] = [
@@ -231,7 +243,7 @@ const extraClients: Client[] = NAMES.map((fullName, k) => ({
 const STAGE_CYCLE = ['CONTACTED', 'SELECTION', 'QUALIFIED', 'SHOWING', 'NEW', 'NEGOTIATION', 'CONTACTED', 'SELECTION', 'QUALIFIED', 'SHOWING', 'WON', 'QUALIFIED', 'NEW', 'SELECTION', 'LOST'] as const;
 const PRIORITY_CYCLE = ['warm', 'hot', 'cold', 'warm', 'hot'] as const;
 const PURPOSE_CYCLE = ['LIVING', 'INVESTMENT', 'RELOCATION'] as const;
-const PROPS = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8', 'p10'];
+const PROPS = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8', 'p10', 'p11', 'p12'];
 
 const extraLeads: Lead[] = extraClients.slice(0, 28).map((c, k) => {
   const stage = STAGE_CYCLE[k % STAGE_CYCLE.length];

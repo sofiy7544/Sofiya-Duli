@@ -254,7 +254,11 @@ body.menu-open{overflow:hidden}
 .svc--hub .svc__f .btn{width:auto;position:relative;z-index:2}
 
 /* ── вільна субота ───────────────────────────────────────── */
-.sat{display:grid;grid-template-columns:1fr;gap:clamp(22px,4vw,64px);align-items:center}
+.sat{display:grid;grid-template-columns:1fr;grid-template-areas:"head" "ph" "body";gap:clamp(22px,4vw,48px);align-items:center}
+.sat__head{grid-area:head}
+.sat__body{grid-area:body}
+.sat__ph{grid-area:ph;margin:0;border-radius:var(--r-lg);overflow:hidden;aspect-ratio:4/5;max-height:520px;background:var(--surface-2)}
+.sat__ph img{width:100%;height:100%;object-fit:cover}
 .sat h2{margin-top:10px;max-width:18ch}
 .sat__l{list-style:none;margin:0;padding:0;display:grid;gap:12px}
 .sat__l li{position:relative;padding-left:30px;font-size:clamp(1.02rem,.98rem+.3vw,1.1rem);color:var(--ink-2);line-height:1.5}
@@ -531,6 +535,7 @@ body.calc-in .bar,body.menu-open .bar{transform:translateY(110%)}
 .phero__lead{max-width:52ch;margin-bottom:22px}
 .phero__note{margin-top:16px;font-size:var(--fs-caption);color:var(--muted)}
 .phero__img{width:min(440px,100%);height:auto;border-radius:var(--r-lg);border:1px solid var(--hair)}
+.phero__img--photo{border:0;box-shadow:var(--sh-2);object-fit:cover;aspect-ratio:16/10}
 .phero__price{display:flex;flex-direction:row;align-items:baseline;gap:8px;background:var(--surface);border:1px solid var(--hair);border-radius:var(--r-lg);padding:18px 22px;box-shadow:var(--sh-1);width:100%}
 .phero__price span{font-size:var(--fs-small);color:var(--muted)}
 .phero__price b{font-size:clamp(2rem,1.6rem + 1.6vw,2.8rem);font-weight:800;letter-spacing:-.035em;line-height:1;color:var(--brand);font-variant-numeric:tabular-nums}
@@ -692,7 +697,9 @@ body.calc-in .bar,body.menu-open .bar{transform:translateY(110%)}
   .bar{display:none}
   .phero__in{grid-template-columns:1fr auto}
   .inc__grid{grid-template-columns:.9fr 1.1fr}
-  .sat{grid-template-columns:1fr 1fr}
+  .sat{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);grid-template-areas:"ph head" "ph body";align-items:start;column-gap:clamp(32px,5vw,72px)}
+  .sat__ph{max-height:none;align-self:stretch;aspect-ratio:auto;min-height:480px}
+  .sat__body{align-self:start}
   .tr{grid-template-columns:repeat(4,1fr)}
   .rev{grid-template-columns:repeat(3,1fr)}
   .strip__in{grid-template-columns:repeat(4,1fr)}

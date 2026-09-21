@@ -77,7 +77,8 @@ export const clients: Client[] = [
    10 — студия с кирпичной стеной, 11 — фасад дома, 12 — вид сверху на набережную,
    13 — гостиная с кирпичом, 14 — бассейн во дворе, 15 — тренажёрный зал,
    16 — балкон с видом на город, 17 и 19 — спальня с панорамным окном,
-   18 — кухня с кирпичной стеной. */
+   18 — кухня с кирпичной стеной, 20 — вид из окна на город, 21 — бассейн
+   на крыше, 22 — лобби, 23 — фасад новой башни. */
 export const properties: Property[] = [
   { id: 'p1', type: 'HOUSE', status: 'AVAILABLE', title: 'Вилла с панорамой залива', district: 'Villefranche-sur-Mer', address: '675 Av. des Caroubiers', rooms: 5, area: 280, price: 4_900_000, currency: 'EUR', ownerUserId: 'u1',
     description: 'Вилла расположена в престижном районе с панорамным видом на залив. На первом уровне — просторная гостиная с выходом на террасу, кухня-столовая и гостевая спальня. На втором — четыре спальни, каждая со своей ванной. Сад 900 м², бассейн, гараж на две машины.',
@@ -101,8 +102,12 @@ export const properties: Property[] = [
     description: 'Коммерческое помещение с витринами на набережную, действующий арендатор с договором до 2028 года.', photos: [{ id: 'ph22', art: 4 }], features: ['Арендатор до 2028', 'Витрины'], createdAt: ago(27 * DAY) },
   { id: 'p8', type: 'LAND', status: 'AVAILABLE', title: 'Участок под виллу', district: 'Roquebrune-Cap-Martin', address: 'Av. Winston Churchill', area: 1400, price: 1_950_000, currency: 'EUR', ownerUserId: 'u2',
     description: 'Участок с разрешением на строительство виллы 300 м², вид на мыс. Коммуникации подведены.', photos: [{ id: 'ph23', art: 6 }], features: ['Разрешение на стройку', 'Вид на мыс'], createdAt: ago(40 * DAY) },
+  { id: 'p10', type: 'APARTMENT', status: 'AVAILABLE', title: 'Апартаменты в новой башне', district: 'Nice', address: '14 Rue de la Tour', rooms: 2, floor: 21, totalFloors: 28, area: 78, price: 1_180_000, currency: 'EUR', ownerUserId: 'u2',
+    description: 'Новостройка со сдачей в этом году: панорамное остекление, бассейн на крыше, лобби с консьержем круглосуточно. С двадцать первого этажа виден город до самого холма, вечером — огни бульвара.',
+    photos: [{ id: 'ph24', art: 23 }, { id: 'ph25', art: 22 }, { id: 'ph26', art: 21 }, { id: 'ph27', art: 20 }],
+    features: ['Новостройка', 'Бассейн на крыше', 'Консьерж 24/7', 'Панорамные окна'], createdAt: ago(5 * DAY) },
   { id: 'p9', type: 'APARTMENT', status: 'SOLD', title: 'Апартаменты в Лугано', district: 'Lugano', address: 'Riva Paradiso 5', rooms: 3, floor: 5, totalFloors: 7, area: 124, price: 1_420_000, currency: 'CHF', ownerUserId: 'u1',
-    description: 'Апартаменты с видом на озеро. Продано в этом квартале.', photos: [{ id: 'ph24', art: 1 }], features: ['Вид на озеро'], createdAt: ago(90 * DAY) },
+    description: 'Апартаменты с видом на озеро. Продано в этом квартале.', photos: [{ id: 'ph28', art: 1 }], features: ['Вид на озеро'], createdAt: ago(90 * DAY) },
 ];
 
 export const leads: Lead[] = [
@@ -120,7 +125,7 @@ export const leads: Lead[] = [
   { id: 'l12', clientId: 'c11', stage: 'LOST', priority: 'cold', assignedUserId: 'u3', source: 'FACEBOOK', purpose: 'LIVING', budgetCurrency: 'EUR', lostReason: 'Купил через другое агентство', createdAt: ago(124 * DAY) },
   { id: 'l13', clientId: 'c15', stage: 'SELECTION', priority: 'hot', assignedUserId: 'u3', source: 'TELEGRAM', purpose: 'LIVING', budgetMax: 2_100_000, budgetCurrency: 'EUR', interestPropertyId: 'p2', interestNote: 'Просит подборку из трёх вариантов к пятнице', nextActionAt: at(1, 13), lastContactAt: ago(2 * DAY), createdAt: ago(16 * DAY) },
   { id: 'l14', clientId: 'c16', stage: 'SHOWING', priority: 'warm', assignedUserId: 'u2', source: 'REFERRAL', purpose: 'INVESTMENT', budgetMax: 2_200_000, budgetCurrency: 'EUR', interestPropertyId: 'p8', nextActionAt: at(3, 11), lastContactAt: ago(5 * DAY), createdAt: ago(52 * DAY) },
-  { id: 'l15', clientId: 'c17', stage: 'NEW', priority: 'warm', assignedUserId: 'u1', source: 'WEBSITE', purpose: 'LIVING', budgetCurrency: 'EUR', createdAt: ago(4 * HOUR) },
+  { id: 'l15', clientId: 'c17', stage: 'NEW', priority: 'warm', assignedUserId: 'u1', source: 'WEBSITE', purpose: 'LIVING', budgetMax: 1_300_000, budgetCurrency: 'EUR', interestPropertyId: 'p10', interestNote: 'Заявка по новостройке с сайта', createdAt: ago(4 * HOUR) },
   { id: 'l16', clientId: 'c18', stage: 'CONTACTED', priority: 'warm', assignedUserId: 'u3', source: 'INSTAGRAM', purpose: 'INVESTMENT', budgetMax: 800_000, budgetCurrency: 'EUR', interestPropertyId: 'p6', nextActionAt: at(4, 12), lastContactAt: ago(3 * DAY), createdAt: ago(9 * DAY) },
 ];
 
@@ -156,6 +161,7 @@ export const events: CalendarEvent[] = [
   { id: 'e12', kind: 'SHOWING', title: 'Показ: участок в Рокбрюне', startsAt: at(3, 11), endsAt: at(3, 12), clientId: 'c16', propertyId: 'p8', userId: 'u2' },
   { id: 'e13', kind: 'MEETING', title: 'Подбор вариантов с клиентом', startsAt: at(1, 13), endsAt: at(1, 14), clientId: 'c15', userId: 'u3' },
   { id: 'e14', kind: 'CALL', title: 'Заявка с сайта: первый контакт', startsAt: at(0, 11), endsAt: at(0, 11, 20), clientId: 'c17', userId: 'u1' },
+  { id: 'e15', kind: 'SHOWING', title: 'Показ: апартаменты в новой башне', startsAt: at(2, 17), endsAt: at(2, 18), clientId: 'c17', propertyId: 'p10', userId: 'u1' },
 ];
 
 export const activities: Activity[] = [

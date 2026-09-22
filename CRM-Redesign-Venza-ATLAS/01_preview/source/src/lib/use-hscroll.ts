@@ -13,6 +13,10 @@ import * as React from 'react';
  *
  * Состояние отдаётся в `data-fade`, рисует его CSS (styles/app.css): так ни один
  * кадр прокрутки не проходит через React.
+ *
+ * Заодно считается положение ползунка: `--hs-w` (какая доля ряда видна) и
+ * `--hs-x` (насколько он отлистан). Пишутся в родителя — сам ряд прокручивается,
+ * и полоска внутри него уезжала бы вместе с содержимым.
  */
 export function useHScrollFade<T extends HTMLElement>() {
   const detach = React.useRef<(() => void) | null>(null);
@@ -31,6 +35,15 @@ export function useHScrollFade<T extends HTMLElement>() {
       const right = max > 2 && el.scrollLeft < max - 2;
       const state = left && right ? 'both' : left ? 'left' : right ? 'right' : null;
       if (state) el.setAttribute('data-fade', state); else el.removeAttribute('data-fade');
+
+      const wrap = el.parentElement;
+      if (!wrap?.hasAttribute('data-hscroll-wrap')) return;
+      if (max <= 2) { wrap.removeAttribute('data-scrollbar'); return; }
+      wrap.setAttribute('data-scrollbar', '');
+      const visible = el.clientWidth / el.scrollWidth;          // какая доля ряда видна
+      const progress = Math.min(1, Math.max(0, el.scrollLeft / max));
+      wrap.style.setProperty('--hs-w', `${(visible * 100).toFixed(2)}%`);
+      wrap.style.setProperty('--hs-x', `${(progress * (1 - visible) * 100).toFixed(2)}%`);
     };
 
     update();

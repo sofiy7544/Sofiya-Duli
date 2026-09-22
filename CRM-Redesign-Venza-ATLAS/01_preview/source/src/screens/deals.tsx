@@ -56,6 +56,9 @@ export function DealsScreen() {
     if (view === 'board') {
       const cols: DealStatus[] = ['ACTIVE', 'COMPLETED', 'CANCELLED'];
       return (
+        /* Полоски-ползунка здесь нет намеренно: колонки высокие, и низ ряда
+           оказывается далеко за экраном — подсказку там никто не увидит.
+           Про прокрутку говорит затухание у края. */
         <div ref={boardRow} data-hscroll className="no-scrollbar relative -mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-4 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0">
           {cols.map((s) => { const list = items.filter((d) => d.status === s); const drag = items.find((d) => d.id === dragId); return (
             <section key={s} aria-label={DEAL_STATUS_LABEL[s]} onDragOver={(e) => { if (drag && drag.status !== s) { e.preventDefault(); setOver(s); } }} onDragLeave={() => setOver(null)}

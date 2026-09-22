@@ -79,9 +79,12 @@ export function LeadsScreen() {
     return (
       <>
         {!isDesktop && (
-          <div ref={stageRow} data-hscroll className="no-scrollbar relative -mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1" role="group" aria-label="Фильтр по этапам">
-            <Chip selected={stage === 'ALL'} onClick={() => setStage('ALL')} count={active.length}>Все</Chip>
-            {STAGES_ACTIVE.map((s) => <Chip key={s} selected={stage === s} onClick={() => setStage(s)} count={active.filter((l) => l.stage === s).length}>{STAGE_LABEL[s]}</Chip>)}
+          /* Обёртка держит ползунок: сам ряд прокручивается, и полоска внутри него уехала бы. */
+          <div data-hscroll-wrap className="mb-4 pb-2">
+            <div ref={stageRow} data-hscroll className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-2.5" role="group" aria-label="Фильтр по этапам">
+              <Chip selected={stage === 'ALL'} onClick={() => setStage('ALL')} count={active.length}>Все</Chip>
+              {STAGES_ACTIVE.map((s) => <Chip key={s} selected={stage === s} onClick={() => setStage(s)} count={active.filter((l) => l.stage === s).length}>{STAGE_LABEL[s]}</Chip>)}
+            </div>
           </div>
         )}
         {list.length === 0 ? <EmptyState icon={Workflow} title="На этом этапе пусто" text="Попробуйте другой этап или сбросьте фильтры." action={activeFilterCount(filters) ? <Button variant="outline" size="sm" onClick={() => setFilters({})}>Сбросить фильтры</Button> : undefined} /> : (

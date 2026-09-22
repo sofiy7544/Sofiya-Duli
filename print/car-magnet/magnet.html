@@ -11,10 +11,11 @@
 @font-face{font-family:"Playfair Display";font-weight:400 900;src:url(../../assets/fonts/playfair-latin.woff2) format("woff2");unicode-range:U+0000-00FF}
 @page{size:610mm 410mm;margin:0}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{width:610mm;height:410mm;overflow:hidden;background:#1D402C}
+html,body{width:610mm;height:410mm;overflow:hidden;background:transparent}
 body{font-family:"Manrope",Arial,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
 /* 5 мм вильоту з кожного боку; обрізний формат 600×400, безпечна зона ще 15 мм всередину */
-.sheet{position:relative;width:610mm;height:410mm;background:#1D402C;overflow:hidden}
+/* скруглені кути: радіус 15 мм по лінії різу (20 мм разом із вильотом) */
+.sheet{position:relative;width:610mm;height:410mm;background:#1D402C;overflow:hidden;border-radius:20mm}
 .grid{position:absolute;inset:20mm;display:grid;grid-template-columns:276mm 1fr;column-gap:14mm;align-items:stretch}
 .side-right .grid{grid-template-columns:1fr 276mm}
 .side-right .bear{order:2}

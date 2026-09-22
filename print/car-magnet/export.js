@@ -13,7 +13,7 @@ const W = 2306, H = 1550;
     const p1 = await ctx1.newPage();
     await p1.goto(base + '?side=' + side + '&guides=1', { waitUntil: 'networkidle' });
     await p1.evaluate(() => document.fonts.ready);
-    await p1.screenshot({ path: path.join(dir, 'preview-' + side + '.png'), fullPage: false });
+    await p1.screenshot({ path: path.join(dir, 'preview-' + side + '.png'), fullPage: false, omitBackground: true });
     await ctx1.close();
 
     // print PNG 150 dpi -> 150/96 = 1.5625
@@ -21,7 +21,7 @@ const W = 2306, H = 1550;
     const p2 = await ctx2.newPage();
     await p2.goto(base + '?side=' + side, { waitUntil: 'networkidle' });
     await p2.evaluate(() => document.fonts.ready);
-    await p2.screenshot({ path: path.join(dir, 'DULI-magnet-' + side + '-610x410mm-150dpi.png'), fullPage: false });
+    await p2.screenshot({ path: path.join(dir, 'DULI-magnet-' + side + '-610x410mm-150dpi.png'), fullPage: false, omitBackground: true });
     await p2.pdf({ path: path.join(dir, 'DULI-magnet-' + side + '-610x410mm.pdf'), width: '610mm', height: '410mm', printBackground: true, preferCSSPageSize: true });
     await ctx2.close();
   }

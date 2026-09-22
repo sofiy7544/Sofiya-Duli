@@ -16,7 +16,6 @@ import '@fontsource/montserrat/latin-600.css';
 import '@fontsource/montserrat/latin-800.css';
 import '@/styles/app.css';
 import App from './App';
-import { clearAppBadge } from './lib/push';
 
 createRoot(document.getElementById('root')!).render(<StrictMode><App /></StrictMode>);
 
@@ -24,6 +23,3 @@ createRoot(document.getElementById('root')!).render(<StrictMode><App /></StrictM
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
   addEventListener('load', () => { void navigator.serviceWorker.register('./sw.js').catch(() => {}); });
 }
-
-// CRM открыли — цифру со значка снимаем, как это делает почта.
-clearAppBadge();

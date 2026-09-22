@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { AtSign, BellRing, MessageCircle, Plug, Plus, Send, Trash2, Wand2 } from 'lucide-react';
+import { AtSign, MessageCircle, Plug, Plus, Send, Trash2, Wand2 } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { adminApi, useAdminVersion, type Member, type Template } from '@/lib/mock/admin';
 import { usePreviewSettings } from '@/lib/mock/store';
-import { installed, pushState, showDemoNotification } from '@/lib/push';
 import { FormGrid } from '@/components/shell/form-shell';
 import { useResource } from '@/lib/use-resource';
 import { ago } from '@/lib/format';
@@ -469,68 +468,9 @@ export function NotificationsSettingsScreen() {
         )}
       </section>
 
-      <DeviceCheck />
-
       <div className="mt-5 flex justify-end">
         <Button loading={busy} disabled={!dirty} onClick={save}>Сохранить</Button>
       </div>
     </PageBody>
-  );
-}
-
-/**
- * «Проверить на этом устройстве». Настоящий push приходит с сервера, которого
- * в превью нет; это же уведомление показывает сам браузер — вид на экране
- * блокировки, иконка, цифра на значке и переход по тапу те же самые.
- */
-function DeviceCheck() {
-  const [state, setState] = React.useState(() => pushState());
-  const [busy, setBusy] = React.useState(false);
-  // Разрешение может измениться в настройках телефона, пока приложение свёрнуто.
-  React.useEffect(() => {
-    const sync = () => setState(pushState());
-    addEventListener('visibilitychange', sync);
-    return () => removeEventListener('visibilitychange', sync);
-  }, []);
-
-  const send = async () => {
-    setBusy(true);
-    const r = await showDemoNotification();
-    setState(pushState()); setBusy(false);
-    // Пока CRM открыта на весь экран, iPhone баннер поверх неё не показывает —
-    // уведомление уходит в шторку. Поэтому подсказываем, где смотреть.
-    if (r === 'shown') toast.success('Готово — потяните шторку сверху или заблокируйте экран');
-    if (r === 'denied') toast.error('Уведомления запрещены для этого приложения');
-    if (r === 'failed') toast.error('Браузер не показал уведомление');
-  };
-
-  const note = !state.ok
-    ? state.why === 'needs-install' ? 'iPhone разрешает уведомления только установленному приложению: «Поделиться» → «На экран „Домой“», затем откройте CRM с иконки.'
-      : state.why === 'insecure' ? 'Уведомления работают только на защищённом соединении (https).'
-      : 'Этот браузер уведомления не поддерживает.'
-    : state.permission === 'denied' ? 'Уведомления запрещены. Включить можно в настройках телефона: Настройки → Уведомления → On Top.'
-    : state.permission === 'granted' ? 'Разрешение уже выдано. Уведомление придёт сразу, цифра появится на значке приложения.'
-    : `Браузер спросит разрешение — это делается один раз.${installed() ? '' : ' Сейчас CRM открыта во вкладке браузера: уведомление придёт от браузера. У установленного приложения оно выглядит как у обычной программы.'}`;
-
-  return (
-    <section className="surface mt-4 p-4 lg:p-5">
-      <div className="flex items-start gap-3">
-        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-[13px] bg-primary-soft text-primary-text"><BellRing className="h-5 w-5" aria-hidden /></span>
-        <div className="min-w-0 flex-1">
-          <h2 className="t-h3 text-[15px]">Проверить на этом устройстве</h2>
-          <p className="t-caption mt-1">{note}</p>
-          {state.ok && state.permission !== 'denied' && (
-            <p className="t-caption mt-1.5">Пока CRM открыта на экране, iPhone не показывает баннер поверх неё: уведомление придёт в шторку и на значок. Настоящее — с сервера при закрытом приложении — всплывает как у обычных программ.</p>
-          )}
-        </div>
-      </div>
-      <div className="mt-3 flex flex-wrap items-center gap-2">
-        <Button variant="outline" loading={busy} disabled={!state.ok || state.permission === 'denied'} onClick={send}>Прислать проверочное</Button>
-      </div>
-      <p className="t-caption mt-3">
-        В превью уведомление показывает сам телефон по нажатию. В CRM оно приходит с сервера и когда приложение закрыто:
-        нужны ключи VAPID, подписка устройства и отправка по событиям из списка выше. Сервис-воркер к этому уже готов.
-      </p>
-    </section>
   );
 }

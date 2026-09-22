@@ -88,7 +88,7 @@ function LeadQuickForm() {
 
   return (
     <form onSubmit={submit} className="space-y-4" noValidate>
-      <Field label="Имя клиента" required error={errors.fullName}>{(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.fullName} autoComplete="name" value={v.fullName} onChange={(e) => setV({ ...v, fullName: e.target.value })} placeholder="Например, Анна Сергеевна" />}</Field>
+      <Field label="Имя клиента" required error={errors.fullName}>{(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.fullName} autoComplete="name" value={v.fullName} onChange={(e) => setV({ ...v, fullName: e.target.value })} placeholder="Например, Ольга Ткаченко" />}</Field>
       <Field label="Телефон" required error={errors.primaryPhone}>{(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.primaryPhone} type="tel" inputMode="tel" className="tabular" value={v.primaryPhone} onChange={(e) => setV({ ...v, primaryPhone: e.target.value })} />}</Field>
       <fieldset>
         <legend className="mb-1.5 text-[13px] font-medium">Приоритет</legend>

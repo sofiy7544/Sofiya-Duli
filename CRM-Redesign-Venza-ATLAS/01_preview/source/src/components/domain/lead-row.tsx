@@ -1,7 +1,7 @@
 import { CalendarClock, MoreHorizontal } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { Link } from '@/lib/router';
-import { store } from '@/lib/mock/store';
+import { store, users, shortName } from '@/lib/mock/store';
 import { budget, relDay, time } from '@/lib/format';
 import { leadUrgency, URGENCY_LABEL, URGENCY_TONE } from '@/lib/lead-urgency';
 import { PURPOSE_LABEL, SOURCE_LABEL } from '@/lib/labels';
@@ -34,7 +34,8 @@ export function LeadRow({ lead, onActions, showStage }: { lead: Lead; onActions?
 
 export function LeadCard({ lead, dragging }: { lead: Lead; dragging?: boolean }) {
   const client = store.db.clients.find((c) => c.id === lead.clientId);
-  const owner = store.db && lead.assignedUserId ? ({ u1: 'Анна П.', u2: 'Marco Z.', u3: 'Сергей Л.' } as Record<string, string>)[lead.assignedUserId] : 'Не назначен';
+  const ownerUser = lead.assignedUserId ? users.find((u) => u.id === lead.assignedUserId) : undefined;
+  const owner = ownerUser ? shortName(ownerUser.fullName) : 'Не назначен';
   const u = leadUrgency(lead);
   return (
     <Link href={`/leads/${lead.id}`} draggable={false}

@@ -3,7 +3,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { ArrowLeft, BedDouble, Building, CalendarPlus, Plus, ChevronLeft, ChevronRight, FileDown, Heart, Layers, MapPin, MoreHorizontal, Pencil, Ruler, Search, Share2, Trash2, X } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { api } from '@/lib/mock/api';
-import { store, usePreviewSettings } from '@/lib/mock/store';
+import { store, usePreviewSettings, users } from '@/lib/mock/store';
 import { useResource } from '@/lib/use-resource';
 import { Link, useRouter } from '@/lib/router';
 import { useIsDesktop, useTheme } from '@/lib/theme/provider';
@@ -122,7 +122,7 @@ export function PropertyDetailScreen({ id }: { id: string }) {
   const p = r.data;
   const canEdit = settings.role === 'ADMIN' || p.ownerUserId === 'u1';
   const matches = store.db.clients.filter((c) => c.preferences && (!c.preferences.price?.max || c.preferences.price.max >= p.price * 0.9) && (!c.preferences.propertyType || c.preferences.propertyType === p.type)).slice(0, 4);
-  const owner = store.db && ({ u1: 'Анна Потапова', u2: 'Marco Zaccaria', u3: 'Сергей Лисовой' } as Record<string, string>)[p.ownerUserId];
+  const owner = users.find((u) => u.id === p.ownerUserId)?.fullName ?? 'Не назначен';
 
   const facts = [
     { icon: Building, label: 'Тип', value: PROPERTY_TYPE_LABEL[p.type] },

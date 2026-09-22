@@ -24,11 +24,15 @@ const ago = (ms: number) => new Date(now.getTime() - ms).toISOString();
 
 export const CURRENT_USER_ID = 'u1';
 
+// Сотрудники агентства тоже выдуманы — это демонстрационный набор, а не состав команды.
 export const users: User[] = [
-  { id: 'u1', fullName: 'Анна Потапова', role: 'ADMIN', email: 'anna@agency.demo' },
-  { id: 'u2', fullName: 'Marco Zaccaria', role: 'REALTOR', email: 'marco@agency.demo' },
-  { id: 'u3', fullName: 'Сергей Лисовой', role: 'REALTOR', email: 'sergey@agency.demo' },
+  { id: 'u1', fullName: 'Елена Радович', role: 'ADMIN', email: 'elena@agency.demo' },
+  { id: 'u2', fullName: 'Matteo Brunelli', role: 'REALTOR', email: 'matteo@agency.demo' },
+  { id: 'u3', fullName: 'Кирилл Дорош', role: 'REALTOR', email: 'kirill@agency.demo' },
 ];
+
+/** «Елена Радович» → «Елена Р.» — короткая подпись в списках и фильтрах. */
+export const shortName = (full: string) => { const [a, b] = full.split(' '); return b ? `${a} ${b[0]}.` : a; };
 
 const coreClients: Client[] = [
   { id: 'c1', fullName: 'Adrien Lacroix', primaryPhone: '+33 6 39 98 14 02', email: 'a.lacroix@mail.demo', type: 'BUYER', source: 'INSTAGRAM', assignedUserId: 'u1', isArchived: false, isBlacklisted: false, createdAt: ago(41 * DAY),

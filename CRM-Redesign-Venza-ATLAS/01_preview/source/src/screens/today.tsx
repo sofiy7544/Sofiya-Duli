@@ -2,7 +2,7 @@ import * as React from 'react';
 import { AlertTriangle, ArrowUpRight, CalendarDays, CheckSquare, ChevronRight, Eye, Handshake, Phone, Sparkles, Users, Workflow, Zap } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { api } from '@/lib/mock/api';
-import { store } from '@/lib/mock/store';
+import { store, currentUser } from '@/lib/mock/store';
 import { useResource } from '@/lib/use-resource';
 import { Link } from '@/lib/router';
 import { useTheme } from '@/lib/theme/provider';
@@ -41,7 +41,7 @@ export function TodayScreen({ firstEntry }: { firstEntry?: boolean }) {
   const [busyTask, setBusyTask] = React.useState<string | null>(null);
   const clients = store.db.clients;
   const nameOf = (id?: string) => clients.find((c) => c.id === id)?.fullName ?? '';
-  const first = store.settings.role ? 'Анна' : '';
+  const first = store.settings.role ? currentUser().fullName.split(' ')[0] : '';
   const now = new Date();
   const part = daypart(now.getHours());
 

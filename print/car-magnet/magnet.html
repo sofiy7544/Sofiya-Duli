@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<title>DULI Service — автомагніт 600×400 мм</title>
+<style>
+@font-face{font-family:"Manrope";font-weight:400 800;src:url(../../assets/fonts/manrope-cyr.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Manrope";font-weight:400 800;src:url(../../assets/fonts/manrope-cyr-ext.woff2) format("woff2");unicode-range:U+0460-052F,U+20B4}
+@font-face{font-family:"Manrope";font-weight:400 800;src:url(../../assets/fonts/manrope-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+2000-206F}
+@font-face{font-family:"Playfair Display";font-weight:400 900;src:url(../../assets/fonts/playfair-cyrillic.woff2) format("woff2");unicode-range:U+0400-045F,U+0490-0491}
+@font-face{font-family:"Playfair Display";font-weight:400 900;src:url(../../assets/fonts/playfair-latin.woff2) format("woff2");unicode-range:U+0000-00FF}
+@page{size:610mm 410mm;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:610mm;height:410mm;overflow:hidden;background:#1D402C}
+body{font-family:"Manrope",Arial,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+/* 5 мм вильоту з кожного боку; обрізний формат 600×400, безпечна зона ще 15 мм всередину */
+.sheet{position:relative;width:610mm;height:410mm;background:#1D402C;overflow:hidden}
+.grid{position:absolute;inset:20mm;display:grid;grid-template-columns:276mm 1fr;column-gap:14mm;align-items:stretch}
+.side-right .grid{grid-template-columns:1fr 276mm}
+.side-right .bear{order:2}
+.bear{align-self:end;height:100%;display:flex;align-items:flex-end;justify-content:center;overflow:visible}
+.bear img{display:block;height:300mm;width:auto;margin-bottom:-28mm;
+  -webkit-mask-image:linear-gradient(to top,rgba(0,0,0,0) 0,#000 12%);mask-image:linear-gradient(to top,rgba(0,0,0,0) 0,#000 12%)}
+.txt{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:space-between;padding:4mm 0 2mm;min-width:0}
+.mark{display:flex;align-items:flex-start;gap:12mm}
+.house{width:40mm;height:40mm;flex:none;margin-top:7mm}
+.word{line-height:.9}
+.word b{display:block;font-size:100mm;font-weight:800;letter-spacing:-.02em;line-height:.88}
+.word span{display:flex;align-items:center;gap:8mm;margin-top:6mm;font-size:32mm;font-weight:500;letter-spacing:.06em;color:#fff}
+.word span::before,.word span::after{content:"";height:1.4mm;flex:1;background:rgba(255,255,255,.75)}
+.tag{margin-top:10mm;font-family:"Playfair Display",Georgia,serif;font-style:italic;font-size:21mm;white-space:nowrap;line-height:1.1;color:#BFE6CE;letter-spacing:-.01em}
+.what{margin-top:6mm;font-size:15.5mm;line-height:1.25;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.85);max-width:320mm}
+.bottom{display:grid;grid-template-columns:1fr auto;column-gap:8mm;row-gap:9mm;align-items:end;margin-top:auto}
+.phone{grid-column:1/-1;justify-self:start;display:inline-flex;align-items:center;gap:7mm;background:#fff;color:#1D402C;border-radius:999px;padding:7mm 18mm 7mm 14mm;font-size:30mm;font-weight:800;letter-spacing:-.02em;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
+.phone svg{width:24mm;height:24mm;flex:none}
+.tg{font-size:18mm;font-weight:700;color:#fff;align-self:end;padding-bottom:2mm}
+.tg__h{display:flex;align-items:center;gap:6mm}
+.tg svg{width:18mm;height:18mm}
+.tg em{display:block;font-style:normal;color:#BFE6CE;font-weight:500;font-size:12.5mm;margin-top:3mm;letter-spacing:.02em}
+.qr{flex:none;display:flex;flex-direction:column;align-items:center;gap:4mm}
+.qr img{width:54mm;height:54mm;border-radius:6mm;border:3mm solid #fff;background:#fff;display:block}
+.qr small{font-size:10mm;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.8);text-align:center;line-height:1.2}
+.guide{position:absolute;inset:5mm;border:.4mm dashed rgba(255,255,255,.35);border-radius:15mm;pointer-events:none;display:none}
+.safe{position:absolute;inset:20mm;border:.4mm dashed rgba(255,120,120,.5);pointer-events:none;display:none}
+.show-guides .guide,.show-guides .safe{display:block}
+</style>
+</head>
+<body>
+<div class="sheet" id="sheet">
+  <div class="grid">
+    <div class="bear"><img src="bear-cut.png" alt=""></div>
+    <div class="txt">
+      <div>
+        <div class="mark">
+          <svg class="house" viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="9" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+            <path d="M10 56 50 18l40 38"/><path d="M22 48v34h56V48"/><rect x="41" y="60" width="18" height="18" rx="2" stroke-width="7"/>
+          </svg>
+          <div class="word"><b>DULI</b><span>Service</span></div>
+        </div>
+        <div class="tag">Повертайтеся в чистий дім</div>
+        <div class="what">Клінінг квартир, будинків<br>і офісів · Одеса</div>
+      </div>
+      <div class="bottom">
+          <div class="phone">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6.2 3.5h3l1.5 3.8-2 1.4a11.5 11.5 0 0 0 5.1 5.1l1.4-2 3.8 1.5v3a1.7 1.7 0 0 1-1.9 1.7A16.2 16.2 0 0 1 4.5 5.4 1.7 1.7 0 0 1 6.2 3.5Z"/></svg>
+            <span>063 704 16 17</span>
+          </div>
+          <div class="tg">
+            <div class="tg__h"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m4 11.5 16-7-4.5 15.5-4-6.5-7.5-2Z"/><path d="m11.5 13.5 8.5-9"/></svg><span>@Duliser</span></div>
+            <em>Telegram · Viber · дзвінок</em>
+          </div>
+        <div class="qr"><img src="qr.png" alt=""><small>Розрахунок<br>вартості онлайн</small></div>
+      </div>
+    </div>
+  </div>
+  <div class="guide"></div><div class="safe"></div>
+</div>
+<script>
+  var q = new URLSearchParams(location.search);
+  if (q.get('side') === 'right') document.getElementById('sheet').classList.add('side-right');
+  if (q.get('guides')) document.getElementById('sheet').classList.add('show-guides');
+</script>
+</body>
+</html>

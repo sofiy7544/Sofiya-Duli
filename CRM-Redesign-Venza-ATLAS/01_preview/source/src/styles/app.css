@@ -14,6 +14,21 @@
   body { min-height: 100svh; min-height: 100dvh; }
   body { touch-action: pan-y pinch-zoom; }            /* горизонтальный «резиновый» отскок страницы отключён */
   .no-scrollbar, [data-hscroll] { touch-action: pan-x pan-y; overscroll-behavior-x: contain; }
+  /* Край листаемого ряда растворяется — видно, что там продолжение.
+     Сторону включает lib/use-hscroll.ts, и только когда листать действительно есть что. */
+  [data-fade] { --hf: 36px; }
+  [data-fade='right'] {
+    -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - var(--hf)), transparent 100%);
+            mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - var(--hf)), transparent 100%);
+  }
+  [data-fade='left'] {
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--hf), #000 100%);
+            mask-image: linear-gradient(90deg, transparent 0, #000 var(--hf), #000 100%);
+  }
+  [data-fade='both'] {
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--hf), #000 calc(100% - var(--hf)), transparent 100%);
+            mask-image: linear-gradient(90deg, transparent 0, #000 var(--hf), #000 calc(100% - var(--hf)), transparent 100%);
+  }
   @supports (-webkit-touch-callout: none) { body { -webkit-overflow-scrolling: touch; } }
   input[type='time'], input[type='date'], input[type='datetime-local'], input[type='month'] {
     -webkit-appearance: none; appearance: none; display: block; min-width: 0 !important; max-width: 100% !important; width: 100%; text-align: left;

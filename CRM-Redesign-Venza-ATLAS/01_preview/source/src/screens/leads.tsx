@@ -4,6 +4,7 @@ import { cn } from '@/lib/cn';
 import { api } from '@/lib/mock/api';
 import { store, usePreviewSettings, users, shortName } from '@/lib/mock/store';
 import { useResource } from '@/lib/use-resource';
+import { useHScrollFade } from '@/lib/use-hscroll';
 import { useIsDesktop, useTheme } from '@/lib/theme/provider';
 import { useRouter } from '@/lib/router';
 import { money, plural } from '@/lib/format';
@@ -31,6 +32,7 @@ export function LeadsScreen() {
   const settings = usePreviewSettings();
   const r = useResource(() => api.leads());
   const [stage, setStage] = React.useState<LeadStage | 'ALL'>('ALL');
+  const stageRow = useHScrollFade<HTMLDivElement>();   // край ряда этапов растворяется, если есть что листать
   const [view, setView] = React.useState<'board' | 'list'>('board');
   const [filters, setFilters] = React.useState<FilterValue>({});
   const [filtersOpen, setFiltersOpen] = React.useState(false);
@@ -77,7 +79,7 @@ export function LeadsScreen() {
     return (
       <>
         {!isDesktop && (
-          <div data-hscroll className="no-scrollbar relative -mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1" role="group" aria-label="Фильтр по этапам">
+          <div ref={stageRow} data-hscroll className="no-scrollbar relative -mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1" role="group" aria-label="Фильтр по этапам">
             <Chip selected={stage === 'ALL'} onClick={() => setStage('ALL')} count={active.length}>Все</Chip>
             {STAGES_ACTIVE.map((s) => <Chip key={s} selected={stage === s} onClick={() => setStage(s)} count={active.filter((l) => l.stage === s).length}>{STAGE_LABEL[s]}</Chip>)}
           </div>
@@ -146,6 +148,7 @@ function Board({ leads, onMove, family, selectMode, selected, onToggle, onStage 
   const [dragId, setDragId] = React.useState<string | null>(null);
   const [over, setOver] = React.useState<LeadStage | null>(null);
   const [settled, setSettled] = React.useState<string | null>(null);
+  const boardRow = useHScrollFade<HTMLDivElement>();   // колонок больше, чем влезает даже на широком экране
   const columns: LeadStage[] = [...STAGES_ACTIVE, 'LOST'];
   const dragLead = leads.find((l) => l.id === dragId);
 
@@ -159,7 +162,7 @@ function Board({ leads, onMove, family, selectMode, selected, onToggle, onStage 
   };
 
   return (
-    <div data-hscroll className="no-scrollbar relative -mx-3.5 flex gap-3 overflow-x-auto px-3.5 pb-4 lg:-mx-6 lg:px-6 2xl:gap-2.5" aria-label="Канбан воронки">
+    <div ref={boardRow} data-hscroll className="no-scrollbar relative -mx-3.5 flex gap-3 overflow-x-auto px-3.5 pb-4 lg:-mx-6 lg:px-6 2xl:gap-2.5" aria-label="Канбан воронки">
       {columns.map((s) => {
         const items = s === 'LOST' ? [] : leads.filter((l) => l.stage === s);
         const sum = items.reduce((a, l) => a + (l.budgetMax ?? 0), 0);

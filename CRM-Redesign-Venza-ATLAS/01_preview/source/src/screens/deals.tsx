@@ -4,6 +4,7 @@ import { cn } from '@/lib/cn';
 import { store, usePreviewSettings, users } from '@/lib/mock/store';
 import { dealsApi, useDealsVersion, DEAL_STATUS_LABEL, type Deal, type DealStatus } from '@/lib/mock/deals';
 import { useResource } from '@/lib/use-resource';
+import { useHScrollFade } from '@/lib/use-hscroll';
 import { Link, useRouter } from '@/lib/router';
 import { useIsDesktop, useTheme } from '@/lib/theme/provider';
 import { money, relDay } from '@/lib/format';
@@ -26,6 +27,7 @@ const property = (id?: string) => store.db.properties.find((p) => p.id === id);
 
 /** /deals — список | доска. Перенос в «Отменена» требует причину (как LOST в воронке). */
 export function DealsScreen() {
+  const boardRow = useHScrollFade<HTMLDivElement>();   // на телефоне колонки сделок листаются вбок
   const { family } = useTheme();
   const isDesktop = useIsDesktop();
   const router = useRouter();
@@ -54,7 +56,7 @@ export function DealsScreen() {
     if (view === 'board') {
       const cols: DealStatus[] = ['ACTIVE', 'COMPLETED', 'CANCELLED'];
       return (
-        <div data-hscroll className="no-scrollbar relative -mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-4 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0">
+        <div ref={boardRow} data-hscroll className="no-scrollbar relative -mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-4 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0">
           {cols.map((s) => { const list = items.filter((d) => d.status === s); const drag = items.find((d) => d.id === dragId); return (
             <section key={s} aria-label={DEAL_STATUS_LABEL[s]} onDragOver={(e) => { if (drag && drag.status !== s) { e.preventDefault(); setOver(s); } }} onDragLeave={() => setOver(null)}
               onDrop={() => { setOver(null); if (drag) move(drag, s); setDragId(null); }}

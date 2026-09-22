@@ -143,6 +143,7 @@
     var qVal = q.querySelector('#qAreaV');
     var qOut = q.querySelector('#qPrice');
 
+    var qGo = q.querySelector('#qGo');
     function qCalc() {
       var t = null;
       (window.DULI.types || []).forEach(function (x) { if (x.id === qType) t = x; });
@@ -151,6 +152,8 @@
       qOut.textContent = new Intl.NumberFormat('uk-UA').format(Math.round(v));
       qRange.style.setProperty('--fill', ((qArea - 20) / 280 * 100) + '%');
       qVal.textContent = qArea;
+      /* кнопка веде на сторінку розрахунку з уже обраними параметрами */
+      if (qGo && window.DULI.calcUrl) qGo.href = window.DULI.calcUrl + '?type=' + qType + '&area=' + qArea;
     }
     q.addEventListener('click', function (e) {
       var b = e.target.closest('[data-qtype]');
@@ -162,11 +165,15 @@
       qCalc();
     });
     qRange.addEventListener('input', function () { qArea = parseInt(qRange.value, 10); qCalc(); });
-    q.querySelector('#qGo').addEventListener('click', function () {
+    qGo.addEventListener('click', function (e) {
       track('quick_calc_continue', { service: qType, area: qArea });
-      window.duliRevealAll();
-      if (window.duliPrefill) window.duliPrefill(qType, qArea);
-      document.getElementById('calc').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      /* якщо калькулятор на цій же сторінці — підставляємо без переходу */
+      if (document.getElementById('calc') && window.duliPrefill) {
+        e.preventDefault();
+        window.duliRevealAll();
+        window.duliPrefill(qType, qArea);
+        document.getElementById('calc').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
     qCalc();
   }
@@ -218,8 +225,9 @@
   /* ── картка послуги відкриває розрахунок ──────────────── */
   document.querySelectorAll('[data-calc-type]').forEach(function (b) {
     b.addEventListener('click', function (e) {
-      e.preventDefault();
       track('service_calc', { service: b.dataset.calcType });
+      if (!document.getElementById('calc')) return;   /* посилання веде на сторінку розрахунку */
+      e.preventDefault();
       window.duliRevealAll();
       if (window.duliPrefill) window.duliPrefill(b.dataset.calcType, null, b.dataset.calcObject || null);
       document.getElementById('calc').scrollIntoView({ behavior: 'smooth', block: 'start' });

@@ -690,8 +690,8 @@ body.calc-in .bar,body.menu-open .bar{transform:translateY(110%)}
 @media (min-width:900px){
   .hdr__in{height:72px;gap:20px}
   .nav{display:flex}
-  .hdr__tel{display:inline-flex}
   .hdr__cta{margin-left:0}
+  .nav a{padding:10px 11px}
   .hdr__cta .btn--primary{display:inline-flex}
   .hdr__call,.burger{display:none}
   .bar{display:none}
@@ -718,6 +718,10 @@ body.calc-in .bar,body.menu-open .bar{transform:translateY(110%)}
   .calc__foot{position:static;padding:14px clamp(18px,3vw,40px) 18px;background:transparent;backdrop-filter:none;border-top:1px solid var(--hair)}
   .calc__tot{display:none}
   .calc__next{min-width:180px;padding:0 26px}
+}
+@media (min-width:1180px){
+  .hdr__tel{display:inline-flex}
+  .nav a{padding:10px 13px}
 }
 @media (min-width:1080px){
   .hero__grid{grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);gap:clamp(28px,4vw,64px)}
@@ -850,3 +854,27 @@ h2{line-height:1.12}
 .jump a:hover{background:var(--brand-soft);border-color:var(--brand-soft)}
 .fgroup__h,.pg__h{font-family:var(--serif);font-weight:600;font-size:1.4rem;letter-spacing:-.01em}
 .legal h2{font-size:1.5rem}
+
+/* ── компактні картки послуг на головній ─────────────────── */
+.svc__c--compact .svc__b{padding:14px 16px 16px;gap:4px}
+.svc__c--compact .svc__b h3{font-size:1.08rem;line-height:1.25}
+.svc__c--compact .svc__what{font-size:var(--fs-caption)}
+.svc__c--compact .svc__f{padding-top:8px;justify-content:flex-start}
+.svc__go{display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);font-size:var(--fs-small);font-weight:700;color:var(--brand)}
+.svc__go svg{width:16px;height:16px;transition:transform var(--t)}
+.svc__go:hover svg{transform:translateX(3px)}
+@media (max-width:639.98px){
+  .svc--compact{gap:12px}
+  .svc__c--compact{display:grid;grid-template-columns:38% minmax(0,1fr);border-radius:var(--r)}
+  .svc__c--compact .svc__img{aspect-ratio:auto;height:100%;min-height:150px}
+  .svc__c--compact .svc__pill{left:8px;bottom:8px;padding:5px 9px;font-size:.72rem}
+  .svc__c--compact .svc__pill b{font-size:.9rem}
+  .svc__c--compact .svc__need{font-size:.72rem;letter-spacing:.05em}
+  .svc__c--compact .svc__what{display:none}
+  .svc__c--compact .svc__b{padding:12px 14px 10px}
+  .svc__c--compact .svc__b h3{font-size:1rem}
+  .svc__c--compact .svc__f{padding-top:4px}
+  .svc__c--compact .svc__go{min-height:36px}
+  .svc__c:hover{transform:none}
+}
+.nav a{white-space:nowrap}

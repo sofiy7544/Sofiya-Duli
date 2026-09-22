@@ -40,6 +40,16 @@
   /* сторінка послуги відкриває калькулятор на своєму типі */
   if (window.DULI_PREFILL && window.DULI_PREFILL.type) state.type = window.DULI_PREFILL.type;
 
+  /* параметри з посилання: /calc/?type=general&object=flat&area=60 — з карток послуг і швидкого розрахунку */
+  var fromQuery = false;
+  try {
+    var qs = new URLSearchParams(window.location.search);
+    var qt = qs.get('type'), qo = qs.get('object'), qa = parseInt(qs.get('area'), 10);
+    if (qt && byId(D.types, qt).id === qt) { state.type = qt; fromQuery = true; }
+    if (qo && byId(D.objects, qo).id === qo) { state.object = qo; fromQuery = true; }
+    if (qa >= 10 && qa <= 500) { state.area = qa; fromQuery = true; }
+  } catch (e) {}
+
   function save() {
     try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {}
   }
@@ -394,7 +404,8 @@
     var el = $('cnt-' + id); if (el) el.textContent = state.furn[id];
   });
   renderSide();
-  show(0, true);
+  if (fromQuery) { state.started = true; track('calc_start', { from: 'link' }); }
+  show(fromQuery ? 2 : 0, true);
 
   /* швидкий розрахунок у геро / картки послуг передають параметри сюди */
   window.duliPrefill = function (type, area, object) {

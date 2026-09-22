@@ -101,6 +101,22 @@
     rv.forEach(function (el) { el.classList.add('in'); if (io) io.unobserve(el); });
   };
 
+
+  /* ── прайс: посилання на розділ відкриває його ────────── */
+  function openTarget() {
+    var id = location.hash.slice(1);
+    var d = id && document.getElementById(id);
+    if (d && d.tagName === 'DETAILS') d.open = true;
+  }
+  document.querySelectorAll('.jump a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function () {
+      var d = document.getElementById(a.getAttribute('href').slice(1));
+      if (d && d.tagName === 'DETAILS') d.open = true;
+    });
+  });
+  window.addEventListener('hashchange', openTarget);
+  openTarget();
+
   /* ── FAQ ──────────────────────────────────────────────── */
   document.querySelectorAll('.faq__q').forEach(function (q) {
     q.addEventListener('click', function () {

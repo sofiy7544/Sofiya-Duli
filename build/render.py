@@ -138,7 +138,7 @@ def header(cta=None, cur=""):
         curattr = ' aria-current="page"' if cur and h == cur else ""
         return '<a href="%s"%s>%s%s</a>' % (h, curattr, t, ic("chevr") if arrow else "")
     nav = "".join(link(t, h) for t, h in NAV if h != CALC)
-    menu_links = "".join(link(t, h, True) for t, h in NAV + [("Для бізнесу", BASE + "business/")])
+    menu_links = "".join(link(t, h, True) for t, h in [("Головна", BASE)] + NAV + [("Для бізнесу", BASE + "business/")])
     menu_sub = "".join('<a href="%sservices/%s/">%s</a>' % (BASE, s["slug"], s["name"]) for s in SERVICES)
     return f"""
 <a class="skip" href="#main">Перейти до вмісту</a>
@@ -1009,15 +1009,15 @@ def services_hub():
 def pricing_page():
     groups = "".join(
         f"""
-    <div class="pg rv" id="pg-{i}">
-      <h3 class="pg__h">{name}</h3>
+    <details class="pg rv" id="pg-{i}"{' open' if i == 0 else ''}>
+      <summary class="pg__h"><h3>{name}</h3><span class="pg__n">{len(rows)} позицій</span>{ic('chev')}</summary>
       <div class="pt__wrap">
         <table class="pt">
           <thead><tr><th>Послуга</th><th>Ціна</th><th>Одиниця</th></tr></thead>
           <tbody>{''.join('<tr><td>%s</td><td class="pt__v">%s</td><td class="pt__u">%s</td></tr>' % r for r in rows)}</tbody>
         </table>
       </div>
-    </div>"""
+    </details>"""
         for i, (name, rows) in enumerate(PRICE_LIST)
     )
     jump = "".join('<a href="#pg-%d">%s</a>' % (i, name) for i, (name, _) in enumerate(PRICE_LIST))
@@ -1044,7 +1044,7 @@ def pricing_page():
     <div class="section-head rv">
       <span class="eyebrow">Прайс-лист</span>
       <h2>Усі послуги та ціни</h2>
-      <p class="lead muted">Розділи прайсу — перейдіть до потрібного або порахуйте вартість у калькуляторі.</p>
+      <p class="lead muted">Прайс поділено на розділи — відкрийте потрібний або порахуйте вартість у калькуляторі.</p>
     </div>
     <div class="jump rv">{jump}</div>
     <div class="pg__list">{groups}</div>
@@ -1076,12 +1076,13 @@ def how_page():
     )
     checks = "".join(
         f"""
-    <div class="chk">
-      <h3>{name}</h3>
-      <p class="chk__s">{sub}</p>
+    <details class="chk"{' open' if i == 0 else ''}>
+      <summary class="chk__h"><span><h3>{name}</h3><span class="chk__s">{sub}</span></span>{ic('chev')}</summary>
+      <div class="chk__b">
       {''.join('<div class="chk__r"><b>%s</b><ul>%s</ul></div>' % (room, ''.join('<li>%s</li>' % x for x in items)) for room, items in rooms)}
-    </div>"""
-        for name, sub, rooms in CHECKLISTS
+      </div>
+    </details>"""
+        for i, (name, sub, rooms) in enumerate(CHECKLISTS)
     )
     nots = ["купувати хімію та інвентар", "звільняти квартиру на весь день",
             "стояти поруч і контролювати", "домовлятися про вивіз сміття окремо",
@@ -1220,10 +1221,6 @@ def about_page():
     equip = "".join(
         '<div class="eq"><b>%s</b><span>%s</span></div>' % (t, d) for t, d in EQUIPMENT
     )
-    team = "".join(
-        '<div class="team__c"><div class="team__ph">%s<span>фото команди</span></div></div>' % ic("image")
-        for _ in range(4)
-    )
     crumb_html, crumb_ld = crumbs([("Головна", BASE), ("Про нас", None)])
     title = "Про DULI Service — клінінгова компанія в Одесі"
     desc = ("DULI Service — клінінгова служба в Одесі. Постійні бригади, професійна хімія та обладнання, "
@@ -1245,8 +1242,6 @@ def about_page():
       <p class="lead muted">Клінер заходить до вас додому, тож ви маєте знати, хто приїде. Усі працюють у нас
       постійно й проходять навчання роботі з хімією та поверхнями — це не випадкові люди під замовлення.</p>
     </div>
-    <div class="team rv">{team}</div>
-    <p class="muted rv" style="font-size:.88rem;margin-top:16px">Тут будуть фотографії бригад DULI у формі.</p>
   </div>
 </section>
 

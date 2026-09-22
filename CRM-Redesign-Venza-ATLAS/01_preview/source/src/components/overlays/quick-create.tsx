@@ -88,7 +88,7 @@ function LeadQuickForm() {
 
   return (
     <form onSubmit={submit} className="space-y-4" noValidate>
-      <Field label="Имя клиента" required error={errors.fullName}>{(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.fullName} autoComplete="name" value={v.fullName} onChange={(e) => setV({ ...v, fullName: e.target.value })} placeholder="Например, Анна Сергеевна" />}</Field>
+      <Field label="Имя клиента" required error={errors.fullName}>{(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.fullName} autoComplete="name" value={v.fullName} onChange={(e) => setV({ ...v, fullName: e.target.value })} placeholder="Например, Ольга Ткаченко" />}</Field>
       <Field label="Телефон" required error={errors.primaryPhone}>{(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.primaryPhone} type="tel" inputMode="tel" className="tabular" value={v.primaryPhone} onChange={(e) => setV({ ...v, primaryPhone: e.target.value })} />}</Field>
       <fieldset>
         <legend className="mb-1.5 text-[13px] font-medium">Приоритет</legend>
@@ -112,6 +112,7 @@ function LeadQuickForm() {
 }
 
 function TaskQuickForm() {
+  const router = useRouter();
   const presets = React.useMemo(() => duePresets(), []);
   const [v, setV] = React.useState({ title: '', type: 'CALL' as TaskType, due: toLocalInput(defaultDue(presets)) });
   const [error, setError] = React.useState<string | null>(null);
@@ -123,7 +124,13 @@ function TaskQuickForm() {
     const at = new Date(v.due);
     if (!v.due || Number.isNaN(at.getTime())) { setDueError('Укажите срок'); return; }
     setBusy(true);
-    try { await api.createTask({ title: v.title.trim(), type: v.type, dueAt: at.toISOString() }); ui.set({ quickCreate: null }); toast.success('Задача создана'); }
+    try {
+      const task = await api.createTask({ title: v.title.trim(), type: v.type, dueAt: at.toISOString() });
+      ui.set({ quickCreate: null });
+      // Срок по умолчанию часто не сегодняшний, и задача попадает во вкладку, которую
+      // никто не открыл: без этой кнопки после «Задача создана» список не меняется.
+      toast.success('Задача создана', { action: { label: 'Показать', onClick: () => { ui.set({ focusTask: task.id }); router.navigate('/tasks'); } } });
+    }
     catch (err) { toast.error((err as Error).message); } finally { setBusy(false); }
   };
   const iso = v.due && !Number.isNaN(new Date(v.due).getTime()) ? new Date(v.due).toISOString() : null;
@@ -145,7 +152,7 @@ function TaskQuickForm() {
         {/* Точное время — системным полем: на iPhone это тот же барабан, что в будильнике. */}
         <div className="mt-3">
           <Field label="или точное время" error={dueError}>
-            {(id, d) => <Input id={id} aria-describedby={d} invalid={!!dueError} type="datetime-local" value={v.due}
+            {(id, d) => <Input id={id} aria-describedby={d} invalid={!!dueError} required type="datetime-local" value={v.due}
               onChange={(e) => { setV({ ...v, due: e.target.value }); setDueError(null); }} />}
           </Field>
         </div>

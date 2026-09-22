@@ -9,7 +9,9 @@ import { Avatar } from '@/components/ui/avatar';
 import { money } from '@/lib/format';
 import { PropertyMedia } from '@/components/domain/property-media';
 import { ui, useUI } from '@/components/shell/ui-state';
-import type { Client, Property } from '@/lib/mock/types';
+import { STAGE_LABEL } from '@/lib/labels';
+import { store } from '@/lib/mock/store';
+import type { Client, Lead, Property } from '@/lib/mock/types';
 
 /**
  * Поиск: ⌘K/Ctrl+K. Мобайл — полноэкранный; десктоп — командная палитра с клавиатурой.
@@ -20,7 +22,7 @@ export function SearchOverlay() {
   const isDesktop = useIsDesktop();
   const router = useRouter();
   const [term, setTerm] = React.useState('');
-  const [res, setRes] = React.useState<{ clients: Client[]; properties: Property[] } | null>(null);
+  const [res, setRes] = React.useState<{ clients: Client[]; leads: Lead[]; properties: Property[] } | null>(null);
   const [busy, setBusy] = React.useState(false);
   const [cursor, setCursor] = React.useState(0);
 
@@ -41,7 +43,10 @@ export function SearchOverlay() {
     { href: '/today', label: 'Сегодня', icon: Sun }, { href: '/leads', label: 'Лиды', icon: Workflow }, { href: '/properties', label: 'Объекты', icon: Building2 },
     { href: '/tasks', label: 'Задачи', icon: CheckSquare }, { href: '/clients', label: 'Клиенты', icon: User }, { href: '/calendar', label: 'Календарь', icon: CalendarDays },
   ];
-  const flat: string[] = res ? [...res.clients.map((c) => `/clients/${c.id}`), ...res.properties.map((p) => `/properties/${p.id}`)] : nav.map((n) => n.href);
+  const flat: string[] = res
+    ? [...res.leads.map((l) => `/leads/${l.id}`), ...res.clients.map((c) => `/clients/${c.id}`), ...res.properties.map((p) => `/properties/${p.id}`)]
+    : nav.map((n) => n.href);
+  const clientName = (id: string) => store.db.clients.find((c) => c.id === id)?.fullName ?? 'Клиент';
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown') { e.preventDefault(); setCursor((c) => Math.min(flat.length - 1, c + 1)); }
@@ -64,7 +69,7 @@ export function SearchOverlay() {
             {!isDesktop && <Dialog.Close className="grid h-11 w-11 place-items-center rounded-full" aria-label="Закрыть"><ArrowLeft className="h-5 w-5" /></Dialog.Close>}
             <div className={cn('flex flex-1 items-center gap-2.5', !isDesktop && 'h-12 rounded-control border border-border bg-surface px-3.5 shadow-soft')}>
               <SearchIcon className="h-[18px] w-[18px] text-muted-foreground" aria-hidden />
-              <input autoFocus value={term} onChange={(e) => setTerm(e.target.value)} placeholder="Имя, телефон или объект"
+              <input autoFocus value={term} onChange={(e) => setTerm(e.target.value)} placeholder="Имя, телефон, почта или объект"
                 className={cn('min-w-0 flex-1 bg-transparent outline-none placeholder:text-muted-foreground', isDesktop ? 'h-14 text-[16px]' : 'h-full text-[16px]')} aria-label="Поиск по CRM" />
               {term && <button onClick={() => setTerm('')} aria-label="Очистить" className="grid h-8 w-8 place-items-center rounded-full text-muted-foreground hover:bg-muted"><X className="h-4 w-4" /></button>}
               {isDesktop && <kbd className="rounded-md bg-surface-2 px-1.5 py-0.5 text-[11px] text-muted-foreground">Esc</kbd>}
@@ -78,11 +83,19 @@ export function SearchOverlay() {
                   <span className="grid h-9 w-9 place-items-center rounded-[10px] bg-surface-2 text-muted-foreground"><n.icon className="h-[18px] w-[18px]" aria-hidden /></span>
                   <span className="text-[15px] font-medium">{n.label}</span>
                 </button>); })}
-              <p className="t-caption px-3 pt-4">Введите от 2 символов. Попробуйте «Крыловы» или «вилла».</p>
+              <p className="t-caption px-3 pt-4">Введите от 2 символов. Попробуйте «Крыловы», «вилла» или «Ницца».</p>
             </>)}
             {busy && <div className="space-y-2 p-3" aria-label="Ищем">{[0, 1, 2].map((i) => <div key={i} className="flex items-center gap-3"><div className="skeleton h-9 w-9 rounded-full" /><div className="skeleton h-3.5 flex-1" /></div>)}</div>}
-            {res && !busy && res.clients.length + res.properties.length === 0 && (
+            {res && !busy && res.leads.length + res.clients.length + res.properties.length === 0 && (
               <div className="px-4 py-10 text-center"><p className="t-h3">Ничего не найдено</p><p className="t-caption mt-1">Проверьте написание или ищите по номеру телефона.</p></div>)}
+            {res && !busy && res.leads.length > 0 && (<>
+              <div className="t-micro px-3 pb-1.5 pt-3">Лиды в работе</div>
+              {res.leads.map((l) => { idx++; const i = idx; return (
+                <button key={l.id} role="option" aria-selected={i === cursor} onMouseEnter={() => setCursor(i)} onClick={() => go(`/leads/${l.id}`)} className={rowCls(i)}>
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] bg-primary-soft text-primary-text"><Workflow className="h-[18px] w-[18px]" aria-hidden /></span>
+                  <span className="min-w-0 flex-1"><span className="block truncate text-[15px] font-medium">{clientName(l.clientId)}</span><span className="t-caption">{STAGE_LABEL[l.stage]}</span></span>
+                </button>); })}
+            </>)}
             {res && !busy && res.clients.length > 0 && (<>
               <div className="t-micro px-3 pb-1.5 pt-3">Клиенты</div>
               {res.clients.map((c) => { idx++; const i = idx; return (

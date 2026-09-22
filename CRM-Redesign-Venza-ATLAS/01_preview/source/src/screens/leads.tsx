@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Inbox, LayoutList, MoreHorizontal, Phone, Plus, SquareKanban, Workflow, XCircle } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { api } from '@/lib/mock/api';
-import { store, usePreviewSettings } from '@/lib/mock/store';
+import { store, usePreviewSettings, users, shortName } from '@/lib/mock/store';
 import { useResource } from '@/lib/use-resource';
 import { useIsDesktop, useTheme } from '@/lib/theme/provider';
 import { useRouter } from '@/lib/router';
@@ -50,7 +50,7 @@ export function LeadsScreen() {
   const groups = [
     { key: 'priority', label: 'Приоритет', options: (['hot', 'warm', 'cold'] as const).map((p) => ({ value: p, label: PRIORITY_LABEL[p] })) },
     { key: 'source', label: 'Источник', options: (['INSTAGRAM', 'WEBSITE', 'REFERRAL', 'FACEBOOK', 'TELEGRAM', 'MANUAL'] as const).map((s) => ({ value: s, label: SOURCE_LABEL[s] })) },
-    ...(settings.role === 'ADMIN' ? [{ key: 'assignee', label: 'Ответственный', options: [{ value: 'u1', label: 'Анна П.' }, { value: 'u2', label: 'Marco Z.' }, { value: 'u3', label: 'Сергей Л.' }, { value: 'none', label: 'Не назначен' }] }] : []),
+    ...(settings.role === 'ADMIN' ? [{ key: 'assignee', label: 'Ответственный', options: [...users.map((u) => ({ value: u.id, label: shortName(u.fullName) })), { value: 'none', label: 'Не назначен' }] }] : []),
     { key: 'urgency', label: 'Срочность', options: [{ value: 'overdue', label: 'Просрочено' }, { value: 'today', label: 'Сегодня' }, { value: 'stale', label: 'Без контакта' }] },
   ];
   const apply = (leads: Lead[], f: FilterValue) => leads.filter((l) =>
@@ -109,7 +109,7 @@ export function LeadsScreen() {
           <label className="sr-only" htmlFor="bulk-assignee">Переназначить</label>
           <select id="bulk-assignee" defaultValue="" onChange={(e) => { if (e.target.value) bulk({ assignedUserId: e.target.value === 'none' ? null : e.target.value }, 'Переназначено'); }}
             className="h-9 rounded-control border border-input bg-surface px-2.5 text-[14px] outline-none focus:border-primary">
-            <option value="" disabled>Переназначить</option><option value="u1">Анна Потапова</option><option value="u2">Marco Zaccaria</option><option value="u3">Сергей Лисовой</option><option value="none">Снять ответственного</option>
+            <option value="" disabled>Переназначить</option>{users.map((u) => <option key={u.id} value={u.id}>{u.fullName}</option>)}<option value="none">Снять ответственного</option>
           </select>
           {(['hot', 'warm', 'cold'] as const).map((pr) => <Button key={pr} size="sm" variant="outline" onClick={() => bulk({ priority: pr }, PRIORITY_LABEL[pr])}>{PRIORITY_LABEL[pr]}</Button>)}
           <Button size="sm" variant="ghost" onClick={() => setSelected([])}>Отмена</Button>

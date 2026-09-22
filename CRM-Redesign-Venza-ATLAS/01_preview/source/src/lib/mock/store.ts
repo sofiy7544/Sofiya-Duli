@@ -33,4 +33,5 @@ export function usePreviewSettings(): PreviewSettings { useStoreVersion(); retur
 
 export const currentUser = () => ({ ...fx.users[0], role: settings.role });
 export const users = fx.users;
+export const shortName = fx.shortName;
 export type { LeadStage };

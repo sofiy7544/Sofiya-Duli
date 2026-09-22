@@ -208,7 +208,7 @@ export function QuickCapture() {
         ) : (
           <div className="mt-3">
             <Field label="Время показа" hint="Если время уже прошло, показ встанет на завтра">
-              {(id, d) => <Input id={id} aria-describedby={d} type="time" value={v.showingAt} onChange={(e) => setV({ ...v, showingAt: e.target.value })} />}
+              {(id, d) => <Input id={id} aria-describedby={d} required type="time" value={v.showingAt} onChange={(e) => setV({ ...v, showingAt: e.target.value })} />}
             </Field>
           </div>
         )}

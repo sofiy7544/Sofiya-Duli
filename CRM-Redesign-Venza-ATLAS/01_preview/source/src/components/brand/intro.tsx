@@ -106,16 +106,29 @@ function LoginPanel({ dark, onSuccess }: { dark: boolean; onSuccess: () => void 
   const tenant = detectTenant(email);
   void dark;
 
-  // почта впечатывается сама — сразу видно, как окно перекрашивается под бренд агентства
+  // почта впечатывается сама — сразу видно, как окно перекрашивается под бренд агентства.
+  // Как только человек сам трогает форму, анимация замолкает: иначе она переписывала
+  // набранное и уводила фокус в пароль посреди ввода.
+  const typedByUser = React.useRef(false);
   React.useEffect(() => {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) { setEmail(DEMO); return; }
     let i = 0; let timer: ReturnType<typeof setTimeout>;
     timer = setTimeout(function tick() {
+      if (typedByUser.current) return;
       i += 1; setEmail(DEMO.slice(0, i));
-      if (i < DEMO.length) timer = setTimeout(tick, i < 5 ? 90 : 52); else passRef.current?.focus({ preventScroll: true });
+      if (i < DEMO.length) timer = setTimeout(tick, i < 5 ? 90 : 52);
+      else if (document.activeElement === document.body) passRef.current?.focus({ preventScroll: true });
     }, 900);
     return () => clearTimeout(timer);
   }, []);
+  /** Человек взялся за форму сам. В поле почты недописанное убираем — он вводит свою;
+   *  если он сразу перешёл в пароль, почту наоборот дописываем целиком. */
+  const stopTyping = (mode: 'clear' | 'finish' | 'keep') => {
+    if (typedByUser.current) return;
+    typedByUser.current = true;
+    if (mode === 'clear') setEmail('');
+    if (mode === 'finish') setEmail(DEMO);
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -150,13 +163,14 @@ function LoginPanel({ dark, onSuccess }: { dark: boolean; onSuccess: () => void 
       <label className={`glassin__field ${error && !/^\S+@\S+\.\S+$/.test(email) ? 'glassin__field--error' : ''}`}>
         <Mail className="glassin__icon" aria-hidden />
         <input type="email" autoComplete="email" inputMode="email" placeholder="Почта" aria-label="Почта"
-          value={email} onChange={(e) => { setEmail(e.target.value); setError(null); }} />
+          onPointerDown={() => stopTyping('clear')} onFocus={() => stopTyping('clear')}
+          value={email} onChange={(e) => { stopTyping('keep'); setEmail(e.target.value); setError(null); }} />
       </label>
 
       {mode === 'signin' && (
       <label className="glassin__field">
         <Lock className="glassin__icon" aria-hidden />
-        <input ref={passRef} type={show ? 'text' : 'password'} autoComplete="current-password" maxLength={128} placeholder="Пароль" aria-label="Пароль"
+        <input ref={passRef} onFocus={() => stopTyping('finish')} type={show ? 'text' : 'password'} autoComplete="current-password" maxLength={128} placeholder="Пароль" aria-label="Пароль"
           value={password} onChange={(e) => { setPassword(e.target.value); setError(null); }} />
         <button type="button" className="glassin__eye" onClick={() => setShow(!show)} aria-label={show ? 'Скрыть пароль' : 'Показать пароль'}>
           {show ? <EyeOff aria-hidden /> : <Eye aria-hidden />}

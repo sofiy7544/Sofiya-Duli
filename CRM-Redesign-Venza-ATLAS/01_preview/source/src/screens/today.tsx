@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { AlertTriangle, ArrowUpRight, Bell, CalendarDays, CheckSquare, ChevronRight, Eye, Handshake, Phone, Sparkles, Users, Workflow, Zap } from 'lucide-react';
+import { AlertTriangle, ArrowUpRight, CalendarDays, CheckSquare, ChevronRight, Eye, Handshake, Phone, Sparkles, Users, Workflow, Zap } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { api } from '@/lib/mock/api';
-import { store } from '@/lib/mock/store';
+import { store, currentUser } from '@/lib/mock/store';
 import { useResource } from '@/lib/use-resource';
 import { Link } from '@/lib/router';
 import { useTheme } from '@/lib/theme/provider';
 import { ago, budget, dayLong, money, plural, time } from '@/lib/format';
 import { EVENT_KIND_LABEL, STAGES_ACTIVE, STAGE_LABEL, TASK_TYPE_LABEL } from '@/lib/labels';
 import type { CalendarEvent, Task } from '@/lib/mock/types';
-import { PageBody } from '@/components/shell/page';
+import { PageBody, NotificationsButton } from '@/components/shell/page';
 import { dealsApi } from '@/lib/mock/deals';
 import { ui } from '@/components/shell/ui-state';
 import { Avatar } from '@/components/ui/avatar';
@@ -41,7 +41,7 @@ export function TodayScreen({ firstEntry }: { firstEntry?: boolean }) {
   const [busyTask, setBusyTask] = React.useState<string | null>(null);
   const clients = store.db.clients;
   const nameOf = (id?: string) => clients.find((c) => c.id === id)?.fullName ?? '';
-  const first = store.settings.role ? 'Анна' : '';
+  const first = store.settings.role ? currentUser().fullName.split(' ')[0] : '';
   const now = new Date();
   const part = daypart(now.getHours());
 
@@ -206,7 +206,7 @@ function TitleBlock({ family, part, name, now }: { family: string; part: { greet
         <div className="flex items-center gap-1.5">
           <IconButton label="Быстрый захват лида" onClick={() => ui.set({ quickCreate: 'capture' })}
             className="bg-primary text-primary-foreground hover:bg-primary/90"><Zap /></IconButton>
-          <IconButton label="Уведомления" onClick={() => ui.set({ notifications: true })}><Bell /></IconButton>
+          <NotificationsButton />
         </div>
       </div>
       <p className={cn('mt-0.5 first-letter:uppercase', family === 'atlas' ? 't-caption text-[13px]' : 'text-[15px] text-muted-foreground')}>{dayLong(now)}</p>

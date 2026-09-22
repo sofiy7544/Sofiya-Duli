@@ -36,9 +36,9 @@ let templates: Template[] = [
     body: '{имя}, напоминаю о встрече сегодня в {время}. {агент}, On Top Property.' },
 ];
 let members: Member[] = [
-  { id: 'u1', fullName: 'Анна Потапова', email: 'anna@ontop.property', role: 'ADMIN', active: true, lastSeenAt: back(8 * MIN) },
-  { id: 'u2', fullName: 'Marco Zaccaria', email: 'marco@ontop.property', role: 'REALTOR', active: true, lastSeenAt: back(2 * 60 * MIN) },
-  { id: 'u3', fullName: 'Сергей Лисовой', email: 'sergey@ontop.property', role: 'REALTOR', active: true, lastSeenAt: back(26 * 60 * MIN) },
+  { id: 'u1', fullName: 'Елена Радович', email: 'elena@ontop.property', role: 'ADMIN', active: true, lastSeenAt: back(8 * MIN) },
+  { id: 'u2', fullName: 'Matteo Brunelli', email: 'matteo@ontop.property', role: 'REALTOR', active: true, lastSeenAt: back(2 * 60 * MIN) },
+  { id: 'u3', fullName: 'Кирилл Дорош', email: 'kirill@ontop.property', role: 'REALTOR', active: true, lastSeenAt: back(26 * 60 * MIN) },
   { id: 'u4', fullName: 'Ольга Кравец', email: 'olga@ontop.property', role: 'ASSISTANT', active: false, lastSeenAt: back(40 * 24 * 60 * MIN) },
 ];
 let branding: Branding = { agencyName: 'On Top Property', logoName: 'ontop-logo.svg', watermark: true, watermarkOpacity: 35 };

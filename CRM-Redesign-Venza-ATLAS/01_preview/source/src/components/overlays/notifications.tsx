@@ -4,7 +4,7 @@ import { Sheet } from '@/components/ui/sheet';
 import { Link } from '@/lib/router';
 import { ago, time } from '@/lib/format';
 import { api } from '@/lib/mock/api';
-import { store } from '@/lib/mock/store';
+import { store, useStoreVersion } from '@/lib/mock/store';
 import { useResource } from '@/lib/use-resource';
 import { EmptyState } from '@/components/ui/state';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -16,6 +16,25 @@ import { Skeleton } from '@/components/ui/skeleton';
  * задачи, ближайшие показы, новые лиды без ответственного.
  */
 type Item = { id: string; icon: typeof CheckSquare; title: string; meta: string; href: string; tone?: 'danger' | 'warning' };
+
+/**
+ * Сколько сейчас поводов открыть колокольчик. Считается по тем же правилам, что и
+ * список ниже, но синхронно из store — точка на кнопке горела всегда, даже когда
+ * панель честно отвечала «Уведомлений пока нет».
+ */
+export function useAlertCount() {
+  useStoreVersion();
+  // В демо-режимах «пусто» и «ошибка» панель ничего не покажет — точка тоже не нужна.
+  if (store.settings.dataMode !== 'ready') return 0;
+  const now = Date.now();
+  const d0 = new Date(); d0.setHours(0, 0, 0, 0);
+  const d1 = new Date(d0); d1.setDate(d1.getDate() + 1);
+  const { tasks, events, leads } = store.db;
+  // Ограничения те же, что у списка ниже (4 + 3 + 3), иначе счётчик обещал бы больше, чем показывает панель.
+  return Math.min(4, tasks.filter((t) => !t.completedAt && new Date(t.dueAt).getTime() < now).length)
+    + Math.min(3, events.filter((e) => { const t = new Date(e.startsAt).getTime(); return t > now && t < d1.getTime(); }).length)
+    + Math.min(3, leads.filter((l) => l.stage === 'NEW' && !l.assignedUserId).length);
+}
 
 export function NotificationsPanel() {
   const { notifications } = useUI();

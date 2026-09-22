@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<title>DULI Service — автомагніт «будиночок» 390×463 мм</title>
+<style>
+@font-face{font-family:"Manrope";font-weight:400 800;src:url(../../assets/fonts/manrope-cyr.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Manrope";font-weight:400 800;src:url(../../assets/fonts/manrope-cyr-ext.woff2) format("woff2");unicode-range:U+0460-052F,U+20B4}
+@font-face{font-family:"Manrope";font-weight:400 800;src:url(../../assets/fonts/manrope-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+2000-206F}
+@font-face{font-family:"Playfair Display";font-weight:400 900;src:url(../../assets/fonts/playfair-cyrillic.woff2) format("woff2");unicode-range:U+0400-045F,U+0490-0491}
+@font-face{font-family:"Playfair Display";font-weight:400 900;src:url(../../assets/fonts/playfair-latin.woff2) format("woff2");unicode-range:U+0000-00FF}
+@page{size:410mm 510mm;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:410mm;height:510mm;overflow:hidden;background:transparent}
+body{font-family:"Manrope",Arial,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+/* Аркуш 410×510 мм. Контур різу — зовнішній контур будиночка (дах із димарем + корпус), 390×463 мм.
+   Біла окантовка 7 мм усередину від різу, назовні біле поле (вильот 5 мм). */
+.sheet{position:relative;width:410mm;height:510mm}
+.shape{position:absolute;inset:0;width:410mm;height:510mm}
+.shape .wall{fill:#1F6B41;stroke:#fff;stroke-width:14;stroke-linejoin:round}
+.shape .roof{fill:#123B27;stroke:#fff;stroke-width:14;stroke-linejoin:round}
+.shape .roof-text{font-family:"Manrope",Arial,sans-serif;font-weight:800;font-size:25px;letter-spacing:.14em;fill:#fff}
+.shape .star{fill:#fff;opacity:.85}
+.shape .smoke{fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;opacity:.7}
+.contour .shape > *:not(.cut),.contour .content{display:none}
+.contour .cut{display:block;stroke-dasharray:none;stroke-width:.3}
+.guides .cut{display:block}
+.cut{display:none;fill:none;stroke:#FF00FF;stroke-width:.6;stroke-dasharray:4 3}
+.content{position:absolute;left:0;top:0;width:410mm;height:510mm}
+.bear{position:absolute;left:50%;top:178mm;transform:translateX(-50%);height:136mm;width:auto;
+  -webkit-mask-image:linear-gradient(to top,rgba(0,0,0,0) 0,#000 12%);mask-image:linear-gradient(to top,rgba(0,0,0,0) 0,#000 12%)}
+.mark{position:absolute;left:0;right:0;top:314mm;display:flex;align-items:center;justify-content:center;gap:8mm}
+.house{width:28mm;height:28mm;flex:none}
+.word b{display:block;font-size:66mm;font-weight:800;letter-spacing:-.02em;line-height:.88}
+.service{position:absolute;left:0;right:0;top:377mm;display:flex;align-items:center;justify-content:center;gap:7mm;font-size:19mm;font-weight:500;letter-spacing:.08em;line-height:1}
+.service::before,.service::after{content:"";height:1.2mm;width:36mm;background:rgba(255,255,255,.75)}
+.tag{position:absolute;left:0;right:0;top:401mm;text-align:center;font-family:"Playfair Display",Georgia,serif;font-style:italic;font-size:13.5mm;line-height:1;color:#BFE6CE;white-space:nowrap}
+.phone{position:absolute;left:50%;top:421mm;transform:translateX(-50%);display:inline-flex;align-items:center;gap:5mm;background:#fff;color:#123B27;border-radius:999px;padding:6mm 13mm 6mm 10mm;font-size:23mm;font-weight:800;letter-spacing:-.02em;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
+.phone svg{width:18mm;height:18mm;flex:none}
+.tg{position:absolute;left:0;right:0;top:464mm;display:flex;align-items:center;justify-content:center;gap:4mm;font-size:11mm;font-weight:700;line-height:1;white-space:nowrap}
+.tg svg{width:11mm;height:11mm}
+.tg em{font-style:normal;font-weight:500;color:#BFE6CE;font-size:9.5mm;margin-left:2mm}
+</style>
+</head>
+<body>
+<div class="sheet" id="sheet">
+  <svg class="shape" viewBox="0 0 410 510" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- корпус будиночка: скруглені нижні кути -->
+    <path class="wall" d="M22 165 H388 V467 Q388 495 360 495 H50 Q22 495 22 467 Z"/>
+    <!-- дах із димарем -->
+    <path class="roof" d="M10 160 L205 32 L300 94.4 V55 H330 V114.1 L400 160 V174 H10 Z"/>
+    <!-- напис на даху -->
+    <text class="roof-text" x="205" y="151" text-anchor="middle">КЛІНІНГ · ОДЕСА</text>
+    <!-- димок над трубою -->
+    <path class="smoke" d="M315 44 c-6 -6 6 -12 0 -18"/>
+    <!-- блискітки чистоти -->
+    <g class="star">
+      <path d="M62 205 l4 -12 4 12 12 4 -12 4 -4 12 -4 -12 -12 -4z"/>
+      <path d="M345 222 l3 -9 3 9 9 3 -9 3 -3 9 -3 -9 -9 -3z"/>
+      <path d="M48 285 l2.5 -7 2.5 7 7 2.5 -7 2.5 -2.5 7 -2.5 -7 -7 -2.5z"/>
+      <path d="M358 300 l3.5 -10 3.5 10 10 3.5 -10 3.5 -3.5 10 -3.5 -10 -10 -3.5z"/>
+      <path d="M120 190 l2 -6 2 6 6 2 -6 2 -2 6 -2 -6 -6 -2z"/>
+    </g>
+    <!-- єдиний контур різу -->
+    <path class="cut" d="M10 160 L205 32 L300 94.4 V55 H330 V114.1 L400 160 V174 H388 V467 Q388 495 360 495 H50 Q22 495 22 467 V174 H10 Z"/>
+  </svg>
+  <div class="content">
+    <img class="bear" src="bear-cut.png" alt="">
+    <div class="mark">
+      <svg class="house" viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="9" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+        <path d="M10 56 50 18l40 38"/><path d="M22 48v34h56V48"/><rect x="41" y="60" width="18" height="18" rx="2" stroke-width="7"/>
+      </svg>
+      <div class="word"><b>DULI</b></div>
+    </div>
+    <div class="service">Service</div>
+    <div class="tag">Повертайтеся в чистий дім</div>
+    <div class="phone">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6.2 3.5h3l1.5 3.8-2 1.4a11.5 11.5 0 0 0 5.1 5.1l1.4-2 3.8 1.5v3a1.7 1.7 0 0 1-1.9 1.7A16.2 16.2 0 0 1 4.5 5.4 1.7 1.7 0 0 1 6.2 3.5Z"/></svg>
+      <span>063 704 16 17</span>
+    </div>
+    <div class="tg">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m4 11.5 16-7-4.5 15.5-4-6.5-7.5-2Z"/><path d="m11.5 13.5 8.5-9"/></svg>
+      <span>@Duliser</span><em>Telegram · Viber</em>
+    </div>
+  </div>
+</div>
+<script>
+  var q = new URLSearchParams(location.search);
+  if (q.get('guides')) document.getElementById('sheet').classList.add('guides');
+  if (q.get('contour')) document.getElementById('sheet').classList.add('contour');
+</script>
+</body>
+</html>

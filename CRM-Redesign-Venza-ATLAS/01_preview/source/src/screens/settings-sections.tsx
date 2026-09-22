@@ -497,7 +497,9 @@ function DeviceCheck() {
     setBusy(true);
     const r = await showDemoNotification();
     setState(pushState()); setBusy(false);
-    if (r === 'shown') toast.success('Уведомление отправлено — сверните CRM, чтобы увидеть его целиком');
+    // Пока CRM открыта на весь экран, iPhone баннер поверх неё не показывает —
+    // уведомление уходит в шторку. Поэтому подсказываем, где смотреть.
+    if (r === 'shown') toast.success('Готово — потяните шторку сверху или заблокируйте экран');
     if (r === 'denied') toast.error('Уведомления запрещены для этого приложения');
     if (r === 'failed') toast.error('Браузер не показал уведомление');
   };
@@ -517,6 +519,9 @@ function DeviceCheck() {
         <div className="min-w-0 flex-1">
           <h2 className="t-h3 text-[15px]">Проверить на этом устройстве</h2>
           <p className="t-caption mt-1">{note}</p>
+          {state.ok && state.permission !== 'denied' && (
+            <p className="t-caption mt-1.5">Пока CRM открыта на экране, iPhone не показывает баннер поверх неё: уведомление придёт в шторку и на значок. Настоящее — с сервера при закрытом приложении — всплывает как у обычных программ.</p>
+          )}
         </div>
       </div>
       <div className="mt-3 flex flex-wrap items-center gap-2">

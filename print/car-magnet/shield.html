@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<title>DULI Service — автомагніт «щит» 400×500 мм</title>
+<style>
+@font-face{font-family:"Manrope";font-weight:400 800;src:url(../../assets/fonts/manrope-cyr.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Manrope";font-weight:400 800;src:url(../../assets/fonts/manrope-cyr-ext.woff2) format("woff2");unicode-range:U+0460-052F,U+20B4}
+@font-face{font-family:"Manrope";font-weight:400 800;src:url(../../assets/fonts/manrope-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+2000-206F}
+@font-face{font-family:"Playfair Display";font-weight:400 900;src:url(../../assets/fonts/playfair-cyrillic.woff2) format("woff2");unicode-range:U+0400-045F,U+0490-0491}
+@font-face{font-family:"Playfair Display";font-weight:400 900;src:url(../../assets/fonts/playfair-latin.woff2) format("woff2");unicode-range:U+0000-00FF}
+@page{size:410mm 510mm;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:410mm;height:510mm;overflow:hidden;background:transparent}
+body{font-family:"Manrope",Arial,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+/* Аркуш 410×510 мм = обрізний контур щита + 5 мм вильоту з кожного боку.
+   Контур різу — сам шлях (path) щита і стрічки; біла окантовка 7 мм усередину, назовні біле поле (вильот). */
+.sheet{position:relative;width:410mm;height:510mm}
+.shape{position:absolute;inset:0;width:410mm;height:510mm}
+.shape .body{fill:#1D402C;stroke:#fff;stroke-width:14;stroke-linejoin:round}
+.shape .ribbon-text{font-family:"Manrope",Arial,sans-serif;font-weight:800;font-size:26px;letter-spacing:.12em;fill:#fff}
+.contour .shape .body,.contour .content,.contour .ribbon-text{display:none}
+.contour .cut{display:block;stroke-dasharray:none;stroke-width:.3}
+.guides .cut{display:block}
+.cut{display:none;fill:none;stroke:#FF00FF;stroke-width:.6;stroke-dasharray:4 3}
+.content{position:absolute;left:0;top:0;width:410mm;height:510mm}
+.bear{position:absolute;left:50%;top:100mm;transform:translateX(-50%);height:150mm;width:auto;
+  -webkit-mask-image:linear-gradient(to top,rgba(0,0,0,0) 0,#000 12%);mask-image:linear-gradient(to top,rgba(0,0,0,0) 0,#000 12%)}
+.mark{position:absolute;left:0;right:0;top:246mm;display:flex;align-items:center;justify-content:center;gap:9mm}
+.house{width:30mm;height:30mm;flex:none}
+.word b{display:block;font-size:72mm;font-weight:800;letter-spacing:-.02em;line-height:.88}
+.service{position:absolute;left:0;right:0;top:314mm;display:flex;align-items:center;justify-content:center;gap:7mm;font-size:21mm;font-weight:500;letter-spacing:.08em;line-height:1}
+.service::before,.service::after{content:"";height:1.2mm;width:38mm;background:rgba(255,255,255,.75)}
+.tag{position:absolute;left:0;right:0;top:342mm;text-align:center;font-family:"Playfair Display",Georgia,serif;font-style:italic;font-size:14.5mm;line-height:1;color:#BFE6CE;white-space:nowrap}
+.phone{position:absolute;left:50%;top:364mm;transform:translateX(-50%);display:inline-flex;align-items:center;gap:5mm;background:#fff;color:#1D402C;border-radius:999px;padding:6mm 13mm 6mm 10mm;font-size:24mm;font-weight:800;letter-spacing:-.02em;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
+.phone svg{width:19mm;height:19mm;flex:none}
+.tg{position:absolute;left:0;right:0;top:412mm;display:flex;align-items:center;justify-content:center;gap:4mm;font-size:11.5mm;font-weight:700;line-height:1;white-space:nowrap}
+.tg svg{width:12mm;height:12mm}
+.tg em{font-style:normal;font-weight:500;color:#BFE6CE;font-size:10mm;margin-left:2mm}
+.qr{position:absolute;left:50%;top:434mm;transform:translateX(-50%);width:42mm;height:42mm;border-radius:4mm;border:2.5mm solid #fff;background:#fff;display:block}
+</style>
+</head>
+<body>
+<div class="sheet" id="sheet">
+  <svg class="shape" viewBox="0 0 410 510" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <!-- дуга для напису на стрічці -->
+      <path id="arc" d="M28 90 Q205 44 382 90"/>
+    </defs>
+    <!-- щит -->
+    <path class="body" d="M10 95 H400 V320 C400 410 300 465 205 495 C110 465 10 410 10 320 Z"/>
+    <!-- стрічка -->
+    <path class="body" d="M20 60 Q205 18 390 60 V120 Q205 78 20 120 Z"/>
+    <text class="ribbon-text" text-anchor="middle"><textPath href="#arc" startOffset="50%">КЛІНІНГ · ОДЕСА</textPath></text>
+    <!-- єдиний контур різу (обʼєднання щита і стрічки): 390 × 456 мм -->
+    <path class="cut" d="M10 95 H20 V60 Q205 18 390 60 V95 H400 V320 C400 410 300 465 205 495 C110 465 10 410 10 320 Z"/>
+  </svg>
+  <div class="content">
+    <img class="bear" src="bear-cut.png" alt="">
+    <div class="mark">
+      <svg class="house" viewBox="0 0 100 100" fill="none" stroke="#fff" stroke-width="9" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+        <path d="M10 56 50 18l40 38"/><path d="M22 48v34h56V48"/><rect x="41" y="60" width="18" height="18" rx="2" stroke-width="7"/>
+      </svg>
+      <div class="word"><b>DULI</b></div>
+    </div>
+    <div class="service">Service</div>
+    <div class="tag">Повертайтеся в чистий дім</div>
+    <div class="phone">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6.2 3.5h3l1.5 3.8-2 1.4a11.5 11.5 0 0 0 5.1 5.1l1.4-2 3.8 1.5v3a1.7 1.7 0 0 1-1.9 1.7A16.2 16.2 0 0 1 4.5 5.4 1.7 1.7 0 0 1 6.2 3.5Z"/></svg>
+      <span>063 704 16 17</span>
+    </div>
+    <div class="tg">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m4 11.5 16-7-4.5 15.5-4-6.5-7.5-2Z"/><path d="m11.5 13.5 8.5-9"/></svg>
+      <span>@Duliser</span><em>Telegram · Viber</em>
+    </div>
+    <img class="qr" src="qr.png" alt="">
+  </div>
+</div>
+<script>
+  var q = new URLSearchParams(location.search);
+  if (q.get('guides')) document.getElementById('sheet').classList.add('guides');
+  if (q.get('contour')) document.getElementById('sheet').classList.add('contour');
+</script>
+</body>
+</html>

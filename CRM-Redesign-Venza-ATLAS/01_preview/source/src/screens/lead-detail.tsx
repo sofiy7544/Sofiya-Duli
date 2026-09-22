@@ -226,11 +226,16 @@ function StageStepper({ lead, onPick }: { lead: Lead; onPick: (s: typeof STAGES_
 export function ScheduleShowingSheet({ open, onOpenChange, client, defaultPropertyId }: { open: boolean; onOpenChange: (o: boolean) => void; client: Client; defaultPropertyId?: string }) {
   const [propertyId, setPropertyId] = React.useState(defaultPropertyId ?? store.db.properties[0].id);
   const [day, setDay] = React.useState(0); const [hour, setHour] = React.useState('16:30'); const [busy, setBusy] = React.useState(false);
-  const d = new Date(); d.setDate(d.getDate() + day); const [hh, mm] = hour.split(':').map(Number); d.setHours(hh, mm, 0, 0);
-  const conflict = store.db.events.find((e) => Math.abs(new Date(e.startsAt).getTime() - d.getTime()) < 60 * 60_000);
+  /* Системный барабан на iPhone умеет очищать поле кнопкой «Сбросить». Показ без
+     времени назначить нельзя, поэтому пустое время — не ошибка ввода, а состояние
+     «время ещё не выбрано»: подсказываем и не даём отправить. */
+  const [hh, mm] = hour.split(':').map(Number);
+  const hasTime = Number.isFinite(hh) && Number.isFinite(mm);
+  const d = new Date(); d.setDate(d.getDate() + day); if (hasTime) d.setHours(hh, mm, 0, 0);
+  const conflict = hasTime ? store.db.events.find((e) => Math.abs(new Date(e.startsAt).getTime() - d.getTime()) < 60 * 60_000) : undefined;
   return (
     <Sheet open={open} onOpenChange={onOpenChange} title="Назначить показ" description={client.fullName} desktop="side" size="sm"
-      footer={<><Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>Отмена</Button><Button className="flex-[2]" loading={busy} onClick={async () => {
+      footer={<><Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>Отмена</Button><Button className="flex-[2]" loading={busy} disabled={!hasTime} onClick={async () => {
         /* Показ создаётся по-настоящему: появляется в календаре и в истории
            клиента. Раньше здесь был только тост, и назначенного показа потом
            нигде не было. */
@@ -253,7 +258,9 @@ export function ScheduleShowingSheet({ open, onOpenChange, client, defaultProper
         <fieldset><legend className="mb-2 text-[13px] font-medium">День</legend>
           <div className="grid grid-cols-3 gap-2">{[0, 1, 2].map((k) => <button key={k} onClick={() => setDay(k)} aria-pressed={day === k} className={cn('h-10 min-w-0 truncate rounded-full border px-2 text-[14px] font-medium', day === k ? 'border-primary bg-primary-soft text-primary-text' : 'border-border bg-surface')}>{relDay(new Date(Date.now() + k * 86_400_000).toISOString())}</button>)}</div>
         </fieldset>
-        <Field label="Время" hint="Длительность 60 минут">{(id) => <Input id={id} type="time" step={900} value={hour} onChange={(e) => setHour(e.target.value)} className="tabular" />}</Field>
+        <Field label="Время" hint="Длительность 60 минут" error={hasTime ? undefined : 'Выберите время показа'}>
+          {(id, dsc) => <Input id={id} aria-describedby={dsc} invalid={!hasTime} required type="time" step={900} value={hour} onChange={(e) => setHour(e.target.value)} className="tabular" />}
+        </Field>
         {conflict && <div role="status" className="rounded-control border border-warning/35 bg-warning/12 px-3.5 py-3 text-[14px] text-warning-text">Пересекается с «{conflict.title}» в {time(conflict.startsAt)}. Показ можно назначить, но проверьте расписание.</div>}
       </div>
     </Sheet>

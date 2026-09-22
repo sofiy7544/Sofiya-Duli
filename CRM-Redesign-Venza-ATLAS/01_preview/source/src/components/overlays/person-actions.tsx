@@ -43,6 +43,9 @@ export function CallDispositionSheet({ open, onOpenChange, clientId, leadId, nam
         <Field label="Заметка">{(id) => <Textarea id={id} value={note} onChange={(e) => setNote(e.target.value)} placeholder="О чём договорились" className="min-h-[80px]" />}</Field>
         <fieldset><legend className="mb-2 text-[13px] font-medium">Перезвонить</legend>
           <div className="flex flex-wrap gap-2">{list.map((p) => <button key={p.k} aria-pressed={preset === p.k && !exact} onClick={() => { setPreset(preset === p.k ? null : p.k); setExact(''); }} className={cn('h-11 rounded-full border px-3.5 text-[14px] font-medium', preset === p.k && !exact ? 'border-primary bg-primary-soft text-primary-text' : 'border-border bg-surface')}>{p.label}</button>)}</div>
+          {/* Единственное время, которое можно оставить пустым: звонок бывает и без
+              перезвона. Поэтому здесь поле не обязательное и «Сбросить» в системном
+              барабане имеет смысл — снимает перезвон. */}
           <div className="mt-3"><Field label="или точное время">{(id) => <Input id={id} type="datetime-local" value={exact} onChange={(e) => { setExact(e.target.value); setPreset(null); }} />}</Field></div>
           {callbackAt && <p className="t-caption mt-2 flex items-center gap-1.5"><BellRing className="h-3.5 w-3.5" aria-hidden />Создастся задача «Перезвонить» на {relDay(callbackAt).toLowerCase()}, {time(callbackAt)}</p>}
         </fieldset>
@@ -60,7 +63,7 @@ export function RemindSheet({ open, onOpenChange, leadId, current }: { open: boo
       footer={<><Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>Отмена</Button><Button className="flex-[2]" disabled={!value} loading={busy} onClick={async () => { setBusy(true); const iso = new Date(value).toISOString(); await api.updateLead(leadId, { nextActionAt: iso }); setBusy(false); onOpenChange(false); toast.success(`Напомню ${relDay(iso).toLowerCase()} в ${time(iso)}`); }}>Сохранить</Button></>}>
       <div className="space-y-4">
         <div className="flex flex-wrap gap-2">{duePresets().map((p) => <button key={p.k} aria-pressed={value === toLocalInput(p.at)} onClick={() => setValue(toLocalInput(p.at))} className={cn('h-11 rounded-full border px-3.5 text-[14px] font-medium', value === toLocalInput(p.at) ? 'border-primary bg-primary-soft text-primary-text' : 'border-border bg-surface')}>{p.label}</button>)}</div>
-        <Field label="Дата и время">{(id) => <Input id={id} type="datetime-local" value={value} onChange={(e) => setValue(e.target.value)} />}</Field>
+        <Field label="Дата и время">{(id) => <Input id={id} required type="datetime-local" value={value} onChange={(e) => setValue(e.target.value)} />}</Field>
       </div>
     </Sheet>
   );

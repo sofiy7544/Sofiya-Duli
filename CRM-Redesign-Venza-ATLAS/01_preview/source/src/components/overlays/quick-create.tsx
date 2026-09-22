@@ -152,7 +152,7 @@ function TaskQuickForm() {
         {/* Точное время — системным полем: на iPhone это тот же барабан, что в будильнике. */}
         <div className="mt-3">
           <Field label="или точное время" error={dueError}>
-            {(id, d) => <Input id={id} aria-describedby={d} invalid={!!dueError} type="datetime-local" value={v.due}
+            {(id, d) => <Input id={id} aria-describedby={d} invalid={!!dueError} required type="datetime-local" value={v.due}
               onChange={(e) => { setV({ ...v, due: e.target.value }); setDueError(null); }} />}
           </Field>
         </div>

@@ -112,7 +112,7 @@ export function EventFormSheet({ open, onOpenChange, move, kind: initialKind = '
           </div>
           <div className="mt-3">
             <Field label="или точное время" error={errors.at}>
-              {(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.at} type="datetime-local" value={v.at}
+              {(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.at} required type="datetime-local" value={v.at}
                 onChange={(e) => { setV({ ...v, at: e.target.value }); setErrors({ ...errors, at: undefined }); }} />}
             </Field>
           </div>

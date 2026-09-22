@@ -461,8 +461,8 @@ export function NotificationsSettingsScreen() {
         {quiet.on && (
           <div className="mt-3">
             <FormGrid>
-              <Field label="С">{(id) => <Input id={id} type="time" value={quiet.from} onChange={(e) => { setQuiet({ ...quiet, from: e.target.value }); setDirty(true); }} />}</Field>
-              <Field label="До">{(id) => <Input id={id} type="time" value={quiet.to} onChange={(e) => { setQuiet({ ...quiet, to: e.target.value }); setDirty(true); }} />}</Field>
+              <Field label="С">{(id) => <Input id={id} required type="time" value={quiet.from} onChange={(e) => { setQuiet({ ...quiet, from: e.target.value }); setDirty(true); }} />}</Field>
+              <Field label="До">{(id) => <Input id={id} required type="time" value={quiet.to} onChange={(e) => { setQuiet({ ...quiet, to: e.target.value }); setDirty(true); }} />}</Field>
             </FormGrid>
           </div>
         )}

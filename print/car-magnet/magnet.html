@@ -16,31 +16,32 @@ body{font-family:"Manrope",Arial,sans-serif;color:#fff;-webkit-font-smoothing:an
 /* 5 мм вильоту з кожного боку; обрізний формат 600×400, безпечна зона ще 15 мм всередину */
 /* скруглені кути: радіус 15 мм по лінії різу (20 мм разом із вильотом) */
 .sheet{position:relative;width:610mm;height:410mm;background:#1D402C;overflow:hidden;border-radius:20mm}
-.grid{position:absolute;inset:20mm;display:grid;grid-template-columns:276mm 1fr;column-gap:14mm;align-items:stretch}
-.side-right .grid{grid-template-columns:1fr 276mm}
+.grid{position:absolute;inset:20mm;display:grid;grid-template-columns:250mm 1fr;column-gap:14mm;align-items:stretch}
+.side-right .grid{grid-template-columns:1fr 250mm}
 .side-right .bear{order:2}
-.bear{align-self:end;height:100%;display:flex;align-items:flex-end;justify-content:center;overflow:visible}
-.bear img{display:block;height:300mm;width:auto;margin-bottom:-28mm;
+.bear{align-self:end;height:100%;display:flex;align-items:flex-end;justify-content:flex-start;overflow:visible;margin-left:-22mm}
+.side-right .bear{justify-content:flex-end;margin-left:0;margin-right:-22mm}
+.bear img{display:block;height:282mm;width:auto;margin-bottom:-26mm;
   -webkit-mask-image:linear-gradient(to top,rgba(0,0,0,0) 0,#000 12%);mask-image:linear-gradient(to top,rgba(0,0,0,0) 0,#000 12%)}
 .txt{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:space-between;padding:4mm 0 2mm;min-width:0}
 .mark{display:flex;align-items:flex-start;gap:12mm}
-.house{width:40mm;height:40mm;flex:none;margin-top:7mm}
+.house{width:38mm;height:38mm;flex:none;margin-top:7mm}
 .word{line-height:.9}
-.word b{display:block;font-size:100mm;font-weight:800;letter-spacing:-.02em;line-height:.88}
+.word b{display:block;font-size:96mm;font-weight:800;letter-spacing:-.02em;line-height:.88}
 .word span{display:flex;align-items:center;gap:8mm;margin-top:6mm;font-size:32mm;font-weight:500;letter-spacing:.06em;color:#fff}
 .word span::before,.word span::after{content:"";height:1.4mm;flex:1;background:rgba(255,255,255,.75)}
 .tag{margin-top:10mm;font-family:"Playfair Display",Georgia,serif;font-style:italic;font-size:21mm;white-space:nowrap;line-height:1.1;color:#BFE6CE;letter-spacing:-.01em}
-.what{margin-top:6mm;font-size:15.5mm;line-height:1.25;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.85);max-width:320mm}
+.what{margin-top:12mm;font-size:17mm;line-height:1.22;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.85);max-width:320mm}
 .bottom{display:grid;grid-template-columns:1fr auto;column-gap:8mm;row-gap:9mm;align-items:end;margin-top:auto}
-.phone{grid-column:1/-1;justify-self:start;display:inline-flex;align-items:center;gap:7mm;background:#fff;color:#1D402C;border-radius:999px;padding:7mm 18mm 7mm 14mm;font-size:30mm;font-weight:800;letter-spacing:-.02em;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
-.phone svg{width:24mm;height:24mm;flex:none}
-.tg{font-size:18mm;font-weight:700;color:#fff;align-self:end;padding-bottom:2mm}
+.phone{grid-column:1/-1;justify-self:start;display:inline-flex;align-items:center;gap:6mm;background:#fff;color:#1D402C;border-radius:999px;padding:7mm 15mm 7mm 12mm;font-size:37mm;font-weight:800;letter-spacing:-.02em;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
+.phone svg{width:22mm;height:22mm;flex:none}
+.tg{font-size:19mm;font-weight:700;color:#fff;align-self:end;padding-bottom:2mm}
 .tg__h{display:flex;align-items:center;gap:6mm}
 .tg svg{width:18mm;height:18mm}
-.tg em{display:block;font-style:normal;color:#BFE6CE;font-weight:500;font-size:12.5mm;margin-top:3mm;letter-spacing:.02em}
+.tg em{display:block;font-style:normal;color:#BFE6CE;font-weight:500;font-size:13mm;margin-top:3mm;letter-spacing:.02em}
 .qr{flex:none;display:flex;flex-direction:column;align-items:center;gap:4mm}
-.qr img{width:54mm;height:54mm;border-radius:6mm;border:3mm solid #fff;background:#fff;display:block}
-.qr small{font-size:10mm;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.8);text-align:center;line-height:1.2}
+.qr img{width:34mm;height:34mm;border-radius:3mm;border:2mm solid #fff;background:#fff;display:block}
+.qr small{font-size:6.5mm;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.8);text-align:center;line-height:1.2}
 .guide{position:absolute;inset:5mm;border:.4mm dashed rgba(255,255,255,.35);border-radius:15mm;pointer-events:none;display:none}
 .safe{position:absolute;inset:20mm;border:.4mm dashed rgba(255,120,120,.5);pointer-events:none;display:none}
 .show-guides .guide,.show-guides .safe{display:block}
@@ -58,7 +59,6 @@ body{font-family:"Manrope",Arial,sans-serif;color:#fff;-webkit-font-smoothing:an
           </svg>
           <div class="word"><b>DULI</b><span>Service</span></div>
         </div>
-        <div class="tag">Повертайтеся в чистий дім</div>
         <div class="what">Клінінг квартир, будинків<br>і офісів · Одеса</div>
       </div>
       <div class="bottom">
@@ -70,7 +70,7 @@ body{font-family:"Manrope",Arial,sans-serif;color:#fff;-webkit-font-smoothing:an
             <div class="tg__h"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m4 11.5 16-7-4.5 15.5-4-6.5-7.5-2Z"/><path d="m11.5 13.5 8.5-9"/></svg><span>@Duliser</span></div>
             <em>Telegram · Viber · дзвінок</em>
           </div>
-        <div class="qr"><img src="qr.png" alt=""><small>Розрахунок<br>вартості онлайн</small></div>
+        <div class="qr"><img src="qr.png" alt=""><small>Розрахунок<br>онлайн</small></div>
       </div>
     </div>
   </div>

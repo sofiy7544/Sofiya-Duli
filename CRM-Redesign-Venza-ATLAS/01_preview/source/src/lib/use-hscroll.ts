@@ -42,8 +42,9 @@ export function useHScrollFade<T extends HTMLElement>() {
       wrap.setAttribute('data-scrollbar', '');
       const visible = el.clientWidth / el.scrollWidth;          // какая доля ряда видна
       const progress = Math.min(1, Math.max(0, el.scrollLeft / max));
-      wrap.style.setProperty('--hs-w', `${(visible * 100).toFixed(2)}%`);
-      wrap.style.setProperty('--hs-x', `${(progress * (1 - visible) * 100).toFixed(2)}%`);
+      // Доли без единиц: в CSS они умножаются на ширину дорожки (--hs-track).
+      wrap.style.setProperty('--hs-w', visible.toFixed(4));
+      wrap.style.setProperty('--hs-x', (progress * (1 - visible)).toFixed(4));
     };
 
     update();

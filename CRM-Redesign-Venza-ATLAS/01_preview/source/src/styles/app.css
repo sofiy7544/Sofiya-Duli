@@ -27,15 +27,17 @@
   }
   /* Ползунок под рядом: дорожка и бегунок шириной в видимую долю ряда.
      Появляется только когда есть что листать — атрибут ставит lib/use-hscroll.ts. */
-  [data-hscroll-wrap] { position: relative; }
+  [data-hscroll-wrap] { position: relative; --hs-track: 1cm; }
   [data-hscroll-wrap][data-scrollbar]::after {
-    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 3px;
-    border-radius: 999px; background: hsl(var(--foreground) / 0.08);
+    content: ''; position: absolute; bottom: 0; left: calc(50% - var(--hs-track) / 2);
+    width: var(--hs-track); height: 3px;
+    border-radius: 999px; background: hsl(var(--foreground) / 0.1);
   }
   [data-hscroll-wrap][data-scrollbar]::before {
     content: ''; position: absolute; bottom: 0; height: 3px; z-index: 1;
-    left: var(--hs-x, 0); width: var(--hs-w, 30%); min-width: 22px;
-    border-radius: 999px; background: hsl(var(--foreground) / 0.3);
+    left: calc(50% - var(--hs-track) / 2 + var(--hs-x, 0) * var(--hs-track));
+    width: max(7px, var(--hs-w, 0.3) * var(--hs-track));
+    border-radius: 999px; background: hsl(var(--foreground) / 0.36);
   }
   [data-fade='both'] {
     -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--hf), #000 calc(100% - var(--hf)), transparent 100%);

@@ -930,7 +930,8 @@ def service_page(s):
                  [crumb_ld, ld_service, ld_faq])
             + header(cur=BASE + "services/") + crumb_html
             + page_hero(s["h1"], s["intro"], s["from"], s["unit"],
-                        "Мінімальне замовлення — %s ₴. Виїзд по Одесі безкоштовний." % uah(CLAIMS["min_order_uah"]),
+                        "Мінімальне замовлення — %s ₴. Виїзд по Одесі безкоштовний."
+                        % uah(next((t["min"] for t in TYPES if t["id"] == s["calc"]), CLAIMS["min_order_uah"])),
                         cta="%s?type=%s&amp;object=%s" % (CALC, s["calc"], obj))
             + f"""
 <section class="section section--surface">

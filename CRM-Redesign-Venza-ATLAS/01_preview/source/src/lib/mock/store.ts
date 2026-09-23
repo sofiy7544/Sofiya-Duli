@@ -28,6 +28,13 @@ export const store = {
   mutate(fn: (d: DB) => void) { fn(db); emit(); },
 };
 
+/* Только для нагрузочных прогонов: скрипт наполняет «базу» данными за год
+   и проверяет, как экраны держат объём. В собранное превью не попадает —
+   import.meta.env.DEV в сборке false, и блок вырезается. */
+if (import.meta.env.DEV) {
+  (window as unknown as Record<string, unknown>).__crm = { store, users: fx.users };
+}
+
 export function useStoreVersion() { return useSyncExternalStore(store.subscribe, store.getVersion, store.getVersion); }
 export function usePreviewSettings(): PreviewSettings { useStoreVersion(); return store.settings; }
 

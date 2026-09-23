@@ -287,7 +287,7 @@ def svc_img(s, eager=False):
 
 
 def services():
-    cards = "".join(svc_card(s, i == 0, compact=True) for i, s in enumerate(SERVICES))
+    cards = "".join(svc_card(s, i == 0, compact=True) for i, s in enumerate(SERVICES[:6]))
     return f"""
 <section class="section" id="services">
   <div class="wrap">
@@ -752,6 +752,14 @@ def final():
       <h2>Поверніть собі вечір, а дому — чистоту</h2>
       <p>Розрахунок — менше хвилини. Ціна фіксується до виїзду й ні до чого не зобов’язує.</p>
       <a class="btn btn--primary btn--lg" href="{CALC}" data-track="cta_final">Розрахувати вартість {ic('arrow')}</a>
+      <form class="cb" id="cbForm" novalidate aria-label="Замовити зворотний дзвінок">
+        <label class="cb__l" for="cbPhone">Або залиште номер — передзвонимо протягом 15 хвилин у робочі години</label>
+        <div class="cb__row">
+          <input id="cbPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+380 __ ___ __ __" aria-describedby="cbErr">
+          <button class="btn btn--ghost" type="submit">{ic('phone')} Передзвоніть мені</button>
+        </div>
+        <p class="cb__err" id="cbErr" role="alert" hidden>Перевірте номер: потрібно 10 цифр, наприклад 063 704 16 17.</p>
+      </form>
       <div class="final__links">{''.join(links)}</div>
     </div>
   </div>

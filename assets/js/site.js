@@ -238,6 +238,31 @@
       '<a class="btn btn--ghost" href="tel:' + window.DULI.phone + '">Зателефонувати</a></div></div>';
   });
 
+
+  /* ── «Передзвоніть мені» ──────────────────────────────── */
+  var cb = document.getElementById('cbForm');
+  if (cb) cb.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var inp = cb.elements.phone, err = document.getElementById('cbErr');
+    var d = (inp.value || '').replace(/\D/g, '');
+    var ok = (d.length === 12 && d.indexOf('380') === 0) || (d.length === 10 && d.charAt(0) === '0');
+    var phone = ok ? (d.length === 10 ? '+38' + d : '+' + d) : '';
+    err.hidden = ok; inp.setAttribute('aria-invalid', String(!ok));
+    if (!ok) { inp.focus(); return; }
+    var text = '📞 ПЕРЕДЗВОНІТЬ МЕНІ · DULI Service\nТелефон: ' + phone + '\nСторінка: ' + document.title;
+    track('callback_submit', {});
+    var ep = (window.DULI && window.DULI.formEndpoint) || '';
+    var hasTg = !!(window.DULI && window.DULI.telegram);
+    var link = hasTg ? 'https://t.me/' + window.DULI.telegram + '?text=' + encodeURIComponent(text)
+                     : 'sms:' + window.DULI.phone + (/iPhone|iPad|iPod/.test(navigator.userAgent) ? '&' : '?') + 'body=' + encodeURIComponent(text);
+    if (ep) {
+      fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: text, phone: phone }) }).catch(function () {});
+    } else if (hasTg) { window.open(link, '_blank', 'noopener'); } else { window.location.href = link; }
+    cb.innerHTML = '<p class="cb__done">' + (ep ? 'Дякуємо! Передзвонимо на ' + phone + ' протягом 15 хвилин у робочі години.'
+      : 'Ми відкрили ' + (hasTg ? 'Telegram' : 'SMS') + ' із вашим номером — натисніть «Надіслати», і ми передзвонимо. ') +
+      (ep ? '' : '<a href="' + link + '"' + (hasTg ? ' target="_blank" rel="noopener"' : '') + '>Відкрити ще раз</a>') + '</p>';
+  });
+
   /* ── картка послуги відкриває розрахунок ──────────────── */
   document.querySelectorAll('[data-calc-type]').forEach(function (b) {
     b.addEventListener('click', function (e) {

@@ -894,3 +894,18 @@ h2{line-height:1.12}
 .nav a{white-space:nowrap}
 
 .chip--wide{flex:0 0 100%;width:100%}
+
+/* зворотний дзвінок у фінальному блоці */
+.cb{max-width:520px;margin:26px auto 0;text-align:left}
+.cb__l{display:block;font-size:var(--fs-small);color:rgba(255,255,255,.78);margin-bottom:10px;text-align:center}
+.cb__row{display:grid;gap:10px}
+.cb input{min-height:52px;padding:0 16px;border-radius:var(--r-pill,999px);border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08);color:#fff;font:inherit;font-size:1.05rem;width:100%}
+.cb input::placeholder{color:rgba(255,255,255,.45)}
+.cb input:focus{outline:none;border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.18)}
+.cb input[aria-invalid="true"]{border-color:#FFB4A8}
+.cb .btn--ghost{color:#fff;border-color:rgba(255,255,255,.4);min-height:52px;justify-content:center}
+.cb .btn--ghost:hover{background:rgba(255,255,255,.1);border-color:#fff}
+.cb__err{margin:10px 0 0;font-size:var(--fs-small);font-weight:600;color:#FFB4A8;text-align:center}
+.cb__done{font-size:1rem;color:#fff;text-align:center;line-height:1.5}
+.cb__done a{color:#fff;text-decoration:underline;text-underline-offset:4px}
+@media (min-width:560px){.cb__row{grid-template-columns:1fr auto}}

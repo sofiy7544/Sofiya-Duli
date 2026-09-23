@@ -266,7 +266,7 @@
     box.dataset.built = '1';
     var days = ['нд', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
     var months = ['січ', 'лют', 'бер', 'кві', 'тра', 'чер', 'лип', 'сер', 'вер', 'жов', 'лис', 'гру'];
-    var html = '';
+    var html = '<button type="button" class="chip chip--wide" data-set="date" data-val="уточнити" aria-pressed="' + (state.date === 'уточнити') + '"><b>Уточнимо по телефону</b><span style=\"text-transform:none\">дату підберемо разом</span></button>';
     for (var i = 1; i <= 14; i++) {
       var d = new Date(); d.setDate(d.getDate() + i);
       var v = d.toISOString().slice(0, 10);
@@ -338,7 +338,7 @@
       'Додатково: ' + (extrasNames.length ? extrasNames.join(', ') : 'немає'),
       'Періодичність: ' + p.freq.name,
       'Район: ' + p.zoneObj.name,
-      'Дата: ' + state.date + ', ' + state.time,
+      'Дата: ' + (state.date === 'уточнити' ? 'уточнити по телефону' : state.date) + ', час: ' + state.time,
       '',
       'Орієнтовна вартість: ' + fmt(p.total) + ' ₴',
       'Час: ' + p.hours.toFixed(1).replace('.0', '') + ' год · ' + p.crew + ' клінер(и)',

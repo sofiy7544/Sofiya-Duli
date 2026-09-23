@@ -19,6 +19,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = "/Sofiya-Duli/"          # префікс проєктного сайту GitHub Pages
 TG = ("https://t.me/" + SITE["telegram"]) if SITE["telegram"] else ""
 TEL = "tel:" + SITE["phone_href"]
+VIBER = SITE.get("viber", "")
 CALC = BASE + "calc/"           # окрема сторінка розрахунку — усі CTA ведуть сюди
 
 # ─────────────────────────────── іконки ───────────────────────────────
@@ -170,6 +171,7 @@ def header(cta=None, cur=""):
     <div class="menu__row">
       <a class="btn btn--ghost btn--block" href="{TEL}">{ic('phone')} Подзвонити</a>
       {('<a class="btn btn--ghost btn--block" href="%s" target="_blank" rel="noopener">%s Telegram</a>' % (TG, ic('send'))) if TG else ('<a class="btn btn--ghost btn--block" href="sms:%s">%s SMS</a>' % (SITE['phone_href'], ic('msg')))}
+      {('<a class="btn btn--ghost btn--block" href="%s">%s Viber</a>' % (VIBER, ic('msg'))) if VIBER else ''}
     </div>
     <p>{SITE['hours']} · Одеса та передмістя</p>
   </div>
@@ -433,7 +435,7 @@ def calculator(title="Скільки коштуватиме у вас",
     zones = "".join('<option value="%s">%s%s</option>'
                     % (z["id"], z["name"], (" · +%d ₴" % z["fee"]) if z["fee"] else "")
                     for z in ZONES)
-    times = "".join(
+    times = '<button class="chip" type="button" data-set="time" data-val="будь-який" aria-pressed="false"><b>Будь-який</b></button>' + "".join(
         '<button class="chip" type="button" data-set="time" data-val="%s" aria-pressed="false"><b>%s</b></button>' % (t, t)
         for t in ("09:00—12:00", "12:00—15:00", "15:00—18:00")
     )
@@ -517,7 +519,7 @@ def calculator(title="Скільки коштуватиме у вас",
               <div class="chips" id="cDates" aria-label="Дата"></div>
               <p class="calc__sub" id="cTimeL">Час</p>
               <div class="chips" id="cTimes" role="group" aria-labelledby="cTimeL">{times}</div>
-              <p class="form-err" id="cWhenErr" role="alert">Оберіть дату та зручний час — так ми одразу зарезервуємо бригаду.</p>
+              <p class="form-err" id="cWhenErr" role="alert">Оберіть дату й час, або «Уточнимо по телефону» — тоді підберемо день разом.</p>
               <form id="cForm" style="margin-top:22px" novalidate>
                 <div class="field-row">
                   <div class="field"><label for="fName">Ім’я</label><input id="fName" name="name" required autocomplete="name" placeholder="Як до вас звертатися" aria-describedby="fNameErr"><span class="field__err" id="fNameErr">Напишіть, як до вас звертатися.</span></div>
@@ -535,6 +537,7 @@ def calculator(title="Скільки коштуватиме у вас",
                 <a class="btn btn--primary" id="cTgLink" href="{TG or '#'}" target="_blank" rel="noopener"{'' if TG else ' hidden'}>{ic('send')} Відкрити Telegram із заявкою</a>
                 <p id="cAltP">{'Немає Telegram? Текст заявки вже готовий — надішліть його SMS або просто зателефонуйте.' if TG else 'Якщо SMS не відкрилось — просто зателефонуйте, ми все запишемо з ваших слів.'}</p>
                 <a class="btn {'btn--ghost' if TG else 'btn--primary'}" id="cSmsLink" href="sms:{SITE['phone_href']}">{ic('msg')} Надіслати SMS</a>
+                {('<a class="btn btn--ghost" href="%s">%s Написати у Viber</a>' % (VIBER, ic('msg'))) if VIBER else ''}
                 <a class="btn btn--ghost" href="{TEL}">{ic('phone')} Зателефонувати</a>
               </div>
             </div>
@@ -737,6 +740,8 @@ def final():
     links = ['<a href="%s">%s</a>' % (TEL, SITE["phone"])]
     if TG:
         links.append('<a href="%s" target="_blank" rel="noopener">Telegram</a>' % TG)
+    if VIBER:
+        links.append('<a href="%s">Viber</a>' % VIBER)
     if SITE["instagram"]:
         links.append('<a href="%s" target="_blank" rel="noopener">Instagram</a>' % SITE["instagram"])
     return f"""
@@ -778,6 +783,7 @@ def footer(cta=None):
         <h5>Контакти</h5>
         <a href="{TEL}">{SITE['phone']}</a>
         {('<a href="%s" target="_blank" rel="noopener">Telegram</a>' % TG) if TG else ('<a href="sms:%s">SMS</a>' % SITE['phone_href'])}
+        {('<a href="%s">Viber</a>' % VIBER) if VIBER else ''}
         <p>{SITE['hours']}</p>
         <p>Одеса та передмістя</p>
       </div>
@@ -1231,7 +1237,8 @@ def about_page():
                         "Ми свідомо відмовились від оплати «за присутність». Клієнт платить за результат: "
                         "обсяг робіт зафіксовано в чек-листі, ціна — до виїзду, а якщо щось зроблено погано, "
                         "ми повертаємось і переробляємо.", img="assets/photos/stove-1610-640.jpg",
-                        img_alt="Клінер миє варильну поверхню: плита в піні, рожеві рукавички")
+                        img_alt="Клінер миє варильну поверхню: плита в піні, рожеві рукавички",
+                        note="Ми виїзна служба: офісу для клієнтів немає, бригада приїжджає до вас. Одеса та передмістя, %s." % SITE["hours"])
             + saturday()
             + f"""
 <section class="section section--surface">

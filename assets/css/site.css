@@ -177,7 +177,7 @@ p{margin:0}
 .menu__sub a{font-size:.9rem;font-weight:600;padding:10px 14px;border:1px solid var(--hair-2);border-radius:999px;color:var(--ink-2);min-height:var(--tap);display:inline-flex;align-items:center}
 .menu__foot{margin-top:auto;padding-top:22px;display:grid;gap:10px}
 .menu__foot p{font-size:var(--fs-caption);color:var(--muted);text-align:center;margin-top:4px}
-.menu__row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.menu__row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
 body.menu-open{overflow:hidden}
 
 /* ── герой ───────────────────────────────────────────────── */
@@ -892,3 +892,5 @@ h2{line-height:1.12}
   .svc__c:hover{transform:none}
 }
 .nav a{white-space:nowrap}
+
+.chip--wide{flex:0 0 100%;width:100%}

@@ -26,24 +26,35 @@ import { toast } from '@/components/ui/toast';
  * /today. Данные = /api/reports/* (dashboard, today-tasks, upcoming-showings, recent-activity).
  * Погода не показывается: реального источника нет. Тон шапки Venza — от реального времени суток.
  */
-function daypart(h: number) {
-  if (h < 5) return { greet: 'Доброй ночи', tone: ['#DCE0E4', '#F1EDE3'] };
-  if (h < 12) return { greet: 'Доброе утро', tone: ['#F4E6CC', '#F7F4EC'] };
-  if (h < 18) return { greet: 'Добрый день', tone: ['#E6EDE4', '#F7F4EC'] };
-  return { greet: 'Добрый вечер', tone: ['#EAD9C6', '#F1EDE3'] };
+/**
+ * Тон шапки Venza — от времени суток. Пары «светлая / тёмная»: цвета зашиты
+ * в коде, а не взяты из токенов темы, поэтому нужен свой набор для тёмного
+ * режима. Со светлыми цветами в тёмной теме шапка превращалась в бледную
+ * плашку, на которой светлый заголовок «Добрый день» становился нечитаемым.
+ */
+const DAYPARTS = [
+  { until: 5, greet: 'Доброй ночи', light: ['#DCE0E4', '#F1EDE3'], dark: ['#18202A', '#10151B'] },
+  { until: 12, greet: 'Доброе утро', light: ['#F4E6CC', '#F7F4EC'], dark: ['#241E14', '#15120D'] },
+  { until: 18, greet: 'Добрый день', light: ['#E6EDE4', '#F7F4EC'], dark: ['#17231B', '#101711'] },
+  { until: 24, greet: 'Добрый вечер', light: ['#EAD9C6', '#F1EDE3'], dark: ['#241B12', '#16110C'] },
+] as const;
+
+function daypart(h: number, dark: boolean) {
+  const p = DAYPARTS.find((x) => h < x.until) ?? DAYPARTS[DAYPARTS.length - 1];
+  return { greet: p.greet, tone: dark ? p.dark : p.light };
 }
 
 type AgendaItem = { id: string; at: string; title: string; meta: string; kind: 'event' | 'task'; task?: Task; event?: CalendarEvent; overdue?: boolean };
 
 export function TodayScreen({ firstEntry }: { firstEntry?: boolean }) {
-  const { family } = useTheme();
+  const { family, isDark } = useTheme();
   const r = useResource(() => api.today());
   const [busyTask, setBusyTask] = React.useState<string | null>(null);
   const clients = store.db.clients;
   const nameOf = (id?: string) => clients.find((c) => c.id === id)?.fullName ?? '';
   const first = store.settings.role ? currentUser().fullName.split(' ')[0] : '';
   const now = new Date();
-  const part = daypart(now.getHours());
+  const part = daypart(now.getHours(), isDark);
 
   const toggle = async (t: Task) => {
     setBusyTask(t.id);

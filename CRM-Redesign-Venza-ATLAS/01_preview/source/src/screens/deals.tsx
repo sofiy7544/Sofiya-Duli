@@ -15,6 +15,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { Button, IconButton } from '@/components/ui/button';
 import { StatusBadge, type Tone } from '@/components/ui/badge';
 import { Field, Input, Select } from '@/components/ui/field';
+import { PickerField } from '@/components/ui/picker';
 import { SegmentedControl } from '@/components/ui/segmented';
 import { RowsSkeleton, Skeleton } from '@/components/ui/skeleton';
 import { EmptyState, ErrorState } from '@/components/ui/state';
@@ -152,8 +153,12 @@ export function DealNewScreen() {
     <PageBody className="lg:max-w-[680px]">
       <PageHeader title="Новая сделка" back="/deals" subtitle={initialLead ? `Из лида: ${clientName(initialLead.clientId)}` : undefined} />
       <form onSubmit={submit} noValidate className="surface space-y-4 p-4 lg:p-6">
-        <Field label="Лид" required error={errors.leadId}>{(id, d) => <Select id={id} aria-describedby={d} aria-invalid={!!errors.leadId} value={v.leadId} onChange={(e) => { const l = store.db.leads.find((x) => x.id === e.target.value); setV({ ...v, leadId: e.target.value, propertyId: l?.interestPropertyId ?? v.propertyId }); }}><option value="">Выберите лид</option>{candidates.map((l) => <option key={l.id} value={l.id}>{clientName(l.clientId)}</option>)}</Select>}</Field>
-        <Field label="Объект" hint="Можно выбрать позже">{(id, d) => <Select id={id} aria-describedby={d} value={v.propertyId} onChange={(e) => setV({ ...v, propertyId: e.target.value })}><option value="">Не выбран</option>{store.db.properties.filter((p) => p.status !== 'SOLD').map((p) => <option key={p.id} value={p.id}>{p.title}, {p.district}</option>)}</Select>}</Field>
+        <PickerField label="Лид" required error={errors.leadId} emptyLabel="Выберите лид"
+          value={v.leadId} onChange={(leadId) => { const l = store.db.leads.find((x) => x.id === leadId); setV({ ...v, leadId, propertyId: l?.interestPropertyId ?? v.propertyId }); }}
+          options={candidates.map((l) => ({ value: l.id, label: clientName(l.clientId) }))} />
+        <PickerField label="Объект" hint="Можно выбрать позже" emptyLabel="Не выбран" searchPlaceholder="Найти по названию или району"
+          value={v.propertyId} onChange={(propertyId) => setV({ ...v, propertyId })}
+          options={store.db.properties.filter((p) => p.status !== 'SOLD').map((p) => ({ value: p.id, label: p.title, meta: p.district }))} />
         {conflict && <div role="status" className="flex gap-2.5 rounded-control border border-warning/35 bg-warning/12 px-3.5 py-3 text-[14px] text-warning-text"><AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />По этому объекту уже есть активная сделка с {clientName(conflict.clientId)}. Создать можно, но проверьте, не дубль ли это.</div>}
         <div className="grid grid-cols-[1fr_120px] gap-3">
           <Field label="Сумма, €" required error={errors.amount}>{(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.amount} inputMode="numeric" className="tabular" value={v.amount} onChange={(e) => setV({ ...v, amount: e.target.value.replace(/[^\d\s]/g, '') })} />}</Field>

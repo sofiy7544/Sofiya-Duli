@@ -7,6 +7,7 @@ import { useRouter } from '@/lib/router';
 import { ui } from '@/components/shell/ui-state';
 import { Button } from '@/components/ui/button';
 import { Field, Input, Select } from '@/components/ui/field';
+import { PickerField } from '@/components/ui/picker';
 import { SegmentedControl } from '@/components/ui/segmented';
 import { toast } from '@/components/ui/toast';
 
@@ -128,14 +129,9 @@ export function QuickCapture() {
             </Field>
           </div>
         ) : (
-          <Field label="Клиент из базы" error={errors.fullName}>
-            {(id, d) => (
-              <Select id={id} aria-describedby={d} value={v.clientId} onChange={(e) => setV({ ...v, clientId: e.target.value })}>
-                <option value="">Выберите клиента</option>
-                {clients.map((c) => <option key={c.id} value={c.id}>{c.fullName}</option>)}
-              </Select>
-            )}
-          </Field>
+          <PickerField label="Клиент из базы" error={errors.fullName} emptyLabel="Выберите клиента"
+            value={v.clientId} onChange={(clientId) => setV({ ...v, clientId })}
+            options={clients.map((c) => ({ value: c.id, label: c.fullName, meta: c.primaryPhone }))} />
         )}
       </section>
 
@@ -155,14 +151,9 @@ export function QuickCapture() {
           </div>
         )}
         {propertyMode === 'crm' && (
-          <Field label="Объект из базы">
-            {(id, d) => (
-              <Select id={id} aria-describedby={d} value={v.propertyId} onChange={(e) => setV({ ...v, propertyId: e.target.value })}>
-                <option value="">Выберите объект</option>
-                {properties.map((p) => <option key={p.id} value={p.id}>{p.title}</option>)}
-              </Select>
-            )}
-          </Field>
+          <PickerField label="Объект из базы" emptyLabel="Выберите объект" searchPlaceholder="Найти по названию или району"
+            value={v.propertyId} onChange={(propertyId) => setV({ ...v, propertyId })}
+            options={properties.map((p) => ({ value: p.id, label: p.title, meta: p.district }))} />
         )}
         {propertyMode === 'none' && <p className="t-caption">Объект добавите позже — из карточки лида.</p>}
       </section>

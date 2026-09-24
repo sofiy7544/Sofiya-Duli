@@ -5,6 +5,8 @@ import { api } from '@/lib/mock/api';
 import { store, usePreviewSettings, users, shortName } from '@/lib/mock/store';
 import { useResource } from '@/lib/use-resource';
 import { useHScrollFade } from '@/lib/use-hscroll';
+import { useChunked } from '@/lib/use-chunked';
+import { ShowMore } from '@/components/ui/show-more';
 import { useIsDesktop, useTheme } from '@/lib/theme/provider';
 import { useRouter } from '@/lib/router';
 import { money, plural } from '@/lib/format';
@@ -61,6 +63,11 @@ export function LeadsScreen() {
   const all = r.data ?? [];
   const active = apply(all.filter((l) => l.stage !== 'WON' && l.stage !== 'LOST'), filters);
   const countFor = (f: FilterValue) => apply(all.filter((l) => l.stage !== 'WON' && l.stage !== 'LOST'), f).length;
+  /* Список рисуется порциями. Счётчики над ним — всегда по всей воронке:
+     «39 активных» и числа на фишках этапов не должны зависеть от того,
+     сколько строк человек успел долистать. */
+  const list = stage === 'ALL' ? active : active.filter((l) => l.stage === stage);
+  const page = useChunked(list, `leads:${stage}:${activeFilterCount(filters)}`);
 
   const header = (
     <PageHeader title="Лиды" subtitle={r.data ? `${active.length} ${plural(active.length, 'активный', 'активных', 'активных')}` : 'Загружаем воронку'}
@@ -75,7 +82,6 @@ export function LeadsScreen() {
     if (r.loading) return isDesktop && view === 'board' ? <BoardSkeleton /> : <RowsSkeleton rows={6} />;
     if (!all.length) return <EmptyState icon={Inbox} title="В воронке пока пусто" text="Добавьте первый лид — он появится в колонке «Новые»." action={<Button onClick={() => ui.set({ quickCreate: 'lead' })}><Plus />Добавить лид</Button>} />;
     if (isDesktop && view === 'board') return <Board leads={active} onMove={move} family={family} selectMode={selectMode} selected={selected} onToggle={toggleSel} onStage={setStageFor} />;
-    const list = stage === 'ALL' ? active : active.filter((l) => l.stage === stage);
     return (
       <>
         {!isDesktop && (
@@ -87,11 +93,12 @@ export function LeadsScreen() {
             </div>
           </div>
         )}
-        {list.length === 0 ? <EmptyState icon={Workflow} title="На этом этапе пусто" text="Попробуйте другой этап или сбросьте фильтры." action={activeFilterCount(filters) ? <Button variant="outline" size="sm" onClick={() => setFilters({})}>Сбросить фильтры</Button> : undefined} /> : (
+        {list.length === 0 ? <EmptyState icon={Workflow} title="На этом этапе пусто" text="Попробуйте другой этап или сбросьте фильтры." action={activeFilterCount(filters) ? <Button variant="outline" size="sm" onClick={() => setFilters({})}>Сбросить фильтры</Button> : undefined} /> : (<>
           <ul className="surface row-divider overflow-hidden">
-            {list.map((l) => <li key={l.id}><LeadRow lead={l} showStage={stage === 'ALL'} onActions={setActionsFor} /></li>)}
+            {page.visible.map((l) => <li key={l.id}><LeadRow lead={l} showStage={stage === 'ALL'} onActions={setActionsFor} /></li>)}
           </ul>
-        )}
+          <ShowMore more={page.more} total={page.total} shown={page.visible.length} onMore={page.loadMore} what="lead" />
+        </>)}
       </>
     );
   };
@@ -154,6 +161,11 @@ function Board({ leads, onMove, family, selectMode, selected, onToggle, onStage 
   const boardRow = useHScrollFade<HTMLDivElement>();   // колонок больше, чем влезает даже на широком экране
   const columns: LeadStage[] = [...STAGES_ACTIVE, 'LOST'];
   const dragLead = leads.find((l) => l.id === dragId);
+  /* В колонке показываем первые 25 карточек. На объёме за год канбан рисовал
+     2 620 карточек и 84 тысячи узлов — экран открывался 6,6 с. Счётчик в шапке
+     колонки при этом остаётся по всем лидам этапа. */
+  const PER_COLUMN = 25;
+  const [shown, setShown] = React.useState<Record<string, number>>({});
 
   const drop = async (s: LeadStage) => {
     setOver(null);
@@ -168,6 +180,8 @@ function Board({ leads, onMove, family, selectMode, selected, onToggle, onStage 
     <div ref={boardRow} data-hscroll className="no-scrollbar relative -mx-3.5 flex gap-3 overflow-x-auto px-3.5 pb-4 lg:-mx-6 lg:px-6 2xl:gap-2.5" aria-label="Канбан воронки">
       {columns.map((s) => {
         const items = s === 'LOST' ? [] : leads.filter((l) => l.stage === s);
+        const take = shown[s] ?? PER_COLUMN;
+        const visible = items.length > take ? items.slice(0, take) : items;
         const sum = items.reduce((a, l) => a + (l.budgetMax ?? 0), 0);
         const canDrop = !!dragLead && dragLead.stage !== s && isStageTransitionAllowed(dragLead.stage, s);
         return (
@@ -186,7 +200,7 @@ function Board({ leads, onMove, family, selectMode, selected, onToggle, onStage 
             <div className="flex min-h-[140px] flex-1 flex-col gap-2 px-2 pb-2">
               {s === 'LOST' ? (
                 <div className="grid flex-1 place-items-center rounded-[10px] border border-dashed border-border p-4 text-center t-caption">Перетащите сюда, чтобы закрыть с причиной</div>
-              ) : items.map((l) => (
+              ) : visible.map((l) => (
                 <div key={l.id} draggable={!selectMode} onDragStart={(e) => { setDragId(l.id); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', l.id); }} onDragEnd={() => { setDragId(null); setOver(null); }}
                   className={cn('group/card relative', selectMode ? '' : 'cursor-grab active:cursor-grabbing', settled === l.id && 'settle', selected.includes(l.id) && 'rounded-card ring-2 ring-primary')}>
                   <LeadCard lead={l} dragging={dragId === l.id} />
@@ -197,6 +211,12 @@ function Board({ leads, onMove, family, selectMode, selected, onToggle, onStage 
                   </button>}
                 </div>
               ))}
+              {items.length > visible.length && (
+                <button type="button" onClick={() => setShown((v) => ({ ...v, [s]: take + PER_COLUMN }))}
+                  className="min-h-[44px] rounded-control border border-border bg-surface/80 text-[13.5px] font-medium text-muted-foreground transition-colors duration-tab hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                  Ещё {Math.min(PER_COLUMN, items.length - visible.length)} из {items.length - visible.length}
+                </button>
+              )}
               {s !== 'LOST' && items.length === 0 && <div className="t-caption grid flex-1 place-items-center text-center">Пусто</div>}
             </div>
           </section>

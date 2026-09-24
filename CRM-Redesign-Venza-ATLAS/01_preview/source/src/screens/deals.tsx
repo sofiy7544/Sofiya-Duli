@@ -4,6 +4,8 @@ import { cn } from '@/lib/cn';
 import { store, usePreviewSettings, users } from '@/lib/mock/store';
 import { dealsApi, useDealsVersion, DEAL_STATUS_LABEL, type Deal, type DealStatus } from '@/lib/mock/deals';
 import { useResource } from '@/lib/use-resource';
+import { useChunked } from '@/lib/use-chunked';
+import { ShowMore } from '@/components/ui/show-more';
 import { useHScrollFade } from '@/lib/use-hscroll';
 import { Link, useRouter } from '@/lib/router';
 import { useIsDesktop, useTheme } from '@/lib/theme/provider';
@@ -13,6 +15,7 @@ import { Avatar } from '@/components/ui/avatar';
 import { Button, IconButton } from '@/components/ui/button';
 import { StatusBadge, type Tone } from '@/components/ui/badge';
 import { Field, Input, Select } from '@/components/ui/field';
+import { PickerField } from '@/components/ui/picker';
 import { SegmentedControl } from '@/components/ui/segmented';
 import { RowsSkeleton, Skeleton } from '@/components/ui/skeleton';
 import { EmptyState, ErrorState } from '@/components/ui/state';
@@ -37,7 +40,11 @@ export function DealsScreen() {
   const [cancelFor, setCancelFor] = React.useState<Deal | null>(null);
   const [dragId, setDragId] = React.useState<string | null>(null);
   const [over, setOver] = React.useState<DealStatus | null>(null);
-  const items = r.data ?? [];
+  const all = r.data ?? [];
+  /* Доска рисует три колонки целиком — там порции только мешали бы перетаскиванию.
+     Порциями идёт список. */
+  const page = useChunked(all, 'deals:list');
+  const items = view === 'board' ? all : page.visible;
   const active = items.filter((d) => d.status === 'ACTIVE');
   const expected = active.reduce((a, d) => a + dealsApi.commission(d), 0);
 
@@ -74,6 +81,7 @@ export function DealsScreen() {
       );
     }
     return (
+      <>
       <ul className="surface row-divider overflow-hidden">
         {items.map((d) => { const p = property(d.propertyId); return (
           <li key={d.id}><Link href={`/deals/${d.id}`} className="pressable flex items-center gap-3 px-4 py-3.5">
@@ -82,6 +90,8 @@ export function DealsScreen() {
             <div className="text-right"><div className={cn('tabular', family === 'atlas' ? 'text-[15px] font-bold' : 't-num text-[17px] font-semibold')}>{money(d.amount, d.currency, true)}</div><StatusBadge tone={STATUS_TONE[d.status]} className="mt-1">{DEAL_STATUS_LABEL[d.status]}</StatusBadge></div>
           </Link></li>); })}
       </ul>
+      <ShowMore more={page.more} total={page.total} shown={items.length} onMore={page.loadMore} what="deal" />
+      </>
     );
   };
 
@@ -143,8 +153,12 @@ export function DealNewScreen() {
     <PageBody className="lg:max-w-[680px]">
       <PageHeader title="Новая сделка" back="/deals" subtitle={initialLead ? `Из лида: ${clientName(initialLead.clientId)}` : undefined} />
       <form onSubmit={submit} noValidate className="surface space-y-4 p-4 lg:p-6">
-        <Field label="Лид" required error={errors.leadId}>{(id, d) => <Select id={id} aria-describedby={d} aria-invalid={!!errors.leadId} value={v.leadId} onChange={(e) => { const l = store.db.leads.find((x) => x.id === e.target.value); setV({ ...v, leadId: e.target.value, propertyId: l?.interestPropertyId ?? v.propertyId }); }}><option value="">Выберите лид</option>{candidates.map((l) => <option key={l.id} value={l.id}>{clientName(l.clientId)}</option>)}</Select>}</Field>
-        <Field label="Объект" hint="Можно выбрать позже">{(id, d) => <Select id={id} aria-describedby={d} value={v.propertyId} onChange={(e) => setV({ ...v, propertyId: e.target.value })}><option value="">Не выбран</option>{store.db.properties.filter((p) => p.status !== 'SOLD').map((p) => <option key={p.id} value={p.id}>{p.title}, {p.district}</option>)}</Select>}</Field>
+        <PickerField label="Лид" required error={errors.leadId} emptyLabel="Выберите лид"
+          value={v.leadId} onChange={(leadId) => { const l = store.db.leads.find((x) => x.id === leadId); setV({ ...v, leadId, propertyId: l?.interestPropertyId ?? v.propertyId }); }}
+          options={candidates.map((l) => ({ value: l.id, label: clientName(l.clientId) }))} />
+        <PickerField label="Объект" hint="Можно выбрать позже" emptyLabel="Не выбран" searchPlaceholder="Найти по названию или району"
+          value={v.propertyId} onChange={(propertyId) => setV({ ...v, propertyId })}
+          options={store.db.properties.filter((p) => p.status !== 'SOLD').map((p) => ({ value: p.id, label: p.title, meta: p.district }))} />
         {conflict && <div role="status" className="flex gap-2.5 rounded-control border border-warning/35 bg-warning/12 px-3.5 py-3 text-[14px] text-warning-text"><AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />По этому объекту уже есть активная сделка с {clientName(conflict.clientId)}. Создать можно, но проверьте, не дубль ли это.</div>}
         <div className="grid grid-cols-[1fr_120px] gap-3">
           <Field label="Сумма, €" required error={errors.amount}>{(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.amount} inputMode="numeric" className="tabular" value={v.amount} onChange={(e) => setV({ ...v, amount: e.target.value.replace(/[^\d\s]/g, '') })} />}</Field>

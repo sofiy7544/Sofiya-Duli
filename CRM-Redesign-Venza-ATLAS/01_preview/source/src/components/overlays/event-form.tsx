@@ -9,7 +9,8 @@ import { defaultDue, duePresets, toLocalInput } from '@/lib/due';
 import type { CalendarEvent, EventKind } from '@/lib/mock/types';
 import { Sheet } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Field, Input, Select } from '@/components/ui/field';
+import { Field, Input } from '@/components/ui/field';
+import { PickerField } from '@/components/ui/picker';
 import { SegmentedControl } from '@/components/ui/segmented';
 import { toast } from '@/components/ui/toast';
 
@@ -130,23 +131,13 @@ export function EventFormSheet({ open, onOpenChange, move, kind: initialKind = '
               options={MINUTES.map((m) => ({ value: m, label: `${m} мин` }))} />
           </fieldset>
 
-          <Field label="Клиент" hint="Событие попадёт в его историю">
-            {(id) => (
-              <Select id={id} value={v.clientId} onChange={(e) => setV({ ...v, clientId: e.target.value })}>
-                <option value="">Без клиента</option>
-                {clients.map((c) => <option key={c.id} value={c.id}>{c.fullName}</option>)}
-              </Select>
-            )}
-          </Field>
+          <PickerField label="Клиент" hint="Событие попадёт в его историю" emptyLabel="Без клиента"
+            value={v.clientId} onChange={(clientId) => setV({ ...v, clientId })}
+            options={clients.map((c) => ({ value: c.id, label: c.fullName, meta: c.primaryPhone }))} />
 
-          <Field label="Объект">
-            {(id) => (
-              <Select id={id} value={v.propertyId} onChange={(e) => setV({ ...v, propertyId: e.target.value })}>
-                <option value="">Без объекта</option>
-                {properties.map((p) => <option key={p.id} value={p.id}>{p.title}</option>)}
-              </Select>
-            )}
-          </Field>
+          <PickerField label="Объект" emptyLabel="Без объекта" searchPlaceholder="Найти по названию или району"
+            value={v.propertyId} onChange={(propertyId) => setV({ ...v, propertyId })}
+            options={properties.map((p) => ({ value: p.id, label: p.title, meta: p.district }))} />
 
           <Field label="Название" hint={`Если оставить пустым: «${suggested()}»`} error={errors.title}>
             {(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.title} value={v.title} maxLength={120}

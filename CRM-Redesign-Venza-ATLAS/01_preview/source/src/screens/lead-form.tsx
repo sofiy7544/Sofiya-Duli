@@ -6,6 +6,7 @@ import { PRIORITY_LABEL, PURPOSE_LABEL, SOURCE_LABEL } from '@/lib/labels';
 import type { Priority, SourceType } from '@/lib/mock/types';
 import { FormGrid, FormRow, FormSection, FormShell, useDirty } from '@/components/shell/form-shell';
 import { Field, Input, Select, Textarea } from '@/components/ui/field';
+import { PickerField } from '@/components/ui/picker';
 import { toast } from '@/components/ui/toast';
 
 /**
@@ -71,14 +72,9 @@ export function LeadFormScreen() {
       <FormSection title="Клиент">
         <FormGrid>
           <FormRow>
-            <Field label="Из базы" hint="Или заполните имя и телефон ниже">
-              {(fid, d) => (
-                <Select id={fid} aria-describedby={d} value={v.clientId} onChange={(e) => patch({ clientId: e.target.value })}>
-                  <option value="">Новый клиент</option>
-                  {clients.map((c) => <option key={c.id} value={c.id}>{c.fullName}</option>)}
-                </Select>
-              )}
-            </Field>
+            <PickerField label="Из базы" hint="Или заполните имя и телефон ниже" emptyLabel="Новый клиент"
+              value={v.clientId} onChange={(clientId) => patch({ clientId })}
+              options={clients.map((c) => ({ value: c.id, label: c.fullName, meta: c.primaryPhone }))} />
           </FormRow>
           {!v.clientId && (
             <>
@@ -133,14 +129,9 @@ export function LeadFormScreen() {
             )}
           </Field>
           <FormRow>
-            <Field label="Объект интереса">
-              {(fid) => (
-                <Select id={fid} value={v.propertyId} onChange={(e) => patch({ propertyId: e.target.value })}>
-                  <option value="">Пока не выбран</option>
-                  {properties.map((p) => <option key={p.id} value={p.id}>{p.title}</option>)}
-                </Select>
-              )}
-            </Field>
+            <PickerField label="Объект интереса" emptyLabel="Пока не выбран" searchPlaceholder="Найти по названию или району"
+              value={v.propertyId} onChange={(propertyId) => patch({ propertyId })}
+              options={properties.map((p) => ({ value: p.id, label: p.title, meta: p.district }))} />
           </FormRow>
           <FormRow>
             <Field label="Первая заметка">

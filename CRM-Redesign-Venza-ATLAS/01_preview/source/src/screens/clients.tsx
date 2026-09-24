@@ -4,6 +4,8 @@ import { cn } from '@/lib/cn';
 import { api } from '@/lib/mock/api';
 import { store, usePreviewSettings, users } from '@/lib/mock/store';
 import { useResource } from '@/lib/use-resource';
+import { useChunked } from '@/lib/use-chunked';
+import { ShowMore } from '@/components/ui/show-more';
 import { Link, useRouter } from '@/lib/router';
 import { useIsDesktop, useTheme } from '@/lib/theme/provider';
 import { budget, relDay } from '@/lib/format';
@@ -34,12 +36,15 @@ export function ClientsScreen() {
   const [debounced, setDebounced] = React.useState('');
   React.useEffect(() => { const t = setTimeout(() => setDebounced(term), 250); return () => clearTimeout(t); }, [term]);
   const r = useResource(() => api.clients(status, debounced), [status, debounced]);
+  /* Список порциями: на объёме за год экран открывался около пяти секунд.
+     Ключ включает вкладку и запрос — у каждого списка своя позиция. */
+  const page = useChunked(r.data?.items ?? [], `clients:${status}:${debounced}`);
   const leadOf = (c: Client) => store.db.leads.find((l) => l.clientId === c.id && l.stage !== 'WON' && l.stage !== 'LOST');
 
   const list = () => {
     if (r.error) return <ErrorState error={r.error} onRetry={r.retry} what="клиентов" />;
     if (r.loading) return <RowsSkeleton rows={7} />;
-    const items = r.data?.items ?? [];
+    const items = page.visible;
     if (!items.length) return debounced
       ? <EmptyState icon={Search} title="Никого не нашли" text={`По запросу «${debounced}» клиентов нет. Проверьте номер или имя.`} action={<Button variant="outline" size="sm" onClick={() => setTerm('')}>Очистить поиск</Button>} />
       : status === 'active' ? <EmptyState icon={Users} title="Клиентов пока нет" text="Клиент появится, когда вы создадите первый лид." action={<Button onClick={() => ui.set({ quickCreate: 'lead' })}><UserPlus />Новый лид</Button>} />
@@ -61,10 +66,12 @@ export function ClientsScreen() {
                 <td className="px-4 py-2 text-muted-foreground tabular">{relDay(c.createdAt)}</td>
               </tr>); })}</tbody>
           </table>
+          <ShowMore more={page.more} total={page.total} shown={items.length} onMore={page.loadMore} what="client" />
         </div>
       );
     }
     return (
+      <>
       <ul className="surface row-divider overflow-hidden">
         {items.map((c) => { const l = leadOf(c); return (
           <li key={c.id}><Link href={`/clients/${c.id}`} className="pressable flex items-center gap-3 px-4 py-3.5">
@@ -74,8 +81,11 @@ export function ClientsScreen() {
             <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
           </Link></li>); })}
       </ul>
+      <ShowMore more={page.more} total={page.total} shown={items.length} onMore={page.loadMore} what="client" />
+    </>
     );
   };
+
 
   const total = r.data?.total;
   return (

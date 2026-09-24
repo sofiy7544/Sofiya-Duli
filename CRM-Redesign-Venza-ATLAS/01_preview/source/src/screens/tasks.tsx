@@ -4,6 +4,8 @@ import { cn } from '@/lib/cn';
 import { api } from '@/lib/mock/api';
 import { store, users } from '@/lib/mock/store';
 import { useResource } from '@/lib/use-resource';
+import { useChunked } from '@/lib/use-chunked';
+import { ShowMore } from '@/components/ui/show-more';
 import { Link } from '@/lib/router';
 import { useIsDesktop, useTheme } from '@/lib/theme/provider';
 import { relDay, sameDay, time } from '@/lib/format';
@@ -38,7 +40,10 @@ export function TasksScreen() {
     upcoming: all.filter((t) => !t.completedAt && new Date(t.dueAt) >= new Date(start.getTime() + 86_400_000)),
     done: all.filter((t) => !!t.completedAt),
   };
-  const items = buckets[filter];
+  /* «Готово» за год — это тысячи строк. Показываем порциями, счётчики на
+     вкладках при этом остаются по всему списку. */
+  const page = useChunked(buckets[filter], `tasks:${filter}`);
+  const items = page.visible;
 
   /* Задача из тоста «Показать»: открываем вкладку, в которой она лежит, и подсвечиваем строку. */
   React.useEffect(() => {
@@ -90,10 +95,12 @@ export function TasksScreen() {
                 <td className="px-3 py-2 text-muted-foreground">{users.find((u) => u.id === t.userId)?.fullName}</td>
               </tr>); })}</tbody>
           </table>
+          <ShowMore more={page.more} total={page.total} shown={items.length} onMore={page.loadMore} what="task" />
         </div>
       );
     }
     return (
+      <>
       <ul className="surface row-divider overflow-hidden">
         {items.map((t) => { const done = isDone(t); const over = !done && new Date(t.dueAt) < now; return (
           <li key={t.id} id={`task-${t.id}`} className={cn('flex items-center gap-3 px-4 py-3 transition-colors duration-500', focusTask === t.id && 'bg-primary-soft')}>
@@ -108,6 +115,8 @@ export function TasksScreen() {
             </div>
           </li>); })}
       </ul>
+      <ShowMore more={page.more} total={page.total} shown={items.length} onMore={page.loadMore} what="task" />
+      </>
     );
   };
 

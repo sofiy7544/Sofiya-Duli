@@ -5,6 +5,8 @@ import { api } from '@/lib/mock/api';
 import { store, usePreviewSettings, users, shortName } from '@/lib/mock/store';
 import { useResource } from '@/lib/use-resource';
 import { useHScrollFade } from '@/lib/use-hscroll';
+import { useChunked } from '@/lib/use-chunked';
+import { ShowMore } from '@/components/ui/show-more';
 import { useIsDesktop, useTheme } from '@/lib/theme/provider';
 import { useRouter } from '@/lib/router';
 import { money, plural } from '@/lib/format';
@@ -61,6 +63,11 @@ export function LeadsScreen() {
   const all = r.data ?? [];
   const active = apply(all.filter((l) => l.stage !== 'WON' && l.stage !== 'LOST'), filters);
   const countFor = (f: FilterValue) => apply(all.filter((l) => l.stage !== 'WON' && l.stage !== 'LOST'), f).length;
+  /* Список рисуется порциями. Счётчики над ним — всегда по всей воронке:
+     «39 активных» и числа на фишках этапов не должны зависеть от того,
+     сколько строк человек успел долистать. */
+  const list = stage === 'ALL' ? active : active.filter((l) => l.stage === stage);
+  const page = useChunked(list, `leads:${stage}:${activeFilterCount(filters)}`);
 
   const header = (
     <PageHeader title="Лиды" subtitle={r.data ? `${active.length} ${plural(active.length, 'активный', 'активных', 'активных')}` : 'Загружаем воронку'}
@@ -75,7 +82,6 @@ export function LeadsScreen() {
     if (r.loading) return isDesktop && view === 'board' ? <BoardSkeleton /> : <RowsSkeleton rows={6} />;
     if (!all.length) return <EmptyState icon={Inbox} title="В воронке пока пусто" text="Добавьте первый лид — он появится в колонке «Новые»." action={<Button onClick={() => ui.set({ quickCreate: 'lead' })}><Plus />Добавить лид</Button>} />;
     if (isDesktop && view === 'board') return <Board leads={active} onMove={move} family={family} selectMode={selectMode} selected={selected} onToggle={toggleSel} onStage={setStageFor} />;
-    const list = stage === 'ALL' ? active : active.filter((l) => l.stage === stage);
     return (
       <>
         {!isDesktop && (
@@ -87,11 +93,12 @@ export function LeadsScreen() {
             </div>
           </div>
         )}
-        {list.length === 0 ? <EmptyState icon={Workflow} title="На этом этапе пусто" text="Попробуйте другой этап или сбросьте фильтры." action={activeFilterCount(filters) ? <Button variant="outline" size="sm" onClick={() => setFilters({})}>Сбросить фильтры</Button> : undefined} /> : (
+        {list.length === 0 ? <EmptyState icon={Workflow} title="На этом этапе пусто" text="Попробуйте другой этап или сбросьте фильтры." action={activeFilterCount(filters) ? <Button variant="outline" size="sm" onClick={() => setFilters({})}>Сбросить фильтры</Button> : undefined} /> : (<>
           <ul className="surface row-divider overflow-hidden">
-            {list.map((l) => <li key={l.id}><LeadRow lead={l} showStage={stage === 'ALL'} onActions={setActionsFor} /></li>)}
+            {page.visible.map((l) => <li key={l.id}><LeadRow lead={l} showStage={stage === 'ALL'} onActions={setActionsFor} /></li>)}
           </ul>
-        )}
+          <ShowMore more={page.more} total={page.total} shown={page.visible.length} onMore={page.loadMore} what="lead" />
+        </>)}
       </>
     );
   };

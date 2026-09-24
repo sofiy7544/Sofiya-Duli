@@ -5,6 +5,8 @@ import { cn } from '@/lib/cn';
 import { api } from '@/lib/mock/api';
 import { store, usePreviewSettings, users } from '@/lib/mock/store';
 import { useResource } from '@/lib/use-resource';
+import { useChunked } from '@/lib/use-chunked';
+import { ShowMore } from '@/components/ui/show-more';
 import { Link, useRouter } from '@/lib/router';
 import { useIsDesktop, useTheme } from '@/lib/theme/provider';
 import { money, plural } from '@/lib/format';
@@ -41,7 +43,10 @@ export function PropertiesScreen() {
     { key: 'status', label: 'Статус', multi: false, options: (['AVAILABLE', 'IN_SHOWING', 'RESERVED', 'SOLD'] as PropertyStatus[]).map((s) => ({ value: s, label: PROPERTY_STATUS_LABEL[s] })) },
     { key: 'inactive', label: 'Показывать', options: [{ value: '1', label: 'Проданные и архив' }] },
   ];
-  const items = r.data?.items ?? [];
+  /* Карточек объектов за год набирается несколько сотен, и каждая — с фото.
+     Рисуем порциями, иначе браузер тянет всю галерею разом. */
+  const page = useChunked(r.data?.items ?? [], `properties:${scope}:${debounced}:${activeFilterCount(filters)}`, 24);
+  const items = page.visible;
 
   return (
     <PageBody wide={family === 'atlas'}>
@@ -64,9 +69,12 @@ export function PropertiesScreen() {
         <EmptyState icon={Building} title={debounced || activeFilterCount(filters) ? 'Под фильтры ничего не подходит' : 'Объектов пока нет'} text={debounced || activeFilterCount(filters) ? 'Сбросьте фильтры или измените запрос.' : 'Добавьте первый объект — с фото он будет выглядеть как на сайте.'}
           action={activeFilterCount(filters) || debounced ? <Button variant="outline" size="sm" onClick={() => { setFilters({}); setTerm(''); }}>Сбросить</Button> : <Button onClick={() => router.navigate('/properties/new')}>Добавить объект</Button>} />
       ) : (
+        <>
         <ul className={cn('grid gap-4', family === 'atlas' ? 'sm:grid-cols-2 xl:grid-cols-4 lg:gap-3' : 'sm:grid-cols-2 xl:grid-cols-3 lg:gap-6')}>
           {items.map((p) => <li key={p.id}><PropertyCard p={p} /></li>)}
         </ul>
+        <ShowMore more={page.more} total={page.total} shown={items.length} onMore={page.loadMore} what="property" />
+        </>
       )}
       <FiltersSheet open={open} onOpenChange={setOpen} groups={groups} value={filters} onApply={setFilters} countFor={countFor} />
     </PageBody>

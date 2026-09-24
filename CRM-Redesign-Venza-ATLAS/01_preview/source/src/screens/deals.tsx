@@ -4,6 +4,8 @@ import { cn } from '@/lib/cn';
 import { store, usePreviewSettings, users } from '@/lib/mock/store';
 import { dealsApi, useDealsVersion, DEAL_STATUS_LABEL, type Deal, type DealStatus } from '@/lib/mock/deals';
 import { useResource } from '@/lib/use-resource';
+import { useChunked } from '@/lib/use-chunked';
+import { ShowMore } from '@/components/ui/show-more';
 import { useHScrollFade } from '@/lib/use-hscroll';
 import { Link, useRouter } from '@/lib/router';
 import { useIsDesktop, useTheme } from '@/lib/theme/provider';
@@ -37,7 +39,11 @@ export function DealsScreen() {
   const [cancelFor, setCancelFor] = React.useState<Deal | null>(null);
   const [dragId, setDragId] = React.useState<string | null>(null);
   const [over, setOver] = React.useState<DealStatus | null>(null);
-  const items = r.data ?? [];
+  const all = r.data ?? [];
+  /* Доска рисует три колонки целиком — там порции только мешали бы перетаскиванию.
+     Порциями идёт список. */
+  const page = useChunked(all, 'deals:list');
+  const items = view === 'board' ? all : page.visible;
   const active = items.filter((d) => d.status === 'ACTIVE');
   const expected = active.reduce((a, d) => a + dealsApi.commission(d), 0);
 
@@ -74,6 +80,7 @@ export function DealsScreen() {
       );
     }
     return (
+      <>
       <ul className="surface row-divider overflow-hidden">
         {items.map((d) => { const p = property(d.propertyId); return (
           <li key={d.id}><Link href={`/deals/${d.id}`} className="pressable flex items-center gap-3 px-4 py-3.5">
@@ -82,6 +89,8 @@ export function DealsScreen() {
             <div className="text-right"><div className={cn('tabular', family === 'atlas' ? 'text-[15px] font-bold' : 't-num text-[17px] font-semibold')}>{money(d.amount, d.currency, true)}</div><StatusBadge tone={STATUS_TONE[d.status]} className="mt-1">{DEAL_STATUS_LABEL[d.status]}</StatusBadge></div>
           </Link></li>); })}
       </ul>
+      <ShowMore more={page.more} total={page.total} shown={items.length} onMore={page.loadMore} what="deal" />
+      </>
     );
   };
 

@@ -161,10 +161,21 @@ async function day(p, r, n) {
     await p.waitForTimeout(1500);
     await clear(p);
   }, async () => {
+    /* Путь человека: сначала «Показать» в тосте — он сам открывает нужную вкладку
+       и дорисовывает список до строки. Если тост уже погас, обходим вкладки руками
+       и дораскрываем порции: на длинном списке новая строка может лежать за пятьюдесятью. */
+    const show = p.locator(V('button:text-is("Показать")')).first();
+    if (await show.count()) { await show.click({ timeout: 4000 }).catch(() => {}); await p.waitForTimeout(1200); }
+    if (await count(p, `text="${title}"`)) return true;
     for (const tab of ['Сегодня', 'Далее', 'Просрочено']) {
       const t = p.locator(V(`button:has-text("${tab}"), [role=radio]:has-text("${tab}")`)).first();
       if (await t.count()) { await t.click().catch(() => {}); await p.waitForTimeout(600); }
-      if (await count(p, `text="${title}"`)) return true;
+      for (let i = 0; i < 4; i++) {
+        if (await count(p, `text="${title}"`)) return true;
+        const more = p.locator(V('button:has-text("Показать ещё")')).first();
+        if (!(await more.count())) break;
+        await more.click({ timeout: 4000 }).catch(() => {}); await p.waitForTimeout(600);
+      }
     }
     return false;
   });

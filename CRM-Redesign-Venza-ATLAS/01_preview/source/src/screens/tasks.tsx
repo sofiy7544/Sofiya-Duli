@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CheckCircle2, CheckSquare, Plus } from 'lucide-react';
+import { CheckCircle2, CheckSquare, ListPlus, Plus } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { api } from '@/lib/mock/api';
 import { store, users } from '@/lib/mock/store';
@@ -13,7 +13,7 @@ import { TASK_TYPE_LABEL } from '@/lib/labels';
 import type { Task } from '@/lib/mock/types';
 import { PageBody, PageHeader } from '@/components/shell/page';
 import { ui, useUI } from '@/components/shell/ui-state';
-import { Button } from '@/components/ui/button';
+import { Button, IconButton } from '@/components/ui/button';
 import { SegmentedControl } from '@/components/ui/segmented';
 import { RowsSkeleton } from '@/components/ui/skeleton';
 import { EmptyState, ErrorState } from '@/components/ui/state';
@@ -133,7 +133,11 @@ export function TasksScreen() {
 
   return (
     <PageBody wide={family === 'atlas'}>
-      <PageHeader title="Задачи" subtitle={r.data ? (buckets.overdue.length ? <span className="font-medium text-danger-text">{buckets.overdue.length} просрочено</span> : 'Без просрочек') : ' '} />
+      <PageHeader title="Задачи" subtitle={r.data ? (buckets.overdue.length ? <span className="font-medium text-danger-text">{buckets.overdue.length} просрочено</span> : 'Без просрочек') : ' '}
+        /* Кнопка в шапке — как «Новый клиент» на «Клиентах»: задача создаётся отсюда сразу,
+           без выбора типа в общем меню. Значок со списком, а не голый плюс: рядом на
+           компьютере стоит «+ Создать», два одинаковых плюса читались бы как одно и то же. */
+        actions={<IconButton label="Новая задача" onClick={() => ui.set({ quickCreate: 'task' })}><ListPlus /></IconButton>} />
       <SegmentedControl<Filter> label="Фильтр задач" className="mb-4 w-full sm:w-auto" value={filter} onChange={setFilter}
         options={[{ value: 'today', label: 'Сегодня', count: r.data ? buckets.today.length : undefined }, { value: 'overdue', label: 'Просрочено', count: r.data ? buckets.overdue.length : undefined }, { value: 'upcoming', label: 'Далее' }, { value: 'done', label: 'Готово' }]} />
       {content()}

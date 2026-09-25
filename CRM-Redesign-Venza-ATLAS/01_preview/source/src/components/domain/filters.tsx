@@ -4,6 +4,7 @@ import { cn } from '@/lib/cn';
 import { Sheet } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Chip } from '@/components/ui/badge';
+import { tr } from '@/lib/i18n';
 
 /** Фильтры: bottom sheet на мобиле, боковая панель на десктопе. Футер: Сбросить / Показать N. */
 export type FilterGroup = { key: string; label: string; options: { value: string; label: string }[]; multi?: boolean };
@@ -11,8 +12,8 @@ export type FilterValue = Record<string, string[]>;
 
 export function FilterButton({ count, onClick }: { count: number; onClick: () => void }) {
   return (
-    <Button variant="outline" size="sm" onClick={onClick} className={cn('shrink-0', count > 0 && 'border-primary/40 text-primary')} aria-label={count ? `Фильтры, выбрано ${count}` : 'Фильтры'}>
-      <SlidersHorizontal />Фильтры{count > 0 && <span className="grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1.5 text-[11px] text-primary-foreground tabular">{count}</span>}
+    <Button variant="outline" size="sm" onClick={onClick} className={cn('shrink-0', count > 0 && 'border-primary/40 text-primary')} aria-label={count ? `Фильтры, выбрано ${count}` : tr('Фильтры')}>
+      <SlidersHorizontal />{tr('Фильтры')}{count > 0 && <span className="grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1.5 text-[11px] text-primary-foreground tabular">{count}</span>}
     </Button>
   );
 }
@@ -29,8 +30,8 @@ export function FiltersSheet({ open, onOpenChange, groups, value, onApply, count
   });
   const n = countFor(draft);
   return (
-    <Sheet open={open} onOpenChange={onOpenChange} title="Фильтры" desktop="side" size="sm"
-      footer={<><Button variant="outline" className="flex-1" onClick={() => setDraft({})}>Сбросить</Button><Button className="flex-[2]" onClick={() => { onApply(draft); onOpenChange(false); }}>{n ? `Показать ${n}` : 'Ничего не найдено'}</Button></>}>
+    <Sheet open={open} onOpenChange={onOpenChange} title={tr('Фильтры')} desktop="side" size="sm"
+      footer={<><Button variant="outline" className="flex-1" onClick={() => setDraft({})}>{tr('Сбросить')}</Button><Button className="flex-[2]" onClick={() => { onApply(draft); onOpenChange(false); }}>{n ? `Показать ${n}` : tr('Ничего не найдено')}</Button></>}>
       <div className="space-y-6">
         {groups.map((g) => (
           <fieldset key={g.key}>

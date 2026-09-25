@@ -11,6 +11,7 @@ import { Field, Input, Select, Textarea } from '@/components/ui/field';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ErrorState } from '@/components/ui/state';
 import { toast } from '@/components/ui/toast';
+import { tr } from '@/lib/i18n';
 
 /**
  * /properties/new и /properties/:id/edit — PropertyForm по SCREEN-MAP.
@@ -51,16 +52,16 @@ export function PropertyFormScreen({ id }: { id?: string }) {
 
   const back = id ? `/properties/${id}` : '/properties';
 
-  if (id && r.error) return <PageBody className="lg:max-w-[760px]"><PageHeader title="Объект" back="/properties" /><ErrorState error={r.error} onRetry={r.retry} what="объект" /></PageBody>;
-  if (id && r.loading && !existing) return <PageBody className="lg:max-w-[760px]"><PageHeader title="Объект" back="/properties" /><Skeleton className="h-96" /></PageBody>;
+  if (id && r.error) return <PageBody className="lg:max-w-[760px]"><PageHeader title={tr('Объект')} back="/properties" /><ErrorState error={r.error} onRetry={r.retry} what={tr('объект')} /></PageBody>;
+  if (id && r.loading && !existing) return <PageBody className="lg:max-w-[760px]"><PageHeader title={tr('Объект')} back="/properties" /><Skeleton className="h-96" /></PageBody>;
 
   const submit = async () => {
     const e: typeof errors = {};
-    if (v.title.trim().length < 3) e.title = 'Название — минимум 3 символа';
-    if (!v.district.trim()) e.district = 'Укажите район';
-    if (!v.address.trim()) e.address = 'Укажите адрес';
-    if (!(num(v.area) ?? 0)) e.area = 'Площадь больше нуля';
-    if (!(num(v.price) ?? 0)) e.price = 'Цена больше нуля';
+    if (v.title.trim().length < 3) e.title = tr('Название — минимум 3 символа');
+    if (!v.district.trim()) e.district = tr('Укажите район');
+    if (!v.address.trim()) e.address = tr('Укажите адрес');
+    if (!(num(v.area) ?? 0)) e.area = tr('Площадь больше нуля');
+    if (!(num(v.price) ?? 0)) e.price = tr('Цена больше нуля');
     setErrors(e);
     if (Object.keys(e).length) return;
 
@@ -75,70 +76,70 @@ export function PropertyFormScreen({ id }: { id?: string }) {
 
     setBusy(true);
     try {
-      if (id) { await api.updateProperty(id, payload); toast.success('Объект сохранён'); router.navigate(`/properties/${id}`); }
-      else { const p = await api.createProperty(payload); toast.success('Объект добавлен'); router.navigate(`/properties/${p.id}`); }
+      if (id) { await api.updateProperty(id, payload); toast.success(tr('Объект сохранён')); router.navigate(`/properties/${id}`); }
+      else { const p = await api.createProperty(payload); toast.success(tr('Объект добавлен')); router.navigate(`/properties/${p.id}`); }
     } catch (err) { toast.error((err as Error).message); }
     finally { setBusy(false); }
   };
 
   return (
-    <FormShell title={id ? 'Правка объекта' : 'Новый объект'} back={back} dirty={dirty} busy={busy}
-      subtitle={id ? undefined : 'Главное для публикации. Фото добавляются на странице объекта.'}
-      submitLabel={id ? 'Сохранить' : 'Создать объект'} onSubmit={submit}>
+    <FormShell title={id ? tr('Правка объекта') : tr('Новый объект')} back={back} dirty={dirty} busy={busy}
+      subtitle={id ? undefined : tr('Главное для публикации. Фото добавляются на странице объекта.')}
+      submitLabel={id ? tr('Сохранить') : tr('Создать объект')} onSubmit={submit}>
 
-      <FormSection title="Основное">
+      <FormSection title={tr('Основное')}>
         <FormGrid>
           <FormRow>
-            <Field label="Название" required error={errors.title}>
+            <Field label={tr('Название')} required error={errors.title}>
               {(fid, d) => <Input id={fid} aria-describedby={d} invalid={!!errors.title} value={v.title}
-                onChange={(e) => patch({ title: e.target.value })} placeholder="Двухкомнатная на набережной" />}
+                onChange={(e) => patch({ title: e.target.value })} placeholder={tr('Двухкомнатная на набережной')} />}
             </Field>
           </FormRow>
-          <Field label="Тип">
+          <Field label={tr('Тип')}>
             {(fid) => (
               <Select id={fid} value={v.type} onChange={(e) => patch({ type: e.target.value as PropertyType })}>
                 {(Object.keys(PROPERTY_TYPE_LABEL) as PropertyType[]).map((t) => <option key={t} value={t}>{PROPERTY_TYPE_LABEL[t]}</option>)}
               </Select>
             )}
           </Field>
-          <Field label="Статус">
+          <Field label={tr('Статус')}>
             {(fid) => (
               <Select id={fid} value={v.status} onChange={(e) => patch({ status: e.target.value as PropertyStatus })}>
                 {(Object.keys(PROPERTY_STATUS_LABEL) as PropertyStatus[]).map((t) => <option key={t} value={t}>{PROPERTY_STATUS_LABEL[t]}</option>)}
               </Select>
             )}
           </Field>
-          <Field label="Район" required error={errors.district}>
+          <Field label={tr('Район')} required error={errors.district}>
             {(fid, d) => <Input id={fid} aria-describedby={d} invalid={!!errors.district} value={v.district}
-              onChange={(e) => patch({ district: e.target.value })} placeholder="Набережная" />}
+              onChange={(e) => patch({ district: e.target.value })} placeholder={tr('Набережная')} />}
           </Field>
-          <Field label="Адрес" required error={errors.address}>
+          <Field label={tr('Адрес')} required error={errors.address}>
             {(fid, d) => <Input id={fid} aria-describedby={d} invalid={!!errors.address} value={v.address}
-              onChange={(e) => patch({ address: e.target.value })} placeholder="ул. Приморская, 14" />}
+              onChange={(e) => patch({ address: e.target.value })} placeholder={tr('ул. Приморская, 14')} />}
           </Field>
         </FormGrid>
       </FormSection>
 
-      <FormSection title="Параметры">
+      <FormSection title={tr('Параметры')}>
         <FormGrid>
-          <Field label="Площадь, м²" required error={errors.area}>
+          <Field label={tr('Площадь, м²')} required error={errors.area}>
             {(fid, d) => <Input id={fid} aria-describedby={d} invalid={!!errors.area} inputMode="decimal"
               value={v.area} onChange={(e) => patch({ area: e.target.value })} placeholder="72" />}
           </Field>
-          <Field label="Комнат">
+          <Field label={tr('Комнат')}>
             {(fid) => <Input id={fid} inputMode="numeric" value={v.rooms} onChange={(e) => patch({ rooms: e.target.value })} placeholder="2" />}
           </Field>
-          <Field label="Этаж">
+          <Field label={tr('Этаж')}>
             {(fid) => <Input id={fid} inputMode="numeric" value={v.floor} onChange={(e) => patch({ floor: e.target.value })} placeholder="4" />}
           </Field>
-          <Field label="Этажей в доме">
+          <Field label={tr('Этажей в доме')}>
             {(fid) => <Input id={fid} inputMode="numeric" value={v.totalFloors} onChange={(e) => patch({ totalFloors: e.target.value })} placeholder="9" />}
           </Field>
-          <Field label="Цена" required error={errors.price}>
+          <Field label={tr('Цена')} required error={errors.price}>
             {(fid, d) => <Input id={fid} aria-describedby={d} invalid={!!errors.price} inputMode="numeric"
               value={v.price} onChange={(e) => patch({ price: e.target.value })} placeholder="450 000" />}
           </Field>
-          <Field label="Валюта">
+          <Field label={tr('Валюта')}>
             {(fid) => (
               <Select id={fid} value={v.currency} onChange={(e) => patch({ currency: e.target.value })}>
                 {['EUR', 'USD', 'CHF', 'UAH'].map((c) => <option key={c} value={c}>{c}</option>)}
@@ -146,7 +147,7 @@ export function PropertyFormScreen({ id }: { id?: string }) {
             )}
           </Field>
           <FormRow>
-            <Field label="Ответственный">
+            <Field label={tr('Ответственный')}>
               {(fid) => (
                 <Select id={fid} value={v.ownerUserId} onChange={(e) => patch({ ownerUserId: e.target.value })}>
                   {users.map((u) => <option key={u.id} value={u.id}>{u.fullName}</option>)}
@@ -157,16 +158,16 @@ export function PropertyFormScreen({ id }: { id?: string }) {
         </FormGrid>
       </FormSection>
 
-      <FormSection title="Описание">
+      <FormSection title={tr('Описание')}>
         <FormGrid>
           <FormRow>
-            <Field label="Особенности" hint="Через запятую: терраса, паркинг, вид на море">
-              {(fid, d) => <Input id={fid} aria-describedby={d} value={v.features} onChange={(e) => patch({ features: e.target.value })} placeholder="терраса, паркинг" />}
+            <Field label={tr('Особенности')} hint={tr('Через запятую: терраса, паркинг, вид на море')}>
+              {(fid, d) => <Input id={fid} aria-describedby={d} value={v.features} onChange={(e) => patch({ features: e.target.value })} placeholder={tr('терраса, паркинг')} />}
             </Field>
           </FormRow>
           <FormRow>
-            <Field label="Текст объявления">
-              {(fid) => <Textarea id={fid} rows={6} value={v.description} onChange={(e) => patch({ description: e.target.value })} placeholder="Что показать клиенту в первую очередь" />}
+            <Field label={tr('Текст объявления')}>
+              {(fid) => <Textarea id={fid} rows={6} value={v.description} onChange={(e) => patch({ description: e.target.value })} placeholder={tr('Что показать клиенту в первую очередь')} />}
             </Field>
           </FormRow>
         </FormGrid>

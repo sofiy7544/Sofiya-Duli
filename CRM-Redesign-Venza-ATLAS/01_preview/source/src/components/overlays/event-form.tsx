@@ -13,6 +13,7 @@ import { Field, Input } from '@/components/ui/field';
 import { PickerField } from '@/components/ui/picker';
 import { SegmentedControl } from '@/components/ui/segmented';
 import { toast } from '@/components/ui/toast';
+import { tr } from '@/lib/i18n';
 
 /**
  * EventDialog по SCREEN-MAP: создание события календаря и перенос существующего.
@@ -66,8 +67,8 @@ export function EventFormSheet({ open, onOpenChange, move, kind: initialKind = '
   const submit = async () => {
     const e: typeof errors = {};
     const title = (v.title.trim() || suggested()).trim();
-    if (title.length < 3) e.title = 'Название — минимум 3 символа';
-    if (!iso) e.at = 'Проверьте дату и время';
+    if (title.length < 3) e.title = tr('Название — минимум 3 символа');
+    if (!iso) e.at = tr('Проверьте дату и время');
     setErrors(e);
     if (Object.keys(e).length || !iso) return;
     setBusy(true);
@@ -87,21 +88,21 @@ export function EventFormSheet({ open, onOpenChange, move, kind: initialKind = '
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange} desktop="side" size="sm"
-      title={move ? 'Перенести событие' : 'Новое событие'}
-      description={move ? move.title : 'Показ, встреча или звонок. Появится в календаре и в сводке дня.'}
-      footer={<><Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>Отмена</Button>
-        <Button className="flex-[2]" loading={busy} onClick={submit}>{move ? 'Перенести' : 'Создать'}</Button></>}>
+      title={move ? tr('Перенести событие') : tr('Новое событие')}
+      description={move ? move.title : tr('Показ, встреча или звонок. Появится в календаре и в сводке дня.')}
+      footer={<><Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>{tr('Отмена')}</Button>
+        <Button className="flex-[2]" loading={busy} onClick={submit}>{move ? tr('Перенести') : tr('Создать')}</Button></>}>
       <div className="space-y-5">
         {!move && (
           <fieldset>
-            <legend className="mb-2 text-[13px] font-medium">Тип</legend>
-            <SegmentedControl<EventKind> label="Тип события" className="w-full" value={v.kind} onChange={(kind) => setV({ ...v, kind })}
+            <legend className="mb-2 text-[13px] font-medium">{tr('Тип')}</legend>
+            <SegmentedControl<EventKind> label={tr('Тип события')} className="w-full" value={v.kind} onChange={(kind) => setV({ ...v, kind })}
               options={KINDS.map((k) => ({ value: k, label: EVENT_KIND_LABEL[k] }))} />
           </fieldset>
         )}
 
         <fieldset>
-          <legend className="mb-2 text-[13px] font-medium">Когда</legend>
+          <legend className="mb-2 text-[13px] font-medium">{tr('Когда')}</legend>
           <div className="flex flex-wrap gap-2">
             {presets.map((p) => {
               const on = v.at === toLocalInput(p.at);
@@ -112,34 +113,34 @@ export function EventFormSheet({ open, onOpenChange, move, kind: initialKind = '
             })}
           </div>
           <div className="mt-3">
-            <Field label="или точное время" error={errors.at}>
+            <Field label={tr('или точное время')} error={errors.at}>
               {(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.at} required type="datetime-local" value={v.at}
                 onChange={(e) => { setV({ ...v, at: e.target.value }); setErrors({ ...errors, at: undefined }); }} />}
             </Field>
           </div>
           {clash && iso && (
             <p className="t-caption mt-2 flex items-center gap-1.5 text-warning-text">
-              <CalendarClock className="h-3.5 w-3.5" aria-hidden />Рядом уже стоит «{clash.title}» в {time(clash.startsAt)}
+              <CalendarClock className="h-3.5 w-3.5" aria-hidden />{tr('Рядом уже стоит «')}{clash.title}» в {time(clash.startsAt)}
             </p>
           )}
         </fieldset>
 
         {!move && (<>
           <fieldset>
-            <legend className="mb-2 text-[13px] font-medium">Длительность</legend>
-            <SegmentedControl<Minutes> label="Длительность" className="w-full" value={String(v.minutes) as Minutes} onChange={(m) => setV({ ...v, minutes: Number(m) })}
+            <legend className="mb-2 text-[13px] font-medium">{tr('Длительность')}</legend>
+            <SegmentedControl<Minutes> label={tr('Длительность')} className="w-full" value={String(v.minutes) as Minutes} onChange={(m) => setV({ ...v, minutes: Number(m) })}
               options={MINUTES.map((m) => ({ value: m, label: `${m} мин` }))} />
           </fieldset>
 
-          <PickerField label="Клиент" hint="Событие попадёт в его историю" emptyLabel="Без клиента"
+          <PickerField label={tr('Клиент')} hint={tr('Событие попадёт в его историю')} emptyLabel={tr('Без клиента')}
             value={v.clientId} onChange={(clientId) => setV({ ...v, clientId })}
             options={clients.map((c) => ({ value: c.id, label: c.fullName, meta: c.primaryPhone }))} />
 
-          <PickerField label="Объект" emptyLabel="Без объекта" searchPlaceholder="Найти по названию или району"
+          <PickerField label={tr('Объект')} emptyLabel={tr('Без объекта')} searchPlaceholder={tr('Найти по названию или району')}
             value={v.propertyId} onChange={(propertyId) => setV({ ...v, propertyId })}
             options={properties.map((p) => ({ value: p.id, label: p.title, meta: p.district }))} />
 
-          <Field label="Название" hint={`Если оставить пустым: «${suggested()}»`} error={errors.title}>
+          <Field label={tr('Название')} hint={`Если оставить пустым: «${suggested()}»`} error={errors.title}>
             {(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.title} value={v.title} maxLength={120}
               onChange={(e) => { setV({ ...v, title: e.target.value }); setErrors({ ...errors, title: undefined }); }} placeholder={suggested()} />}
           </Field>

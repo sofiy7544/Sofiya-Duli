@@ -26,6 +26,7 @@ import { Switch } from '@/components/ui/toggle';
 import { toast } from '@/components/ui/toast';
 import { PropertyMedia } from '@/components/domain/property-media';
 import { FilterButton, FiltersSheet, activeFilterCount, type FilterValue } from '@/components/domain/filters';
+import { tr } from '@/lib/i18n';
 
 export function PropertiesScreen() {
   const router = useRouter();
@@ -39,9 +40,9 @@ export function PropertiesScreen() {
   const countFor = (f: FilterValue) => store.db.properties.filter((p) => (f.inactive?.length || (p.status !== 'SOLD' && p.status !== 'ARCHIVED')) && (!f.type?.[0] || p.type === f.type[0]) && (!f.status?.[0] || p.status === f.status[0]) && (scope === 'all' || p.ownerUserId === 'u1')).length;
 
   const groups = [
-    { key: 'type', label: 'Тип', multi: false, options: (Object.keys(PROPERTY_TYPE_LABEL) as PropertyType[]).map((t) => ({ value: t, label: PROPERTY_TYPE_LABEL[t] })) },
-    { key: 'status', label: 'Статус', multi: false, options: (['AVAILABLE', 'IN_SHOWING', 'RESERVED', 'SOLD'] as PropertyStatus[]).map((s) => ({ value: s, label: PROPERTY_STATUS_LABEL[s] })) },
-    { key: 'inactive', label: 'Показывать', options: [{ value: '1', label: 'Проданные и архив' }] },
+    { key: 'type', label: tr('Тип'), multi: false, options: (Object.keys(PROPERTY_TYPE_LABEL) as PropertyType[]).map((t) => ({ value: t, label: PROPERTY_TYPE_LABEL[t] })) },
+    { key: 'status', label: tr('Статус'), multi: false, options: (['AVAILABLE', 'IN_SHOWING', 'RESERVED', 'SOLD'] as PropertyStatus[]).map((s) => ({ value: s, label: PROPERTY_STATUS_LABEL[s] })) },
+    { key: 'inactive', label: tr('Показывать'), options: [{ value: '1', label: tr('Проданные и архив') }] },
   ];
   /* Карточек объектов за год набирается несколько сотен, и каждая — с фото.
      Рисуем порциями, иначе браузер тянет всю галерею разом. */
@@ -50,24 +51,24 @@ export function PropertiesScreen() {
 
   return (
     <PageBody wide={family === 'atlas'}>
-      <PageHeader title="Объекты" subtitle={r.data ? `${r.data.total} ${plural(r.data.total, 'объект', 'объекта', 'объектов')}` : ' '}
-        actions={<IconButton label="Новый объект" onClick={() => router.navigate('/properties/new')}><Plus /></IconButton>} />
+      <PageHeader title={tr('Объекты')} subtitle={r.data ? `${r.data.total} ${plural(r.data.total, 'объект', 'объекта', 'объектов')}` : ' '}
+        actions={<IconButton label={tr('Новый объект')} onClick={() => router.navigate('/properties/new')}><Plus /></IconButton>} />
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <SegmentedControl label="Чьи объекты" value={scope} onChange={setScope} options={[{ value: 'all', label: 'Все' }, { value: 'mine', label: 'Мои' }]} />
+        <SegmentedControl label={tr('Чьи объекты')} value={scope} onChange={setScope} options={[{ value: 'all', label: tr('Все') }, { value: 'mine', label: tr('Мои') }]} />
         <div className="relative order-last w-full sm:order-none sm:ml-auto sm:w-[280px]">
           <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
-          <input value={term} onChange={(e) => setTerm(e.target.value)} placeholder="Название, район, адрес" aria-label="Поиск объектов" className="h-11 w-full rounded-control border border-input bg-surface pl-10 pr-3 text-[16px] shadow-soft outline-none focus:border-primary focus:shadow-[0_0_0_4px_hsl(var(--primary)/.12)] lg:h-10 lg:text-[14px]" />
+          <input value={term} onChange={(e) => setTerm(e.target.value)} placeholder={tr('Название, район, адрес')} aria-label={tr('Поиск объектов')} className="h-11 w-full rounded-control border border-input bg-surface pl-10 pr-3 text-[16px] shadow-soft outline-none focus:border-primary focus:shadow-[0_0_0_4px_hsl(var(--primary)/.12)] lg:h-10 lg:text-[14px]" />
         </div>
         <FilterButton count={activeFilterCount(filters)} onClick={() => setOpen(true)} />
       </div>
 
-      {r.error ? <ErrorState error={r.error} onRetry={r.retry} what="объекты" /> : r.loading ? (
-        <div className={cn('grid gap-4', family === 'atlas' ? 'sm:grid-cols-2 xl:grid-cols-4' : 'sm:grid-cols-2 xl:grid-cols-3')} role="status" aria-label="Загрузка">
+      {r.error ? <ErrorState error={r.error} onRetry={r.retry} what={tr('объекты')} /> : r.loading ? (
+        <div className={cn('grid gap-4', family === 'atlas' ? 'sm:grid-cols-2 xl:grid-cols-4' : 'sm:grid-cols-2 xl:grid-cols-3')} role="status" aria-label={tr('Загрузка')}>
           {Array.from({ length: 6 }).map((_, i) => <div key={i} className="surface overflow-hidden"><Skeleton className="aspect-[4/3] rounded-none" /><div className="space-y-2 p-4"><Skeleton className="h-5 w-1/2" /><Skeleton className="h-4 w-3/4" /></div></div>)}
         </div>
       ) : !items.length ? (
-        <EmptyState icon={Building} title={debounced || activeFilterCount(filters) ? 'Под фильтры ничего не подходит' : 'Объектов пока нет'} text={debounced || activeFilterCount(filters) ? 'Сбросьте фильтры или измените запрос.' : 'Добавьте первый объект — с фото он будет выглядеть как на сайте.'}
-          action={activeFilterCount(filters) || debounced ? <Button variant="outline" size="sm" onClick={() => { setFilters({}); setTerm(''); }}>Сбросить</Button> : <Button onClick={() => router.navigate('/properties/new')}>Добавить объект</Button>} />
+        <EmptyState icon={Building} title={debounced || activeFilterCount(filters) ? tr('Под фильтры ничего не подходит') : tr('Объектов пока нет')} text={debounced || activeFilterCount(filters) ? tr('Сбросьте фильтры или измените запрос.') : tr('Добавьте первый объект — с фото он будет выглядеть как на сайте.')}
+          action={activeFilterCount(filters) || debounced ? <Button variant="outline" size="sm" onClick={() => { setFilters({}); setTerm(''); }}>{tr('Сбросить')}</Button> : <Button onClick={() => router.navigate('/properties/new')}>{tr('Добавить объект')}</Button>} />
       ) : (
         <>
         <ul className={cn('grid gap-4', family === 'atlas' ? 'sm:grid-cols-2 xl:grid-cols-4 lg:gap-3' : 'sm:grid-cols-2 xl:grid-cols-3 lg:gap-6')}>
@@ -102,7 +103,7 @@ function PropertyCard({ p }: { p: Property }) {
           </div>
         </div>
       </Link>
-      <button onClick={() => { setFav(!fav); toast.success(fav ? 'Убрано из подборки' : 'Добавлено в подборку'); }} aria-pressed={fav} aria-label="В подборку"
+      <button onClick={() => { setFav(!fav); toast.success(fav ? tr('Убрано из подборки') : tr('Добавлено в подборку')); }} aria-pressed={fav} aria-label={tr('В подборку')}
         className="material absolute right-2.5 top-2.5 grid h-11 w-11 place-items-center rounded-full border border-[var(--glass-border)] transition-transform duration-tap active:scale-90">
         <Heart className={cn('h-4 w-4 transition-colors', fav && 'fill-danger text-danger')} aria-hidden />
       </button>
@@ -129,19 +130,19 @@ export function PropertyDetailScreen({ id }: { id: string }) {
   const [dropOver, setDropOver] = React.useState(false);
   const [rmMedia, setRmMedia] = React.useState<string | null>(null);
 
-  if (r.error) return <PageBody><PageHeader title="Объект" back="/properties" /><ErrorState error={r.error} onRetry={r.retry} what="объект" /></PageBody>;
+  if (r.error) return <PageBody><PageHeader title={tr('Объект')} back="/properties" /><ErrorState error={r.error} onRetry={r.retry} what={tr('объект')} /></PageBody>;
   if (r.loading || !r.data) return <PageBody><PageHeader title="" back="/properties" large={false} /><Skeleton className="aspect-[4/3] rounded-card" /><Skeleton className="mt-4 h-8 w-40" /><Skeleton className="mt-2 h-5 w-64" /><Skeleton className="mt-6 h-32 rounded-card" /></PageBody>;
   const p = r.data;
   const canEdit = settings.role === 'ADMIN' || p.ownerUserId === 'u1';
   const matches = store.db.clients.filter((c) => c.preferences && (!c.preferences.price?.max || c.preferences.price.max >= p.price * 0.9) && (!c.preferences.propertyType || c.preferences.propertyType === p.type)).slice(0, 4);
   const ownerUser = users.find((u) => u.id === p.ownerUserId);
-  const owner = ownerUser?.fullName ?? 'Не назначен';
+  const owner = ownerUser?.fullName ?? tr('Не назначен');
 
   const facts = [
-    { icon: Building, label: 'Тип', value: PROPERTY_TYPE_LABEL[p.type] },
-    p.rooms ? { icon: BedDouble, label: 'Комнат', value: String(p.rooms) } : null,
-    { icon: Ruler, label: 'Площадь', value: `${p.area.toLocaleString('ru-RU')} м²` },
-    p.floor ? { icon: Layers, label: 'Этаж', value: `${p.floor} из ${p.totalFloors}` } : null,
+    { icon: Building, label: tr('Тип'), value: PROPERTY_TYPE_LABEL[p.type] },
+    p.rooms ? { icon: BedDouble, label: tr('Комнат'), value: String(p.rooms) } : null,
+    { icon: Ruler, label: tr('Площадь'), value: `${p.area.toLocaleString('ru-RU')} м²` },
+    p.floor ? { icon: Layers, label: tr('Этаж'), value: `${p.floor} из ${p.totalFloors}` } : null,
   ].filter(Boolean) as { icon: typeof Building; label: string; value: string }[];
 
   /* Загрузка своих файлов. В CRM это отправка в хранилище (S3) и запись в media;
@@ -169,10 +170,10 @@ export function PropertyDetailScreen({ id }: { id: string }) {
 
   const gallery = (
     <div className={cn('relative overflow-hidden bg-surface-2', isDesktop ? 'rounded-card' : '-mx-4 sm:-mx-5')}>
-      <div ref={track} onScroll={onScroll} data-hscroll className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto" aria-label="Фотографии" role="region">
+      <div ref={track} onScroll={onScroll} data-hscroll className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto" aria-label={tr('Фотографии')} role="region">
         {p.photos.map((ph, i) => (
           <button key={ph.id} onClick={() => setLightbox(i)} className="relative w-full shrink-0 snap-center"
-            aria-label={`${ph.kind === 'video' ? 'Видео' : 'Фото'} ${i + 1} из ${p.photos.length}, открыть`}>
+            aria-label={`${ph.kind === 'video' ? tr('Видео') : tr('Фото')} ${i + 1} из ${p.photos.length}, открыть`}>
             <PropertyMedia art={ph.art} src={ph.url} video={ph.kind === 'video'} aspect={isDesktop ? (family === 'atlas' ? '16/10' : '16/9') : '4/3'} rounded={false} parallax={i === 0} />
             {ph.kind === 'video' && (
               <span className="material pointer-events-none absolute left-1/2 top-1/2 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-[var(--glass-border)]" aria-hidden>
@@ -184,18 +185,18 @@ export function PropertyDetailScreen({ id }: { id: string }) {
       </div>
       {!isDesktop && (
         <div className="safe-top absolute inset-x-0 top-0 flex items-center gap-2 p-3">
-          <button onClick={() => router.back('/properties')} aria-label="Назад" className="material grid h-11 w-11 place-items-center rounded-full border border-[var(--glass-border)]"><ArrowLeft className="h-5 w-5" /></button>
+          <button onClick={() => router.back('/properties')} aria-label={tr('Назад')} className="material grid h-11 w-11 place-items-center rounded-full border border-[var(--glass-border)]"><ArrowLeft className="h-5 w-5" /></button>
           <div className="flex-1" />
-          <button onClick={() => toast.success('Ссылка скопирована')} aria-label="Поделиться" className="material grid h-11 w-11 place-items-center rounded-full border border-[var(--glass-border)]"><Share2 className="h-[18px] w-[18px]" /></button>
-          <button onClick={() => setMenu(true)} aria-label="Действия" className="material grid h-11 w-11 place-items-center rounded-full border border-[var(--glass-border)]"><MoreHorizontal className="h-5 w-5" /></button>
+          <button onClick={() => toast.success(tr('Ссылка скопирована'))} aria-label={tr('Поделиться')} className="material grid h-11 w-11 place-items-center rounded-full border border-[var(--glass-border)]"><Share2 className="h-[18px] w-[18px]" /></button>
+          <button onClick={() => setMenu(true)} aria-label={tr('Действия')} className="material grid h-11 w-11 place-items-center rounded-full border border-[var(--glass-border)]"><MoreHorizontal className="h-5 w-5" /></button>
         </div>
       )}
       {p.photos.length > 1 && (<>
         <div className="material absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5 rounded-full px-2.5 py-1.5" aria-hidden>
           {p.photos.map((_, i) => <span key={i} className={cn('h-1.5 rounded-full bg-foreground transition-[width,opacity] duration-tab', i === slide ? 'w-4 opacity-90' : 'w-1.5 opacity-35')} />)}
         </div>
-        {isDesktop && slide > 0 && <button onClick={() => go(slide - 1)} aria-label="Предыдущее фото" className="material absolute left-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-[var(--glass-border)]"><ChevronLeft className="h-5 w-5" /></button>}
-        {isDesktop && slide < p.photos.length - 1 && <button onClick={() => go(slide + 1)} aria-label="Следующее фото" className="material absolute right-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-[var(--glass-border)]"><ChevronRight className="h-5 w-5" /></button>}
+        {isDesktop && slide > 0 && <button onClick={() => go(slide - 1)} aria-label={tr('Предыдущее фото')} className="material absolute left-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-[var(--glass-border)]"><ChevronLeft className="h-5 w-5" /></button>}
+        {isDesktop && slide < p.photos.length - 1 && <button onClick={() => go(slide + 1)} aria-label={tr('Следующее фото')} className="material absolute right-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-[var(--glass-border)]"><ChevronRight className="h-5 w-5" /></button>}
       </>)}
     </div>
   );
@@ -221,21 +222,21 @@ export function PropertyDetailScreen({ id }: { id: string }) {
       onDragLeave={() => setDropOver(false)}
       onDrop={(e) => { if (!canEdit) return; e.preventDefault(); setDropOver(false); void takeFiles(e.dataTransfer.files); }}>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="t-h3">Фото и видео</h2>
-        {canEdit && <Button size="sm" variant="outline" loading={upBusy} onClick={() => filePick.current?.click()}><ImagePlus />Добавить</Button>}
+        <h2 className="t-h3">{tr('Фото и видео')}</h2>
+        {canEdit && <Button size="sm" variant="outline" loading={upBusy} onClick={() => filePick.current?.click()}><ImagePlus />{tr('Добавить')}</Button>}
       </div>
       <p className="t-caption mt-1">
         {canEdit
           ? `Фото и видео с телефона или компьютера, до ${MAX_MB} МБ на файл. В превью файлы живут до перезагрузки страницы — в CRM они уходят в хранилище агентства.`
-          : 'Добавлять файлы может ответственный за объект или администратор.'}
+          : tr('Добавлять файлы может ответственный за объект или администратор.')}
       </p>
-      <input ref={filePick} type="file" accept="image/*,video/*" multiple aria-label="Фото и видео объекта" className="sr-only" tabIndex={-1}
+      <input ref={filePick} type="file" accept="image/*,video/*" multiple aria-label={tr('Фото и видео объекта')} className="sr-only" tabIndex={-1}
         onChange={(e) => void takeFiles(e.target.files)} />
       <ul className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-5">
         {p.photos.map((ph, i) => (
           <li key={ph.id} className="relative">
             <button type="button" onClick={() => setLightbox(i)} className="pressable block w-full overflow-hidden rounded-control"
-              aria-label={`${ph.kind === 'video' ? 'Видео' : 'Фото'} ${i + 1}, открыть`}>
+              aria-label={`${ph.kind === 'video' ? tr('Видео') : tr('Фото')} ${i + 1}, открыть`}>
               <PropertyMedia art={ph.art} src={ph.url} video={ph.kind === 'video'} aspect="1/1" />
             </button>
             {ph.kind === 'video' && (
@@ -243,32 +244,32 @@ export function PropertyDetailScreen({ id }: { id: string }) {
                 <Play className="h-4 w-4 translate-x-[1px]" />
               </span>
             )}
-            {ph.url && <span className="material pointer-events-none absolute left-1 top-1 rounded-full px-2 py-0.5 text-[11px] font-medium">своё</span>}
+            {ph.url && <span className="material pointer-events-none absolute left-1 top-1 rounded-full px-2 py-0.5 text-[11px] font-medium">{tr('своё')}</span>}
           </li>
         ))}
       </ul>
-      {!p.photos.length && <p className="t-caption mt-3">Пока пусто. Первый кадр станет обложкой объекта.</p>}
-      {canEdit && p.photos.some((x) => x.url) && <p className="t-caption mt-3">Свой файл удаляется при просмотре: откройте его и нажмите «Удалить».</p>}
+      {!p.photos.length && <p className="t-caption mt-3">{tr('Пока пусто. Первый кадр станет обложкой объекта.')}</p>}
+      {canEdit && p.photos.some((x) => x.url) && <p className="t-caption mt-3">{tr('Свой файл удаляется при просмотре: откройте его и нажмите «Удалить».')}</p>}
     </section>
   );
 
   const about = (
     <div className="space-y-4">
-      <section className="surface p-4 lg:p-5"><h2 className="t-h3 mb-2">Описание</h2><p className="max-w-[68ch] text-[15.5px] leading-[25px] text-foreground/90">{p.description}</p>
+      <section className="surface p-4 lg:p-5"><h2 className="t-h3 mb-2">{tr('Описание')}</h2><p className="max-w-[68ch] text-[15.5px] leading-[25px] text-foreground/90">{p.description}</p>
         <ul className="mt-4 flex flex-wrap gap-2">{p.features.map((f) => <li key={f} className="rounded-full bg-surface-2 px-3 py-1.5 text-[13px] font-medium">{f}</li>)}</ul></section>
       {mediaBlock}
-      <section className="surface flex items-center gap-3 p-4"><Avatar name={owner} src={ownerUser?.avatarUrl} size={40} /><div className="flex-1"><div className="t-caption">Ответственный</div><div className="font-medium">{owner}</div></div></section>
+      <section className="surface flex items-center gap-3 p-4"><Avatar name={owner} src={ownerUser?.avatarUrl} size={40} /><div className="flex-1"><div className="t-caption">{tr('Ответственный')}</div><div className="font-medium">{owner}</div></div></section>
     </div>
   );
   const matchBlock = (
-    <section className="surface p-4"><h2 className="t-h3 mb-1">Подходящие клиенты</h2><p className="t-caption mb-3">По бюджету и типу объекта из предпочтений.</p>
-      {matches.length ? <ul className="row-divider">{matches.map((c) => <li key={c.id}><Link href={`/clients/${c.id}`} className="pressable -mx-2 flex items-center gap-3 rounded-control px-2 py-2.5"><Avatar name={c.fullName} size={36} /><span className="min-w-0 flex-1 truncate font-medium">{c.fullName}</span><ChevronRight className="h-4 w-4 text-muted-foreground" /></Link></li>)}</ul> : <p className="t-caption">Пока никого.</p>}
+    <section className="surface p-4"><h2 className="t-h3 mb-1">{tr('Подходящие клиенты')}</h2><p className="t-caption mb-3">{tr('По бюджету и типу объекта из предпочтений.')}</p>
+      {matches.length ? <ul className="row-divider">{matches.map((c) => <li key={c.id}><Link href={`/clients/${c.id}`} className="pressable -mx-2 flex items-center gap-3 rounded-control px-2 py-2.5"><Avatar name={c.fullName} size={36} /><span className="min-w-0 flex-1 truncate font-medium">{c.fullName}</span><ChevronRight className="h-4 w-4 text-muted-foreground" /></Link></li>)}</ul> : <p className="t-caption">{tr('Пока никого.')}</p>}
     </section>
   );
   const actions = (
     <div className="flex gap-2">
       <Button variant="outline" className="flex-1" onClick={() => setPdf(true)}><FileDown />PDF</Button>
-      <Button className="flex-[1.6]" onClick={() => setShowing(true)}><CalendarPlus />Назначить показ</Button>
+      <Button className="flex-[1.6]" onClick={() => setShowing(true)}><CalendarPlus />{tr('Назначить показ')}</Button>
     </div>
   );
 
@@ -278,24 +279,24 @@ export function PropertyDetailScreen({ id }: { id: string }) {
     <Sheet open={menu} onOpenChange={setMenu} title={p.title} desktop="center" size="sm">
       <div className="space-y-3">
         <div className="surface-quiet p-1.5">
-          <button disabled={!canEdit} className="pressable flex min-h-[54px] w-full items-center gap-3.5 rounded-control px-3 text-left text-[16px] font-medium disabled:opacity-45" onClick={() => { setMenu(false); router.navigate(`/properties/${p.id}/edit`); }}><Pencil className="h-5 w-5 text-primary" />Редактировать</button>
-          <button className="pressable flex min-h-[54px] w-full items-center gap-3.5 rounded-control px-3 text-left text-[16px] font-medium" onClick={() => { setMenu(false); setPdf(true); }}><FileDown className="h-5 w-5 text-primary" />Скачать PDF</button>
+          <button disabled={!canEdit} className="pressable flex min-h-[54px] w-full items-center gap-3.5 rounded-control px-3 text-left text-[16px] font-medium disabled:opacity-45" onClick={() => { setMenu(false); router.navigate(`/properties/${p.id}/edit`); }}><Pencil className="h-5 w-5 text-primary" />{tr('Редактировать')}</button>
+          <button className="pressable flex min-h-[54px] w-full items-center gap-3.5 rounded-control px-3 text-left text-[16px] font-medium" onClick={() => { setMenu(false); setPdf(true); }}><FileDown className="h-5 w-5 text-primary" />{tr('Скачать PDF')}</button>
         </div>
-        {canEdit ? <div className="surface-quiet p-1.5"><button className="pressable flex min-h-[54px] w-full items-center gap-3.5 rounded-control px-3 text-left text-[16px] font-medium text-danger-text" onClick={() => { setMenu(false); setDel(true); }}><Trash2 className="h-5 w-5" />Удалить объект</button></div>
-          : <p className="t-caption px-1">Редактировать и удалять может ответственный или администратор.</p>}
+        {canEdit ? <div className="surface-quiet p-1.5"><button className="pressable flex min-h-[54px] w-full items-center gap-3.5 rounded-control px-3 text-left text-[16px] font-medium text-danger-text" onClick={() => { setMenu(false); setDel(true); }}><Trash2 className="h-5 w-5" />{tr('Удалить объект')}</button></div>
+          : <p className="t-caption px-1">{tr('Редактировать и удалять может ответственный или администратор.')}</p>}
       </div>
     </Sheet>
     <EventFormSheet open={showing} onOpenChange={setShowing} kind="SHOWING" propertyId={p.id} />
-    <ConfirmDialog open={rmMedia !== null} onOpenChange={(v) => !v && setRmMedia(null)} title="Удалить файл?"
-      text="Файл пропадёт из галереи объекта. Фото из комплекта агентства останутся на месте." confirmLabel="Удалить"
-      onConfirm={async () => { if (rmMedia) await api.removePropertyMedia(p.id, rmMedia); setRmMedia(null); setLightbox(null); toast.success('Файл удалён'); }} />
-    <ConfirmDialog open={del} onOpenChange={setDel} title="Удалить объект?" text="Объект и все фото будут удалены. Показы по нему останутся в истории клиентов." confirmLabel="Удалить" onConfirm={() => { setDel(false); router.navigate('/properties', { replace: true }); toast.success('Объект удалён'); }} />
+    <ConfirmDialog open={rmMedia !== null} onOpenChange={(v) => !v && setRmMedia(null)} title={tr('Удалить файл?')}
+      text={tr('Файл пропадёт из галереи объекта. Фото из комплекта агентства останутся на месте.')} confirmLabel={tr('Удалить')}
+      onConfirm={async () => { if (rmMedia) await api.removePropertyMedia(p.id, rmMedia); setRmMedia(null); setLightbox(null); toast.success(tr('Файл удалён')); }} />
+    <ConfirmDialog open={del} onOpenChange={setDel} title={tr('Удалить объект?')} text={tr('Объект и все фото будут удалены. Показы по нему останутся в истории клиентов.')} confirmLabel={tr('Удалить')} onConfirm={() => { setDel(false); router.navigate('/properties', { replace: true }); toast.success(tr('Объект удалён')); }} />
   </>);
 
   if (isDesktop) {
     return (
       <PageBody wide={family === 'atlas'}>
-        <PageHeader title="" back="/properties" large={false} actions={<><IconButton label="Поделиться" variant="outline" onClick={() => toast.success('Ссылка скопирована')}><Share2 /></IconButton><IconButton label="Действия" variant="outline" onClick={() => setMenu(true)}><MoreHorizontal /></IconButton></>} />
+        <PageHeader title="" back="/properties" large={false} actions={<><IconButton label={tr('Поделиться')} variant="outline" onClick={() => toast.success(tr('Ссылка скопирована'))}><Share2 /></IconButton><IconButton label={tr('Действия')} variant="outline" onClick={() => setMenu(true)}><MoreHorizontal /></IconButton></>} />
         <div className={cn('-mt-4 grid gap-6', family === 'atlas' ? 'grid-cols-[minmax(0,1.5fr)_minmax(340px,1fr)] gap-4' : 'grid-cols-[minmax(0,1.6fr)_minmax(320px,1fr)]')}>
           <div className="min-w-0 space-y-4">{gallery}{about}</div>
           <div className="space-y-4"><div className="surface space-y-5 p-5">{priceBlock}{factsBlock}{actions}</div>{matchBlock}</div>
@@ -310,7 +311,7 @@ export function PropertyDetailScreen({ id }: { id: string }) {
       <div className="mt-5 space-y-5">
         {priceBlock}
         {factsBlock}
-        <SegmentedControl label="Разделы объекта" className="w-full" value={tab} onChange={setTab} options={[{ value: 'about', label: 'Об объекте' }, { value: 'match', label: 'Клиенты', count: matches.length }]} />
+        <SegmentedControl label={tr('Разделы объекта')} className="w-full" value={tab} onChange={setTab} options={[{ value: 'about', label: tr('Об объекте') }, { value: 'match', label: tr('Клиенты'), count: matches.length }]} />
         <div key={tab} className="page-fade pb-24">{tab === 'about' ? about : matchBlock}</div>
       </div>
       <div className="material fixed inset-x-0 bottom-[calc(max(0.75rem,env(safe-area-inset-bottom))+80px)] z-30 mx-3 rounded-[20px] border border-[var(--glass-border)] p-2 shadow-lift">{actions}</div>
@@ -339,18 +340,18 @@ function Lightbox({ photos, index, onChange, title, onDelete }: {
             <span className="px-2 text-[14px] tabular opacity-80">{i + 1} / {photos.length}</span>
             <div className="flex items-center gap-2">
               {onDelete && photos[i]?.url && (
-                <button onClick={() => onDelete(photos[i].id)} aria-label="Удалить файл"
+                <button onClick={() => onDelete(photos[i].id)} aria-label={tr('Удалить файл')}
                   className="grid h-11 w-11 place-items-center rounded-full bg-white/10 hover:bg-white/20"><Trash2 className="h-5 w-5" /></button>
               )}
-              <Dialog.Close className="grid h-11 w-11 place-items-center rounded-full bg-white/10 hover:bg-white/20" aria-label="Закрыть"><X className="h-5 w-5" /></Dialog.Close>
+              <Dialog.Close className="grid h-11 w-11 place-items-center rounded-full bg-white/10 hover:bg-white/20" aria-label={tr('Закрыть')}><X className="h-5 w-5" /></Dialog.Close>
             </div>
           </div>
           <div className="relative flex flex-1 items-center justify-center px-2 pb-10">
             <div key={i} className="w-full max-w-[1100px] animate-pop-in">
               <PropertyMedia art={photos[i]?.art ?? 0} src={photos[i]?.url} video={photos[i]?.kind === 'video'} playable aspect="4/3" className="!rounded-[10px]" />
             </div>
-            {i > 0 && <button onClick={() => step(-1)} aria-label="Предыдущее" className="absolute left-4 hidden h-12 w-12 place-items-center rounded-full bg-white/10 hover:bg-white/20 md:grid"><ChevronLeft /></button>}
-            {i < photos.length - 1 && <button onClick={() => step(1)} aria-label="Следующее" className="absolute right-4 hidden h-12 w-12 place-items-center rounded-full bg-white/10 hover:bg-white/20 md:grid"><ChevronRight /></button>}
+            {i > 0 && <button onClick={() => step(-1)} aria-label={tr('Предыдущее')} className="absolute left-4 hidden h-12 w-12 place-items-center rounded-full bg-white/10 hover:bg-white/20 md:grid"><ChevronLeft /></button>}
+            {i < photos.length - 1 && <button onClick={() => step(1)} aria-label={tr('Следующее')} className="absolute right-4 hidden h-12 w-12 place-items-center rounded-full bg-white/10 hover:bg-white/20 md:grid"><ChevronRight /></button>}
           </div>
         </Dialog.Content>
       </Dialog.Portal>
@@ -362,12 +363,12 @@ function Lightbox({ photos, index, onChange, title, onDelete }: {
 function PdfSheet({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
   const [logo, setLogo] = React.useState(true); const [mark, setMark] = React.useState(false); const [lang, setLang] = React.useState('ru'); const [busy, setBusy] = React.useState(false);
   return (
-    <Sheet open={open} onOpenChange={onOpenChange} title="PDF-презентация" description="Для отправки клиенту." desktop="center" size="sm"
-      footer={<Button className="flex-1" loading={busy} onClick={async () => { setBusy(true); await new Promise((r) => setTimeout(r, 1200)); setBusy(false); onOpenChange(false); toast.success('PDF готов, загрузка началась'); }}><FileDown />Скачать PDF</Button>}>
+    <Sheet open={open} onOpenChange={onOpenChange} title={tr('PDF-презентация')} description={tr('Для отправки клиенту.')} desktop="center" size="sm"
+      footer={<Button className="flex-1" loading={busy} onClick={async () => { setBusy(true); await new Promise((r) => setTimeout(r, 1200)); setBusy(false); onOpenChange(false); toast.success(tr('PDF готов, загрузка началась')); }}><FileDown />{tr('Скачать PDF')}</Button>}>
       <div className="space-y-4">
-        <div className="flex items-center gap-3"><span className="flex-1 text-[15px] font-medium">Логотип агентства</span><Switch label="Логотип" checked={logo} onChange={setLogo} /></div>
-        <div className="flex items-center gap-3"><span className="flex-1 text-[15px] font-medium">Водяной знак</span><Switch label="Водяной знак" checked={mark} onChange={setMark} /></div>
-        <div><div className="mb-2 text-[15px] font-medium">Язык</div><SegmentedControl label="Язык PDF" className="w-full" value={lang} onChange={setLang} options={['ru', 'uk', 'en', 'fr', 'it'].map((l) => ({ value: l, label: l.toUpperCase() }))} /></div>
+        <div className="flex items-center gap-3"><span className="flex-1 text-[15px] font-medium">{tr('Логотип агентства')}</span><Switch label={tr('Логотип')} checked={logo} onChange={setLogo} /></div>
+        <div className="flex items-center gap-3"><span className="flex-1 text-[15px] font-medium">{tr('Водяной знак')}</span><Switch label={tr('Водяной знак')} checked={mark} onChange={setMark} /></div>
+        <div><div className="mb-2 text-[15px] font-medium">{tr('Язык')}</div><SegmentedControl label={tr('Язык PDF')} className="w-full" value={lang} onChange={setLang} options={['ru', 'uk', 'en', 'fr', 'it'].map((l) => ({ value: l, label: l.toUpperCase() }))} /></div>
       </div>
     </Sheet>
   );

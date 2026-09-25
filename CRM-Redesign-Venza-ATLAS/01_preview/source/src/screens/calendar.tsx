@@ -17,6 +17,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState, ErrorState } from '@/components/ui/state';
 import { Sheet } from '@/components/ui/sheet';
 import { toast } from '@/components/ui/toast';
+import { tr } from '@/lib/i18n';
 
 type View = 'month' | 'week' | 'day' | 'agenda';
 /** Цвета типов событий — токены семьи; тип всегда подписан текстом. */
@@ -44,18 +45,18 @@ export function CalendarScreen() {
   const toolbar = (
     <div className="mb-4 flex flex-wrap items-center gap-2">
       <div className="flex items-center gap-1">
-        <IconButton label="Назад" variant="outline" size="iconSm" onClick={() => shift(-1)}><ChevronLeft /></IconButton>
-        <IconButton label="Вперёд" variant="outline" size="iconSm" onClick={() => shift(1)}><ChevronRight /></IconButton>
-        <Button variant="ghost" size="sm" onClick={() => setCursor(new Date())}>Сегодня</Button>
+        <IconButton label={tr('Назад')} variant="outline" size="iconSm" onClick={() => shift(-1)}><ChevronLeft /></IconButton>
+        <IconButton label={tr('Вперёд')} variant="outline" size="iconSm" onClick={() => shift(1)}><ChevronRight /></IconButton>
+        <Button variant="ghost" size="sm" onClick={() => setCursor(new Date())}>{tr('Сегодня')}</Button>
       </div>
       <h2 className={cn('min-w-0 flex-1 truncate first-letter:uppercase', family === 'atlas' ? 'text-[16px] font-semibold' : 'font-display text-[19px] font-semibold')}>{title}</h2>
-      <SegmentedControl<View> label="Вид календаря" size="sm" value={view} onChange={setView} className="max-sm:w-full"
-        options={[{ value: 'month', label: 'Месяц' }, { value: 'week', label: 'Неделя' }, { value: 'day', label: 'День' }, { value: 'agenda', label: 'Список' }]} />
+      <SegmentedControl<View> label={tr('Вид календаря')} size="sm" value={view} onChange={setView} className="max-sm:w-full"
+        options={[{ value: 'month', label: tr('Месяц') }, { value: 'week', label: tr('Неделя') }, { value: 'day', label: tr('День') }, { value: 'agenda', label: tr('Список') }]} />
     </div>
   );
 
   const weekStrip = !isDesktop && view !== 'month' && (
-    <div className="-mx-1 mb-4 grid grid-cols-7 gap-1" role="tablist" aria-label="Дни недели">
+    <div className="-mx-1 mb-4 grid grid-cols-7 gap-1" role="tablist" aria-label={tr('Дни недели')}>
       {days.map((d) => { const active = sameDay(d, cursor); const today = sameDay(d, new Date()); const has = on(d).length > 0; return (
         <button key={d.toISOString()} role="tab" aria-selected={active} onClick={() => { setCursor(d); if (view === 'week') setView('day'); }}
           className={cn('flex flex-col items-center gap-1 rounded-[14px] py-2 transition-colors duration-tab', active ? 'bg-primary text-primary-foreground' : 'hover:bg-surface-2')}>
@@ -67,20 +68,20 @@ export function CalendarScreen() {
   );
 
   const body = () => {
-    if (r.error) return <ErrorState error={r.error} onRetry={r.retry} what="календарь" />;
+    if (r.error) return <ErrorState error={r.error} onRetry={r.retry} what={tr('календарь')} />;
     if (r.loading) return <div className="space-y-2">{[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-16 rounded-card" />)}</div>;
-    if (!events.length) return <EmptyState icon={CalendarDays} title="Событий нет" text="Показы, встречи и дедлайны сделок появятся здесь." />;
+    if (!events.length) return <EmptyState icon={CalendarDays} title={tr('Событий нет')} text={tr('Показы, встречи и дедлайны сделок появятся здесь.')} />;
 
     if (view === 'month') {
       const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1); const gridStart = startOfWeek(first);
       return (
         <div className="surface overflow-hidden">
-          <div className="grid grid-cols-7 border-b border-border text-center text-[12px] font-medium text-muted-foreground">{['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map((d) => <div key={d} className="py-2">{d}</div>)}</div>
+          <div className="grid grid-cols-7 border-b border-border text-center text-[12px] font-medium text-muted-foreground">{[tr('Пн'), tr('Вт'), tr('Ср'), tr('Чт'), tr('Пт'), tr('Сб'), tr('Вс')].map((d) => <div key={d} className="py-2">{d}</div>)}</div>
           <div className="grid grid-cols-7">
             {Array.from({ length: 42 }, (_, i) => addDays(gridStart, i)).map((d, i) => { const list = on(d); const other = d.getMonth() !== cursor.getMonth(); return (
               <button key={i} onClick={() => { setCursor(d); setView(isDesktop ? 'day' : 'agenda'); }} className={cn('min-h-[64px] border-b border-r border-border/60 p-1.5 text-left align-top hover:bg-surface-2/60 lg:min-h-[104px]', other && 'bg-surface-2/40 text-muted-foreground', (i + 1) % 7 === 0 && 'border-r-0')}>
                 <span className={cn('grid h-6 w-6 place-items-center rounded-full text-[12.5px] font-medium tabular', sameDay(d, new Date()) && 'bg-primary text-primary-foreground')}>{d.getDate()}</span>
-                <span className="mt-1 hidden space-y-0.5 lg:block">{list.slice(0, 2).map((e) => <span key={e.id} className="block truncate rounded px-1 text-[11.5px]" style={{ background: `hsl(${KIND_COLOR[e.kind]} / .14)` }}>{time(e.startsAt)} {e.title}</span>)}{list.length > 2 && <span className="t-micro px-1">ещё {list.length - 2}</span>}</span>
+                <span className="mt-1 hidden space-y-0.5 lg:block">{list.slice(0, 2).map((e) => <span key={e.id} className="block truncate rounded px-1 text-[11.5px]" style={{ background: `hsl(${KIND_COLOR[e.kind]} / .14)` }}>{time(e.startsAt)} {e.title}</span>)}{list.length > 2 && <span className="t-micro px-1">{tr('ещё')}{list.length - 2}</span>}</span>
                 {list.length > 0 && <span className="mt-1 flex gap-0.5 lg:hidden">{list.slice(0, 3).map((e) => <span key={e.id} className="h-1.5 w-1.5 rounded-full" style={{ background: `hsl(${KIND_COLOR[e.kind]})` }} />)}</span>}
               </button>); })}
           </div>
@@ -118,19 +119,19 @@ export function CalendarScreen() {
 
     const agendaDays = view === 'day' ? [cursor] : days;
     const withEvents = agendaDays.filter((d) => on(d).length);
-    if (!withEvents.length) return <EmptyState icon={CalendarDays} title="В этот период свободно" text="Выберите другой день или неделю." />;
+    if (!withEvents.length) return <EmptyState icon={CalendarDays} title={tr('В этот период свободно')} text={tr('Выберите другой день или неделю.')} />;
     return (
       <div className="space-y-5">
         {withEvents.map((d) => (
           <section key={d.toISOString()}>
-            <h3 className={cn('mb-2 first-letter:uppercase', sameDay(d, new Date()) ? 'text-primary' : '', family === 'atlas' ? 'text-[13px] font-semibold' : 'font-display text-[17px] font-semibold')}>{sameDay(d, new Date()) ? 'Сегодня' : d.toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' })}</h3>
+            <h3 className={cn('mb-2 first-letter:uppercase', sameDay(d, new Date()) ? 'text-primary' : '', family === 'atlas' ? 'text-[13px] font-semibold' : 'font-display text-[17px] font-semibold')}>{sameDay(d, new Date()) ? tr('Сегодня') : d.toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' })}</h3>
             <ul className="surface row-divider overflow-hidden">
               {on(d).map((e) => (
                 <li key={e.id}><button onClick={() => setSelected(e)} className="pressable flex min-h-[52px] w-full items-center gap-3 px-4 py-3 text-left">
                   <span className="w-12 shrink-0 text-[14px] font-semibold tabular">{time(e.startsAt)}</span>
                   <span aria-hidden className="h-9 w-[3px] rounded-full" style={{ background: `hsl(${KIND_COLOR[e.kind]})` }} />
                   <span className="min-w-0 flex-1"><span className="block truncate text-[15px] font-medium">{e.title}</span><span className="t-caption">{EVENT_KIND_LABEL[e.kind]}, до {time(e.endsAt)}</span></span>
-                  {e.readOnly && <Lock className="h-4 w-4 text-muted-foreground" aria-label="Только просмотр" />}
+                  {e.readOnly && <Lock className="h-4 w-4 text-muted-foreground" aria-label={tr('Только просмотр')} />}
                 </button></li>
               ))}
             </ul>
@@ -142,7 +143,7 @@ export function CalendarScreen() {
 
   return (
     <PageBody wide={family === 'atlas'}>
-      <PageHeader title="Календарь" actions={<Button size="sm" variant="soft" onClick={() => setCreate(true)}><Plus />Событие</Button>} />
+      <PageHeader title={tr('Календарь')} actions={<Button size="sm" variant="soft" onClick={() => setCreate(true)}><Plus />{tr('Событие')}</Button>} />
       {toolbar}{weekStrip}{body()}
       <EventSheet event={selected} onClose={() => setSelected(null)} onMove={(e) => { setSelected(null); setMove(e); }} onDone={r.retry} />
       <EventFormSheet open={create} onOpenChange={setCreate} onDone={r.retry} />
@@ -159,18 +160,18 @@ function EventSheet({ event, onClose, onMove, onDone }: { event: CalendarEvent |
   return (
     <Sheet open={!!event} onOpenChange={(o) => !o && onClose()} title={event?.title ?? ''} description={event ? `${EVENT_KIND_LABEL[event.kind]}, ${new Date(event.startsAt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })}, ${time(event.startsAt)}–${time(event.endsAt)}` : undefined} desktop="side" size="sm"
       footer={event && !event.readOnly ? <>
-        <Button variant="outline" className="flex-1" onClick={() => onMove(event)}>Перенести</Button>
+        <Button variant="outline" className="flex-1" onClick={() => onMove(event)}>{tr('Перенести')}</Button>
         <Button className="flex-1" loading={busy} onClick={async () => {
           setBusy(true);
-          try { await api.completeEvent(event.id); onClose(); onDone(); toast.success('Отмечено как проведённое'); }
+          try { await api.completeEvent(event.id); onClose(); onDone(); toast.success(tr('Отмечено как проведённое')); }
           catch (err) { toast.error((err as Error).message); }
           finally { setBusy(false); }
-        }}>Проведено</Button></> : undefined}>
+        }}>{tr('Проведено')}</Button></> : undefined}>
       {event && (
         <div className="space-y-3">
-          {event.readOnly && <div className="flex items-center gap-2 rounded-control bg-surface-2 px-3.5 py-3 text-[14px] text-muted-foreground"><Lock className="h-4 w-4" aria-hidden />Событие сделки. Изменяется в карточке сделки.</div>}
-          {client && <Link href={`/clients/${client.id}`} onClick={onClose} className="pressable surface flex items-center justify-between p-3.5"><span><span className="t-caption block">Клиент</span><span className="font-medium">{client.fullName}</span></span><ChevronRight className="h-4 w-4 text-muted-foreground" /></Link>}
-          {property && <Link href={`/properties/${property.id}`} onClick={onClose} className="pressable surface flex items-center justify-between p-3.5"><span><span className="t-caption block">Объект</span><span className="font-medium">{property.title}</span><span className="t-caption flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{property.address}</span></span><ChevronRight className="h-4 w-4 text-muted-foreground" /></Link>}
+          {event.readOnly && <div className="flex items-center gap-2 rounded-control bg-surface-2 px-3.5 py-3 text-[14px] text-muted-foreground"><Lock className="h-4 w-4" aria-hidden />{tr('Событие сделки. Изменяется в карточке сделки.')}</div>}
+          {client && <Link href={`/clients/${client.id}`} onClick={onClose} className="pressable surface flex items-center justify-between p-3.5"><span><span className="t-caption block">{tr('Клиент')}</span><span className="font-medium">{client.fullName}</span></span><ChevronRight className="h-4 w-4 text-muted-foreground" /></Link>}
+          {property && <Link href={`/properties/${property.id}`} onClick={onClose} className="pressable surface flex items-center justify-between p-3.5"><span><span className="t-caption block">{tr('Объект')}</span><span className="font-medium">{property.title}</span><span className="t-caption flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{property.address}</span></span><ChevronRight className="h-4 w-4 text-muted-foreground" /></Link>}
         </div>
       )}
     </Sheet>

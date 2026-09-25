@@ -6,21 +6,22 @@ import { store } from '@/lib/mock/store';
 import { NAV_LABEL } from '@/components/shell/nav-icons';
 import { Link } from '@/lib/router';
 import type { NavIconKey } from '@/lib/navigation/mobile-nav';
+import { tr } from '@/lib/i18n';
 
 /** Разделы вне Preview 1: маршрут и навигация настоящие, экран — честная заглушка. */
 export function PlaceholderScreen({ section }: { section: NavIconKey }) {
   if (section === 'communications' && !store.settings.integrationsEnabled) {
-    return <PageBody><PageHeader title={NAV_LABEL[section]} /><EmptyState icon={MessagesSquare} title="Мессенджеры не подключены" text="Когда администратор подключит Telegram, WhatsApp или почту, переписка появится здесь." /></PageBody>;
+    return <PageBody><PageHeader title={NAV_LABEL[section]} /><EmptyState icon={MessagesSquare} title={tr('Мессенджеры не подключены')} text={tr('Когда администратор подключит Telegram, WhatsApp или почту, переписка появится здесь.')} /></PageBody>;
   }
   return (
     <PageBody><PageHeader title={NAV_LABEL[section]} />
-      <EmptyState icon={Construction} title="Экран войдёт в Preview 2" text="Навигация, права и маршрут уже настоящие. Дизайн раздела будет в следующей итерации."
-        action={<Button variant="outline" size="sm" onClick={() => history.back()}>Вернуться</Button>} />
+      <EmptyState icon={Construction} title={tr('Экран войдёт в Preview 2')} text={tr('Навигация, права и маршрут уже настоящие. Дизайн раздела будет в следующей итерации.')}
+        action={<Button variant="outline" size="sm" onClick={() => history.back()}>{tr('Вернуться')}</Button>} />
     </PageBody>
   );
 }
 export function ForbiddenScreen() {
-  return <PageBody><PageHeader title="Нет доступа" /><EmptyState icon={Lock} title="Раздел только для администратора" text="Переключите роль в панели превью, чтобы посмотреть экран." /></PageBody>;
+  return <PageBody><PageHeader title={tr('Нет доступа')} /><EmptyState icon={Lock} title={tr('Раздел только для администратора')} text={tr('Переключите роль в панели превью, чтобы посмотреть экран.')} /></PageBody>;
 }
 
 /** not-found.tsx: адрес не совпал ни с одним экраном. Раньше здесь показывалась
@@ -29,10 +30,10 @@ export function ForbiddenScreen() {
 export function NotFoundScreen({ path }: { path: string }) {
   return (
     <PageBody>
-      <PageHeader title="Страница не найдена" />
+      <PageHeader title={tr('Страница не найдена')} />
       <EmptyState icon={Compass} title={`Адрес ${path} не существует`}
-        text="Возможно, ссылка устарела или в ней опечатка. Разделы CRM — в нижней панели и в «Ещё»."
-        action={<Link href="/today" className="pressable inline-flex h-11 items-center rounded-control bg-primary px-4 text-[15px] font-semibold text-primary-foreground">На сегодня</Link>} />
+        text={tr('Возможно, ссылка устарела или в ней опечатка. Разделы CRM — в нижней панели и в «Ещё».')}
+        action={<Link href="/today" className="pressable inline-flex h-11 items-center rounded-control bg-primary px-4 text-[15px] font-semibold text-primary-foreground">{tr('На сегодня')}</Link>} />
     </PageBody>
   );
 }

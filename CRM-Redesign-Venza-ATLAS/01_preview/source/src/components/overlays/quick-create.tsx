@@ -13,16 +13,17 @@ import type { Priority, TaskType } from '@/lib/mock/types';
 import { TASK_TYPE_LABEL } from '@/lib/labels';
 import { defaultDue, duePresets, toLocalInput } from '@/lib/due';
 import { relDay, time } from '@/lib/format';
+import { tr } from '@/lib/i18n';
 
 /** Quick Create: меню → форма. Поля и правила = LeadForm/QuickCapture и createTaskSchema CRM. */
 export function QuickCreate() {
   const { quickCreate } = useUI();
   const open = quickCreate !== null;
-  const titles = { menu: 'Создать', lead: 'Новый лид', task: 'Новая задача', capture: 'Быстрый захват лида' } as const;
+  const titles = { menu: tr('Создать'), lead: tr('Новый лид'), task: tr('Новая задача'), capture: tr('Быстрый захват лида') } as const;
   return (
     <Sheet open={open} onOpenChange={(o) => !o && ui.set({ quickCreate: null })} title={quickCreate ? titles[quickCreate] : ''}
-      description={quickCreate === 'lead' ? 'Клиент и лид создадутся одним действием.'
-        : quickCreate === 'capture' ? 'Контакт, объект и действие за один сабмит. Остальное — потом.' : undefined} desktop="side" size="sm">
+      description={quickCreate === 'lead' ? tr('Клиент и лид создадутся одним действием.')
+        : quickCreate === 'capture' ? tr('Контакт, объект и действие за один сабмит. Остальное — потом.') : undefined} desktop="side" size="sm">
       {quickCreate === 'menu' && <Menu />}
       {quickCreate === 'capture' && <QuickCapture />}
       {quickCreate === 'lead' && <LeadQuickForm />}
@@ -33,8 +34,8 @@ export function QuickCreate() {
 
 function Menu() {
   const items = [
-    { key: 'lead' as const, icon: UserPlus, title: 'Лид', text: 'Новый запрос клиента в воронку' },
-    { key: 'task' as const, icon: CheckSquare, title: 'Задача', text: 'Звонок, показ или напоминание' },
+    { key: 'lead' as const, icon: UserPlus, title: tr('Лид'), text: tr('Новый запрос клиента в воронку') },
+    { key: 'task' as const, icon: CheckSquare, title: tr('Задача'), text: tr('Звонок, показ или напоминание') },
   ];
   /* Событие открывается своим листом: он же переносит существующие. */
   const openEvent = () => ui.set({ quickCreate: null, eventForm: true });
@@ -49,16 +50,16 @@ function Menu() {
       ))}
       <button onClick={openEvent} className="pressable surface flex w-full items-center gap-3.5 p-3.5 text-left">
         <span className="grid h-11 w-11 place-items-center rounded-[13px] bg-primary-soft text-primary-text"><CalendarPlus className="h-5 w-5" aria-hidden /></span>
-        <span className="flex-1"><span className="block text-[15.5px] font-semibold">Событие</span><span className="t-caption">Показ, встреча или звонок в календарь</span></span>
+        <span className="flex-1"><span className="block text-[15.5px] font-semibold">{tr('Событие')}</span><span className="t-caption">{tr('Показ, встреча или звонок в календарь')}</span></span>
         <ChevronRight className="h-4 w-4 text-muted-foreground" aria-hidden />
       </button>
-      <p className="t-caption px-1">В карточке лида или клиента показ назначается быстрее: клиент там уже выбран.</p>
+      <p className="t-caption px-1">{tr('В карточке лида или клиента показ назначается быстрее: клиент там уже выбран.')}</p>
     </div>
   );
 }
 
 const PRIORITIES: { value: Priority; label: string; icon: typeof Flame }[] = [
-  { value: 'hot', label: 'Горячий', icon: Flame }, { value: 'warm', label: 'Тёплый', icon: Sun }, { value: 'cold', label: 'Холодный', icon: Snowflake },
+  { value: 'hot', label: tr('Горячий'), icon: Flame }, { value: 'warm', label: tr('Тёплый'), icon: Sun }, { value: 'cold', label: tr('Холодный'), icon: Snowflake },
 ];
 
 function LeadQuickForm() {
@@ -70,7 +71,7 @@ function LeadQuickForm() {
 
   const validate = () => {
     const e: typeof errors = {};
-    if (v.fullName.trim().length < 2) e.fullName = 'Минимум 2 символа';
+    if (v.fullName.trim().length < 2) e.fullName = tr('Минимум 2 символа');
     if (!/^[+0-9()\-\s]{6,32}$/.test(v.primaryPhone.trim()) || v.primaryPhone.replace(/\D/g, '').length < 6) e.primaryPhone = 'Цифры, +, скобки и дефис, от 6 символов';
     setErrors(e); return !Object.keys(e).length;
   };
@@ -82,16 +83,16 @@ function LeadQuickForm() {
     try {
       const lead = await api.createLead({ fullName: v.fullName, primaryPhone: v.primaryPhone.trim(), priority: v.priority, budgetMax: Number(v.budget.replace(/\D/g, '')) || undefined });
       ui.set({ quickCreate: null });
-      toast.success('Лид создан', { action: { label: 'Открыть', onClick: () => router.navigate(`/leads/${lead.id}`) } });
+      toast.success(tr('Лид создан'), { action: { label: tr('Открыть'), onClick: () => router.navigate(`/leads/${lead.id}`) } });
     } catch (err) { toast.error((err as ApiError).message); } finally { setBusy(false); }
   };
 
   return (
     <form onSubmit={submit} className="space-y-4" noValidate>
-      <Field label="Имя клиента" required error={errors.fullName}>{(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.fullName} autoComplete="name" value={v.fullName} onChange={(e) => setV({ ...v, fullName: e.target.value })} placeholder="Например, Ольга Ткаченко" />}</Field>
-      <Field label="Телефон" required error={errors.primaryPhone}>{(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.primaryPhone} type="tel" inputMode="tel" className="tabular" value={v.primaryPhone} onChange={(e) => setV({ ...v, primaryPhone: e.target.value })} />}</Field>
+      <Field label={tr('Имя клиента')} required error={errors.fullName}>{(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.fullName} autoComplete="name" value={v.fullName} onChange={(e) => setV({ ...v, fullName: e.target.value })} placeholder={tr('Например, Ольга Ткаченко')} />}</Field>
+      <Field label={tr('Телефон')} required error={errors.primaryPhone}>{(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.primaryPhone} type="tel" inputMode="tel" className="tabular" value={v.primaryPhone} onChange={(e) => setV({ ...v, primaryPhone: e.target.value })} />}</Field>
       <fieldset>
-        <legend className="mb-1.5 text-[13px] font-medium">Приоритет</legend>
+        <legend className="mb-1.5 text-[13px] font-medium">{tr('Приоритет')}</legend>
         <div className="grid grid-cols-3 gap-2">
           {PRIORITIES.map((p) => (
             <button key={p.value} type="button" aria-pressed={v.priority === p.value} onClick={() => setV({ ...v, priority: p.value })}
@@ -102,10 +103,10 @@ function LeadQuickForm() {
           ))}
         </div>
       </fieldset>
-      <Field label="Бюджет до, €" hint="Можно заполнить позже">{(id, d) => <Input id={id} aria-describedby={d} inputMode="numeric" className="tabular" value={v.budget} onChange={(e) => setV({ ...v, budget: e.target.value.replace(/[^\d\s]/g, '') })} placeholder="1 500 000" />}</Field>
+      <Field label={tr('Бюджет до, €')} hint={tr('Можно заполнить позже')}>{(id, d) => <Input id={id} aria-describedby={d} inputMode="numeric" className="tabular" value={v.budget} onChange={(e) => setV({ ...v, budget: e.target.value.replace(/[^\d\s]/g, '') })} placeholder="1 500 000" />}</Field>
       <div className="flex gap-2.5 pt-2">
-        <Button type="button" variant="outline" className="flex-1" onClick={() => ui.set({ quickCreate: 'menu' })}>Назад</Button>
-        <Button type="submit" className="flex-[2]" loading={busy}>Создать лид</Button>
+        <Button type="button" variant="outline" className="flex-1" onClick={() => ui.set({ quickCreate: 'menu' })}>{tr('Назад')}</Button>
+        <Button type="submit" className="flex-[2]" loading={busy}>{tr('Создать лид')}</Button>
       </div>
     </form>
   );
@@ -120,26 +121,26 @@ function TaskQuickForm() {
   const [busy, setBusy] = React.useState(false);
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!v.title.trim()) { setError('Введите название задачи'); return; }
+    if (!v.title.trim()) { setError(tr('Введите название задачи')); return; }
     const at = new Date(v.due);
-    if (!v.due || Number.isNaN(at.getTime())) { setDueError('Укажите срок'); return; }
+    if (!v.due || Number.isNaN(at.getTime())) { setDueError(tr('Укажите срок')); return; }
     setBusy(true);
     try {
       const task = await api.createTask({ title: v.title.trim(), type: v.type, dueAt: at.toISOString() });
       ui.set({ quickCreate: null });
       // Срок по умолчанию часто не сегодняшний, и задача попадает во вкладку, которую
       // никто не открыл: без этой кнопки после «Задача создана» список не меняется.
-      toast.success('Задача создана', { action: { label: 'Показать', onClick: () => { ui.set({ focusTask: task.id }); router.navigate('/tasks'); } } });
+      toast.success(tr('Задача создана'), { action: { label: tr('Показать'), onClick: () => { ui.set({ focusTask: task.id }); router.navigate('/tasks'); } } });
     }
     catch (err) { toast.error((err as Error).message); } finally { setBusy(false); }
   };
   const iso = v.due && !Number.isNaN(new Date(v.due).getTime()) ? new Date(v.due).toISOString() : null;
   return (
     <form onSubmit={submit} className="space-y-4" noValidate>
-      <Field label="Что сделать" required error={error}>{(id, d) => <Input id={id} aria-describedby={d} invalid={!!error} value={v.title} maxLength={200} onChange={(e) => { setV({ ...v, title: e.target.value }); setError(null); }} placeholder="Позвонить и подтвердить показ" />}</Field>
-      <Field label="Тип">{(id) => <Select id={id} value={v.type} onChange={(e) => setV({ ...v, type: e.target.value as TaskType })}>{(Object.keys(TASK_TYPE_LABEL) as TaskType[]).map((t) => <option key={t} value={t}>{TASK_TYPE_LABEL[t]}</option>)}</Select>}</Field>
+      <Field label={tr('Что сделать')} required error={error}>{(id, d) => <Input id={id} aria-describedby={d} invalid={!!error} value={v.title} maxLength={200} onChange={(e) => { setV({ ...v, title: e.target.value }); setError(null); }} placeholder={tr('Позвонить и подтвердить показ')} />}</Field>
+      <Field label={tr('Тип')}>{(id) => <Select id={id} value={v.type} onChange={(e) => setV({ ...v, type: e.target.value as TaskType })}>{(Object.keys(TASK_TYPE_LABEL) as TaskType[]).map((t) => <option key={t} value={t}>{TASK_TYPE_LABEL[t]}</option>)}</Select>}</Field>
       <fieldset>
-        <legend className="mb-1.5 text-[13px] font-medium">Срок</legend>
+        <legend className="mb-1.5 text-[13px] font-medium">{tr('Срок')}</legend>
         <div className="flex flex-wrap gap-2">
           {presets.map((p) => {
             const on = v.due === toLocalInput(p.at);
@@ -151,16 +152,16 @@ function TaskQuickForm() {
         </div>
         {/* Точное время — системным полем: на iPhone это тот же барабан, что в будильнике. */}
         <div className="mt-3">
-          <Field label="или точное время" error={dueError}>
+          <Field label={tr('или точное время')} error={dueError}>
             {(id, d) => <Input id={id} aria-describedby={d} invalid={!!dueError} required type="datetime-local" value={v.due}
               onChange={(e) => { setV({ ...v, due: e.target.value }); setDueError(null); }} />}
           </Field>
         </div>
-        {iso && !dueError && <p className="t-caption mt-2">Напомню {relDay(iso).toLowerCase()} в {time(iso)}</p>}
+        {iso && !dueError && <p className="t-caption mt-2">{tr('Напомню')}{relDay(iso).toLowerCase()} в {time(iso)}</p>}
       </fieldset>
       <div className="flex gap-2.5 pt-2">
-        <Button type="button" variant="outline" className="flex-1" onClick={() => ui.set({ quickCreate: 'menu' })}>Назад</Button>
-        <Button type="submit" className="flex-[2]" loading={busy}>Создать задачу</Button>
+        <Button type="button" variant="outline" className="flex-1" onClick={() => ui.set({ quickCreate: 'menu' })}>{tr('Назад')}</Button>
+        <Button type="submit" className="flex-[2]" loading={busy}>{tr('Создать задачу')}</Button>
       </div>
     </form>
   );

@@ -7,6 +7,7 @@ import { PageBody, PageHeader } from '@/components/shell/page';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState, ErrorState } from '@/components/ui/state';
 import { SignalRow, useSignals } from '@/components/today/briefing';
+import { tr } from '@/lib/i18n';
 
 /**
  * /briefing — весь разбор дня. Сгруппирован по срочности, у каждого пункта
@@ -19,14 +20,14 @@ export function BriefingScreen() {
   const d = r.data;
   const signals = useSignals(d?.activeLeads ?? [], d?.tasks ?? [], d?.events ?? []);
 
-  const header = <PageHeader title="Сводка дня" back="/today" subtitle="Что требует внимания и почему" />;
-  if (r.error) return <PageBody className="lg:max-w-[760px]">{header}<ErrorState error={r.error} onRetry={r.retry} what="сводку" /></PageBody>;
+  const header = <PageHeader title={tr('Сводка дня')} back="/today" subtitle={tr('Что требует внимания и почему')} />;
+  if (r.error) return <PageBody className="lg:max-w-[760px]">{header}<ErrorState error={r.error} onRetry={r.retry} what={tr('сводку')} /></PageBody>;
   if (r.loading || !d) return <PageBody className="lg:max-w-[760px]">{header}<Skeleton className="h-64" /></PageBody>;
 
   if (signals.length === 0) {
     return (
       <PageBody className="lg:max-w-[760px]">{header}
-        <EmptyState icon={Sparkles} title="Всё под контролем" text="Просроченных шагов нет, ближайших показов нет, лиды не остывают." />
+        <EmptyState icon={Sparkles} title={tr('Всё под контролем')} text={tr('Просроченных шагов нет, ближайших показов нет, лиды не остывают.')} />
       </PageBody>
     );
   }

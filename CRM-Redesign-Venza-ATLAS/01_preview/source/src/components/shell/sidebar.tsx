@@ -9,6 +9,7 @@ import { BRAND } from '@/lib/brand';
 import { LogoMark } from '@/components/brand/logo';
 import { NAV_ICON, NAV_LABEL } from './nav-icons';
 import { ui } from './ui-state';
+import { tr } from '@/lib/i18n';
 
 /**
  * Десктопная навигация. Порядок тот же, что на мобиле: 4 основных → остальные → Настройки внизу.
@@ -49,11 +50,11 @@ export function Sidebar() {
 
         <button onClick={() => ui.set({ search: true })}
           className={cn('mb-4 flex h-10 items-center gap-2.5 rounded-[10px] px-3 text-[13.5px] transition-colors', atlas ? 'bg-[var(--at-sidebar-surface)] text-[var(--at-sidebar-muted)] hover:text-[var(--at-sidebar-text)]' : 'border border-border bg-surface text-muted-foreground shadow-soft hover:text-foreground')}>
-          <Search className="h-4 w-4" aria-hidden /><span className="flex-1 text-left">Поиск</span>
+          <Search className="h-4 w-4" aria-hidden /><span className="flex-1 text-left">{tr('Поиск')}</span>
           <kbd className={cn('rounded-md px-1.5 text-[11px] font-medium', atlas ? 'bg-[var(--at-sidebar-bg)]' : 'bg-surface-2')}>⌘K</kbd>
         </button>
 
-        <nav aria-label="Основная навигация" className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto no-scrollbar">
+        <nav aria-label={tr('Основная навигация')} className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto no-scrollbar">
           {PRIMARY_NAV.map(item)}
           <div className={cn('mx-3 my-3 h-px', atlas ? 'bg-[var(--at-sidebar-border)]' : 'bg-border/70')} />
           {secondary.map(item)}
@@ -65,9 +66,9 @@ export function Sidebar() {
           <Avatar name={user.fullName} src={user.avatarUrl} size={34} />
           <div className="min-w-0 flex-1">
             <div className={cn('truncate text-[13.5px] font-medium', atlas && 'text-[var(--at-sidebar-text)]')}>{user.fullName}</div>
-            <div className={cn('truncate text-[11.5px]', atlas ? 'text-[var(--at-sidebar-muted)]' : 'text-muted-foreground')}>{user.role === 'ADMIN' ? 'Администратор' : 'Риелтор'}</div>
+            <div className={cn('truncate text-[11.5px]', atlas ? 'text-[var(--at-sidebar-muted)]' : 'text-muted-foreground')}>{user.role === 'ADMIN' ? tr('Администратор') : tr('Риелтор')}</div>
           </div>
-          <button onClick={() => ui.set({ quickCreate: 'menu' })} aria-label="Создать"
+          <button onClick={() => ui.set({ quickCreate: 'menu' })} aria-label={tr('Создать')}
             className={cn('grid h-8 w-8 place-items-center rounded-lg', atlas ? 'bg-[hsl(var(--primary))] text-white' : 'bg-primary text-primary-foreground')}><Plus className="h-4 w-4" /></button>
         </div>
       </div>

@@ -21,6 +21,7 @@ import { StatusBadge, STAGE_DOT } from '@/components/ui/badge';
 import { BriefingCard } from '@/components/today/briefing';
 import { HeaderBrand } from '@/components/brand/header-brand';
 import { toast } from '@/components/ui/toast';
+import { tr } from '@/lib/i18n';
 
 /**
  * /today. Данные = /api/reports/* (dashboard, today-tasks, upcoming-showings, recent-activity).
@@ -33,10 +34,10 @@ import { toast } from '@/components/ui/toast';
  * плашку, на которой светлый заголовок «Добрый день» становился нечитаемым.
  */
 const DAYPARTS = [
-  { until: 5, greet: 'Доброй ночи', light: ['#DCE0E4', '#F1EDE3'], dark: ['#18202A', '#10151B'] },
-  { until: 12, greet: 'Доброе утро', light: ['#F4E6CC', '#F7F4EC'], dark: ['#241E14', '#15120D'] },
-  { until: 18, greet: 'Добрый день', light: ['#E6EDE4', '#F7F4EC'], dark: ['#17231B', '#101711'] },
-  { until: 24, greet: 'Добрый вечер', light: ['#EAD9C6', '#F1EDE3'], dark: ['#241B12', '#16110C'] },
+  { until: 5, greet: tr('Доброй ночи'), light: ['#DCE0E4', '#F1EDE3'], dark: ['#18202A', '#10151B'] },
+  { until: 12, greet: tr('Доброе утро'), light: ['#F4E6CC', '#F7F4EC'], dark: ['#241E14', '#15120D'] },
+  { until: 18, greet: tr('Добрый день'), light: ['#E6EDE4', '#F7F4EC'], dark: ['#17231B', '#101711'] },
+  { until: 24, greet: tr('Добрый вечер'), light: ['#EAD9C6', '#F1EDE3'], dark: ['#241B12', '#16110C'] },
 ] as const;
 
 function daypart(h: number, dark: boolean) {
@@ -60,7 +61,7 @@ export function TodayScreen({ firstEntry }: { firstEntry?: boolean }) {
     setBusyTask(t.id);
     const { done } = await api.toggleTask(t.id);
     setBusyTask(null);
-    if (done) toast.success('Задача выполнена', { action: { label: 'Вернуть', onClick: () => api.toggleTask(t.id) } });
+    if (done) toast.success(tr('Задача выполнена'), { action: { label: tr('Вернуть'), onClick: () => api.toggleTask(t.id) } });
   };
 
   const d = r.data;
@@ -68,10 +69,10 @@ export function TodayScreen({ firstEntry }: { firstEntry?: boolean }) {
   const completed = revenue.data?.filter((x) => x.status === 'COMPLETED') ?? [];
   const revenueStrip = completed.length > 0 && (
     <Link href="/deals" className="pressable surface mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 p-4">
-      <span className="flex items-center gap-2 text-[14px] font-medium"><Handshake className="h-4 w-4 text-primary" aria-hidden />Сделки</span>
-      <span><span className="t-caption mr-1.5">Сделок закрыто</span><b className="tabular">{completed.length}</b></span>
-      <span><span className="t-caption mr-1.5">Объём</span><b className="tabular">{money(completed.reduce((a, x) => a + x.amount, 0), 'EUR', true)}</b></span>
-      <span><span className="t-caption mr-1.5">Комиссия получена</span><b className="tabular">{money(completed.reduce((a, x) => a + dealsApi.paid(x), 0), 'EUR', true)}</b></span>
+      <span className="flex items-center gap-2 text-[14px] font-medium"><Handshake className="h-4 w-4 text-primary" aria-hidden />{tr('Сделки')}</span>
+      <span><span className="t-caption mr-1.5">{tr('Сделок закрыто')}</span><b className="tabular">{completed.length}</b></span>
+      <span><span className="t-caption mr-1.5">{tr('Объём')}</span><b className="tabular">{money(completed.reduce((a, x) => a + x.amount, 0), 'EUR', true)}</b></span>
+      <span><span className="t-caption mr-1.5">{tr('Комиссия получена')}</span><b className="tabular">{money(completed.reduce((a, x) => a + dealsApi.paid(x), 0), 'EUR', true)}</b></span>
     </Link>
   );
   const startOfDay = new Date(now); startOfDay.setHours(0, 0, 0, 0);
@@ -84,7 +85,7 @@ export function TodayScreen({ firstEntry }: { firstEntry?: boolean }) {
   ].sort((a, b) => a.at.localeCompare(b.at)) : [];
   const nextIdx = agenda.findIndex((a) => new Date(a.at) > now);
 
-  if (r.error) return <PageBody><TitleBlock family={family} part={part} name={first} now={now} /><ErrorState error={r.error} onRetry={r.retry} what="сводку дня" /></PageBody>;
+  if (r.error) return <PageBody><TitleBlock family={family} part={part} name={first} now={now} /><ErrorState error={r.error} onRetry={r.retry} what={tr('сводку дня')} /></PageBody>;
 
   /* ------------------------------ ATLAS ------------------------------ */
   if (family === 'atlas') {
@@ -94,11 +95,11 @@ export function TodayScreen({ firstEntry }: { firstEntry?: boolean }) {
       <PageBody wide>
         <TitleBlock family={family} part={part} name={first} now={now} />
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 xl:grid-cols-5">
-          <Kpi loading={r.loading} icon={Users} label="Новые лиды" value={d?.newLeads.length} sub="ждут первого контакта" href="/leads" />
-          <Kpi loading={r.loading} icon={CheckSquare} label="Задачи сегодня" value={todayTasks.filter((t) => !t.completedAt).length} sub={overdue.length ? `${overdue.length} ${plural(overdue.length, 'просрочена', 'просрочены', 'просрочено')}` : 'без просрочек'} subTone={overdue.length ? 'danger' : undefined} href="/tasks" />
-          <Kpi loading={r.loading} icon={Eye} label="Показы" value={showings.length} sub="запланировано на сегодня" href="/calendar" />
-          <Kpi loading={r.loading} icon={Workflow} label="Лиды в работе" value={d?.activeLeads.length} sub="во всех этапах" href="/leads" />
-          <Kpi loading={r.loading} icon={Handshake} label="Бюджеты в работе" value={d ? money(pipelineBudget, 'EUR', true) : undefined} sub="сумма «до» активных лидов" href="/leads" className="col-span-2 sm:col-span-1" />
+          <Kpi loading={r.loading} icon={Users} label={tr('Новые лиды')} value={d?.newLeads.length} sub={tr('ждут первого контакта')} href="/leads" />
+          <Kpi loading={r.loading} icon={CheckSquare} label={tr('Задачи сегодня')} value={todayTasks.filter((t) => !t.completedAt).length} sub={overdue.length ? `${overdue.length} ${plural(overdue.length, 'просрочена', 'просрочены', 'просрочено')}` : 'без просрочек'} subTone={overdue.length ? 'danger' : undefined} href="/tasks" />
+          <Kpi loading={r.loading} icon={Eye} label={tr('Показы')} value={showings.length} sub={tr('запланировано на сегодня')} href="/calendar" />
+          <Kpi loading={r.loading} icon={Workflow} label={tr('Лиды в работе')} value={d?.activeLeads.length} sub={tr('во всех этапах')} href="/leads" />
+          <Kpi loading={r.loading} icon={Handshake} label={tr('Бюджеты в работе')} value={d ? money(pipelineBudget, 'EUR', true) : undefined} sub={tr('сумма «до» активных лидов')} href="/leads" className="col-span-2 sm:col-span-1" />
         </div>
         {revenueStrip}
         <BriefingCard loading={r.loading} tasks={todayTasks} events={d?.events ?? []} leads={d?.activeLeads ?? []} />
@@ -106,24 +107,24 @@ export function TodayScreen({ firstEntry }: { firstEntry?: boolean }) {
         <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
           <div className="min-w-0 space-y-4">
             <section className="surface p-4">
-              <div className="mb-3 flex items-center justify-between"><h2 className="t-h2">Воронка</h2><Link href="/leads" className="tap-link text-[13px] font-medium text-primary hover:underline">Открыть канбан</Link></div>
+              <div className="mb-3 flex items-center justify-between"><h2 className="t-h2">{tr('Воронка')}</h2><Link href="/leads" className="tap-link text-[13px] font-medium text-primary hover:underline">{tr('Открыть канбан')}</Link></div>
               {r.loading ? <Skeleton className="h-24 w-full" /> : (
                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
                   {byStage.map(({ s, items }) => (
                     <Link key={s} href="/leads" className="pressable rounded-[10px] border border-border/70 p-3" style={{ background: `var(--at-stage-${s === 'NEGOTIATION' ? 'negotiation' : s.toLowerCase()})` }}>
                       <div className="flex items-center gap-1.5 text-[12.5px] font-medium text-muted-foreground"><span className="h-2 w-2 rounded-full" style={{ background: STAGE_DOT[s] }} />{STAGE_LABEL[s]}</div>
                       <div className="mt-1.5 text-[24px] font-bold leading-7 tabular tracking-[-0.03em]">{items.length}</div>
-                      <div className="t-micro mt-0.5 truncate">{items.length ? money(items.reduce((a, l) => a + (l.budgetMax ?? 0), 0), 'EUR', true) : 'нет лидов'}</div>
+                      <div className="t-micro mt-0.5 truncate">{items.length ? money(items.reduce((a, l) => a + (l.budgetMax ?? 0), 0), 'EUR', true) : tr('нет лидов')}</div>
                     </Link>
                   ))}
                 </div>
               )}
             </section>
             <section className="surface overflow-hidden">
-              <div className="flex items-center justify-between px-4 pb-2 pt-4"><h2 className="t-h2">Последние действия</h2></div>
-              {r.loading ? <div className="space-y-3 p-4">{[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-8" />)}</div> : !d?.activity.length ? <p className="t-caption px-4 pb-5">Сегодня ещё ничего не происходило.</p> : (
+              <div className="flex items-center justify-between px-4 pb-2 pt-4"><h2 className="t-h2">{tr('Последние действия')}</h2></div>
+              {r.loading ? <div className="space-y-3 p-4">{[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-8" />)}</div> : !d?.activity.length ? <p className="t-caption px-4 pb-5">{tr('Сегодня ещё ничего не происходило.')}</p> : (
                 <table className="w-full text-[14px]">
-                  <caption className="sr-only">Последние действия</caption>
+                  <caption className="sr-only">{tr('Последние действия')}</caption>
                   <tbody>{d.activity.map((a) => (
                     <tr key={a.id} className="border-t border-border/70">
                       <td className="w-12 py-2.5 pl-4 pr-3"><Avatar name={nameOf(a.clientId) || 'CRM'} size={28} /></td>
@@ -136,7 +137,7 @@ export function TodayScreen({ firstEntry }: { firstEntry?: boolean }) {
           </div>
           <div className="space-y-4">
             <section className="surface">
-              <div className="flex items-center justify-between px-4 pb-1 pt-4"><h2 className="t-h2">Расписание</h2><Link href="/calendar" className="tap-link text-[13px] font-medium text-primary hover:underline">Календарь</Link></div>
+              <div className="flex items-center justify-between px-4 pb-1 pt-4"><h2 className="t-h2">{tr('Расписание')}</h2><Link href="/calendar" className="tap-link text-[13px] font-medium text-primary hover:underline">{tr('Календарь')}</Link></div>
               <AgendaList loading={r.loading} items={agenda} compact nextIdx={nextIdx} busyTask={busyTask} onToggle={toggle} />
             </section>
             <UrgentBlock overdue={overdue} nameOf={nameOf} compact />
@@ -155,9 +156,9 @@ export function TodayScreen({ firstEntry }: { firstEntry?: boolean }) {
           <TitleBlock family={family} part={part} name={first} now={now} />
 
           <div className="grid grid-cols-3 gap-2.5 lg:max-w-[720px] lg:gap-3">
-            <VzKpi loading={r.loading} label="Задачи" value={todayTasks.filter((t) => !t.completedAt).length} note={overdue.length ? `+${overdue.length} просроч.` : 'на сегодня'} warn={overdue.length > 0} href="/tasks" />
-            <VzKpi loading={r.loading} label="Показы" value={showings.length} note={showings[0] ? `с ${time(showings[0].startsAt)}` : 'нет'} href="/calendar" />
-            <VzKpi loading={r.loading} label="Новые лиды" value={d?.newLeads.length} note="ждут звонка" href="/leads" />
+            <VzKpi loading={r.loading} label={tr('Задачи')} value={todayTasks.filter((t) => !t.completedAt).length} note={overdue.length ? tr('+{n} просроч.', { n: overdue.length }) : tr('на сегодня')} warn={overdue.length > 0} href="/tasks" />
+            <VzKpi loading={r.loading} label={tr('Показы')} value={showings.length} note={showings[0] ? tr('с {t}', { t: time(showings[0].startsAt) }) : tr('нет')} href="/calendar" />
+            <VzKpi loading={r.loading} label={tr('Новые лиды')} value={d?.newLeads.length} note={tr('ждут звонка')} href="/leads" />
           </div>
           <div className="lg:max-w-[720px]">{revenueStrip}</div>
 
@@ -165,15 +166,15 @@ export function TodayScreen({ firstEntry }: { firstEntry?: boolean }) {
             <div className="min-w-0 space-y-6">
               <UrgentBlock overdue={overdue} nameOf={nameOf} />
               <section>
-                <div className="mb-3 flex items-baseline justify-between"><h2 className="t-h2">Повестка дня</h2><Link href="/calendar" className="tap-link text-[14px] font-medium text-primary">Календарь</Link></div>
+                <div className="mb-3 flex items-baseline justify-between"><h2 className="t-h2">{tr('Повестка дня')}</h2><Link href="/calendar" className="tap-link text-[14px] font-medium text-primary">{tr('Календарь')}</Link></div>
                 <div className="surface overflow-hidden"><AgendaList loading={r.loading} items={agenda} nextIdx={nextIdx} busyTask={busyTask} onToggle={toggle} /></div>
               </section>
             </div>
             <div className="space-y-6">
               <section>
-                <div className="mb-3 flex items-baseline justify-between"><h2 className="t-h2">Новые лиды</h2><Link href="/leads" className="tap-link text-[14px] font-medium text-primary">Все</Link></div>
+                <div className="mb-3 flex items-baseline justify-between"><h2 className="t-h2">{tr('Новые лиды')}</h2><Link href="/leads" className="tap-link text-[14px] font-medium text-primary">{tr('Все')}</Link></div>
                 {r.loading ? <div className="surface space-y-3 p-4">{[0, 1, 2].map((i) => <Skeleton key={i} className="h-10" />)}</div> : !d?.newLeads.length ? (
-                  <EmptyState icon={Sparkles} title="Новых лидов нет" text="Все запросы уже в работе." action={<Button size="sm" variant="outline" onClick={() => ui.set({ quickCreate: 'lead' })}>Добавить лид</Button>} />
+                  <EmptyState icon={Sparkles} title={tr('Новых лидов нет')} text={tr('Все запросы уже в работе.')} action={<Button size="sm" variant="outline" onClick={() => ui.set({ quickCreate: 'lead' })}>{tr('Добавить лид')}</Button>} />
                 ) : (
                   <ul className="surface row-divider overflow-hidden">
                     {d.newLeads.map((l) => (
@@ -187,7 +188,7 @@ export function TodayScreen({ firstEntry }: { firstEntry?: boolean }) {
                 )}
               </section>
               <section>
-                <h2 className="t-h2 mb-3">Недавно</h2>
+                <h2 className="t-h2 mb-3">{tr('Недавно')}</h2>
                 {r.loading ? <Skeleton className="h-28" /> : (
                   <ol className="relative space-y-4 pl-6 before:absolute before:bottom-2 before:left-[3px] before:top-2 before:w-px before:bg-border">
                     {(d?.activity ?? []).slice(0, 4).map((a) => (
@@ -215,7 +216,7 @@ function TitleBlock({ family, part, name, now }: { family: string; part: { greet
         <HeaderBrand compact />
         <div className="flex-1 lg:hidden" />
         <div className="flex items-center gap-1.5">
-          <IconButton label="Быстрый захват лида" onClick={() => ui.set({ quickCreate: 'capture' })}
+          <IconButton label={tr('Быстрый захват лида')} onClick={() => ui.set({ quickCreate: 'capture' })}
             className="bg-primary text-primary-foreground hover:bg-primary/90"><Zap /></IconButton>
           <NotificationsButton />
         </div>
@@ -253,12 +254,12 @@ function UrgentBlock({ overdue, nameOf, compact }: { overdue: Task[]; nameOf: (i
   const t = overdue[0];
   if (!t) return null;
   return (
-    <section aria-label="Срочно" className={cn('relative overflow-hidden text-primary-foreground', compact ? 'rounded-card border border-danger/25 bg-danger/8 p-4 !text-foreground' : 'rounded-[22px] bg-primary p-5')}>
-      <div className={cn('flex items-center gap-2 text-[13px] font-medium', compact ? 'text-danger-text' : 'text-primary-foreground')}><AlertTriangle className="h-4 w-4" aria-hidden />Просрочено со вчера</div>
+    <section aria-label={tr('Срочно')} className={cn('relative overflow-hidden text-primary-foreground', compact ? 'rounded-card border border-danger/25 bg-danger/8 p-4 !text-foreground' : 'rounded-[22px] bg-primary p-5')}>
+      <div className={cn('flex items-center gap-2 text-[13px] font-medium', compact ? 'text-danger-text' : 'text-primary-foreground')}><AlertTriangle className="h-4 w-4" aria-hidden />{tr('Просрочено со вчера')}</div>
       <p className={cn('mt-1.5', compact ? 'text-[16px] font-semibold' : 'font-display text-[22px] font-semibold leading-7 tracking-[-0.01em]')}>{t.title}</p>
-      <p className={cn('mt-1 text-[14px]', compact ? 'text-foreground/80' : 'text-primary-foreground')}>{nameOf(t.clientId)}{overdue.length > 1 && `, и ещё ${overdue.length - 1}`}</p>
+      <p className={cn('mt-1 text-[14px]', compact ? 'text-foreground/80' : 'text-primary-foreground')}>{nameOf(t.clientId)}{overdue.length > 1 && tr(', и ещё {n}', { n: overdue.length - 1 })}</p>
       <div className="mt-4 flex gap-2">
-        <Link href={t.clientId ? `/clients/${t.clientId}` : '/tasks'} className={cn('inline-flex h-11 items-center lg:h-10 gap-1.5 px-4 text-[14px] font-semibold transition-colors', compact ? 'rounded-control bg-surface border border-border hover:bg-surface-2' : 'rounded-full bg-primary-foreground text-primary-text hover:brightness-95')}><Phone className="h-4 w-4" aria-hidden />Связаться</Link>
+        <Link href={t.clientId ? `/clients/${t.clientId}` : '/tasks'} className={cn('inline-flex h-11 items-center lg:h-10 gap-1.5 px-4 text-[14px] font-semibold transition-colors', compact ? 'rounded-control bg-surface border border-border hover:bg-surface-2' : 'rounded-full bg-primary-foreground text-primary-text hover:brightness-95')}><Phone className="h-4 w-4" aria-hidden />{tr('Связаться')}</Link>
         <Link href="/tasks" className={cn('inline-flex h-11 items-center lg:h-10 gap-1 rounded-full px-3 text-[14px] font-medium', compact ? 'text-foreground' : 'text-primary-foreground')}>Все задачи<ChevronRight className="h-4 w-4" aria-hidden /></Link>
       </div>
     </section>
@@ -267,7 +268,7 @@ function UrgentBlock({ overdue, nameOf, compact }: { overdue: Task[]; nameOf: (i
 
 function AgendaList({ items, loading, nextIdx, compact, busyTask, onToggle }: { items: AgendaItem[]; loading: boolean; nextIdx: number; compact?: boolean; busyTask: string | null; onToggle: (t: Task) => void }) {
   if (loading) return <div className="space-y-4 p-4">{[0, 1, 2, 3].map((i) => <div key={i} className="flex gap-3"><Skeleton className="h-5 w-12" /><div className="flex-1 space-y-2"><Skeleton className="h-4 w-3/4" /><Skeleton className="h-3 w-1/3" /></div></div>)}</div>;
-  if (!items.length) return <div className="px-5 py-10 text-center"><CalendarDays className="mx-auto mb-3 h-6 w-6 text-muted-foreground" aria-hidden /><p className="t-h3">На сегодня пусто</p><p className="t-caption mt-1">Самое время разобрать новых лидов.</p></div>;
+  if (!items.length) return <div className="px-5 py-10 text-center"><CalendarDays className="mx-auto mb-3 h-6 w-6 text-muted-foreground" aria-hidden /><p className="t-h3">{tr('На сегодня пусто')}</p><p className="t-caption mt-1">{tr('Самое время разобрать новых лидов.')}</p></div>;
   return (
     <ol className={cn('row-divider', compact && 'pb-1')}>
       {items.map((it, i) => {
@@ -278,10 +279,10 @@ function AgendaList({ items, loading, nextIdx, compact, busyTask, onToggle }: { 
             <time dateTime={it.at} className={cn('w-12 shrink-0 tabular', compact ? 'text-[13px] font-semibold' : 't-num text-[17px] font-semibold')}>{time(it.at)}</time>
             <div className="min-w-0 flex-1">
               <p className={cn('truncate font-medium', compact ? 'text-[14px]' : 'text-[15.5px]', it.task?.completedAt && 'line-through decoration-muted-foreground/60')}>{it.title}</p>
-              <p className="t-caption truncate">{it.meta}{isNext && <StatusBadge tone="primary" className="ml-2 h-5 align-middle">Следующее</StatusBadge>}</p>
+              <p className="t-caption truncate">{it.meta}{isNext && <StatusBadge tone="primary" className="ml-2 h-5 align-middle">{tr('Следующее')}</StatusBadge>}</p>
             </div>
-            {it.task ? <TaskCheck checked={!!it.task.completedAt} busy={busyTask === it.task.id} onChange={() => onToggle(it.task!)} label={`Выполнено: ${it.title}`} />
-              : it.event?.propertyId ? <Link href={`/properties/${it.event.propertyId}`} aria-label="Открыть объект" className="grid h-11 w-11 place-items-center rounded-full text-muted-foreground hover:bg-surface-2"><ArrowUpRight className="h-4 w-4" /></Link> : null}
+            {it.task ? <TaskCheck checked={!!it.task.completedAt} busy={busyTask === it.task.id} onChange={() => onToggle(it.task!)} label={tr('Выполнено: {title}', { title: it.title })} />
+              : it.event?.propertyId ? <Link href={`/properties/${it.event.propertyId}`} aria-label={tr('Открыть объект')} className="grid h-11 w-11 place-items-center rounded-full text-muted-foreground hover:bg-surface-2"><ArrowUpRight className="h-4 w-4" /></Link> : null}
           </li>
         );
       })}

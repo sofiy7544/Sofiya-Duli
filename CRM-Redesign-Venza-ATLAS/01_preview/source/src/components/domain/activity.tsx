@@ -11,16 +11,17 @@ import { Textarea } from '@/components/ui/field';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ErrorState } from '@/components/ui/state';
 import { toast } from '@/components/ui/toast';
+import { tr } from '@/lib/i18n';
 
 const ICON: Record<ActivityType, typeof Phone> = { CALL: Phone, NOTE: StickyNote, STAGE: Workflow, SHOWING: Eye, TASK: CheckSquare, CREATED: CalendarCheck };
-const TYPE_LABEL: Record<ActivityType, string> = { CALL: 'Звонок', NOTE: 'Заметка', STAGE: 'Этап', SHOWING: 'Показ', TASK: 'Задача', CREATED: 'Создан' };
+const TYPE_LABEL: Record<ActivityType, string> = { CALL: tr('Звонок'), NOTE: tr('Заметка'), STAGE: tr('Этап'), SHOWING: tr('Показ'), TASK: tr('Задача'), CREATED: tr('Создан') };
 
 /** ActivityTimeline: /api/activities/lead/:id или client/:id, группировка по дням. */
 export function ActivityTimeline({ clientId, leadId }: { clientId?: string; leadId?: string }) {
   const r = useResource(() => api.activities({ clientId, leadId }), [clientId, leadId]);
-  if (r.error) return <ErrorState error={r.error} onRetry={r.retry} what="историю" />;
+  if (r.error) return <ErrorState error={r.error} onRetry={r.retry} what={tr('историю')} />;
   if (r.loading) return <div className="space-y-4">{[0, 1, 2].map((i) => <div key={i} className="flex gap-3"><Skeleton className="h-9 w-9 rounded-full" /><div className="flex-1 space-y-2"><Skeleton className="h-3.5 w-1/3" /><Skeleton className="h-3.5 w-4/5" /></div></div>)}</div>;
-  if (!r.data?.length) return <p className="t-caption py-6 text-center">История пока пустая. Первая заметка появится здесь.</p>;
+  if (!r.data?.length) return <p className="t-caption py-6 text-center">{tr('История пока пустая. Первая заметка появится здесь.')}</p>;
   const groups = r.data.reduce<Record<string, Activity[]>>((acc, a) => { const k = relDay(a.at); (acc[k] ||= []).push(a); return acc; }, {});
   return (
     <div className="space-y-5">
@@ -47,14 +48,14 @@ export function ActivityTimeline({ clientId, leadId }: { clientId?: string; lead
 /** Быстрая заметка. В CRM рядом VoiceRecorder — место под кнопку оставлено. */
 export function NoteComposer({ clientId, leadId }: { clientId: string; leadId?: string }) {
   const [text, setText] = React.useState(''); const [busy, setBusy] = React.useState(false); const [open, setOpen] = React.useState(false);
-  if (!open) return <Button variant="outline" className="w-full" onClick={() => setOpen(true)}><Plus />Добавить заметку</Button>;
+  if (!open) return <Button variant="outline" className="w-full" onClick={() => setOpen(true)}><Plus />{tr('Добавить заметку')}</Button>;
   return (
     <div className="surface p-3">
-      <label className="sr-only" htmlFor="note">Заметка</label>
-      <Textarea id="note" autoFocus value={text} onChange={(e) => setText(e.target.value)} placeholder="Что обсудили, о чём договорились" className="border-0 !shadow-none focus:!shadow-none" />
+      <label className="sr-only" htmlFor="note">{tr('Заметка')}</label>
+      <Textarea id="note" autoFocus value={text} onChange={(e) => setText(e.target.value)} placeholder={tr('Что обсудили, о чём договорились')} className="border-0 !shadow-none focus:!shadow-none" />
       <div className="mt-2 flex justify-end gap-2">
-        <Button size="sm" variant="ghost" onClick={() => { setOpen(false); setText(''); }}>Отмена</Button>
-        <Button size="sm" loading={busy} disabled={!text.trim()} onClick={async () => { setBusy(true); await api.addNote(clientId, text.trim(), leadId); setBusy(false); setText(''); setOpen(false); toast.success('Заметка сохранена'); }}>Сохранить</Button>
+        <Button size="sm" variant="ghost" onClick={() => { setOpen(false); setText(''); }}>{tr('Отмена')}</Button>
+        <Button size="sm" loading={busy} disabled={!text.trim()} onClick={async () => { setBusy(true); await api.addNote(clientId, text.trim(), leadId); setBusy(false); setText(''); setOpen(false); toast.success(tr('Заметка сохранена')); }}>{tr('Сохранить')}</Button>
       </div>
     </div>
   );

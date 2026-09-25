@@ -6,6 +6,7 @@ import { usePreviewSettings } from '@/lib/mock/store';
 import { Sheet } from '@/components/ui/sheet';
 import { NAV_ICON, NAV_LABEL } from './nav-icons';
 import { ui, useUI } from './ui-state';
+import { tr } from '@/lib/i18n';
 
 /** Нижняя навигация — одинаковые 5 пунктов во всех темах; стили .crm-bottom-nav в themes.css. */
 export function MobileNav() {
@@ -17,7 +18,7 @@ export function MobileNav() {
 
   return (
     <>
-      <nav aria-label="Основная навигация" className="crm-bottom-nav fixed inset-x-3 bottom-safe-bottom z-50 lg:hidden">
+      <nav aria-label={tr('Основная навигация')} className="crm-bottom-nav fixed inset-x-3 bottom-safe-bottom z-50 lg:hidden">
         <ul className="grid grid-cols-5">
           {PRIMARY_NAV.map((it) => {
             const Icon = NAV_ICON[it.key]; const on = active === it.key;
@@ -33,13 +34,13 @@ export function MobileNav() {
           <li>
             <button type="button" onClick={() => ui.set({ more: true })} aria-haspopup="dialog" data-active={active === 'more' || more || undefined} aria-current={active === 'more' ? 'page' : undefined} className="crm-bottom-nav__item">
               <span className="crm-bottom-nav__icon"><LayoutGrid className="h-5 w-5" aria-hidden /></span>
-              <span className="crm-bottom-nav__label">Ещё</span>
+              <span className="crm-bottom-nav__label">{tr('Ещё')}</span>
             </button>
           </li>
         </ul>
       </nav>
 
-      <Sheet open={more} onOpenChange={(o) => ui.set({ more: o })} title="Ещё">
+      <Sheet open={more} onOpenChange={(o) => ui.set({ more: o })} title={tr('Ещё')}>
         <ul className="-mx-2">
           {/* Колокольчик на телефоне был только на «Сегодня» — на остальных
               экранах уведомления были недоступны. В шапке для него нет места
@@ -51,7 +52,7 @@ export function MobileNav() {
                 <Bell className="h-[19px] w-[19px]" aria-hidden />
                 <span aria-hidden className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-danger ring-2 ring-surface" />
               </span>
-              <span className="flex-1 text-[16px] font-medium">Уведомления</span>
+              <span className="flex-1 text-[16px] font-medium">{tr('Уведомления')}</span>
               <ChevronRight className="h-4 w-4 text-muted-foreground" aria-hidden />
             </button>
           </li>
@@ -69,7 +70,7 @@ export function MobileNav() {
             );
           })}
         </ul>
-        {!settings.integrationsEnabled && <p className="t-caption mt-3 px-1">Коммуникации появятся, когда администратор подключит мессенджеры.</p>}
+        {!settings.integrationsEnabled && <p className="t-caption mt-3 px-1">{tr('Коммуникации появятся, когда администратор подключит мессенджеры.')}</p>}
       </Sheet>
     </>
   );

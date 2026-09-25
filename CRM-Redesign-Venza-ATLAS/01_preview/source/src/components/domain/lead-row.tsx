@@ -8,6 +8,7 @@ import { PURPOSE_LABEL, SOURCE_LABEL } from '@/lib/labels';
 import type { Lead } from '@/lib/mock/types';
 import { Avatar } from '@/components/ui/avatar';
 import { PriorityMark, StageBadge, StatusBadge } from '@/components/ui/badge';
+import { tr } from '@/lib/i18n';
 
 /** LeadRow (мобайл/список) и LeadCard (канбан). Данные: Lead + client + assignee из store. */
 export function LeadRow({ lead, onActions, showStage }: { lead: Lead; onActions?: (l: Lead) => void; showStage?: boolean }) {
@@ -35,7 +36,7 @@ export function LeadRow({ lead, onActions, showStage }: { lead: Lead; onActions?
 export function LeadCard({ lead, dragging }: { lead: Lead; dragging?: boolean }) {
   const client = store.db.clients.find((c) => c.id === lead.clientId);
   const ownerUser = lead.assignedUserId ? users.find((u) => u.id === lead.assignedUserId) : undefined;
-  const owner = ownerUser ? shortName(ownerUser.fullName) : 'Не назначен';
+  const owner = ownerUser ? shortName(ownerUser.fullName) : tr('Не назначен');
   const u = leadUrgency(lead);
   return (
     <Link href={`/leads/${lead.id}`} draggable={false}

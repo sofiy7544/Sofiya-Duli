@@ -7,6 +7,7 @@ import { Button, IconButton } from '@/components/ui/button';
 import { HeaderBrand } from '@/components/brand/header-brand';
 import { useAlertCount } from '@/components/overlays/notifications';
 import { ui } from './ui-state';
+import { tr } from '@/lib/i18n';
 
 /** Шапка страницы. Один H1 на страницу (исправляет дубль Topbar+page из CRM). */
 export function PageHeader({ title, subtitle, back, actions, large = true, children }: {
@@ -17,22 +18,22 @@ export function PageHeader({ title, subtitle, back, actions, large = true, child
   return (
     <header className={cn('safe-top', family === 'atlas' ? 'mb-4 lg:mb-5' : 'mb-5 lg:mb-7')}>
       <div className="flex min-h-[52px] items-center gap-2 pt-2 lg:pt-0">
-        {back && <IconButton label="Назад" onClick={() => router.back(back)} variant={family === 'venza' ? 'outline' : 'ghost'} className={cn('-ml-1 rounded-full', family === 'venza' && 'bg-surface')}><ArrowLeft /></IconButton>}
+        {back && <IconButton label={tr('Назад')} onClick={() => router.back(back)} variant={family === 'venza' ? 'outline' : 'ghost'} className={cn('-ml-1 rounded-full', family === 'venza' && 'bg-surface')}><ArrowLeft /></IconButton>}
         {/* Знак агентства: на телефоне слева в шапке было пусто. */}
         <HeaderBrand className={back ? 'pl-1.5' : undefined} />
         <div className="flex-1" />
         <div className="flex items-center gap-1.5 lg:hidden">
           {actions}
-          <IconButton label="Быстрый захват лида" onClick={() => ui.set({ quickCreate: 'capture' })}
+          <IconButton label={tr('Быстрый захват лида')} onClick={() => ui.set({ quickCreate: 'capture' })}
             className="bg-primary text-primary-foreground hover:bg-primary/90"><Zap /></IconButton>
-          <IconButton label="Поиск" onClick={() => ui.set({ search: true })}><Search /></IconButton>
+          <IconButton label={tr('Поиск')} onClick={() => ui.set({ search: true })}><Search /></IconButton>
         </div>
         <div className="hidden items-center gap-2 lg:flex">
           {actions}
-          <IconButton label="Быстрый захват лида" onClick={() => ui.set({ quickCreate: 'capture' })}
+          <IconButton label={tr('Быстрый захват лида')} onClick={() => ui.set({ quickCreate: 'capture' })}
             className="bg-primary text-primary-foreground hover:bg-primary/90"><Zap /></IconButton>
           <NotificationsButton />
-          <Button size="sm" onClick={() => ui.set({ quickCreate: 'menu' })}><Plus />Создать</Button>
+          <Button size="sm" onClick={() => ui.set({ quickCreate: 'menu' })}><Plus />{tr('Создать')}</Button>
         </div>
       </div>
       <div className={cn(back ? 'mt-1' : 'mt-0')}>
@@ -48,7 +49,7 @@ export function PageHeader({ title, subtitle, back, actions, large = true, child
 export function NotificationsButton({ className }: { className?: string }) {
   const alerts = useAlertCount();
   return (
-    <IconButton label={alerts ? `Уведомления: ${alerts}` : 'Уведомления'} className={cn('relative', className)} onClick={() => ui.set({ notifications: true })}>
+    <IconButton label={alerts ? `Уведомления: ${alerts}` : tr('Уведомления')} className={cn('relative', className)} onClick={() => ui.set({ notifications: true })}>
       <Bell />
       {alerts > 0 && <span aria-hidden className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-danger ring-2 ring-background" />}
     </IconButton>
@@ -87,7 +88,7 @@ export function Fab() {
   // Новый экран — кнопка на месте.
   React.useEffect(() => { byHand.current = false; last.current = scrollY; setHidden(false); }, [route.path]);
   return (
-    <button type="button" aria-label="Создать" onClick={() => ui.set({ quickCreate: 'menu' })}
+    <button type="button" aria-label={tr('Создать')} onClick={() => ui.set({ quickCreate: 'menu' })}
       className={cn('fixed right-4 z-40 grid h-14 w-14 place-items-center bg-primary text-primary-foreground shadow-fab ring-4 ring-background/70 transition-[transform,opacity] duration-sheet ease-emphasized active:scale-90 lg:hidden',
         family === 'atlas' ? 'bottom-[calc(80px+env(safe-area-inset-bottom))] rounded-[18px]' : 'bottom-[calc(max(0.75rem,env(safe-area-inset-bottom))+88px)] rounded-full',
         hidden && 'pointer-events-none translate-y-[130%] opacity-0')}>

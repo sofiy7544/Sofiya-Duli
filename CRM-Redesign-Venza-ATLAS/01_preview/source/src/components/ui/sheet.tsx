@@ -4,6 +4,7 @@ import { X } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { useIsDesktop } from '@/lib/theme/provider';
 import { Button } from './button';
+import { tr } from '@/lib/i18n';
 
 /**
  * PremiumSheet: снизу на мобиле (вес + контролируемая посадка, свайп вниз закрывает),
@@ -50,7 +51,7 @@ export function Sheet({ open, onOpenChange, title, description, children, footer
               <Dialog.Title className="t-h2">{title}</Dialog.Title>
               {description ? <Dialog.Description className="t-caption mt-1">{description}</Dialog.Description> : <Dialog.Description className="sr-only">{title}</Dialog.Description>}
             </div>
-            <Dialog.Close asChild><Button variant="ghost" size="iconSm" aria-label="Закрыть" className="-mr-2 -mt-1 text-muted-foreground"><X /></Button></Dialog.Close>
+            <Dialog.Close asChild><Button variant="ghost" size="iconSm" aria-label={tr('Закрыть')} className="-mr-2 -mt-1 text-muted-foreground"><X /></Button></Dialog.Close>
           </div>
           <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain px-5 pb-5 [&>*]:min-w-0">{children}</div>
           {footer && <div className="flex gap-2.5 border-t border-border/70 px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3.5">{footer}</div>}
@@ -72,7 +73,7 @@ export function ConfirmDialog({ open, onOpenChange, title, text, confirmLabel, o
           <Dialog.Title className="t-h2">{title}</Dialog.Title>
           <Dialog.Description className="t-caption mt-2 text-[14px] leading-5">{text}</Dialog.Description>
           <div className="mt-6 flex gap-2.5">
-            <Dialog.Close asChild><Button variant="outline" className="flex-1" autoFocus>Отмена</Button></Dialog.Close>
+            <Dialog.Close asChild><Button variant="outline" className="flex-1" autoFocus>{tr('Отмена')}</Button></Dialog.Close>
             <Button variant={tone === 'danger' ? 'destructive' : 'default'} className="flex-1" loading={busy} onClick={onConfirm}>{confirmLabel}</Button>
           </div>
         </Dialog.Content>

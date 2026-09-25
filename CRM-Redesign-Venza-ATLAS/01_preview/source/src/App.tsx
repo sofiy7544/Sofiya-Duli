@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { RouterProvider, matchRoute, useRouter } from '@/lib/router';
 import { ThemeProvider } from '@/lib/theme/provider';
+import { useLocale } from '@/lib/locale';
 import { usePreviewSettings } from '@/lib/mock/store';
 import { AppShell } from '@/components/shell/app-shell';
 import { Toaster } from '@/components/ui/toast';
@@ -45,6 +46,9 @@ function Routes() {
 }
 
 export default function App() {
+  /* Смена языка перерисовывает всё дерево: подписи берутся из словаря
+     в момент отрисовки (lib/i18n.ts), а не при загрузке модуля. */
+  useLocale();
   return (
     <ThemeProvider>
       <RouterProvider>

@@ -13,9 +13,10 @@ import { toast } from '@/components/ui/toast';
 import { ui, useUI } from '@/components/shell/ui-state';
 import { INTRO_EVENT } from '@/components/brand/intro';
 import { Sparkles } from 'lucide-react';
+import { tr } from '@/lib/i18n';
 
 /** Панель дизайн-превью: НЕ часть CRM. Переключает тему, состояние данных, роль и флаг интеграций. */
-export const THEME_NAMES: Record<Theme, string> = { atlas: 'ATLAS (стандарт)', sepia: 'Сепия', venza: 'Venza' };
+export const THEME_NAMES: Record<Theme, string> = { atlas: 'ATLAS (стандарт)', sepia: tr('Сепия'), venza: 'Venza' };
 
 /** Мини-макет экрана CRM в цветах темы: видно сайдбар, карточки и кнопку, а не просто цвет. */
 const PREVIEW: Record<Theme, { bg: string; surface: string; rail: string; railOn: string; text: string; muted: string; primary: string; border: string }> = {
@@ -66,7 +67,7 @@ function ThemeScreen({ theme }: { theme: Theme }) {
 export function ThemeSwatches({ compact }: { compact?: boolean }) {
   const { theme, setTheme } = useTheme();
   return (
-    <div role="radiogroup" aria-label="Тема оформления" className={cn('grid gap-2.5', compact ? 'grid-cols-3' : 'grid-cols-3')}>
+    <div role="radiogroup" aria-label={tr('Тема оформления')} className={cn('grid gap-2.5', compact ? 'grid-cols-3' : 'grid-cols-3')}>
       {THEME_OPTIONS.map((o) => {
         const on = theme === o.value;
         return (
@@ -89,37 +90,37 @@ export function PreviewPanel() {
   const router = useRouter();
   return (
     <>
-      <button onClick={() => ui.set({ preview: true })} aria-label="Настройки превью"
+      <button onClick={() => ui.set({ preview: true })} aria-label={tr('Настройки превью')}
         className="fixed left-0 top-[58%] z-[60] grid h-11 w-7 place-items-center rounded-r-[12px] border border-l-0 border-border bg-surface/95 text-muted-foreground shadow-soft backdrop-blur transition-[width] hover:w-9 hover:text-foreground">
         <SlidersHorizontal className="h-4 w-4" aria-hidden />
       </button>
-      <Sheet open={preview} onOpenChange={(o) => ui.set({ preview: o })} title="Дизайн-превью" description="Панель только для просмотра дизайна. В CRM её нет." desktop="side" size="sm">
+      <Sheet open={preview} onOpenChange={(o) => ui.set({ preview: o })} title={tr('Дизайн-превью')} description={tr('Панель только для просмотра дизайна. В CRM её нет.')} desktop="side" size="sm">
         <div className="space-y-6">
-          <section><h3 className="t-h3 mb-2.5">Тема</h3><ThemeSwatches compact /></section>
+          <section><h3 className="t-h3 mb-2.5">{tr('Тема')}</h3><ThemeSwatches compact /></section>
           <section>
-            <h3 className="t-h3 mb-1">Состояние данных</h3><p className="t-caption mb-2.5">Применяется ко всем экранам со списками и карточками.</p>
-            <SegmentedControl<DataMode> label="Состояние данных" className="w-full" size="sm" value={s.dataMode} onChange={(v) => store.setSettings({ dataMode: v })}
-              options={[{ value: 'ready', label: 'Данные' }, { value: 'loading', label: 'Загрузка' }, { value: 'empty', label: 'Пусто' }, { value: 'error', label: 'Ошибка' }]} />
+            <h3 className="t-h3 mb-1">{tr('Состояние данных')}</h3><p className="t-caption mb-2.5">{tr('Применяется ко всем экранам со списками и карточками.')}</p>
+            <SegmentedControl<DataMode> label={tr('Состояние данных')} className="w-full" size="sm" value={s.dataMode} onChange={(v) => store.setSettings({ dataMode: v })}
+              options={[{ value: 'ready', label: tr('Данные') }, { value: 'loading', label: tr('Загрузка') }, { value: 'empty', label: tr('Пусто') }, { value: 'error', label: tr('Ошибка') }]} />
           </section>
           <section>
-            <h3 className="t-h3 mb-1">Роль</h3><p className="t-caption mb-2.5">Риелтор не видит «Команду» и «Отчёты».</p>
-            <SegmentedControl<UserRole> label="Роль" className="w-full" size="sm" value={s.role} onChange={(v) => store.setSettings({ role: v })}
-              options={[{ value: 'ADMIN', label: 'Администратор' }, { value: 'REALTOR', label: 'Риелтор' }]} />
+            <h3 className="t-h3 mb-1">{tr('Роль')}</h3><p className="t-caption mb-2.5">{tr('Риелтор не видит «Команду» и «Отчёты».')}</p>
+            <SegmentedControl<UserRole> label={tr('Роль')} className="w-full" size="sm" value={s.role} onChange={(v) => store.setSettings({ role: v })}
+              options={[{ value: 'ADMIN', label: tr('Администратор') }, { value: 'REALTOR', label: tr('Риелтор') }]} />
           </section>
           <section className="flex items-center gap-3">
-            <div className="flex-1"><h3 className="t-h3">Интеграции подключены</h3><p className="t-caption">NEXT_PUBLIC_INTEGRATIONS_ENABLED</p></div>
-            <Switch label="Интеграции" checked={s.integrationsEnabled} onChange={(v) => store.setSettings({ integrationsEnabled: v })} />
+            <div className="flex-1"><h3 className="t-h3">{tr('Интеграции подключены')}</h3><p className="t-caption">NEXT_PUBLIC_INTEGRATIONS_ENABLED</p></div>
+            <Switch label={tr('Интеграции')} checked={s.integrationsEnabled} onChange={(v) => store.setSettings({ integrationsEnabled: v })} />
           </section>
           <section>
-            <h3 className="t-h3 mb-2.5">Задержка сети</h3>
-            <SegmentedControl label="Задержка" className="w-full" size="sm" value={String(s.latencyMs)} onChange={(v) => store.setSettings({ latencyMs: Number(v) })}
-              options={[{ value: '150', label: 'Быстро' }, { value: '650', label: 'Обычно' }, { value: '2000', label: 'Медленно' }]} />
+            <h3 className="t-h3 mb-2.5">{tr('Задержка сети')}</h3>
+            <SegmentedControl label={tr('Задержка')} className="w-full" size="sm" value={String(s.latencyMs)} onChange={(v) => store.setSettings({ latencyMs: Number(v) })}
+              options={[{ value: '150', label: tr('Быстро') }, { value: '650', label: tr('Обычно') }, { value: '2000', label: tr('Медленно') }]} />
           </section>
           <div className="flex gap-2.5">
-            <Button variant="outline" className="flex-1" onClick={() => { store.reset(); store.setSettings({ dataMode: 'ready' }); toast.success('Данные сброшены'); }}><RotateCcw />Сбросить</Button>
-            <Button variant="outline" className="flex-1" onClick={() => { ui.set({ preview: false }); router.navigate('/login', { replace: true }); }}><LogOut />Экран входа</Button>
+            <Button variant="outline" className="flex-1" onClick={() => { store.reset(); store.setSettings({ dataMode: 'ready' }); toast.success(tr('Данные сброшены')); }}><RotateCcw />{tr('Сбросить')}</Button>
+            <Button variant="outline" className="flex-1" onClick={() => { ui.set({ preview: false }); router.navigate('/login', { replace: true }); }}><LogOut />{tr('Экран входа')}</Button>
           </div>
-          <Button variant="soft" className="w-full" onClick={() => { ui.set({ preview: false }); router.navigate('/login', { replace: true }); setTimeout(() => dispatchEvent(new Event(INTRO_EVENT)), 60); }}><Sparkles />Повторить интро бренда</Button>
+          <Button variant="soft" className="w-full" onClick={() => { ui.set({ preview: false }); router.navigate('/login', { replace: true }); setTimeout(() => dispatchEvent(new Event(INTRO_EVENT)), 60); }}><Sparkles />{tr('Повторить интро бренда')}</Button>
         </div>
       </Sheet>
     </>

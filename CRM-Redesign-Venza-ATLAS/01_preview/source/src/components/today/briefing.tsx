@@ -10,6 +10,7 @@ import { buildBriefing, briefingHeadline, type BriefingAction, type Signal, type
 import { StatusBadge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/toast';
+import { tr } from '@/lib/i18n';
 
 /**
  * AI Briefing. Логика — в lib/briefing.ts: правила по данным, а не модель.
@@ -27,11 +28,11 @@ const TONE: Record<string, string> = { now: 'text-danger-text', today: 'text-war
 export async function runAction(a: BriefingAction): Promise<string | null> {
   if (a.kind === 'plan-today' || a.kind === 'plan-tomorrow') {
     await api.updateLead(a.leadId, { nextActionAt: a.at });
-    return 'Следующий шаг запланирован';
+    return tr('Следующий шаг запланирован');
   }
   if (a.kind === 'task-call') {
     await api.createTask({ title: a.title, type: 'CALL', dueAt: new Date(Date.now() + 30 * 60_000).toISOString(), leadId: a.leadId });
-    return 'Звонок поставлен в задачи';
+    return tr('Звонок поставлен в задачи');
   }
   return null;
 }
@@ -39,7 +40,7 @@ export async function runAction(a: BriefingAction): Promise<string | null> {
 export function useSignals(leads: Lead[], tasks: Task[], events: CalendarEvent[]): Signal[] {
   const clients = store.db.clients;
   return React.useMemo(() => {
-    const nameOf = (id?: string) => clients.find((c) => c.id === id)?.fullName ?? 'Лид без имени';
+    const nameOf = (id?: string) => clients.find((c) => c.id === id)?.fullName ?? tr('Лид без имени');
     return buildBriefing({ leads, tasks, events, nameOf });
   }, [leads, tasks, events, clients]);
 }
@@ -106,16 +107,16 @@ export function BriefingCard({ tasks, events, leads, loading }: {
         <div className="min-w-0 flex-1">
           <h2 className="t-h2">AI Briefing</h2>
           <p className="t-caption">
-            {openTasks} {plural(openTasks, 'задача', 'задачи', 'задач')} на сегодня · {showingsSoon} {plural(showingsSoon, 'показ', 'показа', 'показов')} в ближайшие 3 ч
+            {openTasks} {plural(openTasks, 'задача', 'задачи', 'задач')} {tr('на сегодня')} · {showingsSoon} {plural(showingsSoon, 'показ', 'показа', 'показов')} {tr('в ближайшие 3 ч')}
           </p>
         </div>
-        {urgent > 0 ? <StatusBadge tone="danger">{urgent} срочно</StatusBadge> : <StatusBadge>Beta</StatusBadge>}
+        {urgent > 0 ? <StatusBadge tone="danger">{urgent} {tr('срочно')}</StatusBadge> : <StatusBadge>Beta</StatusBadge>}
       </div>
 
       <p className="t-caption px-4 pt-2"><b className="font-medium text-foreground/80">{head.title}.</b> {head.text}.</p>
 
       {shown.length === 0 ? (
-        <p className="t-caption px-4 pb-4 pt-2.5">{loading ? 'Собираем сводку…' : 'Срочного нет: просроченных шагов, ближайших показов и остывающих лидов не найдено.'}</p>
+        <p className="t-caption px-4 pb-4 pt-2.5">{loading ? tr('Собираем сводку…') : tr('Срочного нет: просроченных шагов, ближайших показов и остывающих лидов не найдено.')}</p>
       ) : (
         <>
           <div className="mt-2.5 border-t border-border/70">
@@ -123,7 +124,7 @@ export function BriefingCard({ tasks, events, leads, loading }: {
           </div>
           {signals.length > shown.length && (
             <Link href="/briefing" className="pressable flex items-center justify-between px-4 py-3 text-[14px] font-medium text-primary">
-              Вся сводка · ещё {signals.length - shown.length}
+              {tr('Вся сводка')} · {tr('ещё')} {signals.length - shown.length}
               <ChevronRight className="h-4 w-4" aria-hidden />
             </Link>
           )}

@@ -6,6 +6,7 @@ import { Field, Input } from '@/components/ui/field';
 import { Button } from '@/components/ui/button';
 import { Avatar } from '@/components/ui/avatar';
 import { toast } from '@/components/ui/toast';
+import { tr } from '@/lib/i18n';
 
 /**
  * /profile — по SCREEN-MAP: личные данные + смена пароля, двумя отдельными
@@ -26,61 +27,61 @@ export function ProfileScreen() {
 
   const save = async () => {
     const e: typeof errors = {};
-    if (v.fullName.trim().length < 2) e.fullName = 'Имя — минимум 2 символа';
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email)) e.email = 'Проверьте адрес почты';
+    if (v.fullName.trim().length < 2) e.fullName = tr('Имя — минимум 2 символа');
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email)) e.email = tr('Проверьте адрес почты');
     setErrors(e);
     if (Object.keys(e).length) return;
     setBusy(true);
     await new Promise((r) => setTimeout(r, 450));
     setBusy(false);
-    toast.success('Профиль сохранён');
+    toast.success(tr('Профиль сохранён'));
   };
 
   return (
     <PageBody className="lg:max-w-[760px]">
-      <PageHeader title="Профиль" back="/settings" subtitle="Как вас видят коллеги и клиенты" />
+      <PageHeader title={tr('Профиль')} back="/settings" subtitle={tr('Как вас видят коллеги и клиенты')} />
 
       <section className="surface p-4 lg:p-5">
         <div className="flex items-center gap-4">
           <Avatar name={v.fullName || me.fullName} size={64} src={photo ?? undefined} />
           <div className="min-w-0">
             <p className="text-[15px] font-medium">{v.fullName || me.fullName}</p>
-            <p className="t-caption mt-0.5">{me.role === 'ADMIN' ? 'Администратор' : 'Риелтор'}</p>
+            <p className="t-caption mt-0.5">{me.role === 'ADMIN' ? tr('Администратор') : tr('Риелтор')}</p>
             <div className="mt-2 flex flex-wrap gap-2">
-              <Button size="sm" variant="outline" onClick={() => fileRef.current?.click()}>{photo ? 'Другое фото' : 'Сменить фото'}</Button>
-              {photo && <Button size="sm" variant="outline" className="text-danger-text" onClick={() => { URL.revokeObjectURL(photo); setPhoto(null); }}>Убрать</Button>}
+              <Button size="sm" variant="outline" onClick={() => fileRef.current?.click()}>{photo ? tr('Другое фото') : tr('Сменить фото')}</Button>
+              {photo && <Button size="sm" variant="outline" className="text-danger-text" onClick={() => { URL.revokeObjectURL(photo); setPhoto(null); }}>{tr('Убрать')}</Button>}
             </div>
-            <input ref={fileRef} type="file" accept="image/*" className="sr-only" aria-label="Фото профиля"
+            <input ref={fileRef} type="file" accept="image/*" className="sr-only" aria-label={tr('Фото профиля')}
               onChange={(e) => {
                 const f = e.target.files?.[0]; if (!f) return;
-                if (f.size > 5 * 1024 * 1024) { toast.error('Файл больше 5 МБ'); return; }
+                if (f.size > 5 * 1024 * 1024) { toast.error(tr('Файл больше 5 МБ')); return; }
                 if (photo) URL.revokeObjectURL(photo);
                 setPhoto(URL.createObjectURL(f)); e.target.value = '';
-                toast.success('Фото выбрано. В CRM оно уйдёт на сервер при сохранении');
+                toast.success(tr('Фото выбрано. В CRM оно уйдёт на сервер при сохранении'));
               }} />
           </div>
         </div>
 
-        <FormSection title="Личные данные">
+        <FormSection title={tr('Личные данные')}>
           <FormGrid>
             <FormRow>
-              <Field label="Имя и фамилия" required error={errors.fullName}>
+              <Field label={tr('Имя и фамилия')} required error={errors.fullName}>
                 {(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.fullName} value={v.fullName}
                   onChange={(e) => patch({ fullName: e.target.value })} autoComplete="name" />}
               </Field>
             </FormRow>
-            <Field label="Рабочая почта" required error={errors.email}>
+            <Field label={tr('Рабочая почта')} required error={errors.email}>
               {(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.email} type="email" inputMode="email"
                 value={v.email} onChange={(e) => patch({ email: e.target.value })} />}
             </Field>
-            <Field label="Телефон">
+            <Field label={tr('Телефон')}>
               {(id) => <Input id={id} type="tel" inputMode="tel" value={v.phone} onChange={(e) => patch({ phone: e.target.value })} />}
             </Field>
           </FormGrid>
         </FormSection>
 
         <div className="mt-5 flex justify-end">
-          <Button loading={busy} disabled={!dirty} onClick={save}>Сохранить</Button>
+          <Button loading={busy} disabled={!dirty} onClick={save}>{tr('Сохранить')}</Button>
         </div>
       </section>
 
@@ -97,43 +98,43 @@ function PasswordCard() {
 
   const submit = async () => {
     const e: typeof errors = {};
-    if (!v.current) e.current = 'Введите текущий пароль';
-    if (v.next.length < 8) e.next = 'Новый пароль — минимум 8 символов';
-    if (v.next && v.next === v.current) e.next = 'Новый пароль совпадает с текущим';
-    if (v.repeat !== v.next) e.repeat = 'Пароли не совпадают';
+    if (!v.current) e.current = tr('Введите текущий пароль');
+    if (v.next.length < 8) e.next = tr('Новый пароль — минимум 8 символов');
+    if (v.next && v.next === v.current) e.next = tr('Новый пароль совпадает с текущим');
+    if (v.repeat !== v.next) e.repeat = tr('Пароли не совпадают');
     setErrors(e);
     if (Object.keys(e).length) return;
     setBusy(true);
     await new Promise((r) => setTimeout(r, 500));
     setBusy(false);
     setV({ current: '', next: '', repeat: '' });
-    toast.success('Пароль изменён');
+    toast.success(tr('Пароль изменён'));
   };
 
   return (
     <section className="surface mt-4 p-4 lg:p-5">
-      <h2 className="t-h3 text-[15px]">Пароль</h2>
-      <p className="t-caption mt-1">После смены остальные устройства попросят войти заново.</p>
+      <h2 className="t-h3 text-[15px]">{tr('Пароль')}</h2>
+      <p className="t-caption mt-1">{tr('После смены остальные устройства попросят войти заново.')}</p>
       <div className="mt-3">
         <FormGrid>
           <FormRow>
-            <Field label="Текущий пароль" error={errors.current}>
+            <Field label={tr('Текущий пароль')} error={errors.current}>
               {(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.current} type="password" autoComplete="current-password"
                 value={v.current} onChange={(e) => setV({ ...v, current: e.target.value })} />}
             </Field>
           </FormRow>
-          <Field label="Новый пароль" error={errors.next}>
+          <Field label={tr('Новый пароль')} error={errors.next}>
             {(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.next} type="password" autoComplete="new-password"
               value={v.next} onChange={(e) => setV({ ...v, next: e.target.value })} />}
           </Field>
-          <Field label="Ещё раз" error={errors.repeat}>
+          <Field label={tr('Ещё раз')} error={errors.repeat}>
             {(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.repeat} type="password" autoComplete="new-password"
               value={v.repeat} onChange={(e) => setV({ ...v, repeat: e.target.value })} />}
           </Field>
         </FormGrid>
       </div>
       <div className="mt-5 flex justify-end">
-        <Button variant="outline" loading={busy} onClick={submit}>Сменить пароль</Button>
+        <Button variant="outline" loading={busy} onClick={submit}>{tr('Сменить пароль')}</Button>
       </div>
     </section>
   );

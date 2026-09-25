@@ -8,6 +8,7 @@ import { store, useStoreVersion } from '@/lib/mock/store';
 import { useResource } from '@/lib/use-resource';
 import { EmptyState } from '@/components/ui/state';
 import { Skeleton } from '@/components/ui/skeleton';
+import { tr } from '@/lib/i18n';
 
 /**
  * Колокольчик в шапке. В работающей CRM это панель со списком и честным
@@ -40,7 +41,7 @@ export function NotificationsPanel() {
   const { notifications } = useUI();
   const r = useResource(() => api.today(), [notifications]);
   const clients = store.db.clients;
-  const nameOf = (id?: string) => clients.find((c) => c.id === id)?.fullName ?? 'Без имени';
+  const nameOf = (id?: string) => clients.find((c) => c.id === id)?.fullName ?? tr('Без имени');
   const now = Date.now();
 
   const d = r.data;
@@ -53,17 +54,17 @@ export function NotificationsPanel() {
       items.push({ id: `e-${e.id}`, icon: CalendarClock, tone: 'warning', title: e.title, meta: `Сегодня в ${time(e.startsAt)}`, href: '/calendar' });
     }
     for (const l of d.newLeads.filter((x) => !x.assignedUserId).slice(0, 3)) {
-      items.push({ id: `l-${l.id}`, icon: UserPlus, title: `Новый лид: ${nameOf(l.clientId)}`, meta: 'Без ответственного', href: `/leads/${l.id}` });
+      items.push({ id: `l-${l.id}`, icon: UserPlus, title: `Новый лид: ${nameOf(l.clientId)}`, meta: tr('Без ответственного'), href: `/leads/${l.id}` });
     }
   }
 
   return (
     <Sheet open={notifications} onOpenChange={(o) => !o && ui.set({ notifications: false })}
-      title="Уведомления" description="Просроченные задачи, ближайшие показы и новые лиды." desktop="side" size="sm">
+      title={tr('Уведомления')} description={tr('Просроченные задачи, ближайшие показы и новые лиды.')} desktop="side" size="sm">
       {r.loading && !d ? (
         <div className="space-y-2.5">{[0, 1, 2].map((i) => <Skeleton key={i} className="h-16" />)}</div>
       ) : items.length === 0 ? (
-        <EmptyState icon={BellOff} title="Уведомлений пока нет" text="Здесь появятся просроченные задачи, ближайшие показы и лиды без ответственного." />
+        <EmptyState icon={BellOff} title={tr('Уведомлений пока нет')} text={tr('Здесь появятся просроченные задачи, ближайшие показы и лиды без ответственного.')} />
       ) : (
         <ul className="space-y-2">
           {items.map((n) => (

@@ -8,6 +8,7 @@ import { Sheet } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Field, Input, Textarea } from '@/components/ui/field';
 import { toast } from '@/components/ui/toast';
+import { tr } from '@/lib/i18n';
 
 /* Пресеты перезвона и напоминания — те же, что у срока задачи: см. lib/due. */
 
@@ -20,19 +21,19 @@ export function CallDispositionSheet({ open, onOpenChange, clientId, leadId, nam
   const list = duePresets();
   const callbackAt = exact ? new Date(exact).toISOString() : list.find((p) => p.k === preset)?.at;
   const tiles = [
-    { v: 'answered' as const, label: 'Ответил', icon: PhoneCall, cls: 'border-success/40 bg-success/12 text-success-text' },
-    { v: 'no_answer' as const, label: 'Нет ответа', icon: PhoneMissed, cls: 'border-warning/40 bg-warning/12 text-warning-text' },
-    { v: 'busy' as const, label: 'Занято', icon: PhoneOff, cls: 'border-border bg-surface-2 text-foreground' },
+    { v: 'answered' as const, label: tr('Ответил'), icon: PhoneCall, cls: 'border-success/40 bg-success/12 text-success-text' },
+    { v: 'no_answer' as const, label: tr('Нет ответа'), icon: PhoneMissed, cls: 'border-warning/40 bg-warning/12 text-warning-text' },
+    { v: 'busy' as const, label: tr('Занято'), icon: PhoneOff, cls: 'border-border bg-surface-2 text-foreground' },
   ];
   return (
-    <Sheet open={open} onOpenChange={onOpenChange} title="Итог звонка" description={`${name}, ${phone}`} desktop="center" size="sm"
-      footer={<><Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>Отмена</Button><Button className="flex-[2]" loading={busy} onClick={async () => {
-        if (!outcome) { setError('Выберите результат звонка'); return; }
+    <Sheet open={open} onOpenChange={onOpenChange} title={tr('Итог звонка')} description={`${name}, ${phone}`} desktop="center" size="sm"
+      footer={<><Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>{tr('Отмена')}</Button><Button className="flex-[2]" loading={busy} onClick={async () => {
+        if (!outcome) { setError(tr('Выберите результат звонка')); return; }
         setBusy(true); await api.logCall({ clientId, leadId, outcome, note: note.trim(), callbackAt }); setBusy(false); onOpenChange(false);
-        toast.success(callbackAt ? `Звонок сохранён, перезвон ${relDay(callbackAt).toLowerCase()} в ${time(callbackAt)}` : 'Звонок сохранён');
-      }}>Сохранить</Button></>}>
+        toast.success(callbackAt ? `Звонок сохранён, перезвон ${relDay(callbackAt).toLowerCase()} в ${time(callbackAt)}` : tr('Звонок сохранён'));
+      }}>{tr('Сохранить')}</Button></>}>
       <div className="space-y-5">
-        <a href={`tel:${phone.replace(/\s/g, '')}`} className="flex h-12 items-center justify-center gap-2 rounded-control bg-primary-soft text-[15px] font-semibold text-primary-text"><PhoneCall className="h-[18px] w-[18px]" aria-hidden />Позвонить {phone}</a>
+        <a href={`tel:${phone.replace(/\s/g, '')}`} className="flex h-12 items-center justify-center gap-2 rounded-control bg-primary-soft text-[15px] font-semibold text-primary-text"><PhoneCall className="h-[18px] w-[18px]" aria-hidden />{tr('Позвонить')}{phone}</a>
         <fieldset><legend className="mb-2 text-[13px] font-medium">Результат<span className="text-danger-text">*</span></legend>
           <div className="grid grid-cols-3 gap-2" role="radiogroup">
             {tiles.map((t) => <button key={t.v} role="radio" aria-checked={outcome === t.v} onClick={() => { setOutcome(t.v); setError(null); }}
@@ -40,14 +41,14 @@ export function CallDispositionSheet({ open, onOpenChange, clientId, leadId, nam
           </div>
           {error && <p role="alert" className="mt-2 text-[13px] text-danger-text">{error}</p>}
         </fieldset>
-        <Field label="Заметка">{(id) => <Textarea id={id} value={note} onChange={(e) => setNote(e.target.value)} placeholder="О чём договорились" className="min-h-[80px]" />}</Field>
-        <fieldset><legend className="mb-2 text-[13px] font-medium">Перезвонить</legend>
+        <Field label={tr('Заметка')}>{(id) => <Textarea id={id} value={note} onChange={(e) => setNote(e.target.value)} placeholder={tr('О чём договорились')} className="min-h-[80px]" />}</Field>
+        <fieldset><legend className="mb-2 text-[13px] font-medium">{tr('Перезвонить')}</legend>
           <div className="flex flex-wrap gap-2">{list.map((p) => <button key={p.k} aria-pressed={preset === p.k && !exact} onClick={() => { setPreset(preset === p.k ? null : p.k); setExact(''); }} className={cn('h-11 rounded-full border px-3.5 text-[14px] font-medium', preset === p.k && !exact ? 'border-primary bg-primary-soft text-primary-text' : 'border-border bg-surface')}>{p.label}</button>)}</div>
           {/* Единственное время, которое можно оставить пустым: звонок бывает и без
               перезвона. Поэтому здесь поле не обязательное и «Сбросить» в системном
               барабане имеет смысл — снимает перезвон. */}
-          <div className="mt-3"><Field label="или точное время">{(id) => <Input id={id} type="datetime-local" value={exact} onChange={(e) => { setExact(e.target.value); setPreset(null); }} />}</Field></div>
-          {callbackAt && <p className="t-caption mt-2 flex items-center gap-1.5"><BellRing className="h-3.5 w-3.5" aria-hidden />Создастся задача «Перезвонить» на {relDay(callbackAt).toLowerCase()}, {time(callbackAt)}</p>}
+          <div className="mt-3"><Field label={tr('или точное время')}>{(id) => <Input id={id} type="datetime-local" value={exact} onChange={(e) => { setExact(e.target.value); setPreset(null); }} />}</Field></div>
+          {callbackAt && <p className="t-caption mt-2 flex items-center gap-1.5"><BellRing className="h-3.5 w-3.5" aria-hidden />{tr('Создастся задача «Перезвонить» на')}{relDay(callbackAt).toLowerCase()}, {time(callbackAt)}</p>}
         </fieldset>
       </div>
     </Sheet>
@@ -59,11 +60,11 @@ export function RemindSheet({ open, onOpenChange, leadId, current }: { open: boo
   const [value, setValue] = React.useState(''); const [busy, setBusy] = React.useState(false);
   React.useEffect(() => { if (open) setValue(current ? toLocalInput(current) : ''); }, [open, current]);
   return (
-    <Sheet open={open} onOpenChange={onOpenChange} title="Напомнить" description="Время следующего действия по лиду." desktop="center" size="sm"
-      footer={<><Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>Отмена</Button><Button className="flex-[2]" disabled={!value} loading={busy} onClick={async () => { setBusy(true); const iso = new Date(value).toISOString(); await api.updateLead(leadId, { nextActionAt: iso }); setBusy(false); onOpenChange(false); toast.success(`Напомню ${relDay(iso).toLowerCase()} в ${time(iso)}`); }}>Сохранить</Button></>}>
+    <Sheet open={open} onOpenChange={onOpenChange} title={tr('Напомнить')} description={tr('Время следующего действия по лиду.')} desktop="center" size="sm"
+      footer={<><Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>{tr('Отмена')}</Button><Button className="flex-[2]" disabled={!value} loading={busy} onClick={async () => { setBusy(true); const iso = new Date(value).toISOString(); await api.updateLead(leadId, { nextActionAt: iso }); setBusy(false); onOpenChange(false); toast.success(`Напомню ${relDay(iso).toLowerCase()} в ${time(iso)}`); }}>{tr('Сохранить')}</Button></>}>
       <div className="space-y-4">
         <div className="flex flex-wrap gap-2">{duePresets().map((p) => <button key={p.k} aria-pressed={value === toLocalInput(p.at)} onClick={() => setValue(toLocalInput(p.at))} className={cn('h-11 rounded-full border px-3.5 text-[14px] font-medium', value === toLocalInput(p.at) ? 'border-primary bg-primary-soft text-primary-text' : 'border-border bg-surface')}>{p.label}</button>)}</div>
-        <Field label="Дата и время">{(id) => <Input id={id} required type="datetime-local" value={value} onChange={(e) => setValue(e.target.value)} />}</Field>
+        <Field label={tr('Дата и время')}>{(id) => <Input id={id} required type="datetime-local" value={value} onChange={(e) => setValue(e.target.value)} />}</Field>
       </div>
     </Sheet>
   );

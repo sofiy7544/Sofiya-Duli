@@ -20,6 +20,7 @@ import { EmptyState, ErrorState } from '@/components/ui/state';
 import { StatusBadge } from '@/components/ui/badge';
 import { TaskCheck } from '@/components/ui/toggle';
 import { toast } from '@/components/ui/toast';
+import { tr } from '@/lib/i18n';
 
 type Filter = 'today' | 'overdue' | 'upcoming' | 'done';
 
@@ -80,22 +81,22 @@ export function TasksScreen() {
     setPending((p) => ({ ...p, [t.id]: next }));
     await api.toggleTask(t.id);
     setPending((p) => { const n = { ...p }; delete n[t.id]; return n; });
-    if (next) toast.success('Задача выполнена', { action: { label: 'Вернуть', onClick: () => api.toggleTask(t.id) } });
+    if (next) toast.success(tr('Задача выполнена'), { action: { label: tr('Вернуть'), onClick: () => api.toggleTask(t.id) } });
   };
   const clientName = (id?: string) => store.db.clients.find((c) => c.id === id)?.fullName;
 
   const content = () => {
-    if (r.error) return <ErrorState error={r.error} onRetry={r.retry} what="задачи" />;
+    if (r.error) return <ErrorState error={r.error} onRetry={r.retry} what={tr('задачи')} />;
     if (r.loading) return <RowsSkeleton rows={6} avatar={false} />;
     if (!items.length) return filter === 'overdue'
-      ? <EmptyState icon={CheckCircle2} title="Просроченных нет" text="Все сроки под контролем." />
-      : <EmptyState icon={CheckSquare} title={filter === 'done' ? 'Пока ничего не выполнено' : 'Задач нет'} text="Создайте задачу — звонок, показ или напоминание." action={<Button onClick={() => ui.set({ quickCreate: 'task' })}><Plus />Новая задача</Button>} />;
+      ? <EmptyState icon={CheckCircle2} title={tr('Просроченных нет')} text={tr('Все сроки под контролем.')} />
+      : <EmptyState icon={CheckSquare} title={filter === 'done' ? tr('Пока ничего не выполнено') : tr('Задач нет')} text={tr('Создайте задачу — звонок, показ или напоминание.')} action={<Button onClick={() => ui.set({ quickCreate: 'task' })}><Plus />{tr('Новая задача')}</Button>} />;
 
     if (family === 'atlas' && isDesktop) {
       return (
         <div data-hscroll className="surface overflow-x-auto">
           <table className="w-full min-w-[720px] text-[14px]">
-            <thead><tr className="border-b border-border text-left text-[12.5px] text-muted-foreground"><th scope="col" className="w-12 px-4 py-2.5"><span className="sr-only">Статус</span></th>{['Задача', 'Тип', 'Клиент', 'Срок', 'Ответственный'].map((h) => <th key={h} scope="col" className="px-3 py-2.5 font-medium">{h}</th>)}</tr></thead>
+            <thead><tr className="border-b border-border text-left text-[12.5px] text-muted-foreground"><th scope="col" className="w-12 px-4 py-2.5"><span className="sr-only">{tr('Статус')}</span></th>{[tr('Задача'), tr('Тип'), tr('Клиент'), tr('Срок'), tr('Ответственный')].map((h) => <th key={h} scope="col" className="px-3 py-2.5 font-medium">{h}</th>)}</tr></thead>
             <tbody>{items.map((t) => { const done = isDone(t); const over = !done && new Date(t.dueAt) < now; return (
               <tr key={t.id} id={`task-${t.id}`} className={cn('border-b border-border/70 last:border-0 transition-[opacity,background-color] duration-row', done && 'opacity-60', glow === t.id && 'bg-primary-soft')}>
                 <td className="px-4 py-1.5"><TaskCheck checked={done} onChange={() => toggle(t)} label={t.title} /></td>
@@ -133,13 +134,13 @@ export function TasksScreen() {
 
   return (
     <PageBody wide={family === 'atlas'}>
-      <PageHeader title="Задачи" subtitle={r.data ? (buckets.overdue.length ? <span className="font-medium text-danger-text">{buckets.overdue.length} просрочено</span> : 'Без просрочек') : ' '}
+      <PageHeader title={tr('Задачи')} subtitle={r.data ? (buckets.overdue.length ? <span className="font-medium text-danger-text">{buckets.overdue.length} просрочено</span> : tr('Без просрочек')) : ' '}
         /* Кнопка в шапке — как «Новый клиент» на «Клиентах»: задача создаётся отсюда сразу,
            без выбора типа в общем меню. Значок со списком, а не голый плюс: рядом на
            компьютере стоит «+ Создать», два одинаковых плюса читались бы как одно и то же. */
-        actions={<IconButton label="Новая задача" onClick={() => ui.set({ quickCreate: 'task' })}><ListPlus /></IconButton>} />
-      <SegmentedControl<Filter> label="Фильтр задач" className="mb-4 w-full sm:w-auto" value={filter} onChange={setFilter}
-        options={[{ value: 'today', label: 'Сегодня', count: r.data ? buckets.today.length : undefined }, { value: 'overdue', label: 'Просрочено', count: r.data ? buckets.overdue.length : undefined }, { value: 'upcoming', label: 'Далее' }, { value: 'done', label: 'Готово' }]} />
+        actions={<IconButton label={tr('Новая задача')} onClick={() => ui.set({ quickCreate: 'task' })}><ListPlus /></IconButton>} />
+      <SegmentedControl<Filter> label={tr('Фильтр задач')} className="mb-4 w-full sm:w-auto" value={filter} onChange={setFilter}
+        options={[{ value: 'today', label: tr('Сегодня'), count: r.data ? buckets.today.length : undefined }, { value: 'overdue', label: tr('Просрочено'), count: r.data ? buckets.overdue.length : undefined }, { value: 'upcoming', label: tr('Далее') }, { value: 'done', label: tr('Готово') }]} />
       {content()}
     </PageBody>
   );

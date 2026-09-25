@@ -30,6 +30,11 @@ export function TasksScreen() {
   const r = useResource(() => api.tasks());
   const [filter, setFilter] = React.useState<Filter>('today');
   const { focusTask } = useUI();
+  /* Подсветка живёт в экране, а не в общем состоянии: из стора задачу снимаем сразу,
+     как только открыли нужную вкладку. Иначе значение остаётся висеть (уход с экрана
+     раньше 2,6 с обрывает таймер) и на следующем визите любое обновление списка
+     перекидывает человека на чужую вкладку — например, когда он закрывает просроченную. */
+  const [glow, setGlow] = React.useState<string | null>(null);
   const [pending, setPending] = React.useState<Record<string, boolean>>({});
   const now = new Date(); const start = new Date(now); start.setHours(0, 0, 0, 0);
   const all = r.data ?? [];
@@ -42,7 +47,10 @@ export function TasksScreen() {
   };
   /* «Готово» за год — это тысячи строк. Показываем порциями, счётчики на
      вкладках при этом остаются по всему списку. */
-  const page = useChunked(buckets[filter], `tasks:${filter}`);
+  /* Задача из тоста может лежать за порцией: её номер в списке передаём в useChunked,
+     иначе «Показать» открывает вкладку, а строки на ней нет. */
+  const focusIndex = glow ? buckets[filter].findIndex((t) => t.id === glow) : -1;
+  const page = useChunked(buckets[filter], `tasks:${filter}`, undefined, focusIndex);
   const items = page.visible;
 
   /* Задача из тоста «Показать»: открываем вкладку, в которой она лежит, и подсвечиваем строку. */
@@ -54,15 +62,18 @@ export function TasksScreen() {
       : new Date(t.dueAt) < start ? 'overdue'
       : sameDay(new Date(t.dueAt), now) ? 'today' : 'upcoming';
     setFilter(bucket);
-    const id = setTimeout(() => ui.set({ focusTask: null }), 2600);
+    setGlow(focusTask);
+    ui.set({ focusTask: null });
+    const id = setTimeout(() => setGlow(null), 2600);
     return () => clearTimeout(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [focusTask, r.data]);
   React.useEffect(() => {
-    if (!focusTask) return;
-    const el = document.getElementById(`task-${focusTask}`);
+    if (!glow) return;
+    const el = document.getElementById(`task-${glow}`);
     el?.scrollIntoView({ block: 'center', behavior: 'smooth' });
-  }, [focusTask, filter]);
+    // items.length — потому что строка может появиться на шаг позже, когда дорисуется нужная порция.
+  }, [glow, filter, items.length]);
 
   const toggle = async (t: Task) => {
     const next = !isDone(t);
@@ -86,7 +97,7 @@ export function TasksScreen() {
           <table className="w-full min-w-[720px] text-[14px]">
             <thead><tr className="border-b border-border text-left text-[12.5px] text-muted-foreground"><th scope="col" className="w-12 px-4 py-2.5"><span className="sr-only">Статус</span></th>{['Задача', 'Тип', 'Клиент', 'Срок', 'Ответственный'].map((h) => <th key={h} scope="col" className="px-3 py-2.5 font-medium">{h}</th>)}</tr></thead>
             <tbody>{items.map((t) => { const done = isDone(t); const over = !done && new Date(t.dueAt) < now; return (
-              <tr key={t.id} id={`task-${t.id}`} className={cn('border-b border-border/70 last:border-0 transition-[opacity,background-color] duration-row', done && 'opacity-60', focusTask === t.id && 'bg-primary-soft')}>
+              <tr key={t.id} id={`task-${t.id}`} className={cn('border-b border-border/70 last:border-0 transition-[opacity,background-color] duration-row', done && 'opacity-60', glow === t.id && 'bg-primary-soft')}>
                 <td className="px-4 py-1.5"><TaskCheck checked={done} onChange={() => toggle(t)} label={t.title} /></td>
                 <td className={cn('px-3 py-2 font-medium', done && 'line-through decoration-muted-foreground/60')}>{t.title}</td>
                 <td className="px-3 py-2"><StatusBadge>{TASK_TYPE_LABEL[t.type]}</StatusBadge></td>
@@ -103,7 +114,7 @@ export function TasksScreen() {
       <>
       <ul className="surface row-divider overflow-hidden">
         {items.map((t) => { const done = isDone(t); const over = !done && new Date(t.dueAt) < now; return (
-          <li key={t.id} id={`task-${t.id}`} className={cn('flex items-center gap-3 px-4 py-3 transition-colors duration-500', focusTask === t.id && 'bg-primary-soft')}>
+          <li key={t.id} id={`task-${t.id}`} className={cn('flex items-center gap-3 px-4 py-3 transition-colors duration-500', glow === t.id && 'bg-primary-soft')}>
             <TaskCheck checked={done} onChange={() => toggle(t)} label={t.title} />
             <div className="min-w-0 flex-1">
               <p className={cn('text-[15.5px] font-medium leading-[22px]', done && 'line-through decoration-muted-foreground/60')}>{t.title}</p>

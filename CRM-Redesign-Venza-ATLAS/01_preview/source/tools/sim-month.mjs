@@ -134,17 +134,19 @@ async function day(p, r, n) {
   // 4. быстрый захват лида с показа
   await goto(p, '/leads');
   await ready(p, 'a[href*="#/leads/l"]', s, 'Лиды');
-  const leadsBefore = await count(p, 'a[href*="#/leads/l"]:visible');
+  /* Проверяем по имени, а не по числу строк: список рисуется порциями по 50,
+     и на длинном списке счётчик перестаёт расти, хотя лид создан и стоит первым. */
+  const leadName = `${r.name} тест ${n}`;
   await act(s, `д${n} быстрый захват`, async () => {
     await p.locator(V('button[aria-label="Быстрый захват лида"]')).first().click({ timeout: 6000 }); await p.waitForTimeout(800);
-    await p.locator('[role=dialog] input:visible').first().fill(`${r.name} тест ${n}`);
+    await p.locator('[role=dialog] input:visible').first().fill(leadName);
     const tel = p.locator('[role=dialog] input[type=tel]:visible').first();
     if (await tel.count()) await tel.fill('+33 6 39 98 70 11');
     await p.locator(V('[role=dialog] button:has-text("Создать")')).last().click();
     await p.waitForTimeout(1500);
     await clear(p);
     await goto(p, '/leads'); await p.waitForTimeout(1400);
-  }, async () => (await count(p, 'a[href*="#/leads/l"]:visible')) > leadsBefore);
+  }, async () => (await count(p, `text="${leadName}"`)) > 0);
 
   // 5. задача с точным сроком; проверяем во всех вкладках, а не только в «Сегодня»
   await goto(p, '/tasks');
@@ -159,10 +161,21 @@ async function day(p, r, n) {
     await p.waitForTimeout(1500);
     await clear(p);
   }, async () => {
+    /* Путь человека: сначала «Показать» в тосте — он сам открывает нужную вкладку
+       и дорисовывает список до строки. Если тост уже погас, обходим вкладки руками
+       и дораскрываем порции: на длинном списке новая строка может лежать за пятьюдесятью. */
+    const show = p.locator(V('button:text-is("Показать")')).first();
+    if (await show.count()) { await show.click({ timeout: 4000 }).catch(() => {}); await p.waitForTimeout(1200); }
+    if (await count(p, `text="${title}"`)) return true;
     for (const tab of ['Сегодня', 'Далее', 'Просрочено']) {
       const t = p.locator(V(`button:has-text("${tab}"), [role=radio]:has-text("${tab}")`)).first();
       if (await t.count()) { await t.click().catch(() => {}); await p.waitForTimeout(600); }
-      if (await count(p, `text="${title}"`)) return true;
+      for (let i = 0; i < 4; i++) {
+        if (await count(p, `text="${title}"`)) return true;
+        const more = p.locator(V('button:has-text("Показать ещё")')).first();
+        if (!(await more.count())) break;
+        await more.click({ timeout: 4000 }).catch(() => {}); await p.waitForTimeout(600);
+      }
     }
     return false;
   });

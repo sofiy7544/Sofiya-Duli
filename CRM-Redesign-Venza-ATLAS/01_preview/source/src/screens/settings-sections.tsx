@@ -378,7 +378,8 @@ export function UsersScreen() {
           </tbody>
         </table>
       </div>
-      <input ref={photoPick} type="file" accept="image/*" className="sr-only" tabIndex={-1}
+      {/* Поле скрыто, но подпись нужна: скринридер читает его как «поле без имени». */}
+      <input ref={photoPick} type="file" accept="image/*" aria-label="Фотография сотрудника" className="sr-only" tabIndex={-1}
         onChange={(e) => void takePhoto(e.target.files?.[0])} />
       <p className="t-caption mt-4">Отключённый сотрудник не входит в систему, но его лиды, задачи и история остаются на месте. Удаление — на случай, когда человек ушёл совсем: его лиды, задачи, показы и объекты переходят администратору.</p>
 

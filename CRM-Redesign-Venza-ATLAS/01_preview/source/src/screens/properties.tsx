@@ -229,7 +229,7 @@ export function PropertyDetailScreen({ id }: { id: string }) {
           ? `Фото и видео с телефона или компьютера, до ${MAX_MB} МБ на файл. В превью файлы живут до перезагрузки страницы — в CRM они уходят в хранилище агентства.`
           : 'Добавлять файлы может ответственный за объект или администратор.'}
       </p>
-      <input ref={filePick} type="file" accept="image/*,video/*" multiple className="sr-only" tabIndex={-1}
+      <input ref={filePick} type="file" accept="image/*,video/*" multiple aria-label="Фото и видео объекта" className="sr-only" tabIndex={-1}
         onChange={(e) => void takeFiles(e.target.files)} />
       <ul className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-5">
         {p.photos.map((ph, i) => (

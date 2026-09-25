@@ -134,17 +134,19 @@ async function day(p, r, n) {
   // 4. быстрый захват лида с показа
   await goto(p, '/leads');
   await ready(p, 'a[href*="#/leads/l"]', s, 'Лиды');
-  const leadsBefore = await count(p, 'a[href*="#/leads/l"]:visible');
+  /* Проверяем по имени, а не по числу строк: список рисуется порциями по 50,
+     и на длинном списке счётчик перестаёт расти, хотя лид создан и стоит первым. */
+  const leadName = `${r.name} тест ${n}`;
   await act(s, `д${n} быстрый захват`, async () => {
     await p.locator(V('button[aria-label="Быстрый захват лида"]')).first().click({ timeout: 6000 }); await p.waitForTimeout(800);
-    await p.locator('[role=dialog] input:visible').first().fill(`${r.name} тест ${n}`);
+    await p.locator('[role=dialog] input:visible').first().fill(leadName);
     const tel = p.locator('[role=dialog] input[type=tel]:visible').first();
     if (await tel.count()) await tel.fill('+33 6 39 98 70 11');
     await p.locator(V('[role=dialog] button:has-text("Создать")')).last().click();
     await p.waitForTimeout(1500);
     await clear(p);
     await goto(p, '/leads'); await p.waitForTimeout(1400);
-  }, async () => (await count(p, 'a[href*="#/leads/l"]:visible')) > leadsBefore);
+  }, async () => (await count(p, `text="${leadName}"`)) > 0);
 
   // 5. задача с точным сроком; проверяем во всех вкладках, а не только в «Сегодня»
   await goto(p, '/tasks');

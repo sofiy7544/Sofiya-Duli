@@ -42,7 +42,10 @@ export function TasksScreen() {
   };
   /* «Готово» за год — это тысячи строк. Показываем порциями, счётчики на
      вкладках при этом остаются по всему списку. */
-  const page = useChunked(buckets[filter], `tasks:${filter}`);
+  /* Задача из тоста может лежать за порцией: её номер в списке передаём в useChunked,
+     иначе «Показать» открывает вкладку, а строки на ней нет. */
+  const focusIndex = focusTask ? buckets[filter].findIndex((t) => t.id === focusTask) : -1;
+  const page = useChunked(buckets[filter], `tasks:${filter}`, undefined, focusIndex);
   const items = page.visible;
 
   /* Задача из тоста «Показать»: открываем вкладку, в которой она лежит, и подсвечиваем строку. */
@@ -62,7 +65,8 @@ export function TasksScreen() {
     if (!focusTask) return;
     const el = document.getElementById(`task-${focusTask}`);
     el?.scrollIntoView({ block: 'center', behavior: 'smooth' });
-  }, [focusTask, filter]);
+    // items.length — потому что строка может появиться на шаг позже, когда дорисуется нужная порция.
+  }, [focusTask, filter, items.length]);
 
   const toggle = async (t: Task) => {
     const next = !isDone(t);

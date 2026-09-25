@@ -16,11 +16,21 @@ import * as React from 'react';
 const CHUNK = 50;
 const shownMemory = new Map<string, number>();
 
-export function useChunked<T>(items: T[], key: string, chunk = CHUNK) {
+/**
+ * ensureIndex — строка, которая обязана быть на экране, даже если лежит за
+ * порцией: задача из тоста «Показать». Без этого «Показать» на длинном списке
+ * ничего не открывает — ровно тот дефект, из-за которого тост и появился.
+ */
+export function useChunked<T>(items: T[], key: string, chunk = CHUNK, ensureIndex?: number) {
   const [shown, setShown] = React.useState(() => shownMemory.get(key) ?? chunk);
 
   // Сменили фильтр или вкладку — это другой список: начинаем с его собственной позиции.
   React.useEffect(() => { setShown(shownMemory.get(key) ?? chunk); }, [key, chunk]);
+  // Дорисовываем ровно столько порций, чтобы нужная строка попала в список.
+  React.useEffect(() => {
+    if (ensureIndex === undefined || ensureIndex < 0) return;
+    setShown((s) => (ensureIndex < s ? s : Math.ceil((ensureIndex + 1) / chunk) * chunk));
+  }, [ensureIndex, chunk, key]);
   React.useEffect(() => { shownMemory.set(key, shown); }, [key, shown]);
 
   const visible = React.useMemo(() => (items.length > shown ? items.slice(0, shown) : items), [items, shown]);

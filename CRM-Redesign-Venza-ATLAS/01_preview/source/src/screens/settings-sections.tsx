@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AtSign, MessageCircle, Plug, Plus, Send, Trash2, Wand2 } from 'lucide-react';
+import { AtSign, Camera, MessageCircle, Plug, Plus, Send, Trash2, UserMinus, Wand2 } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { adminApi, useAdminVersion, type Member, type Template } from '@/lib/mock/admin';
 import { usePreviewSettings } from '@/lib/mock/store';
@@ -13,6 +13,7 @@ import { EmptyState, ErrorState } from '@/components/ui/state';
 import { Button, IconButton } from '@/components/ui/button';
 import { ConfirmDialog, Sheet } from '@/components/ui/sheet';
 import { Field, Input, Select, Textarea } from '@/components/ui/field';
+import { Avatar } from '@/components/ui/avatar';
 import { Switch } from '@/components/ui/toggle';
 import { StatusBadge } from '@/components/ui/badge';
 import { toast } from '@/components/ui/toast';
@@ -296,6 +297,17 @@ export function UsersScreen() {
   const [form, setForm] = React.useState({ fullName: '', email: '', role: 'REALTOR' as UserRole });
   const [busy, setBusy] = React.useState(false);
   const [confirm, setConfirm] = React.useState<Member | null>(null);
+  const [fire, setFire] = React.useState<Member | null>(null);
+  /* Один скрытый выбор файла на всю таблицу: какому сотруднику — помним отдельно. */
+  const photoFor = React.useRef<string | null>(null);
+  const photoPick = React.useRef<HTMLInputElement>(null);
+  const takePhoto = async (file?: File) => {
+    const id = photoFor.current;
+    if (!file || !id) return;
+    try { await adminApi.setMemberPhoto(id, file); toast.success('Фото обновлено'); }
+    catch (e) { toast.error((e as Error).message); }
+    finally { photoFor.current = null; if (photoPick.current) photoPick.current.value = ''; }
+  };
 
   const header = <PageHeader title="Пользователи" back="/settings" subtitle="Доступы сотрудников агентства"
     actions={<IconButton label="Пригласить сотрудника" onClick={() => setInvite(true)}><Plus /></IconButton>} />;
@@ -328,8 +340,24 @@ export function UsersScreen() {
             {r.data.map((m) => (
               <tr key={m.id} className={cn('border-b border-border/70 last:border-0', !m.active && 'text-muted-foreground')}>
                 <th scope="row" className="px-4 py-2.5 text-left font-normal">
-                  <span className="block font-medium">{m.fullName}</span>
-                  <span className="t-caption block">{m.email}</span>
+                  <span className="flex items-center gap-3">
+                    <button type="button" className="pressable relative shrink-0 rounded-full"
+                      onClick={() => { photoFor.current = m.id; photoPick.current?.click(); }}
+                      aria-label={m.avatarUrl ? `Сменить фото: ${m.fullName}` : `Добавить фото: ${m.fullName}`}>
+                      <Avatar name={m.fullName} src={m.avatarUrl} size={40} />
+                      <span className="absolute -bottom-0.5 -right-0.5 grid h-[18px] w-[18px] place-items-center rounded-full bg-primary text-primary-foreground" aria-hidden>
+                        <Camera className="h-3 w-3" />
+                      </span>
+                    </button>
+                    <span className="min-w-0">
+                      <span className="block font-medium">{m.fullName}</span>
+                      <span className="t-caption block">{m.email}</span>
+                      {m.avatarUrl && (
+                        <button type="button" className="t-caption underline decoration-dotted"
+                          onClick={() => void adminApi.removeMemberPhoto(m.id).then(() => toast.success('Фото убрано'))}>Убрать фото</button>
+                      )}
+                    </span>
+                  </span>
                 </th>
                 <td className="px-3 py-2.5">
                   <Select aria-label={`Роль: ${m.fullName}`} value={m.role} onChange={(e) => void adminApi.setMemberRole(m.id, e.target.value as UserRole).then(() => toast.success('Роль изменена'))}>
@@ -337,17 +365,22 @@ export function UsersScreen() {
                   </Select>
                 </td>
                 <td className="px-3 py-2.5 t-caption">{m.lastSeenAt ? ago(m.lastSeenAt) : '—'}</td>
-                <td className="px-4 py-2.5 text-right">
-                  {m.active
-                    ? <Button size="sm" variant="outline" onClick={() => setConfirm(m)}>Отключить</Button>
-                    : <Button size="sm" variant="outline" onClick={() => void adminApi.setMemberActive(m.id, true).then(() => toast.success('Доступ возвращён'))}>Включить</Button>}
+                <td className="px-4 py-2.5">
+                  <div className="flex items-center justify-end gap-2">
+                    {m.active
+                      ? <Button size="sm" variant="outline" onClick={() => setConfirm(m)}>Отключить</Button>
+                      : <Button size="sm" variant="outline" onClick={() => void adminApi.setMemberActive(m.id, true).then(() => toast.success('Доступ возвращён'))}>Включить</Button>}
+                    <IconButton label={`Удалить из команды: ${m.fullName}`} variant="outline" className="text-danger-text" onClick={() => setFire(m)}><UserMinus /></IconButton>
+                  </div>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <p className="t-caption mt-4">Отключённый сотрудник не входит в систему, но его лиды, задачи и история остаются на месте.</p>
+      <input ref={photoPick} type="file" accept="image/*" className="sr-only" tabIndex={-1}
+        onChange={(e) => void takePhoto(e.target.files?.[0])} />
+      <p className="t-caption mt-4">Отключённый сотрудник не входит в систему, но его лиды, задачи и история остаются на месте. Удаление — на случай, когда человек ушёл совсем: его лиды, задачи, показы и объекты переходят администратору.</p>
 
       <Sheet open={invite} onOpenChange={setInvite} title="Пригласить сотрудника" description="Придёт письмо со ссылкой для входа." size="sm"
         footer={<><Button variant="outline" onClick={() => setInvite(false)}>Отмена</Button><Button loading={busy} onClick={send}>Отправить</Button></>}>
@@ -362,6 +395,17 @@ export function UsersScreen() {
         </div>
       </Sheet>
 
+      <ConfirmDialog open={fire !== null} onOpenChange={(v) => !v && setFire(null)} title="Удалить из команды?"
+        text={fire ? `${fire.fullName} исчезнет из списков и фильтров. Лиды, задачи, показы и объекты перейдут администратору — ничего не потеряется.` : ''} confirmLabel="Удалить"
+        onConfirm={async () => {
+          if (!fire) return;
+          try {
+            const moved = await adminApi.deleteMember(fire.id);
+            const parts = [moved.leads && `лиды: ${moved.leads}`, moved.tasks && `задачи: ${moved.tasks}`, moved.properties && `объекты: ${moved.properties}`].filter(Boolean).join(', ');
+            toast.success(parts ? `Сотрудник удалён. Передано администратору — ${parts}` : 'Сотрудник удалён');
+          } catch (e) { toast.error((e as Error).message); }
+          finally { setFire(null); }
+        }} />
       <ConfirmDialog open={confirm !== null} onOpenChange={(v) => !v && setConfirm(null)} title="Отключить доступ?"
         text={confirm ? `${confirm.fullName} не сможет войти. Лиды и задачи останутся закреплены за ним.` : ''} confirmLabel="Отключить"
         onConfirm={async () => { if (confirm) await adminApi.setMemberActive(confirm.id, false); setConfirm(null); toast.success('Доступ отключён'); }} />

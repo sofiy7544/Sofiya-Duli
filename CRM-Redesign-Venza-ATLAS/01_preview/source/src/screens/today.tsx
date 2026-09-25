@@ -68,7 +68,7 @@ export function TodayScreen({ firstEntry }: { firstEntry?: boolean }) {
   const completed = revenue.data?.filter((x) => x.status === 'COMPLETED') ?? [];
   const revenueStrip = completed.length > 0 && (
     <Link href="/deals" className="pressable surface mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 p-4">
-      <span className="flex items-center gap-2 text-[14px] font-medium"><Handshake className="h-4 w-4 text-primary" aria-hidden />Выручка</span>
+      <span className="flex items-center gap-2 text-[14px] font-medium"><Handshake className="h-4 w-4 text-primary" aria-hidden />Сделки</span>
       <span><span className="t-caption mr-1.5">Сделок закрыто</span><b className="tabular">{completed.length}</b></span>
       <span><span className="t-caption mr-1.5">Объём</span><b className="tabular">{money(completed.reduce((a, x) => a + x.amount, 0), 'EUR', true)}</b></span>
       <span><span className="t-caption mr-1.5">Комиссия получена</span><b className="tabular">{money(completed.reduce((a, x) => a + dealsApi.paid(x), 0), 'EUR', true)}</b></span>

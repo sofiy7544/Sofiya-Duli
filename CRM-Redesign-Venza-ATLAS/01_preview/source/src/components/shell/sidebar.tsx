@@ -62,7 +62,7 @@ export function Sidebar() {
         </nav>
 
         <div className={cn('mt-3 flex items-center gap-2.5 rounded-xl p-2', atlas ? 'bg-[var(--at-sidebar-surface)]' : 'bg-surface-2/70')}>
-          <Avatar name={user.fullName} size={34} />
+          <Avatar name={user.fullName} src={user.avatarUrl} size={34} />
           <div className="min-w-0 flex-1">
             <div className={cn('truncate text-[13.5px] font-medium', atlas && 'text-[var(--at-sidebar-text)]')}>{user.fullName}</div>
             <div className={cn('truncate text-[11.5px]', atlas ? 'text-[var(--at-sidebar-muted)]' : 'text-muted-foreground')}>{user.role === 'ADMIN' ? 'Администратор' : 'Риелтор'}</div>

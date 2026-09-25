@@ -1,18 +1,18 @@
 import { useSyncExternalStore } from 'react';
 import * as fx from './fixtures';
-import type { Activity, CalendarEvent, Client, DataMode, Lead, LeadStage, Property, Task, UserRole } from './types';
+import type { Activity, CalendarEvent, Client, DataMode, Interest, Lead, LeadStage, Property, Task, UserRole } from './types';
 
 /**
  * In-memory «база» превью. Мутации меняют только память вкладки.
  * В реальной CRM этого файла нет — вместо него lib/api.ts.
  */
 type DB = {
-  clients: Client[]; leads: Lead[]; properties: Property[]; tasks: Task[]; events: CalendarEvent[]; activities: Activity[];
+  clients: Client[]; leads: Lead[]; properties: Property[]; tasks: Task[]; events: CalendarEvent[]; activities: Activity[]; interests: Interest[];
 };
 export type PreviewSettings = { dataMode: DataMode; role: UserRole; integrationsEnabled: boolean; latencyMs: number };
 
 const clone = <T,>(v: T): T => JSON.parse(JSON.stringify(v));
-let db: DB = { clients: clone(fx.clients), leads: clone(fx.leads), properties: clone(fx.properties), tasks: clone(fx.tasks), events: clone(fx.events), activities: clone(fx.activities) };
+let db: DB = { clients: clone(fx.clients), leads: clone(fx.leads), properties: clone(fx.properties), tasks: clone(fx.tasks), events: clone(fx.events), activities: clone(fx.activities), interests: clone(fx.interests) };
 let settings: PreviewSettings = { dataMode: 'ready', role: 'ADMIN', integrationsEnabled: false, latencyMs: 650 };
 let version = 0;
 const listeners = new Set<() => void>();
@@ -24,7 +24,7 @@ export const store = {
   get db() { return db; },
   get settings() { return settings; },
   setSettings(patch: Partial<PreviewSettings>) { settings = { ...settings, ...patch }; emit(); },
-  reset() { db = { clients: clone(fx.clients), leads: clone(fx.leads), properties: clone(fx.properties), tasks: clone(fx.tasks), events: clone(fx.events), activities: clone(fx.activities) }; emit(); },
+  reset() { db = { clients: clone(fx.clients), leads: clone(fx.leads), properties: clone(fx.properties), tasks: clone(fx.tasks), events: clone(fx.events), activities: clone(fx.activities), interests: clone(fx.interests) }; emit(); },
   mutate(fn: (d: DB) => void) { fn(db); emit(); },
   /* Общий сигнал «данные изменились». Свои хранилища (заметки, коммуникации,
      настройки, сделки) дёргают его из своих emit: тогда открытый экран

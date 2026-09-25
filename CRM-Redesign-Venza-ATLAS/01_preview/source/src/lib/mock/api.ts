@@ -1,5 +1,5 @@
 import { store } from './store';
-import type { Activity, CalendarEvent, Client, EventKind, Lead, LeadStage, Paginated, Property, Task } from './types';
+import type { Activity, CalendarEvent, Client, EventKind, Interest, InterestStatus, Lead, LeadStage, Paginated, Property, Task } from './types';
 import { EVENT_KIND_LABEL, isStageTransitionAllowed } from '../labels';
 
 /**
@@ -178,6 +178,56 @@ export const api = {
     store.mutate((d) => { Object.assign(d.properties.find((p) => p.id === id)!, patch); });
     return { ...cur, ...patch } as Property;
   },
+  /** GET /api/clients/:id/interests — объекты, которые смотрит клиент */
+  clientInterests: (clientId: string) => respond(
+    () => store.db.interests.filter((x) => x.clientId === clientId).sort((a, b) => b.at.localeCompare(a.at)),
+    [] as Interest[],
+  ),
+  /** POST /api/clients/:id/interests */
+  async attachProperty(clientId: string, propertyId: string, status: InterestStatus = 'SELECTED') {
+    await wait(400);
+    if (!store.db.properties.some((p) => p.id === propertyId)) throw new ApiError('Объект не найден', 404);
+    if (store.db.interests.some((x) => x.clientId === clientId && x.propertyId === propertyId)) throw new ApiError('Этот объект уже прикреплён к клиенту', 409);
+    const rec: Interest = { id: `i${Date.now()}`, clientId, propertyId, status, at: new Date().toISOString() };
+    store.mutate((d) => { d.interests.unshift(rec); });
+    return rec;
+  },
+  /** PATCH /api/interests/:id */
+  async setInterest(id: string, patch: { status?: InterestStatus; note?: string }) {
+    await wait(300);
+    const cur = store.db.interests.find((x) => x.id === id);
+    if (!cur) throw new ApiError('Запись не найдена', 404);
+    store.mutate((d) => { Object.assign(d.interests.find((x) => x.id === id)!, patch, { at: new Date().toISOString() }); });
+  },
+  /** DELETE /api/interests/:id */
+  async detachProperty(id: string) {
+    await wait(250);
+    store.mutate((d) => { d.interests = d.interests.filter((x) => x.id !== id); });
+  },
+  /** POST /api/properties/:id/media — в CRM это загрузка в хранилище и запись в media */
+  async addPropertyMedia(id: string, files: File[]) {
+    await wait(400);
+    const cur = store.db.properties.find((p) => p.id === id);
+    if (!cur) throw new ApiError('Объект не найден', 404);
+    const added = files.map((f, i) => ({
+      id: `m${Date.now()}${i}`,
+      art: 0,
+      url: URL.createObjectURL(f),
+      kind: (f.type.startsWith('video/') ? 'video' : 'image') as 'image' | 'video',
+      name: f.name,
+    }));
+    store.mutate((d) => { d.properties.find((p) => p.id === id)!.photos.push(...added); });
+    return added;
+  },
+  /** DELETE /api/properties/:id/media/:mediaId */
+  async removePropertyMedia(id: string, mediaId: string) {
+    await wait(250);
+    const cur = store.db.properties.find((p) => p.id === id);
+    if (!cur) throw new ApiError('Объект не найден', 404);
+    const gone = cur.photos.find((x) => x.id === mediaId);
+    if (gone?.url) URL.revokeObjectURL(gone.url);
+    store.mutate((d) => { const t = d.properties.find((p) => p.id === id)!; t.photos = t.photos.filter((x) => x.id !== mediaId); });
+  },
   /** POST /api/clients/:id/note */
   async addNote(clientId: string, text: string, leadId?: string) {
     await wait(300);
@@ -202,6 +252,13 @@ export const api = {
     store.mutate((d) => {
       d.events.push(event);
       if (event.clientId) d.activities.unshift({ id: `a${Date.now()}`, type: event.kind === 'SHOWING' ? 'SHOWING' : 'NOTE', text: `${EVENT_KIND_LABEL[event.kind]}: ${event.title}`, at: new Date().toISOString(), userId: 'u1', clientId: event.clientId });
+      /* Показ по объекту сам прикрепляет объект к клиенту: иначе риелтор ведёт
+         список показанного отдельно и он расходится с календарём. */
+      if (event.kind === 'SHOWING' && event.clientId && event.propertyId) {
+        const has = d.interests.find((x) => x.clientId === event.clientId && x.propertyId === event.propertyId);
+        if (has) { if (has.status === 'SELECTED') { has.status = 'SHOWN'; has.at = event.startsAt; } }
+        else d.interests.unshift({ id: `i${Date.now()}`, clientId: event.clientId, propertyId: event.propertyId, status: 'SHOWN', at: event.startsAt });
+      }
     });
     return event;
   },

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Archive, ArchiveRestore, Ban, ChevronRight, GitMerge, MoreHorizontal, Pencil, Search, UserPlus, Users, Workflow } from 'lucide-react';
+import { Archive, ArchiveRestore, Ban, ChevronRight, GitMerge, MoreHorizontal, Pencil, Plus, Search, UserPlus, Users, Workflow, X } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { api } from '@/lib/mock/api';
 import { store, usePreviewSettings, users } from '@/lib/mock/store';
@@ -8,20 +8,22 @@ import { useChunked } from '@/lib/use-chunked';
 import { ShowMore } from '@/components/ui/show-more';
 import { Link, useRouter } from '@/lib/router';
 import { useIsDesktop, useTheme } from '@/lib/theme/provider';
-import { budget, relDay } from '@/lib/format';
-import { CLIENT_TYPE_LABEL, PROPERTY_TYPE_LABEL, SOURCE_LABEL, STAGE_LABEL } from '@/lib/labels';
-import type { Client } from '@/lib/mock/types';
+import { budget, money, relDay } from '@/lib/format';
+import { CLIENT_TYPE_LABEL, INTEREST_LABEL, INTEREST_ORDER, PROPERTY_TYPE_LABEL, SOURCE_LABEL, STAGE_LABEL } from '@/lib/labels';
+import type { Client, Interest } from '@/lib/mock/types';
 import { PageBody, PageHeader } from '@/components/shell/page';
 import { ui } from '@/components/shell/ui-state';
 import { Avatar } from '@/components/ui/avatar';
 import { Button, IconButton } from '@/components/ui/button';
 import { StageBadge, StatusBadge } from '@/components/ui/badge';
 import { SegmentedControl } from '@/components/ui/segmented';
-import { RowsSkeleton } from '@/components/ui/skeleton';
+import { RowsSkeleton, Skeleton } from '@/components/ui/skeleton';
 import { EmptyState, ErrorState } from '@/components/ui/state';
 import { ConfirmDialog, Sheet } from '@/components/ui/sheet';
 import { toast } from '@/components/ui/toast';
 import { ActivityTimeline, NoteComposer } from '@/components/domain/activity';
+import { PropertyMedia } from '@/components/domain/property-media';
+import { PickerField } from '@/components/ui/picker';
 import { CallDispositionSheet } from '@/components/overlays/person-actions';
 import { DetailSkeleton, QuickActions, ScheduleShowingSheet } from './lead-detail';
 
@@ -120,6 +122,7 @@ export function ClientDetailScreen({ id }: { id: string }) {
   const [showing, setShowing] = React.useState(false);
   const [busy, setBusy] = React.useState(false);
   const [call, setCall] = React.useState(false);
+  const [attach, setAttach] = React.useState(false);
   const canMerge = settings.role === 'ADMIN' || settings.role === 'MANAGER';
 
   if (r.error) return <PageBody><PageHeader title="Клиент" back="/clients" /><ErrorState error={r.error} onRetry={r.retry} what="карточку клиента" /></PageBody>;
@@ -146,6 +149,7 @@ export function ClientDetailScreen({ id }: { id: string }) {
       <ul className="space-y-2">{store.db.clients.filter((x) => x.id !== c.id).slice(0, 5).map((x) => (
         <li key={x.id}><button onClick={() => setMergeWith(x.id)} aria-pressed={mergeWith === x.id} className={cn('flex w-full items-center gap-3 rounded-control border p-3 text-left', mergeWith === x.id ? 'border-primary bg-primary-soft' : 'border-border bg-surface')}><Avatar name={x.fullName} size={36} /><span className="min-w-0 flex-1"><span className="block truncate font-medium">{x.fullName}</span><span className="t-caption tabular">{x.primaryPhone}</span></span></button></li>))}</ul>
     </Sheet>
+    <AttachPropertySheet open={attach} onOpenChange={setAttach} clientId={c.id} />
     <ConfirmDialog open={confirm === 'archive'} onOpenChange={(o) => !o && setConfirm(null)} tone="primary" busy={busy}
       title={c.isArchived ? 'Вернуть из архива?' : 'Перенести в архив?'} text={c.isArchived ? 'Клиент снова появится в активных.' : 'Клиент исчезнет из активных, история сохранится. Вернуть можно в любой момент.'} confirmLabel={c.isArchived ? 'Вернуть' : 'В архив'}
       onConfirm={async () => { setBusy(true); await api.setArchived(c.id, !c.isArchived); setBusy(false); setConfirm(null); toast.success(c.isArchived ? 'Клиент возвращён' : 'Клиент в архиве', { action: { label: 'Отменить', onClick: () => api.setArchived(c.id, c.isArchived) } }); }} />
@@ -178,6 +182,8 @@ export function ClientDetailScreen({ id }: { id: string }) {
     </section>
   );
 
+  const interestsBlock = <ClientProperties clientId={c.id} onAttach={() => setAttach(true)} />;
+
   const identity = (
     <div className={cn('flex items-center gap-4', family !== 'atlas' && 'max-lg:flex-col max-lg:text-center')}>
       <Avatar name={c.fullName} size={family === 'atlas' ? 56 : 84} className="ring-4 ring-surface" />
@@ -198,9 +204,9 @@ export function ClientDetailScreen({ id }: { id: string }) {
         <PageHeader title="" back="/clients" large={false} actions={<IconButton label="Действия" variant="outline" onClick={() => setMenu(true)}><MoreHorizontal /></IconButton>} />
         <div className="surface -mt-4 flex items-center gap-6 p-4">{identity}<div className="ml-auto w-[340px]"><QuickActions client={c} onCall={() => setCall(true)} onShowing={() => setShowing(true)} onTask={() => ui.set({ quickCreate: 'task' })} /></div></div>
         <div className="mt-4 grid grid-cols-[320px_minmax(0,1fr)_320px] gap-4">
-          <div className="space-y-4">{prefsBlock}<section className="surface p-4"><h2 className="t-h3 mb-2">Ответственный</h2><div className="flex items-center gap-2.5"><Avatar name={owner?.fullName ?? '—'} size={32} /><span className="font-medium">{owner?.fullName ?? 'Не назначен'}</span></div></section></div>
+          <div className="space-y-4">{prefsBlock}<section className="surface p-4"><h2 className="t-h3 mb-2">Ответственный</h2><div className="flex items-center gap-2.5"><Avatar name={owner?.fullName ?? '—'} src={owner?.avatarUrl} size={32} /><span className="font-medium">{owner?.fullName ?? 'Не назначен'}</span></div></section></div>
           <section className="surface min-w-0 p-4"><h2 className="t-h2 mb-3">История взаимодействий</h2><div className="mb-4"><NoteComposer clientId={c.id} /></div><ActivityTimeline clientId={c.id} /></section>
-          <div className="space-y-4">{leadBanner}</div>
+          <div className="space-y-4">{leadBanner}{interestsBlock}</div>
         </div>
         {overlays}
       </PageBody>
@@ -213,10 +219,100 @@ export function ClientDetailScreen({ id }: { id: string }) {
       <div className="-mt-6 lg:-mt-2">{identity}</div>
       <div className="mx-auto mt-5 max-w-[420px] lg:mx-0"><QuickActions client={c} onCall={() => setCall(true)} onShowing={() => setShowing(true)} onTask={() => ui.set({ quickCreate: 'task' })} /></div>
       <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-6">
-        <div className="min-w-0 space-y-4 lg:order-2">{leadBanner}{prefsBlock}</div>
+        <div className="min-w-0 space-y-4 lg:order-2">{leadBanner}{prefsBlock}{interestsBlock}</div>
         <div className="min-w-0 space-y-4 lg:order-1"><h2 className="t-h2">История</h2><NoteComposer clientId={c.id} /><section className="surface p-4"><ActivityTimeline clientId={c.id} /></section></div>
       </div>
       {overlays}
     </PageBody>
+  );
+}
+
+/**
+ * Объекты, которые клиент смотрит. Риелтор ведёт одного покупателя по
+ * трём-четырём объектам сразу; без этого списка он держит их в переписке,
+ * а на показе выясняется, что дом уже смотрели с другим агентом.
+ *
+ * Показ по объекту прикрепляет его сюда сам (api.createEvent) — список и
+ * календарь не расходятся.
+ */
+function ClientProperties({ clientId, onAttach }: { clientId: string; onAttach: () => void }) {
+  const r = useResource(() => api.clientInterests(clientId), [clientId]);
+  const [remove, setRemove] = React.useState<Interest | null>(null);
+  const items = r.data ?? [];
+
+  return (
+    <section className="surface p-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h2 className="t-h3">Объекты клиента</h2>
+        <Button size="sm" variant="outline" onClick={onAttach}><Plus />Прикрепить</Button>
+      </div>
+      {r.loading && !r.data ? <Skeleton className="mt-3 h-24" /> : items.length === 0 ? (
+        <p className="t-caption mt-2">Пока ничего. Прикрепите объекты из подборки — они соберутся здесь вместе с показами.</p>
+      ) : (
+        <ul className="row-divider mt-2">
+          {items.map((x) => {
+            const p = store.db.properties.find((pr) => pr.id === x.propertyId);
+            if (!p) return null;
+            return (
+              <li key={x.id} className="py-2.5">
+                <div className="flex items-center gap-3">
+                  <Link href={`/properties/${p.id}`} className="pressable flex min-w-0 flex-1 items-center gap-3 rounded-control">
+                    <PropertyMedia art={p.photos[0]?.art ?? 0} src={p.photos[0]?.url} video={p.photos[0]?.kind === 'video'} aspect="1/1" className="w-12 shrink-0 !rounded-[10px]" />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-[14.5px] font-medium">{p.title}</span>
+                      <span className="t-caption block truncate">{p.district} · {money(p.price, p.currency, true)}</span>
+                    </span>
+                  </Link>
+                  <IconButton label={`Убрать ${p.title}`} variant="ghost" onClick={() => setRemove(x)}><X /></IconButton>
+                </div>
+                <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                  {INTEREST_ORDER.map((st) => (
+                    <button key={st} type="button" aria-pressed={x.status === st}
+                      onClick={() => void api.setInterest(x.id, { status: st })}
+                      className={cn('min-h-[32px] rounded-full border px-2.5 text-[12.5px] font-medium transition-colors',
+                        x.status === st ? 'border-primary bg-primary-soft text-primary' : 'border-border bg-surface text-muted-foreground hover:bg-surface-2')}>
+                      {INTEREST_LABEL[st]}
+                    </button>
+                  ))}
+                </div>
+                {x.note && <p className="t-caption mt-1.5">{x.note}</p>}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+      <ConfirmDialog open={remove !== null} onOpenChange={(v) => !v && setRemove(null)} title="Убрать объект?"
+        text="Объект пропадёт из списка клиента. Сам объект и прошедшие показы останутся на месте." confirmLabel="Убрать"
+        onConfirm={async () => { if (remove) await api.detachProperty(remove.id); setRemove(null); toast.success('Объект убран'); }} />
+    </section>
+  );
+}
+
+/** Прикрепить объект: поиск по названию, району и цене — как в подборке. */
+function AttachPropertySheet({ open, onOpenChange, clientId }: { open: boolean; onOpenChange: (o: boolean) => void; clientId: string }) {
+  const [pick, setPick] = React.useState('');
+  const [busy, setBusy] = React.useState(false);
+  React.useEffect(() => { if (open) setPick(''); }, [open]);
+
+  const taken = store.db.interests.filter((x) => x.clientId === clientId).map((x) => x.propertyId);
+  const options = store.db.properties
+    .filter((p) => p.status !== 'SOLD' && p.status !== 'ARCHIVED' && !taken.includes(p.id))
+    .map((p) => ({ value: p.id, label: p.title, meta: `${p.district} · ${money(p.price, p.currency, true)}` }));
+
+  const save = async () => {
+    if (!pick) return;
+    setBusy(true);
+    try { await api.attachProperty(clientId, pick); onOpenChange(false); toast.success('Объект прикреплён к клиенту'); }
+    catch (e) { toast.error((e as Error).message); }
+    finally { setBusy(false); }
+  };
+
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange} title="Прикрепить объект" description="Объект появится в карточке клиента и в подборке к показу." desktop="center" size="sm"
+      footer={<><Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>Отмена</Button><Button className="flex-[2]" loading={busy} disabled={!pick} onClick={save}>Прикрепить</Button></>}>
+      {options.length === 0
+        ? <p className="t-caption">Свободных объектов не осталось — все уже прикреплены к этому клиенту.</p>
+        : <PickerField label="Объект" value={pick} onChange={setPick} options={options} emptyLabel="Выберите объект" searchPlaceholder="Название, район или цена" />}
+    </Sheet>
   );
 }

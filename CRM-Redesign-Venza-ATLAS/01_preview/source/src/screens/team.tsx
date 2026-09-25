@@ -68,7 +68,7 @@ export function TeamScreen() {
               <tr key={x.user.id} className="border-b border-border/70 last:border-0">
                 <th scope="row" className="px-4 py-2 text-left font-normal">
                   <Link href={`/leads?assignee=${x.user.id}`} className="tap-link flex items-center gap-2.5">
-                    <Avatar name={x.user.fullName} size={32} />
+                    <Avatar name={x.user.fullName} src={x.user.avatarUrl} size={32} />
                     <span className="min-w-0">
                       <span className="block truncate font-medium text-primary">{x.user.fullName}</span>
                       <span className="t-caption block">{ROLE_LABEL[x.user.role] ?? x.user.role}</span>

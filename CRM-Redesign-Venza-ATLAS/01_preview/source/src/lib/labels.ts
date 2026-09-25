@@ -22,3 +22,9 @@ export const TASK_TYPE_LABEL: Record<TaskType, string> = { CALL: 'Звонок',
 export const EVENT_KIND_LABEL: Record<EventKind, string> = { SHOWING: 'Показ', MEETING: 'Встреча', CALL: 'Звонок', TASK: 'Задача', DEADLINE: 'Дедлайн', CONTRACT: 'Договор', PAYMENT: 'Оплата' };
 export const SOURCE_LABEL: Record<SourceType, string> = { INSTAGRAM: 'Instagram', FACEBOOK: 'Facebook', WEBSITE: 'Сайт', REFERRAL: 'Рекомендация', TELEGRAM: 'Telegram', MANUAL: 'Вручную' };
 export const PURPOSE_LABEL = { LIVING: 'Для жизни', INVESTMENT: 'Инвестиция', RELOCATION: 'Переезд' } as const;
+
+/** Что с объектом у клиента: подборка → показ → решение. */
+export const INTEREST_LABEL: Record<import('./mock/types').InterestStatus, string> = {
+  SELECTED: 'В подборке', SHOWN: 'Показан', LIKED: 'Нравится', REJECTED: 'Отказ',
+};
+export const INTEREST_ORDER: import('./mock/types').InterestStatus[] = ['SELECTED', 'SHOWN', 'LIKED', 'REJECTED'];

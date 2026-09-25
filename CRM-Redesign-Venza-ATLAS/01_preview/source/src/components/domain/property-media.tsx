@@ -103,8 +103,10 @@ function Scene({ art }: { art: number }) {
   );
 }
 
-export function PropertyMedia({ art, className, aspect = '4/3', parallax, children, rounded = true }: {
+export function PropertyMedia({ art, src, video, className, aspect = '4/3', parallax, children, rounded = true, playable }: {
   art: number; className?: string; aspect?: string; parallax?: boolean; children?: React.ReactNode; rounded?: boolean;
+  /** Свой файл вместо фото из комплекта: загруженная карточка объекта. */
+  src?: string; video?: boolean; playable?: boolean;
 }) {
   const { family, reducedMotion } = useTheme();
   const ref = React.useRef<HTMLDivElement>(null);
@@ -129,7 +131,12 @@ export function PropertyMedia({ art, className, aspect = '4/3', parallax, childr
   return (
     <div ref={ref} className={cn('relative overflow-hidden bg-surface-2', rounded && 'rounded-card', className)} style={{ aspectRatio: aspect }}>
       <div ref={inner} data-parallax={enabled || undefined} className="absolute inset-0 will-change-transform" style={enabled ? { transform: 'scale(1.08)' } : undefined}>
-        {PHOTOS.length ? <img src={PHOTOS[art % PHOTOS.length]} alt="" loading="lazy" decoding="async" draggable={false} className="h-full w-full object-cover" /> : <Scene art={art} />}
+        {video && src
+          /* #t=0.1 — кадр для обложки: без него плитка видео остаётся серой до нажатия. */
+          ? <video src={playable ? src : `${src}#t=0.1`} className="h-full w-full object-cover" playsInline muted={!playable} controls={playable} preload="metadata" />
+          : src
+            ? <img src={src} alt="" loading="lazy" decoding="async" draggable={false} className="h-full w-full object-cover" />
+            : PHOTOS.length ? <img src={PHOTOS[art % PHOTOS.length]} alt="" loading="lazy" decoding="async" draggable={false} className="h-full w-full object-cover" /> : <Scene art={art} />}
       </div>
       {children}
     </div>

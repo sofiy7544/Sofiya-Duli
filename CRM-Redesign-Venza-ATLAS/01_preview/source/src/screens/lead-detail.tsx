@@ -80,7 +80,7 @@ export function LeadDetailScreen({ id }: { id: string }) {
           <div className="space-y-4">
             <section className="surface p-4"><div className="mb-3 flex items-center gap-3"><Avatar name={client.fullName} size={44} /><div className="min-w-0"><Link href={`/clients/${client.id}`} className="block truncate font-semibold hover:underline">{client.fullName}</Link><div className="t-caption">{CLIENT_TYPE_LABEL[client.type]}</div></div></div>{actions}</section>
             <section className="surface p-4"><h2 className="t-h3 mb-2">Запрос</h2><RequestList lead={lead} client={client} /></section>
-            <section className="surface p-4"><h2 className="t-h3 mb-2">Ответственный</h2><div className="flex items-center gap-2.5"><Avatar name={owner?.fullName ?? '—'} size={32} /><div><div className="text-[14px] font-medium">{owner?.fullName ?? 'Не назначен'}</div><div className="t-caption">Риелтор</div></div></div></section>
+            <section className="surface p-4"><h2 className="t-h3 mb-2">Ответственный</h2><div className="flex items-center gap-2.5"><Avatar name={owner?.fullName ?? '—'} src={owner?.avatarUrl} size={32} /><div><div className="text-[14px] font-medium">{owner?.fullName ?? 'Не назначен'}</div><div className="t-caption">Риелтор</div></div></div></section>
           </div>
           <section className="surface min-w-0 p-4"><div className="mb-3 flex items-center justify-between"><h2 className="t-h2">История</h2></div><div className="mb-4"><NoteComposer clientId={client.id} leadId={lead.id} /></div><ActivityTimeline leadId={lead.id} /></section>
           <div className="space-y-4">
@@ -120,7 +120,7 @@ export function LeadDetailScreen({ id }: { id: string }) {
           <NextAction lead={lead} onShowing={() => setShowing(true)} />
           <section className="surface p-4"><h2 className="t-h3 mb-2">Запрос клиента</h2><RequestList lead={lead} client={client} /></section>
           {property && <InterestProperty id={property.id} />}
-          <section className="surface p-4"><h2 className="t-h3 mb-2">Ответственный</h2><div className="flex items-center gap-2.5"><Avatar name={owner?.fullName ?? '—'} size={36} /><span className="text-[15px] font-medium">{owner?.fullName ?? 'Не назначен'}</span></div></section>
+          <section className="surface p-4"><h2 className="t-h3 mb-2">Ответственный</h2><div className="flex items-center gap-2.5"><Avatar name={owner?.fullName ?? '—'} src={owner?.avatarUrl} size={36} /><span className="text-[15px] font-medium">{owner?.fullName ?? 'Не назначен'}</span></div></section>
           <Button variant="ghost" className="w-full text-danger-text" onClick={() => setDel(true)}><Trash2 />Удалить лид</Button>
         </>)}
         {tab === 'tasks' && <section className="surface p-4"><TaskMini tasks={tasks} /></section>}

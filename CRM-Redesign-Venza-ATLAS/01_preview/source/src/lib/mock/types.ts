@@ -16,7 +16,17 @@ export type EventKind = 'SHOWING' | 'MEETING' | 'CALL' | 'TASK' | 'DEADLINE' | '
 export type SourceType = 'INSTAGRAM' | 'FACEBOOK' | 'WEBSITE' | 'REFERRAL' | 'TELEGRAM' | 'MANUAL';
 export type ActivityType = 'CALL' | 'NOTE' | 'STAGE' | 'SHOWING' | 'TASK' | 'CREATED';
 
-export type User = { id: string; fullName: string; role: UserRole; email: string };
+export type User = {
+  id: string;
+  fullName: string;
+  role: UserRole;
+  email: string;
+  /** Доступ в систему. Отключённый сотрудник остаётся в истории, но не входит. */
+  active?: boolean;
+  lastSeenAt?: string;
+  /** Фото, которое загрузил администратор. Нет фото — монограмма. */
+  avatarUrl?: string;
+};
 
 export type Paginated<T> = { items: T[]; total: number; page: number; pageSize: number };
 
@@ -75,9 +85,25 @@ export type Property = {
   currency: string;
   description: string;
   ownerUserId: string;
-  photos: { id: string; art: number }[];
+  /** art — индекс фото из комплекта агентства; url/kind — файл, который загрузили сами. */
+  photos: { id: string; art: number; url?: string; kind?: 'image' | 'video'; name?: string }[];
   features: string[];
   createdAt: string;
+};
+
+/**
+ * Объект, привязанный к клиенту: подборка и показы. Риелтор ведёт двух-трёх
+ * клиентов по трём-четырём объектам одновременно — без такой привязки он
+ * держит это в голове или в переписке.
+ */
+export type InterestStatus = 'SELECTED' | 'SHOWN' | 'LIKED' | 'REJECTED';
+export type Interest = {
+  id: string;
+  clientId: string;
+  propertyId: string;
+  status: InterestStatus;
+  note?: string;
+  at: string;
 };
 
 export type Task = {

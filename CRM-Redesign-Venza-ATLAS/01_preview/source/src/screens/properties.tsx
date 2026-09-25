@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import { ArrowLeft, BedDouble, Building, CalendarPlus, Plus, ChevronLeft, ChevronRight, FileDown, Heart, Layers, MapPin, MoreHorizontal, Pencil, Ruler, Search, Share2, Trash2, X } from 'lucide-react';
+import { ArrowLeft, BedDouble, Building, CalendarPlus, Plus, ChevronLeft, ChevronRight, FileDown, Heart, ImagePlus, Layers, MapPin, MoreHorizontal, Pencil, Play, Ruler, Search, Share2, Trash2, X } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { api } from '@/lib/mock/api';
 import { store, usePreviewSettings, users } from '@/lib/mock/store';
@@ -124,13 +124,18 @@ export function PropertyDetailScreen({ id }: { id: string }) {
   const [del, setDel] = React.useState(false);
   const [slide, setSlide] = React.useState(0);
   const track = React.useRef<HTMLDivElement>(null);
+  const filePick = React.useRef<HTMLInputElement>(null);
+  const [upBusy, setUpBusy] = React.useState(false);
+  const [dropOver, setDropOver] = React.useState(false);
+  const [rmMedia, setRmMedia] = React.useState<string | null>(null);
 
   if (r.error) return <PageBody><PageHeader title="Объект" back="/properties" /><ErrorState error={r.error} onRetry={r.retry} what="объект" /></PageBody>;
   if (r.loading || !r.data) return <PageBody><PageHeader title="" back="/properties" large={false} /><Skeleton className="aspect-[4/3] rounded-card" /><Skeleton className="mt-4 h-8 w-40" /><Skeleton className="mt-2 h-5 w-64" /><Skeleton className="mt-6 h-32 rounded-card" /></PageBody>;
   const p = r.data;
   const canEdit = settings.role === 'ADMIN' || p.ownerUserId === 'u1';
   const matches = store.db.clients.filter((c) => c.preferences && (!c.preferences.price?.max || c.preferences.price.max >= p.price * 0.9) && (!c.preferences.propertyType || c.preferences.propertyType === p.type)).slice(0, 4);
-  const owner = users.find((u) => u.id === p.ownerUserId)?.fullName ?? 'Не назначен';
+  const ownerUser = users.find((u) => u.id === p.ownerUserId);
+  const owner = ownerUser?.fullName ?? 'Не назначен';
 
   const facts = [
     { icon: Building, label: 'Тип', value: PROPERTY_TYPE_LABEL[p.type] },
@@ -139,6 +144,26 @@ export function PropertyDetailScreen({ id }: { id: string }) {
     p.floor ? { icon: Layers, label: 'Этаж', value: `${p.floor} из ${p.totalFloors}` } : null,
   ].filter(Boolean) as { icon: typeof Building; label: string; value: string }[];
 
+  /* Загрузка своих файлов. В CRM это отправка в хранилище (S3) и запись в media;
+     здесь файл живёт в памяти вкладки — честно сказано в подписи под кнопкой. */
+  const MAX_MB = 80;
+  const takeFiles = async (list: FileList | null) => {
+    const all = Array.from(list ?? []);
+    if (!all.length) return;
+    const wrong = all.filter((f) => !f.type.startsWith('image/') && !f.type.startsWith('video/'));
+    const heavy = all.filter((f) => f.size > MAX_MB * 1024 * 1024);
+    const ok = all.filter((f) => !wrong.includes(f) && !heavy.includes(f));
+    if (wrong.length) toast.error(`Не подходит: ${wrong.map((f) => f.name).join(', ')}. Нужны фото или видео.`);
+    if (heavy.length) toast.error(`Слишком большой файл: ${heavy.map((f) => f.name).join(', ')}. До ${MAX_MB} МБ.`);
+    if (!ok.length) return;
+    setUpBusy(true);
+    try {
+      await api.addPropertyMedia(p.id, ok);
+      toast.success(`Добавлено ${ok.length} ${plural(ok.length, 'файл', 'файла', 'файлов')}`);
+    } catch (e) { toast.error((e as Error).message); }
+    finally { setUpBusy(false); if (filePick.current) filePick.current.value = ''; }
+  };
+
   const onScroll = () => { const el = track.current; if (el) setSlide(Math.round(el.scrollLeft / el.clientWidth)); };
   const go = (i: number) => track.current?.scrollTo({ left: i * track.current.clientWidth, behavior: 'smooth' });
 
@@ -146,8 +171,14 @@ export function PropertyDetailScreen({ id }: { id: string }) {
     <div className={cn('relative overflow-hidden bg-surface-2', isDesktop ? 'rounded-card' : '-mx-4 sm:-mx-5')}>
       <div ref={track} onScroll={onScroll} data-hscroll className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto" aria-label="Фотографии" role="region">
         {p.photos.map((ph, i) => (
-          <button key={ph.id} onClick={() => setLightbox(i)} className="w-full shrink-0 snap-center" aria-label={`Фото ${i + 1} из ${p.photos.length}, открыть`}>
-            <PropertyMedia art={ph.art} aspect={isDesktop ? (family === 'atlas' ? '16/10' : '16/9') : '4/3'} rounded={false} parallax={i === 0} />
+          <button key={ph.id} onClick={() => setLightbox(i)} className="relative w-full shrink-0 snap-center"
+            aria-label={`${ph.kind === 'video' ? 'Видео' : 'Фото'} ${i + 1} из ${p.photos.length}, открыть`}>
+            <PropertyMedia art={ph.art} src={ph.url} video={ph.kind === 'video'} aspect={isDesktop ? (family === 'atlas' ? '16/10' : '16/9') : '4/3'} rounded={false} parallax={i === 0} />
+            {ph.kind === 'video' && (
+              <span className="material pointer-events-none absolute left-1/2 top-1/2 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-[var(--glass-border)]" aria-hidden>
+                <Play className="h-6 w-6 translate-x-[1px]" />
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -184,11 +215,49 @@ export function PropertyDetailScreen({ id }: { id: string }) {
       ))}
     </dl>
   );
+  const mediaBlock = (
+    <section className={cn('surface p-4 lg:p-5 transition-colors', dropOver && 'ring-2 ring-primary')}
+      onDragOver={(e) => { if (!canEdit) return; e.preventDefault(); setDropOver(true); }}
+      onDragLeave={() => setDropOver(false)}
+      onDrop={(e) => { if (!canEdit) return; e.preventDefault(); setDropOver(false); void takeFiles(e.dataTransfer.files); }}>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h2 className="t-h3">Фото и видео</h2>
+        {canEdit && <Button size="sm" variant="outline" loading={upBusy} onClick={() => filePick.current?.click()}><ImagePlus />Добавить</Button>}
+      </div>
+      <p className="t-caption mt-1">
+        {canEdit
+          ? `Фото и видео с телефона или компьютера, до ${MAX_MB} МБ на файл. В превью файлы живут до перезагрузки страницы — в CRM они уходят в хранилище агентства.`
+          : 'Добавлять файлы может ответственный за объект или администратор.'}
+      </p>
+      <input ref={filePick} type="file" accept="image/*,video/*" multiple className="sr-only" tabIndex={-1}
+        onChange={(e) => void takeFiles(e.target.files)} />
+      <ul className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-5">
+        {p.photos.map((ph, i) => (
+          <li key={ph.id} className="relative">
+            <button type="button" onClick={() => setLightbox(i)} className="pressable block w-full overflow-hidden rounded-control"
+              aria-label={`${ph.kind === 'video' ? 'Видео' : 'Фото'} ${i + 1}, открыть`}>
+              <PropertyMedia art={ph.art} src={ph.url} video={ph.kind === 'video'} aspect="1/1" />
+            </button>
+            {ph.kind === 'video' && (
+              <span className="material pointer-events-none absolute left-1/2 top-1/2 grid h-8 w-8 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-[var(--glass-border)]" aria-hidden>
+                <Play className="h-4 w-4 translate-x-[1px]" />
+              </span>
+            )}
+            {ph.url && <span className="material pointer-events-none absolute left-1 top-1 rounded-full px-2 py-0.5 text-[11px] font-medium">своё</span>}
+          </li>
+        ))}
+      </ul>
+      {!p.photos.length && <p className="t-caption mt-3">Пока пусто. Первый кадр станет обложкой объекта.</p>}
+      {canEdit && p.photos.some((x) => x.url) && <p className="t-caption mt-3">Свой файл удаляется при просмотре: откройте его и нажмите «Удалить».</p>}
+    </section>
+  );
+
   const about = (
     <div className="space-y-4">
       <section className="surface p-4 lg:p-5"><h2 className="t-h3 mb-2">Описание</h2><p className="max-w-[68ch] text-[15.5px] leading-[25px] text-foreground/90">{p.description}</p>
         <ul className="mt-4 flex flex-wrap gap-2">{p.features.map((f) => <li key={f} className="rounded-full bg-surface-2 px-3 py-1.5 text-[13px] font-medium">{f}</li>)}</ul></section>
-      <section className="surface flex items-center gap-3 p-4"><Avatar name={owner} size={40} /><div className="flex-1"><div className="t-caption">Ответственный</div><div className="font-medium">{owner}</div></div></section>
+      {mediaBlock}
+      <section className="surface flex items-center gap-3 p-4"><Avatar name={owner} src={ownerUser?.avatarUrl} size={40} /><div className="flex-1"><div className="t-caption">Ответственный</div><div className="font-medium">{owner}</div></div></section>
     </div>
   );
   const matchBlock = (
@@ -204,7 +273,7 @@ export function PropertyDetailScreen({ id }: { id: string }) {
   );
 
   const overlays = (<>
-    <Lightbox photos={p.photos.map((x) => x.art)} index={lightbox} onChange={setLightbox} title={p.title} />
+    <Lightbox photos={p.photos} index={lightbox} onChange={setLightbox} title={p.title} onDelete={canEdit ? setRmMedia : undefined} />
     <PdfSheet open={pdf} onOpenChange={setPdf} />
     <Sheet open={menu} onOpenChange={setMenu} title={p.title} desktop="center" size="sm">
       <div className="space-y-3">
@@ -217,6 +286,9 @@ export function PropertyDetailScreen({ id }: { id: string }) {
       </div>
     </Sheet>
     <EventFormSheet open={showing} onOpenChange={setShowing} kind="SHOWING" propertyId={p.id} />
+    <ConfirmDialog open={rmMedia !== null} onOpenChange={(v) => !v && setRmMedia(null)} title="Удалить файл?"
+      text="Файл пропадёт из галереи объекта. Фото из комплекта агентства останутся на месте." confirmLabel="Удалить"
+      onConfirm={async () => { if (rmMedia) await api.removePropertyMedia(p.id, rmMedia); setRmMedia(null); setLightbox(null); toast.success('Файл удалён'); }} />
     <ConfirmDialog open={del} onOpenChange={setDel} title="Удалить объект?" text="Объект и все фото будут удалены. Показы по нему останутся в истории клиентов." confirmLabel="Удалить" onConfirm={() => { setDel(false); router.navigate('/properties', { replace: true }); toast.success('Объект удалён'); }} />
   </>);
 
@@ -248,7 +320,11 @@ export function PropertyDetailScreen({ id }: { id: string }) {
 }
 
 /** Лайтбокс: полноэкранно, свайп/стрелки/Esc, счётчик. */
-function Lightbox({ photos, index, onChange, title }: { photos: number[]; index: number | null; onChange: (i: number | null) => void; title: string }) {
+function Lightbox({ photos, index, onChange, title, onDelete }: {
+  photos: Property['photos']; index: number | null; onChange: (i: number | null) => void; title: string;
+  /** Удалять можно только свои файлы: фото из комплекта агентства — часть карточки. */
+  onDelete?: (mediaId: string) => void;
+}) {
   const touch = React.useRef<number | null>(null);
   const i = index ?? 0;
   const step = (d: number) => onChange(Math.max(0, Math.min(photos.length - 1, i + d)));
@@ -261,10 +337,18 @@ function Lightbox({ photos, index, onChange, title }: { photos: number[]; index:
           <Dialog.Title className="sr-only">{title}</Dialog.Title>
           <div className="safe-top flex items-center justify-between p-3">
             <span className="px-2 text-[14px] tabular opacity-80">{i + 1} / {photos.length}</span>
-            <Dialog.Close className="grid h-11 w-11 place-items-center rounded-full bg-white/10 hover:bg-white/20" aria-label="Закрыть"><X className="h-5 w-5" /></Dialog.Close>
+            <div className="flex items-center gap-2">
+              {onDelete && photos[i]?.url && (
+                <button onClick={() => onDelete(photos[i].id)} aria-label="Удалить файл"
+                  className="grid h-11 w-11 place-items-center rounded-full bg-white/10 hover:bg-white/20"><Trash2 className="h-5 w-5" /></button>
+              )}
+              <Dialog.Close className="grid h-11 w-11 place-items-center rounded-full bg-white/10 hover:bg-white/20" aria-label="Закрыть"><X className="h-5 w-5" /></Dialog.Close>
+            </div>
           </div>
           <div className="relative flex flex-1 items-center justify-center px-2 pb-10">
-            <div key={i} className="w-full max-w-[1100px] animate-pop-in"><PropertyMedia art={photos[i]} aspect="4/3" className="!rounded-[10px]" /></div>
+            <div key={i} className="w-full max-w-[1100px] animate-pop-in">
+              <PropertyMedia art={photos[i]?.art ?? 0} src={photos[i]?.url} video={photos[i]?.kind === 'video'} playable aspect="4/3" className="!rounded-[10px]" />
+            </div>
             {i > 0 && <button onClick={() => step(-1)} aria-label="Предыдущее" className="absolute left-4 hidden h-12 w-12 place-items-center rounded-full bg-white/10 hover:bg-white/20 md:grid"><ChevronLeft /></button>}
             {i < photos.length - 1 && <button onClick={() => step(1)} aria-label="Следующее" className="absolute right-4 hidden h-12 w-12 place-items-center rounded-full bg-white/10 hover:bg-white/20 md:grid"><ChevronRight /></button>}
           </div>

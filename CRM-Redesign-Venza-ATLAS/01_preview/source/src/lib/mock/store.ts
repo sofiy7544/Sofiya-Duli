@@ -26,6 +26,10 @@ export const store = {
   setSettings(patch: Partial<PreviewSettings>) { settings = { ...settings, ...patch }; emit(); },
   reset() { db = { clients: clone(fx.clients), leads: clone(fx.leads), properties: clone(fx.properties), tasks: clone(fx.tasks), events: clone(fx.events), activities: clone(fx.activities) }; emit(); },
   mutate(fn: (d: DB) => void) { fn(db); emit(); },
+  /* Общий сигнал «данные изменились». Свои хранилища (заметки, коммуникации,
+     настройки, сделки) дёргают его из своих emit: тогда открытый экран
+     перечитывает список, даже если его версию забыли внести в зависимости. */
+  touch() { emit(); },
 };
 
 /* Только для нагрузочных прогонов: скрипт наполняет «базу» данными за год

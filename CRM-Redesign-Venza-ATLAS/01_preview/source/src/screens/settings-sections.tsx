@@ -31,8 +31,8 @@ const ROLE_LABEL: Record<UserRole, string> = {
 /* ─────────────────────────── Автоматизация ─────────────────────────── */
 
 export function AutomationScreen() {
-  useAdminVersion();
-  const r = useResource(() => adminApi.rules());
+  const av = useAdminVersion();
+  const r = useResource(() => adminApi.rules(), [av]);
   const [open, setOpen] = React.useState(false);
   const [confirmId, setConfirmId] = React.useState<string | null>(null);
   const [form, setForm] = React.useState({ name: '', when: '', then: '' });
@@ -100,8 +100,8 @@ const CHANNEL_LABEL = { EMAIL: 'Почта', TELEGRAM: 'Telegram', SMS: 'SMS' } 
 const EMPTY_TEMPLATE: Omit<Template, 'updatedAt'> = { id: '', name: '', channel: 'TELEGRAM', subject: '', body: '' };
 
 export function TemplatesScreen() {
-  useAdminVersion();
-  const r = useResource(() => adminApi.templates());
+  const av = useAdminVersion();
+  const r = useResource(() => adminApi.templates(), [av]);
   const [edit, setEdit] = React.useState<Omit<Template, 'updatedAt'> | null>(null);
   const [confirmId, setConfirmId] = React.useState<string | null>(null);
   const [busy, setBusy] = React.useState(false);
@@ -211,8 +211,8 @@ export function IntegrationsScreen() {
 
 export function BrandingScreen() {
   const logoRef = React.useRef<HTMLInputElement>(null);
-  useAdminVersion();
-  const r = useResource(() => adminApi.branding());
+  const av = useAdminVersion();
+  const r = useResource(() => adminApi.branding(), [av]);
   const [name, setName] = React.useState('');
   const [watermark, setWatermark] = React.useState(true);
   const [opacity, setOpacity] = React.useState(35);
@@ -290,8 +290,8 @@ export function BrandingScreen() {
 /* ──────────────────────────── Пользователи ──────────────────────────── */
 
 export function UsersScreen() {
-  useAdminVersion();
-  const r = useResource(() => adminApi.members());
+  const av = useAdminVersion();
+  const r = useResource(() => adminApi.members(), [av]);
   const [invite, setInvite] = React.useState(false);
   const [form, setForm] = React.useState({ fullName: '', email: '', role: 'REALTOR' as UserRole });
   const [busy, setBusy] = React.useState(false);

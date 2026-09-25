@@ -46,7 +46,7 @@ let notes: Note[] = [
 ];
 
 const subs = new Set<() => void>(); let v = 0;
-const emit = () => { v++; subs.forEach((s) => s()); };
+const emit = () => { v++; subs.forEach((s) => s()); store.touch(); };
 const wait = (ms = store.settings.latencyMs) => new Promise((r) => setTimeout(r, ms));
 export function useNotesVersion() { return useSyncExternalStore((f) => { subs.add(f); return () => subs.delete(f); }, () => v, () => v); }
 

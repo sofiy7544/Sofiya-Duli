@@ -40,7 +40,7 @@ let deals: Deal[] = [
   { id: 'd10', leadId: 'l31', clientId: 'c33', propertyId: 'p2', userId: 'u2', amount: 1_600_000, currency: 'EUR', commissionPercent: 3, status: 'CANCELLED', createdAt: ago(40), closedAt: ago(26), payments: [], documents: [] },
 ];
 const subs = new Set<() => void>(); let v = 0;
-const emit = () => { v++; subs.forEach((s) => s()); };
+const emit = () => { v++; subs.forEach((s) => s()); store.touch(); };
 const wait = (ms = store.settings.latencyMs) => new Promise((r) => setTimeout(r, ms));
 export function useDealsVersion() { return useSyncExternalStore((f) => { subs.add(f); return () => subs.delete(f); }, () => v, () => v); }
 

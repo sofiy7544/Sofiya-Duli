@@ -26,19 +26,33 @@ export function NotesScreen() {
   const [tab, setTab] = React.useState<'notes' | 'trash'>('notes');
   const [openId, setOpenId] = React.useState<string | null>(null);
   const isDesktop = useIsDesktop();
-  useNotesVersion();
-  const r = useResource(() => notesApi.list(tab === 'trash'), [tab, store.settings.dataMode]);
+  /* Версия — в зависимостях: без неё список не перечитывается после создания и правки заметки. */
+  const nv = useNotesVersion();
+  const r = useResource(() => notesApi.list(tab === 'trash'), [tab, store.settings.dataMode, nv]);
 
   const items = r.data ?? [];
   const current = items.find((n) => n.id === openId) ?? (isDesktop ? items[0] : undefined);
 
-  const create = async () => { const n = await notesApi.create(); setTab('notes'); setOpenId(n.id); };
+  /* busy: второе нажатие по «плюсу», пока летит запрос, не должно плодить пустые заметки.
+     fresh — только что созданная: её название сразу под курсором, как в «Заметках» на iPhone. */
+  const [busy, setBusy] = React.useState(false);
+  const [freshId, setFreshId] = React.useState<string | null>(null);
+  const create = async () => {
+    if (busy) return;
+    setBusy(true);
+    try {
+      const n = await notesApi.create();
+      setTab('notes'); setOpenId(n.id); setFreshId(n.id);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally { setBusy(false); }
+  };
 
   const header = (
     <PageHeader title="Заметки" subtitle={tab === 'notes' ? 'Личные записи и заметки по сделкам' : 'Удалённое хранится 30 дней'}
-      actions={tab === 'notes' ? <IconButton label="Новая заметка" onClick={create}><Plus /></IconButton> : undefined}>
+      actions={tab === 'notes' ? <IconButton label="Новая заметка" onClick={create} disabled={busy}><Plus /></IconButton> : undefined}>
       <SegmentedControl<'notes' | 'trash'> label="Раздел заметок" className="w-full sm:w-auto" value={tab}
-        onChange={(v) => { setTab(v); setOpenId(null); }}
+        onChange={(v) => { setTab(v); setOpenId(null); setFreshId(null); }}
         options={[{ value: 'notes', label: 'Заметки' }, { value: 'trash', label: 'Корзина' }]} />
     </PageHeader>
   );
@@ -54,7 +68,7 @@ export function NotesScreen() {
           <IconButton label="К списку" variant="ghost" className="-ml-1 rounded-full" onClick={() => setOpenId(null)}><ArrowLeft /></IconButton>
           <span className="t-caption">{tab === 'trash' ? 'Корзина' : 'Заметки'}</span>
         </div>
-        <NoteEditor note={current} trashed={tab === 'trash'} onClose={() => setOpenId(null)} />
+        <NoteEditor note={current} trashed={tab === 'trash'} fresh={current.id === freshId} onClose={() => setOpenId(null)} />
       </PageBody>
     );
   }
@@ -62,12 +76,12 @@ export function NotesScreen() {
   const list = items.length === 0 ? (
     tab === 'trash'
       ? <EmptyState icon={Trash2} title="Корзина пуста" text="Удалённые заметки будут появляться здесь и хранятся 30 дней." />
-      : <EmptyState icon={StickyNote} title="Заметок пока нет" text="Записывайте договорённости и скрипты — они останутся под рукой." action={<Button onClick={create}><Plus />Новая заметка</Button>} />
+      : <EmptyState icon={StickyNote} title="Заметок пока нет" text="Записывайте договорённости и скрипты — они останутся под рукой." action={<Button onClick={create} loading={busy}><Plus />Новая заметка</Button>} />
   ) : (
     <ul className="space-y-2.5">
       {items.map((n) => (
         <li key={n.id}>
-          <button type="button" onClick={() => setOpenId(n.id)}
+          <button type="button" onClick={() => { setOpenId(n.id); setFreshId(null); }}
             className={cn('pressable surface w-full p-3.5 text-left transition-shadow',
               current?.id === n.id && isDesktop && 'bg-primary-soft/50 shadow-none ring-2 ring-primary/45')}>
             <div className="flex items-center gap-2">
@@ -97,7 +111,7 @@ export function NotesScreen() {
           {list}
         </div>
         {current
-          ? <NoteEditor note={current} trashed={tab === 'trash'} onClose={() => setOpenId(null)} />
+          ? <NoteEditor note={current} trashed={tab === 'trash'} fresh={current.id === freshId} onClose={() => setOpenId(null)} />
           : <div className="surface grid min-h-[320px] place-items-center p-6"><p className="t-caption">Выберите заметку слева.</p></div>}
       </div>
     </PageBody>
@@ -105,10 +119,17 @@ export function NotesScreen() {
 }
 
 /** Редактор одной заметки. Сохранение по уходу с поля — как в CRM, без кнопки «Сохранить». */
-function NoteEditor({ note, trashed, onClose }: { note: Note; trashed: boolean; onClose: () => void }) {
+function NoteEditor({ note, trashed, fresh, onClose }: { note: Note; trashed: boolean; fresh?: boolean; onClose: () => void }) {
   const [title, setTitle] = React.useState(note.title);
   const [body, setBody] = React.useState(note.body);
-  React.useEffect(() => { setTitle(note.title); setBody(note.body); }, [note.id, note.title, note.body]);
+  const titleRef = React.useRef<HTMLInputElement>(null);
+  /* Черновик перезаписывается только при смене заметки. Если подтягивать сюда каждое
+     обновление note, перечитанный список стирает текст, который человек набирает прямо сейчас. */
+  React.useEffect(() => { setTitle(note.title); setBody(note.body); },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [note.id]);
+  /* Название новой заметки выделено целиком: первый же символ заменяет «Новая заметка». */
+  React.useEffect(() => { if (fresh) titleRef.current?.select(); }, [fresh, note.id]);
 
   const commit = () => { if (title !== note.title || body !== note.body) void notesApi.save(note.id, { title, body }); };
 
@@ -136,7 +157,7 @@ function NoteEditor({ note, trashed, onClose }: { note: Note; trashed: boolean; 
       <div className="flex items-start gap-2">
         <label className="min-w-0 flex-1">
           <span className="sr-only">Название заметки</span>
-          <input value={title} onChange={(e) => setTitle(e.target.value)} onBlur={commit} placeholder="Название"
+          <input ref={titleRef} value={title} onChange={(e) => setTitle(e.target.value)} onBlur={commit} placeholder="Название"
             className="w-full bg-transparent text-[19px] font-semibold outline-none placeholder:text-muted-foreground" />
         </label>
         <IconButton label={note.pinned ? 'Открепить' : 'Закрепить'} variant="ghost"

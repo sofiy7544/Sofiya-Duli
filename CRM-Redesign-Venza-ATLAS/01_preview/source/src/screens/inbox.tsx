@@ -30,9 +30,9 @@ const CHANNEL_LABEL: Record<Channel, string> = {
 export function InboxScreen() {
   const [openId, setOpenId] = React.useState<string | null>(null);
   const isDesktop = useIsDesktop();
-  useInboxVersion();
+  const iv = useInboxVersion();
   const enabled = store.settings.integrationsEnabled;
-  const r = useResource(() => inboxApi.list(), [enabled]);
+  const r = useResource(() => inboxApi.list(), [enabled, iv]);
 
   if (!enabled) {
     return (

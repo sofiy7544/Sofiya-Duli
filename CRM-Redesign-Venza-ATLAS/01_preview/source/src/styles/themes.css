@@ -354,7 +354,10 @@ html { font-family: var(--font-sans); }
 @keyframes crm-sheet-up   { from { transform: translate3d(0, 100%, 0); } to { transform: none; } }
 @keyframes crm-sheet-down { from { transform: none; } to { transform: translate3d(0, 100%, 0); } }
 @keyframes crm-scrim-in   { from { opacity: 0; } to { opacity: 1; } }
-@keyframes crm-pop-in     { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
+/* Масштаб отдельным свойством scale, а не через transform: у центрированных
+   окон transform уже занят под -translate-x-1/2, и кадр `transform: none`
+   сбрасывал центрирование — окно уезжало вправо и кнопка уходила за экран. */
+@keyframes crm-pop-in     { from { opacity: 0; scale: .97; } to { opacity: 1; scale: 1; } }
 
 /* Тема переключается без «прокатки» цветов по всем элементам: см. theme-provider (класс theme-switching). */
 :root.theme-switching *, :root.theme-switching *::before, :root.theme-switching *::after { transition: none !important; }

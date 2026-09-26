@@ -327,9 +327,14 @@ def home_services(compact=False):
     </div>
     <div class="hs rv">{items}</div>
     <div class="hs__foot rv">
+      <div class="hs__phs">
       <figure class="ph hs__ph">
-        <img src="{BASE}assets/photos/garden-wide-640.jpg" srcset="{BASE}assets/photos/garden-wide-640.jpg 640w, {BASE}assets/photos/garden-wide-1200.jpg 1200w" sizes="(min-width: 900px) 520px, 100vw" alt="Підстрижений газон і туї біля будинку після догляду за ділянкою" width="640" height="400" loading="lazy">
+        <img src="{BASE}assets/photos/garden-wide-640.jpg" srcset="{BASE}assets/photos/garden-wide-640.jpg 640w, {BASE}assets/photos/garden-wide-1200.jpg 1200w" sizes="(min-width: 900px) 300px, 50vw" alt="Підстрижений газон і туї біля будинку після догляду за ділянкою" width="640" height="400" loading="lazy">
       </figure>
+      <figure class="ph hs__ph">
+        <img src="{BASE}assets/photos/hall-portrait-640.jpg" srcset="{BASE}assets/photos/hall-portrait-640.jpg 640w, {BASE}assets/photos/hall-portrait-1200.jpg 1200w" sizes="(min-width: 900px) 300px, 50vw" alt="Клінер DULI у фартуху в холі приватного будинку з паркетом і вітражними дверима" width="640" height="800" loading="lazy">
+      </figure>
+      </div>
       <div class="hs__cta">
         <p>Ціну називаємо після огляду або за фото — зазвичай у той самий день. Можна поєднати з прибиранням в один виїзд.</p>
         <a class="btn btn--primary" href="{TEL}" data-track="cta_home_services">{ic('phone')} Зателефонувати</a>
@@ -973,7 +978,7 @@ def service_page(s):
             + header(cur=BASE + "services/") + crumb_html
             + page_hero(s["h1"], s["intro"], s["from"], s["unit"],
                         "Мінімальне замовлення — %s ₴. Виїзд по Одесі безкоштовний."
-                        % uah(next((t["min"] for t in TYPES if t["id"] == s["calc"]), CLAIMS["min_order_uah"])),
+                        % uah(s.get("min_order") or next((t["min"] for t in TYPES if t["id"] == s["calc"]), CLAIMS["min_order_uah"])),
                         img=s.get("hero_photo"), img_alt=s.get("hero_alt", ""),
                         cta="%s?type=%s&amp;object=%s" % (CALC, s["calc"], obj))
             + f"""

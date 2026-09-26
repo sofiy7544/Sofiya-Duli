@@ -251,6 +251,9 @@ SERVICES = [
         "outcome": "Диван, матрац чи духовка — як нові, за один візит",
         "photo": "assets/illus/dodatkovi-poslugy.svg",                      # assets/photos/<slug>.webp
         "lead": "Техніка, меблі, балкон, хімчистка.",
+        "min_order": 1500,
+        "hero_photo": "assets/photos/balcony-wide-640.jpg",
+        "hero_alt": "Клінер DULI миє плитку на балконі: підлога в піні, зелений фартух",
         "from": 450, "unit": "шт",
         "h1": "Додаткові послуги клінінгу в Одесі",
         "seo_title": "Хімчистка меблів і техніки в Одесі | DULI Service",

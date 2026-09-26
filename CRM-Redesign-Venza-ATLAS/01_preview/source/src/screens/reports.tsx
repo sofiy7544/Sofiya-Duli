@@ -15,6 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState, ErrorState } from '@/components/ui/state';
 import { STAGE_DOT } from '@/components/ui/badge';
 import { BarRow, ChartFigure, StatTile, TableToggle } from '@/components/ui/chart';
+import { tr } from '@/lib/i18n';
 
 /**
  * /reports (в CRM /insights ⇒ /reports). Состав по SCREEN-MAP: KPI · воронка ·
@@ -43,14 +44,14 @@ export function ReportsScreen() {
   const setPeriod = (p: Period) => { try { localStorage.setItem(PERIOD_STORAGE_KEY, p); } catch { /* ignore */ } setPeriodState(p); };
 
   const periodFilter = (
-    <SegmentedControl<Period> label="Период отчёта" size="sm" className="w-full sm:w-auto" value={period} onChange={setPeriod}
+    <SegmentedControl<Period> label={tr('Период отчёта')} size="sm" className="w-full sm:w-auto" value={period} onChange={setPeriod}
       options={PERIODS.map((p) => ({ value: p, label: PERIOD_LABEL[p] }))} />
   );
 
-  if (r.error) return <PageBody><PageHeader title="Отчёты" /><ErrorState error={r.error} onRetry={r.retry} what="отчёты" /></PageBody>;
+  if (r.error) return <PageBody><PageHeader title={tr('Отчёты')} /><ErrorState error={r.error} onRetry={r.retry} what={tr('отчёты')} /></PageBody>;
   if (r.loading || !r.data) {
     return (
-      <PageBody><PageHeader title="Отчёты">{periodFilter}</PageHeader>
+      <PageBody><PageHeader title={tr('Отчёты')}>{periodFilter}</PageHeader>
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">{[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-[92px]" />)}</div>
         <Skeleton className="mt-4 h-64" /><Skeleton className="mt-4 h-64" />
       </PageBody>
@@ -64,13 +65,13 @@ export function ReportsScreen() {
   const deals = (d.data ?? []).filter((x) => (x.status === 'COMPLETED' ? inPeriod(x.closedAt ?? x.createdAt, period) : inPeriod(x.createdAt, period)));
 
   if (allLeads.length === 0) {
-    return <PageBody><PageHeader title="Отчёты" /><EmptyState icon={BarChart3} title="Пока нечего показывать" text="Отчёты появятся, когда в воронку попадут первые лиды." /></PageBody>;
+    return <PageBody><PageHeader title={tr('Отчёты')} /><EmptyState icon={BarChart3} title={tr('Пока нечего показывать')} text={tr('Отчёты появятся, когда в воронку попадут первые лиды.')} /></PageBody>;
   }
   if (leads.length === 0) {
     return (
-      <PageBody><PageHeader title="Отчёты" subtitle={`Период: ${PERIOD_HINT[period]}`}>{periodFilter}</PageHeader>
-        <EmptyState icon={BarChart3} title="За этот период данных нет"
-          text={`Лиды за ${PERIOD_HINT[period]} не найдены. Выберите более широкий период — например, «Всё время».`} />
+      <PageBody><PageHeader title={tr('Отчёты')} subtitle={tr('Период: {p}', { p: PERIOD_HINT[period] })}>{periodFilter}</PageHeader>
+        <EmptyState icon={BarChart3} title={tr('За этот период данных нет')}
+          text={tr('Лиды за {p} не найдены. Выберите более широкий период — например, «Всё время».', { p: PERIOD_HINT[period] })} />
       </PageBody>
     );
   }
@@ -111,29 +112,29 @@ export function ReportsScreen() {
   }).filter((a) => a.active + a.won > 0).sort((a, b) => b.active - a.active);
 
   const reasons = Object.entries(lost.reduce<Record<string, number>>((acc, l) => {
-    const key = l.lostReason?.trim() || 'Причина не указана';
+    const key = l.lostReason?.trim() || tr('Причина не указана');
     acc[key] = (acc[key] ?? 0) + 1; return acc;
   }, {})).map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
   const reasonMax = Math.max(1, ...reasons.map((x) => x.value));
 
   return (
     <PageBody>
-      <PageHeader title="Отчёты"
-        subtitle={`${PERIOD_HINT[period]} · ${leads.length} ${plural(leads.length, 'лид', 'лида', 'лидов')}${period === 'all' ? '' : ` из ${allLeads.length}`}`}>
+      <PageHeader title={tr('Отчёты')}
+        subtitle={`${PERIOD_HINT[period]} · ${leads.length} ${plural(leads.length, 'лид', 'лида', 'лидов')}${period === 'all' ? '' : ` ${tr('из')} ${allLeads.length}`}`}>
         {periodFilter}
       </PageHeader>
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatTile label="В работе" value={String(active.length)} hint={`${money(active.reduce((a, l) => a + avg(l), 0), 'EUR', true)} бюджетов`} />
-        <StatTile label="Конверсия в сделку" value={closed > 0 ? `${conversion}%` : '—'} hint={closed > 0 ? `${won.length} из ${closed} закрытых` : 'Закрытых лидов пока нет'} />
-        <StatTile label="Закрыто сделок" value={String(completed.length)} hint={money(completed.reduce((a, x) => a + x.amount, 0), 'EUR', true)} />
-        <StatTile label="Комиссия" value={money(commission, 'EUR', true)} hint="По завершённым сделкам" />
+        <StatTile label={tr('В работе')} value={String(active.length)} hint={tr('{sum} бюджетов', { sum: money(active.reduce((a, l) => a + avg(l), 0), 'EUR', true) })} />
+        <StatTile label={tr('Конверсия в сделку')} value={closed > 0 ? `${conversion}%` : '—'} hint={closed > 0 ? tr('{won} из {closed} закрытых', { won: won.length, closed }) : tr('Закрытых лидов пока нет')} />
+        <StatTile label={tr('Закрыто сделок')} value={String(completed.length)} hint={money(completed.reduce((a, x) => a + x.amount, 0), 'EUR', true)} />
+        <StatTile label={tr('Комиссия')} value={money(commission, 'EUR', true)} hint={tr('По завершённым сделкам')} />
       </div>
 
       <ChartFigure
-        title="Воронка по этапам"
-        caption="Сколько лидов стоит на каждом этапе и на какую сумму бюджетов."
-        action={<Link href="/leads" className="tap-link text-[13px] font-medium text-primary hover:underline">Открыть канбан</Link>}
+        title={tr('Воронка по этапам')}
+        caption={tr('Сколько лидов стоит на каждом этапе и на какую сумму бюджетов.')}
+        action={<Link href="/leads" className="tap-link text-[13px] font-medium text-primary hover:underline">{tr('Открыть канбан')}</Link>}
       >
         {funnel.map((x) => (
           <BarRow key={x.key} label={x.label} color={x.color} value={x.value} max={funnelMax}
@@ -142,19 +143,19 @@ export function ReportsScreen() {
       </ChartFigure>
 
       <ChartFigure
-        title="Каналы"
-        caption="Откуда пришли лиды и сколько из них дошли до сделки."
+        title={tr('Каналы')}
+        caption={tr('Откуда пришли лиды и сколько из них дошли до сделки.')}
         action={<TableToggle on={asTable} onToggle={() => setAsTable((v) => !v)} />}
       >
         {asTable ? (
           <div data-hscroll className="overflow-x-auto">
             <table className="w-full text-[14px]">
-              <caption className="sr-only">Лиды по каналам привлечения</caption>
+              <caption className="sr-only">{tr('Лиды по каналам привлечения')}</caption>
               <thead><tr className="border-b border-border text-left text-[12.5px] text-muted-foreground">
-                <th scope="col" className="py-2.5 pr-3 font-medium">Канал</th>
-                <th scope="col" className="px-3 py-2.5 text-right font-medium">Лидов</th>
-                <th scope="col" className="px-3 py-2.5 text-right font-medium">Сделок</th>
-                <th scope="col" className="py-2.5 pl-3 text-right font-medium">Бюджеты</th>
+                <th scope="col" className="py-2.5 pr-3 font-medium">{tr('Канал')}</th>
+                <th scope="col" className="px-3 py-2.5 text-right font-medium">{tr('Лидов')}</th>
+                <th scope="col" className="px-3 py-2.5 text-right font-medium">{tr('Сделок')}</th>
+                <th scope="col" className="py-2.5 pl-3 text-right font-medium">{tr('Бюджеты')}</th>
               </tr></thead>
               <tbody>
                 {channels.map((c) => (
@@ -171,23 +172,23 @@ export function ReportsScreen() {
         ) : channels.map((c) => (
           <BarRow key={c.key} label={c.label} color={c.color} value={c.value} max={channelMax}
             href={`/leads?source=${c.key}`}
-            right={<><b className="tabular">{c.value}</b>{c.won > 0 && <span className="t-caption ml-2 tabular">{c.won} в сделку</span>}</>} />
+            right={<><b className="tabular">{c.value}</b>{c.won > 0 && <span className="t-caption ml-2 tabular">{c.won} {tr('в сделку')}</span>}</>} />
         ))}
       </ChartFigure>
 
       <section className="surface mt-4 p-4 lg:p-5">
-        <h2 className="t-h2">Агенты</h2>
-        <p className="t-caption mt-1">Нагрузка и результат. Строка открывает лиды агента.</p>
+        <h2 className="t-h2">{tr('Агенты')}</h2>
+        <p className="t-caption mt-1">{tr('Нагрузка и результат. Строка открывает лиды агента.')}</p>
         <div data-hscroll className="mt-3 overflow-x-auto">
           <table className="w-full min-w-[560px] text-[14px]">
-            <caption className="sr-only">Нагрузка и результат агентов</caption>
+            <caption className="sr-only">{tr('Нагрузка и результат агентов')}</caption>
             <thead>
               <tr className="border-b border-border text-left text-[12.5px] text-muted-foreground">
-                <th scope="col" className="py-2.5 pr-3 font-medium">Агент</th>
-                <th scope="col" className="px-3 py-2.5 text-right font-medium">В работе</th>
-                <th scope="col" className="px-3 py-2.5 text-right font-medium">Сделок</th>
-                <th scope="col" className="px-3 py-2.5 text-right font-medium">Конверсия</th>
-                <th scope="col" className="py-2.5 pl-3 text-right font-medium">Объём</th>
+                <th scope="col" className="py-2.5 pr-3 font-medium">{tr('Агент')}</th>
+                <th scope="col" className="px-3 py-2.5 text-right font-medium">{tr('В работе')}</th>
+                <th scope="col" className="px-3 py-2.5 text-right font-medium">{tr('Сделок')}</th>
+                <th scope="col" className="px-3 py-2.5 text-right font-medium">{tr('Конверсия')}</th>
+                <th scope="col" className="py-2.5 pl-3 text-right font-medium">{tr('Объём')}</th>
               </tr>
             </thead>
             <tbody>
@@ -209,13 +210,13 @@ export function ReportsScreen() {
 
       <section className="surface mt-4 p-4 lg:p-5">
         <div className="flex items-center justify-between gap-3">
-          <h2 className="t-h2">Причины отказов</h2>
+          <h2 className="t-h2">{tr('Причины отказов')}</h2>
           {lost.length > 0
-            ? <Link href="/insights/lost-reasons" className="tap-link text-[13px] font-medium text-primary hover:underline">Подробнее</Link>
+            ? <Link href="/insights/lost-reasons" className="tap-link text-[13px] font-medium text-primary hover:underline">{tr('Подробнее')}</Link>
             : <span className="t-caption tabular">0</span>}
         </div>
         {reasons.length === 0 ? (
-          <p className="t-caption mt-3">Проигранных лидов пока нет.</p>
+          <p className="t-caption mt-3">{tr('Проигранных лидов пока нет.')}</p>
         ) : (
           <div className="mt-3 space-y-2.5">
             {reasons.map((x) => (
@@ -226,7 +227,7 @@ export function ReportsScreen() {
         )}
       </section>
 
-      <p className="t-caption mt-4">Данные превью. В CRM отчёт берёт те же поля из <span className="font-medium">/api/reports</span>.</p>
+      <p className="t-caption mt-4">{tr('Данные превью. В CRM отчёт берёт те же поля из')} <span className="font-medium">/api/reports</span>.</p>
     </PageBody>
   );
 }

@@ -28,6 +28,7 @@ import { CallDispositionSheet, RemindSheet } from '@/components/overlays/person-
 import { leadUrgency } from '@/lib/lead-urgency';
 import { PRIORITY_LABEL } from '@/lib/labels';
 import type { Priority } from '@/lib/mock/types';
+import { tr } from '@/lib/i18n';
 
 export function LeadDetailScreen({ id }: { id: string }) {
   const { family } = useTheme();
@@ -43,8 +44,8 @@ export function LeadDetailScreen({ id }: { id: string }) {
   const settings = usePreviewSettings();
   const { move, lostSheet } = useStageMove();
 
-  if (r.error) return <PageBody><PageHeader title="Лид" back="/leads" /><ErrorState error={r.error} onRetry={r.retry} what="карточку лида" /></PageBody>;
-  if (r.loading || !r.data) return <PageBody><PageHeader title="Загружаем…" back="/leads" large={false} /><DetailSkeleton /></PageBody>;
+  if (r.error) return <PageBody><PageHeader title={tr('Лид')} back="/leads" /><ErrorState error={r.error} onRetry={r.retry} what={tr('карточку лида')} /></PageBody>;
+  if (r.loading || !r.data) return <PageBody><PageHeader title={tr('Загружаем…')} back="/leads" large={false} /><DetailSkeleton /></PageBody>;
 
   const lead = r.data;
   const client = store.db.clients.find((c) => c.id === lead.clientId)!;
@@ -63,8 +64,8 @@ export function LeadDetailScreen({ id }: { id: string }) {
     <CallDispositionSheet open={call} onOpenChange={setCall} clientId={client.id} leadId={lead.id} name={client.fullName} phone={client.primaryPhone} />
     <RemindSheet open={remind} onOpenChange={setRemind} leadId={lead.id} current={lead.nextActionAt} />
     <ScheduleShowingSheet open={showing} onOpenChange={setShowing} client={client} defaultPropertyId={lead.interestPropertyId} />
-    <ConfirmDialog open={del} onOpenChange={setDel} title="Удалить лид?" text={`Лид ${client.fullName} и его история будут удалены. Клиент останется в базе.`} confirmLabel="Удалить"
-      onConfirm={() => { setDel(false); router.navigate('/leads', { replace: true }); toast.success('Лид удалён'); }} />
+    <ConfirmDialog open={del} onOpenChange={setDel} title={tr('Удалить лид?')} text={tr('Лид {name} и его история будут удалены. Клиент останется в базе.', { name: client.fullName })} confirmLabel={tr('Удалить')}
+      onConfirm={() => { setDel(false); router.navigate('/leads', { replace: true }); toast.success(tr('Лид удалён')); }} />
     {lostSheet}
   </>);
 
@@ -72,22 +73,22 @@ export function LeadDetailScreen({ id }: { id: string }) {
   if (family === 'atlas' && isDesktop) {
     return (
       <PageBody wide>
-        <PageHeader title={client.fullName} back="/leads" large={false} subtitle={<span className="flex items-center gap-2"><StageBadge stage={lead.stage} /><PriorityMark priority={lead.priority} withLabel />Создан {relDay(lead.createdAt).toLowerCase()}, {SOURCE_LABEL[lead.source]}</span>}
-          actions={<><Button variant="outline" size="sm" onClick={() => setStageOpen(true)}><Workflow />Этап</Button><Button variant="outline" size="sm" onClick={() => setDel(true)} aria-label="Удалить лид"><Trash2 /></Button></>} />
+        <PageHeader title={client.fullName} back="/leads" large={false} subtitle={<span className="flex items-center gap-2"><StageBadge stage={lead.stage} /><PriorityMark priority={lead.priority} withLabel />{tr('Создан')}{relDay(lead.createdAt).toLowerCase()}, {SOURCE_LABEL[lead.source]}</span>}
+          actions={<><Button variant="outline" size="sm" onClick={() => setStageOpen(true)}><Workflow />{tr('Этап')}</Button><Button variant="outline" size="sm" onClick={() => setDel(true)} aria-label={tr('Удалить лид')}><Trash2 /></Button></>} />
         <StageStepper lead={lead} onPick={(s) => move(lead, s)} />
         <div className="mt-4 grid grid-cols-[240px_300px_minmax(0,1fr)_320px] gap-4 max-2xl:grid-cols-[300px_minmax(0,1fr)_320px]">
           <LeadSwitcher currentId={lead.id} />
           <div className="space-y-4">
             <section className="surface p-4"><div className="mb-3 flex items-center gap-3"><Avatar name={client.fullName} size={44} /><div className="min-w-0"><Link href={`/clients/${client.id}`} className="block truncate font-semibold hover:underline">{client.fullName}</Link><div className="t-caption">{CLIENT_TYPE_LABEL[client.type]}</div></div></div>{actions}</section>
-            <section className="surface p-4"><h2 className="t-h3 mb-2">Запрос</h2><RequestList lead={lead} client={client} /></section>
-            <section className="surface p-4"><h2 className="t-h3 mb-2">Ответственный</h2><div className="flex items-center gap-2.5"><Avatar name={owner?.fullName ?? '—'} size={32} /><div><div className="text-[14px] font-medium">{owner?.fullName ?? 'Не назначен'}</div><div className="t-caption">Риелтор</div></div></div></section>
+            <section className="surface p-4"><h2 className="t-h3 mb-2">{tr('Запрос')}</h2><RequestList lead={lead} client={client} /></section>
+            <section className="surface p-4"><h2 className="t-h3 mb-2">{tr('Ответственный')}</h2><div className="flex items-center gap-2.5"><Avatar name={owner?.fullName ?? '—'} src={owner?.avatarUrl} size={32} /><div><div className="text-[14px] font-medium">{owner?.fullName ?? tr('Не назначен')}</div><div className="t-caption">{tr('Риелтор')}</div></div></div></section>
           </div>
-          <section className="surface min-w-0 p-4"><div className="mb-3 flex items-center justify-between"><h2 className="t-h2">История</h2></div><div className="mb-4"><NoteComposer clientId={client.id} leadId={lead.id} /></div><ActivityTimeline leadId={lead.id} /></section>
+          <section className="surface min-w-0 p-4"><div className="mb-3 flex items-center justify-between"><h2 className="t-h2">{tr('История')}</h2></div><div className="mb-4"><NoteComposer clientId={client.id} leadId={lead.id} /></div><ActivityTimeline leadId={lead.id} /></section>
           <div className="space-y-4">
             <section className="surface p-4">{controls}</section>
             <NextAction lead={lead} onShowing={() => setShowing(true)} />
             {property && <InterestProperty id={property.id} />}
-            <section className="surface p-4"><h2 className="t-h3 mb-1">Задачи по лиду</h2><TaskMini tasks={tasks} /></section>
+            <section className="surface p-4"><h2 className="t-h3 mb-1">{tr('Задачи по лиду')}</h2><TaskMini tasks={tasks} /></section>
           </div>
         </div>
         {overlays}
@@ -104,34 +105,34 @@ export function LeadDetailScreen({ id }: { id: string }) {
         <div className="mt-3 lg:mt-0">
           <h1 className="t-h1">{client.fullName}</h1>
           <div className="mt-2 flex flex-wrap items-center justify-center gap-2 lg:justify-start">
-            <button onClick={() => setStageOpen(true)} className="inline-flex min-h-[40px] items-center rounded-full px-1 focus-visible:ring-2 focus-visible:ring-ring" aria-label={`Этап: ${STAGE_LABEL[lead.stage]}. Сменить`}><StageBadge stage={lead.stage} /></button>
+            <button onClick={() => setStageOpen(true)} className="inline-flex min-h-[40px] items-center rounded-full px-1 focus-visible:ring-2 focus-visible:ring-ring" aria-label={tr('Этап: {stage}. Сменить', { stage: STAGE_LABEL[lead.stage] })}><StageBadge stage={lead.stage} /></button>
             <PriorityMark priority={lead.priority} withLabel />
           </div>
         </div>
       </div>
       <div className="mx-auto mt-5 max-w-[420px] lg:mx-0">{actions}</div>
 
-      <SegmentedControl label="Разделы лида" className="mt-6 w-full lg:w-auto" value={tab} onChange={setTab}
-        options={[{ value: 'info', label: 'Инфо' }, { value: 'tasks', label: 'Задачи', count: tasks.filter((t) => !t.completedAt).length }, { value: 'history', label: 'История' }]} />
+      <SegmentedControl label={tr('Разделы лида')} className="mt-6 w-full lg:w-auto" value={tab} onChange={setTab}
+        options={[{ value: 'info', label: tr('Инфо') }, { value: 'tasks', label: tr('Задачи'), count: tasks.filter((t) => !t.completedAt).length }, { value: 'history', label: tr('История') }]} />
 
       <div key={tab} className="page-fade mt-4 space-y-4 pb-24 lg:pb-0">
         {tab === 'info' && (<>
           <section className="surface p-4">{controls}</section>
           <NextAction lead={lead} onShowing={() => setShowing(true)} />
-          <section className="surface p-4"><h2 className="t-h3 mb-2">Запрос клиента</h2><RequestList lead={lead} client={client} /></section>
+          <section className="surface p-4"><h2 className="t-h3 mb-2">{tr('Запрос клиента')}</h2><RequestList lead={lead} client={client} /></section>
           {property && <InterestProperty id={property.id} />}
-          <section className="surface p-4"><h2 className="t-h3 mb-2">Ответственный</h2><div className="flex items-center gap-2.5"><Avatar name={owner?.fullName ?? '—'} size={36} /><span className="text-[15px] font-medium">{owner?.fullName ?? 'Не назначен'}</span></div></section>
-          <Button variant="ghost" className="w-full text-danger-text" onClick={() => setDel(true)}><Trash2 />Удалить лид</Button>
+          <section className="surface p-4"><h2 className="t-h3 mb-2">{tr('Ответственный')}</h2><div className="flex items-center gap-2.5"><Avatar name={owner?.fullName ?? '—'} src={owner?.avatarUrl} size={36} /><span className="text-[15px] font-medium">{owner?.fullName ?? tr('Не назначен')}</span></div></section>
+          <Button variant="ghost" className="w-full text-danger-text" onClick={() => setDel(true)}><Trash2 />{tr('Удалить лид')}</Button>
         </>)}
         {tab === 'tasks' && <section className="surface p-4"><TaskMini tasks={tasks} /></section>}
         {tab === 'history' && <><NoteComposer clientId={client.id} leadId={lead.id} /><section className="surface p-4"><ActivityTimeline leadId={lead.id} /></section></>}
       </div>
 
       <div className="material fixed inset-x-0 bottom-[calc(max(0.75rem,env(safe-area-inset-bottom))+80px)] z-30 mx-3 flex gap-2 rounded-[20px] border border-[var(--glass-border)] p-2 shadow-lift lg:static lg:mx-0 lg:mt-6 lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none lg:backdrop-blur-none">
-        <Button variant="outline" className="flex-1" onClick={() => setStageOpen(true)}><Workflow />Этап</Button>
+        <Button variant="outline" className="flex-1" onClick={() => setStageOpen(true)}><Workflow />{tr('Этап')}</Button>
         {lead.stage === 'NEGOTIATION'
-          ? <Button className="flex-[1.6]" onClick={readyToBuy}><Handshake />Оформить сделку</Button>
-          : <Button className="flex-[1.6]" onClick={() => setShowing(true)}><CalendarPlus />Назначить показ</Button>}
+          ? <Button className="flex-[1.6]" onClick={readyToBuy}><Handshake />{tr('Оформить сделку')}</Button>
+          : <Button className="flex-[1.6]" onClick={() => setShowing(true)}><CalendarPlus />{tr('Назначить показ')}</Button>}
       </div>
       {overlays}
     </PageBody>
@@ -142,11 +143,11 @@ export function QuickActions({ client, onTask, onShowing, onCall, onRemind }: { 
   const settings = usePreviewSettings();
   const router = useRouter();
   const items = [
-    onCall ? { label: 'Звонок', icon: PhoneCall, onClick: onCall } : { label: 'Позвонить', icon: Phone, href: `tel:${client.primaryPhone.replace(/\s/g, '')}` },
-    onRemind ? { label: 'Напомнить', icon: BellRing, onClick: onRemind } : null,
-    settings.integrationsEnabled ? { label: 'Написать', icon: MessageCircle, onClick: () => router.navigate('/inbox') } : client.email ? { label: 'Почта', icon: Mail, href: `mailto:${client.email}` } : null,
-    onRemind ? null : { label: 'Задача', icon: CheckSquare, onClick: onTask },
-    { label: 'Показ', icon: CalendarPlus, onClick: onShowing },
+    onCall ? { label: tr('Звонок'), icon: PhoneCall, onClick: onCall } : { label: tr('Позвонить'), icon: Phone, href: `tel:${client.primaryPhone.replace(/\s/g, '')}` },
+    onRemind ? { label: tr('Напомнить'), icon: BellRing, onClick: onRemind } : null,
+    settings.integrationsEnabled ? { label: tr('Написать'), icon: MessageCircle, onClick: () => router.navigate('/inbox') } : client.email ? { label: tr('Почта'), icon: Mail, href: `mailto:${client.email}` } : null,
+    onRemind ? null : { label: tr('Задача'), icon: CheckSquare, onClick: onTask },
+    { label: tr('Показ'), icon: CalendarPlus, onClick: onShowing },
   ].filter(Boolean) as { label: string; icon: typeof Phone; href?: string; onClick?: () => void }[];
   return (
     <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}>
@@ -161,9 +162,9 @@ export function QuickActions({ client, onTask, onShowing, onCall, onRemind }: { 
 
 function RequestList({ lead, client }: { lead: Lead; client: Client }) {
   const rows: [string, React.ReactNode][] = [
-    ['Цель', PURPOSE_LABEL[lead.purpose]], ['Бюджет', <span className="tabular">{budget(lead.budgetMin, lead.budgetMax, lead.budgetCurrency)}</span>],
-    ['Районы', client.preferences?.districts.join(', ') || '—'], ['Комнат', client.preferences?.rooms?.min ? `от ${client.preferences.rooms.min}` : '—'],
-    ['Телефон', <a href={`tel:${client.primaryPhone}`} className="tabular text-primary">{client.primaryPhone}</a>], ['Источник', SOURCE_LABEL[lead.source]],
+    [tr('Цель'), PURPOSE_LABEL[lead.purpose]], [tr('Бюджет'), <span className="tabular">{budget(lead.budgetMin, lead.budgetMax, lead.budgetCurrency)}</span>],
+    [tr('Районы'), client.preferences?.districts.join(', ') || '—'], [tr('Комнат'), client.preferences?.rooms?.min ? tr('от {n}', { n: client.preferences.rooms.min }) : '—'],
+    [tr('Телефон'), <a href={`tel:${client.primaryPhone}`} className="tabular text-primary">{client.primaryPhone}</a>], [tr('Источник'), SOURCE_LABEL[lead.source]],
   ];
   return <dl className="row-divider -mx-1">{rows.map(([k, v]) => <div key={k} className="flex items-baseline justify-between gap-4 px-1 py-2.5 text-[14.5px]"><dt className="text-muted-foreground">{k}</dt><dd className="text-right font-medium">{v}</dd></div>)}</dl>;
 }
@@ -172,10 +173,10 @@ function NextAction({ lead, onShowing }: { lead: Lead; onShowing: () => void }) 
   const overdue = lead.nextActionAt && new Date(lead.nextActionAt) < new Date();
   return (
     <section className={cn('rounded-card p-4', overdue ? 'border border-danger/25 bg-danger/8' : 'bg-primary-soft')}>
-      <h2 className={cn('text-[13px] font-medium', overdue ? 'text-danger-text' : 'text-primary')}>{overdue ? 'Следующее действие просрочено' : 'Следующее действие'}</h2>
-      {lead.nextActionAt ? <p className="mt-1 text-[17px] font-semibold tabular">{relDay(lead.nextActionAt)}, {time(lead.nextActionAt)}</p> : <p className="mt-1 text-[15px]">Не запланировано</p>}
+      <h2 className={cn('text-[13px] font-medium', overdue ? 'text-danger-text' : 'text-primary')}>{overdue ? tr('Следующее действие просрочено') : tr('Следующее действие')}</h2>
+      {lead.nextActionAt ? <p className="mt-1 text-[17px] font-semibold tabular">{relDay(lead.nextActionAt)}, {time(lead.nextActionAt)}</p> : <p className="mt-1 text-[15px]">{tr('Не запланировано')}</p>}
       {lead.interestNote && <p className="mt-1 text-[14px] text-foreground/70">{lead.interestNote}</p>}
-      {!lead.nextActionAt && <Button size="sm" variant="outline" className="mt-3" onClick={onShowing}><CalendarPlus />Запланировать</Button>}
+      {!lead.nextActionAt && <Button size="sm" variant="outline" className="mt-3" onClick={onShowing}><CalendarPlus />{tr('Запланировать')}</Button>}
     </section>
   );
 }
@@ -185,7 +186,7 @@ function InterestProperty({ id }: { id: string }) {
   return (
     <Link href={`/properties/${p.id}`} className="pressable surface flex items-center gap-3 p-2.5 pr-3">
       <PropertyMedia art={p.photos[0]?.art ?? 0} aspect="1/1" className="w-[72px] shrink-0 !rounded-[12px]" />
-      <div className="min-w-0 flex-1"><div className="t-micro">Интересуется</div><div className="truncate text-[15px] font-semibold">{p.title}</div><div className="t-caption truncate">{p.district}</div></div>
+      <div className="min-w-0 flex-1"><div className="t-micro">{tr('Интересуется')}</div><div className="truncate text-[15px] font-semibold">{p.title}</div><div className="t-caption truncate">{p.district}</div></div>
       <div className="text-right"><div className="t-num text-[16px] font-semibold">{money(p.price, p.currency, true)}</div><ChevronRight className="ml-auto mt-1 h-4 w-4 text-muted-foreground" aria-hidden /></div>
     </Link>
   );
@@ -193,7 +194,7 @@ function InterestProperty({ id }: { id: string }) {
 
 function TaskMini({ tasks }: { tasks: Task[] }) {
   const [, force] = React.useReducer((x: number) => x + 1, 0);
-  if (!tasks.length) return <p className="t-caption py-4 text-center">Задач нет</p>;
+  if (!tasks.length) return <p className="t-caption py-4 text-center">{tr('Задач нет')}</p>;
   return (
     <ul className="row-divider">
       {tasks.map((t) => (
@@ -209,7 +210,7 @@ function TaskMini({ tasks }: { tasks: Task[] }) {
 function StageStepper({ lead, onPick }: { lead: Lead; onPick: (s: typeof STAGES_ACTIVE[number]) => void }) {
   const idx = STAGES_ACTIVE.indexOf(lead.stage as typeof STAGES_ACTIVE[number]);
   return (
-    <ol className="surface flex overflow-hidden p-1" aria-label="Этапы воронки">
+    <ol className="surface flex overflow-hidden p-1" aria-label={tr('Этапы воронки')}>
       {STAGES_ACTIVE.map((s, i) => (
         <li key={s} className="flex-1">
           <button onClick={() => i !== idx && onPick(s)} aria-current={i === idx ? 'step' : undefined}
@@ -234,34 +235,34 @@ export function ScheduleShowingSheet({ open, onOpenChange, client, defaultProper
   const d = new Date(); d.setDate(d.getDate() + day); if (hasTime) d.setHours(hh, mm, 0, 0);
   const conflict = hasTime ? store.db.events.find((e) => Math.abs(new Date(e.startsAt).getTime() - d.getTime()) < 60 * 60_000) : undefined;
   return (
-    <Sheet open={open} onOpenChange={onOpenChange} title="Назначить показ" description={client.fullName} desktop="side" size="sm"
-      footer={<><Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>Отмена</Button><Button className="flex-[2]" loading={busy} disabled={!hasTime} onClick={async () => {
+    <Sheet open={open} onOpenChange={onOpenChange} title={tr('Назначить показ')} description={client.fullName} desktop="side" size="sm"
+      footer={<><Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>{tr('Отмена')}</Button><Button className="flex-[2]" loading={busy} disabled={!hasTime} onClick={async () => {
         /* Показ создаётся по-настоящему: появляется в календаре и в истории
            клиента. Раньше здесь был только тост, и назначенного показа потом
            нигде не было. */
         setBusy(true);
         const property = store.db.properties.find((p) => p.id === propertyId);
         try {
-          await api.createEvent({ kind: 'SHOWING', title: `Показ · ${property?.title ?? client.fullName}`, startsAt: d.toISOString(), minutes: 60, clientId: client.id, propertyId });
+          await api.createEvent({ kind: 'SHOWING', title: tr('Показ · {what}', { what: property?.title ?? client.fullName }), startsAt: d.toISOString(), minutes: 60, clientId: client.id, propertyId });
           onOpenChange(false);
-          toast.success(`Показ назначен: ${relDay(d.toISOString()).toLowerCase()}, ${time(d.toISOString())}`);
+          toast.success(tr('Показ назначен: {day}, {time}', { day: relDay(d.toISOString()).toLowerCase(), time: time(d.toISOString()) }));
         } catch (err) { toast.error((err as Error).message); }
         finally { setBusy(false); }
-      }}>Назначить</Button></>}>
+      }}>{tr('Назначить')}</Button></>}>
       <div className="space-y-5">
-        <fieldset><legend className="mb-2 text-[13px] font-medium">Объект</legend>
+        <fieldset><legend className="mb-2 text-[13px] font-medium">{tr('Объект')}</legend>
           <div className="space-y-2">{store.db.properties.filter((p) => p.status !== 'SOLD').slice(0, 4).map((p) => (
             <button key={p.id} onClick={() => setPropertyId(p.id)} aria-pressed={propertyId === p.id} className={cn('flex w-full min-w-0 items-center gap-3 rounded-control border p-2 text-left transition-colors', propertyId === p.id ? 'border-primary bg-primary-soft' : 'border-border bg-surface')}>
               <PropertyMedia art={p.photos[0].art} aspect="1/1" className="w-12 shrink-0 !rounded-[10px]" /><span className="min-w-0 flex-1"><span className="block truncate text-[14.5px] font-medium">{p.title}</span><span className="t-caption">{p.district}</span></span>
             </button>))}</div>
         </fieldset>
-        <fieldset><legend className="mb-2 text-[13px] font-medium">День</legend>
+        <fieldset><legend className="mb-2 text-[13px] font-medium">{tr('День')}</legend>
           <div className="grid grid-cols-3 gap-2">{[0, 1, 2].map((k) => <button key={k} onClick={() => setDay(k)} aria-pressed={day === k} className={cn('h-10 min-w-0 truncate rounded-full border px-2 text-[14px] font-medium', day === k ? 'border-primary bg-primary-soft text-primary-text' : 'border-border bg-surface')}>{relDay(new Date(Date.now() + k * 86_400_000).toISOString())}</button>)}</div>
         </fieldset>
-        <Field label="Время" hint="Длительность 60 минут" error={hasTime ? undefined : 'Выберите время показа'}>
+        <Field label={tr('Время')} hint={tr('Длительность 60 минут')} error={hasTime ? undefined : tr('Выберите время показа')}>
           {(id, dsc) => <Input id={id} aria-describedby={dsc} invalid={!hasTime} required type="time" step={900} value={hour} onChange={(e) => setHour(e.target.value)} className="tabular" />}
         </Field>
-        {conflict && <div role="status" className="rounded-control border border-warning/35 bg-warning/12 px-3.5 py-3 text-[14px] text-warning-text">Пересекается с «{conflict.title}» в {time(conflict.startsAt)}. Показ можно назначить, но проверьте расписание.</div>}
+        {conflict && <div role="status" className="rounded-control border border-warning/35 bg-warning/12 px-3.5 py-3 text-[14px] text-warning-text">{tr('Пересекается с «')}{conflict.title}{tr('» в')} {time(conflict.startsAt)}. Показ можно назначить, но проверьте расписание.</div>}
       </div>
     </Sheet>
   );
@@ -269,7 +270,7 @@ export function ScheduleShowingSheet({ open, onOpenChange, client, defaultProper
 
 export function DetailSkeleton() {
   return (
-    <div role="status" aria-label="Загрузка" className="space-y-4">
+    <div role="status" aria-label={tr('Загрузка')} className="space-y-4">
       <div className="flex flex-col items-center gap-3"><Skeleton className="h-20 w-20 rounded-full" /><Skeleton className="h-7 w-48" /><Skeleton className="h-5 w-28 rounded-full" /></div>
       <div className="grid grid-cols-4 gap-2">{[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-16 rounded-control" />)}</div>
       <Skeleton className="h-10 rounded-control" /><Skeleton className="h-40 rounded-card" /><Skeleton className="h-24 rounded-card" />
@@ -280,24 +281,24 @@ export const _unused = EmptyState;
 
 /** Правая панель лида: этап · приоритет · ответственный (ADMIN/MANAGER) · «Готов купить». */
 function LeadControls({ lead, canAssign, onStage, onReady }: { lead: Lead; canAssign: boolean; onStage: () => void; onReady: () => void }) {
-  const setPriority = async (p: Priority) => { await api.updateLead(lead.id, { priority: p }); toast.success(`Приоритет: ${PRIORITY_LABEL[p].toLowerCase()}`); };
+  const setPriority = async (p: Priority) => { await api.updateLead(lead.id, { priority: p }); toast.success(tr('Приоритет: {p}', { p: PRIORITY_LABEL[p].toLowerCase() })); };
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between gap-3"><span className="t-caption text-[13.5px]">Этап</span><button onClick={onStage} className="rounded-full focus-visible:ring-2 focus-visible:ring-ring" aria-label="Сменить этап"><StageBadge stage={lead.stage} /></button></div>
+      <div className="flex items-center justify-between gap-3"><span className="t-caption text-[13.5px]">{tr('Этап')}</span><button onClick={onStage} className="rounded-full focus-visible:ring-2 focus-visible:ring-ring" aria-label={tr('Сменить этап')}><StageBadge stage={lead.stage} /></button></div>
       <div>
-        <div className="t-caption mb-1.5 text-[13.5px]">Приоритет</div>
-        <SegmentedControl<Priority> label="Приоритет" className="w-full" value={lead.priority} onChange={setPriority} options={(['hot', 'warm', 'cold'] as Priority[]).map((p) => ({ value: p, label: PRIORITY_LABEL[p] }))} />
+        <div className="t-caption mb-1.5 text-[13.5px]">{tr('Приоритет')}</div>
+        <SegmentedControl<Priority> label={tr('Приоритет')} className="w-full" value={lead.priority} onChange={setPriority} options={(['hot', 'warm', 'cold'] as Priority[]).map((p) => ({ value: p, label: PRIORITY_LABEL[p] }))} />
       </div>
       <div className="flex items-center justify-between gap-3">
-        <label htmlFor={`as-${lead.id}`} className="t-caption text-[13.5px]">Ответственный</label>
+        <label htmlFor={`as-${lead.id}`} className="t-caption text-[13.5px]">{tr('Ответственный')}</label>
         {canAssign ? (
-          <select id={`as-${lead.id}`} value={lead.assignedUserId ?? ''} onChange={async (e) => { await api.updateLead(lead.id, { assignedUserId: e.target.value || null }); toast.success('Ответственный изменён'); }}
+          <select id={`as-${lead.id}`} value={lead.assignedUserId ?? ''} onChange={async (e) => { await api.updateLead(lead.id, { assignedUserId: e.target.value || null }); toast.success(tr('Ответственный изменён')); }}
             className="h-9 max-w-[60%] rounded-control border border-input bg-surface px-2.5 text-[14px] font-medium outline-none focus:border-primary">
-            <option value="">Не назначен</option>{users.map((u) => <option key={u.id} value={u.id}>{u.fullName}</option>)}
+            <option value="">{tr('Не назначен')}</option>{users.map((u) => <option key={u.id} value={u.id}>{u.fullName}</option>)}
           </select>
-        ) : <span className="text-[14px] font-medium">{users.find((u) => u.id === lead.assignedUserId)?.fullName ?? 'Не назначен'}</span>}
+        ) : <span className="text-[14px] font-medium">{users.find((u) => u.id === lead.assignedUserId)?.fullName ?? tr('Не назначен')}</span>}
       </div>
-      {lead.stage !== 'WON' && lead.stage !== 'LOST' && <Button className="w-full" onClick={onReady}><Handshake />Готов купить</Button>}
+      {lead.stage !== 'WON' && lead.stage !== 'LOST' && <Button className="w-full" onClick={onReady}><Handshake />{tr('Готов купить')}</Button>}
     </div>
   );
 }
@@ -307,14 +308,14 @@ function LeadSwitcher({ currentId }: { currentId: string }) {
   const [q, setQ] = React.useState('');
   const list = store.db.leads.filter((l) => l.stage !== 'WON' && l.stage !== 'LOST').map((l) => ({ l, c: store.db.clients.find((c) => c.id === l.clientId)! })).filter(({ c }) => !q || c.fullName.toLowerCase().includes(q.toLowerCase()));
   return (
-    <aside className="surface flex max-h-[calc(100dvh-180px)] min-w-0 flex-col overflow-hidden max-2xl:hidden" aria-label="Другие лиды">
+    <aside className="surface flex max-h-[calc(100dvh-180px)] min-w-0 flex-col overflow-hidden max-2xl:hidden" aria-label={tr('Другие лиды')}>
       <div className="relative border-b border-border/70 p-2"><Search className="pointer-events-none absolute left-4.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" style={{ left: 18 }} aria-hidden />
-        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Найти лид" aria-label="Найти лид" className="h-9 w-full rounded-control bg-surface-2 pl-8 pr-2 text-[13.5px] outline-none focus:ring-2 focus:ring-ring" /></div>
+        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={tr('Найти лид')} aria-label={tr('Найти лид')} className="h-9 w-full rounded-control bg-surface-2 pl-8 pr-2 text-[13.5px] outline-none focus:ring-2 focus:ring-ring" /></div>
       <ul className="relative min-h-0 flex-1 overflow-y-auto p-1.5">
         {list.map(({ l, c }) => { const u = leadUrgency(l); return (
           <li key={l.id}><Link href={`/leads/${l.id}`} aria-current={l.id === currentId ? 'page' : undefined} className={cn('flex items-center gap-2.5 rounded-[9px] px-2 py-2 transition-colors', l.id === currentId ? 'bg-primary-soft' : 'hover:bg-surface-2')}>
             <Avatar name={c.fullName} size={28} /><span className="min-w-0 flex-1"><span className="block truncate text-[13.5px] font-medium">{c.fullName}</span><span className="block truncate text-[11.5px] text-muted-foreground">{STAGE_LABEL[l.stage]}</span></span>
-            {(u === 'overdue' || u === 'today') && <span aria-label={u === 'overdue' ? 'Просрочено' : 'Сегодня'} className={cn('h-2 w-2 shrink-0 rounded-full', u === 'overdue' ? 'bg-danger' : 'bg-warning')} />}
+            {(u === 'overdue' || u === 'today') && <span aria-label={u === 'overdue' ? tr('Просрочено') : tr('Сегодня')} className={cn('h-2 w-2 shrink-0 rounded-full', u === 'overdue' ? 'bg-danger' : 'bg-warning')} />}
           </Link></li>); })}
       </ul>
     </aside>

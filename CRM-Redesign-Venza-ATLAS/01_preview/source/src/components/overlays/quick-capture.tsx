@@ -10,6 +10,7 @@ import { Field, Input, Select } from '@/components/ui/field';
 import { PickerField } from '@/components/ui/picker';
 import { SegmentedControl } from '@/components/ui/segmented';
 import { toast } from '@/components/ui/toast';
+import { tr } from '@/lib/i18n';
 
 /**
  * «Быстрый захват лида» — «молния» в шапке работающей CRM.
@@ -32,10 +33,10 @@ const CODES = [
 
 /** Заготовки заметки: те же роли, что у чипов в CRM. */
 const CHIPS = [
-  { key: 'callback', label: 'Перезвонить', text: 'Клиент просил перезвонить.' },
-  { key: 'deal', label: 'Договорённость', text: 'Договорились о следующем шаге.' },
-  { key: 'clarify', label: 'Уточнить', text: 'Нужно уточнить детали по объекту.' },
-  { key: 'custom', label: 'Свой текст', text: '' },
+  { key: 'callback', label: tr('Перезвонить'), text: tr('Клиент просил перезвонить.') },
+  { key: 'deal', label: tr('Договорённость'), text: tr('Договорились о следующем шаге.') },
+  { key: 'clarify', label: tr('Уточнить'), text: tr('Нужно уточнить детали по объекту.') },
+  { key: 'custom', label: tr('Свой текст'), text: '' },
 ];
 
 const todayAt = (hhmm: string) => {
@@ -57,7 +58,7 @@ export function QuickCapture() {
   const [v, setV] = React.useState({
     fullName: '', code: '+380', phone: '',
     clientId: '', district: '', address: '', price: '', propertyId: '',
-    note: 'Клиент просил перезвонить.', showingAt: '16:30',
+    note: tr('Клиент просил перезвонить.'), showingAt: '16:30',
   });
 
   const clients = store.db.clients.filter((c) => !c.isArchived);
@@ -74,9 +75,9 @@ export function QuickCapture() {
   const submit = async () => {
     const e: typeof errors = {};
     if (contactMode === 'new') {
-      if (!v.fullName.trim()) e.fullName = 'Без имени лид не найти потом';
-      if (v.phone.replace(/\D/g, '').length < 7) e.phone = 'Проверьте номер';
-    } else if (!v.clientId) e.fullName = 'Выберите клиента из CRM';
+      if (!v.fullName.trim()) e.fullName = tr('Без имени лид не найти потом');
+      if (v.phone.replace(/\D/g, '').length < 7) e.phone = tr('Проверьте номер');
+    } else if (!v.clientId) e.fullName = tr('Выберите клиента из CRM');
     setErrors(e);
     if (Object.keys(e).length > 0) return;
 
@@ -87,13 +88,13 @@ export function QuickCapture() {
       const lead = await api.createLead({ fullName: name, primaryPhone: `${v.code} ${v.phone}`.trim(), priority: 'warm', budgetMax });
 
       if (next === 'showing') {
-        await api.createTask({ title: `Показ: ${name}`, type: 'SHOWING', dueAt: todayAt(v.showingAt), leadId: lead.id });
+        await api.createTask({ title: tr('Показ: {name}', { name }), type: 'SHOWING', dueAt: todayAt(v.showingAt), leadId: lead.id });
       } else if (v.note.trim()) {
         await api.createTask({ title: v.note.trim(), type: 'CALL', dueAt: todayAt('10:00'), leadId: lead.id });
       }
 
       ui.set({ quickCreate: null });
-      toast.success('Лид создан', { action: { label: 'Открыть', onClick: () => router.navigate(`/leads/${lead.id}`) } });
+      toast.success(tr('Лид создан'), { action: { label: tr('Открыть'), onClick: () => router.navigate(`/leads/${lead.id}`) } });
     } catch (err) {
       toast.error((err as Error).message);
     } finally {
@@ -106,20 +107,20 @@ export function QuickCapture() {
       {/* 1. Контакт */}
       <section>
         <div className="mb-2.5 flex items-center justify-between gap-3">
-          <h3 className="text-[12px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">1. Контакт</h3>
-          <SegmentedControl<ContactMode> label="Откуда контакт" size="sm" value={contactMode} onChange={setContactMode}
-            options={[{ value: 'new', label: 'Новый' }, { value: 'crm', label: 'Из CRM' }]} />
+          <h3 className="text-[12px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">{tr('1. Контакт')}</h3>
+          <SegmentedControl<ContactMode> label={tr('Откуда контакт')} size="sm" value={contactMode} onChange={setContactMode}
+            options={[{ value: 'new', label: tr('Новый') }, { value: 'crm', label: tr('Из CRM') }]} />
         </div>
         {contactMode === 'new' ? (
           <div className="space-y-3">
-            <Field label="ФИО" error={errors.fullName}>
+            <Field label={tr('ФИО')} error={errors.fullName}>
               {(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.fullName} value={v.fullName}
-                onChange={(e) => setV({ ...v, fullName: e.target.value })} placeholder="Ирина Савчук" autoComplete="name" />}
+                onChange={(e) => setV({ ...v, fullName: e.target.value })} placeholder={tr('Ирина Савчук')} autoComplete="name" />}
             </Field>
-            <Field label="Телефон" error={errors.phone}>
+            <Field label={tr('Телефон')} error={errors.phone}>
               {(id, d) => (
                 <div className="flex gap-2">
-                  <Select aria-label="Код страны" className="w-[136px] flex-none" value={v.code} onChange={(e) => setV({ ...v, code: e.target.value })}>
+                  <Select aria-label={tr('Код страны')} className="w-[136px] flex-none" value={v.code} onChange={(e) => setV({ ...v, code: e.target.value })}>
                     {CODES.map((c) => <option key={c.code} value={c.code}>{c.flag} {c.code}</option>)}
                   </Select>
                   <Input id={id} aria-describedby={d} invalid={!!errors.phone} className="flex-1" type="tel" inputMode="tel"
@@ -129,7 +130,7 @@ export function QuickCapture() {
             </Field>
           </div>
         ) : (
-          <PickerField label="Клиент из базы" error={errors.fullName} emptyLabel="Выберите клиента"
+          <PickerField label={tr('Клиент из базы')} error={errors.fullName} emptyLabel={tr('Выберите клиента')}
             value={v.clientId} onChange={(clientId) => setV({ ...v, clientId })}
             options={clients.map((c) => ({ value: c.id, label: c.fullName, meta: c.primaryPhone }))} />
         )}
@@ -138,33 +139,33 @@ export function QuickCapture() {
       {/* 2. Объект интереса */}
       <section>
         <div className="mb-2.5 flex items-center justify-between gap-3">
-          <h3 className="text-[12px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">2. Объект интереса</h3>
-          <SegmentedControl<PropertyMode> label="Объект интереса" size="sm" value={propertyMode} onChange={setPropertyMode}
-            options={[{ value: 'new', label: 'Новый' }, { value: 'crm', label: 'Из CRM' }, { value: 'none', label: 'Без' }]} />
+          <h3 className="text-[12px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">{tr('2. Объект интереса')}</h3>
+          <SegmentedControl<PropertyMode> label={tr('Объект интереса')} size="sm" value={propertyMode} onChange={setPropertyMode}
+            options={[{ value: 'new', label: tr('Новый') }, { value: 'crm', label: tr('Из CRM') }, { value: 'none', label: tr('Без') }]} />
         </div>
         {propertyMode === 'new' && (
           <div className="space-y-3">
-            <Field label="Район">{(id, d) => <Input id={id} aria-describedby={d} value={v.district} onChange={(e) => setV({ ...v, district: e.target.value })} placeholder="Набережная" />}</Field>
-            <Field label="Адрес">{(id, d) => <Input id={id} aria-describedby={d} value={v.address} onChange={(e) => setV({ ...v, address: e.target.value })} placeholder="ул. Приморская, 14" />}</Field>
-            <Field label="Цена">{(id, d) => <Input id={id} aria-describedby={d} inputMode="numeric" value={v.price} onChange={(e) => setV({ ...v, price: e.target.value })} placeholder="450 000" />}</Field>
-            <p className="t-caption">Тип, площадь и фото дозаполните позже: объект создастся как «Квартира», тип меняется на его странице.</p>
+            <Field label={tr('Район')}>{(id, d) => <Input id={id} aria-describedby={d} value={v.district} onChange={(e) => setV({ ...v, district: e.target.value })} placeholder={tr('Набережная')} />}</Field>
+            <Field label={tr('Адрес')}>{(id, d) => <Input id={id} aria-describedby={d} value={v.address} onChange={(e) => setV({ ...v, address: e.target.value })} placeholder={tr('ул. Приморская, 14')} />}</Field>
+            <Field label={tr('Цена')}>{(id, d) => <Input id={id} aria-describedby={d} inputMode="numeric" value={v.price} onChange={(e) => setV({ ...v, price: e.target.value })} placeholder="450 000" />}</Field>
+            <p className="t-caption">{tr('Тип, площадь и фото дозаполните позже: объект создастся как «Квартира», тип меняется на его странице.')}</p>
           </div>
         )}
         {propertyMode === 'crm' && (
-          <PickerField label="Объект из базы" emptyLabel="Выберите объект" searchPlaceholder="Найти по названию или району"
+          <PickerField label={tr('Объект из базы')} emptyLabel={tr('Выберите объект')} searchPlaceholder={tr('Найти по названию или району')}
             value={v.propertyId} onChange={(propertyId) => setV({ ...v, propertyId })}
             options={properties.map((p) => ({ value: p.id, label: p.title, meta: p.district }))} />
         )}
-        {propertyMode === 'none' && <p className="t-caption">Объект добавите позже — из карточки лида.</p>}
+        {propertyMode === 'none' && <p className="t-caption">{tr('Объект добавите позже — из карточки лида.')}</p>}
       </section>
 
       {/* 3. Что дальше */}
       <section>
-        <h3 className="mb-2.5 text-[12px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">3. Что дальше</h3>
-        <div role="radiogroup" aria-label="Следующее действие" className="space-y-2">
+        <h3 className="mb-2.5 text-[12px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">{tr('3. Что дальше')}</h3>
+        <div role="radiogroup" aria-label={tr('Следующее действие')} className="space-y-2">
           {([
-            { key: 'interest' as const, icon: MessageSquare, title: 'Интерес', text: 'Записать заметку, перезвонить потом' },
-            { key: 'showing' as const, icon: CalendarClock, title: 'Показ', text: 'Назначить дату и время показа' },
+            { key: 'interest' as const, icon: MessageSquare, title: tr('Интерес'), text: tr('Записать заметку, перезвонить потом') },
+            { key: 'showing' as const, icon: CalendarClock, title: tr('Показ'), text: tr('Назначить дату и время показа') },
           ]).map((o) => (
             <button key={o.key} type="button" role="radio" aria-checked={next === o.key} onClick={() => setNext(o.key)}
               className={cn('flex w-full items-start gap-3 rounded-card border p-3 text-left transition-colors',
@@ -190,15 +191,15 @@ export function QuickCapture() {
               ))}
             </div>
             <label className="mt-2.5 block">
-              <span className="sr-only">Текст заметки</span>
+              <span className="sr-only">{tr('Текст заметки')}</span>
               <textarea value={v.note} onChange={(e) => { setV({ ...v, note: e.target.value }); setChip('custom'); }} rows={3}
-                placeholder="О чём договорились"
+                placeholder={tr('О чём договорились')}
                 className="w-full resize-y rounded-control border border-border bg-surface p-3 text-[15px] outline-none transition-[border-color,box-shadow] focus:border-primary focus:shadow-[0_0_0_4px_hsl(var(--primary)/.12)]" />
             </label>
           </div>
         ) : (
           <div className="mt-3">
-            <Field label="Время показа" hint="Если время уже прошло, показ встанет на завтра">
+            <Field label={tr('Время показа')} hint={tr('Если время уже прошло, показ встанет на завтра')}>
               {(id, d) => <Input id={id} aria-describedby={d} required type="time" value={v.showingAt} onChange={(e) => setV({ ...v, showingAt: e.target.value })} />}
             </Field>
           </div>
@@ -206,8 +207,8 @@ export function QuickCapture() {
       </section>
 
       <div className="flex gap-2.5 pt-1">
-        <Button type="button" variant="outline" className="flex-1" onClick={() => ui.set({ quickCreate: null })}>Отмена</Button>
-        <Button type="button" className="flex-1" loading={busy} onClick={submit}><Zap />Создать</Button>
+        <Button type="button" variant="outline" className="flex-1" onClick={() => ui.set({ quickCreate: null })}>{tr('Отмена')}</Button>
+        <Button type="button" className="flex-1" loading={busy} onClick={submit}><Zap />{tr('Создать')}</Button>
       </div>
     </div>
   );

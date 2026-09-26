@@ -1,4 +1,4 @@
-import type { Activity, CalendarEvent, Client, Lead, Property, Task, User } from './types';
+import type { Activity, CalendarEvent, Client, Interest, Lead, Property, Task, User } from './types';
 
 /**
  * Демо-база превью. Все люди, телефоны и почты выдуманы.
@@ -13,6 +13,7 @@ import type { Activity, CalendarEvent, Client, Lead, Property, Task, User } from
  */
 const DAY = 86_400_000;
 const HOUR = 3_600_000;
+const MIN = 60_000;
 const now = new Date();
 const at = (dayOffset: number, h: number, m = 0) => {
   const d = new Date(now);
@@ -26,9 +27,10 @@ export const CURRENT_USER_ID = 'u1';
 
 // Сотрудники агентства тоже выдуманы — это демонстрационный набор, а не состав команды.
 export const users: User[] = [
-  { id: 'u1', fullName: 'Елена Радович', role: 'ADMIN', email: 'elena@agency.demo' },
-  { id: 'u2', fullName: 'Matteo Brunelli', role: 'REALTOR', email: 'matteo@agency.demo' },
-  { id: 'u3', fullName: 'Кирилл Дорош', role: 'REALTOR', email: 'kirill@agency.demo' },
+  { id: 'u1', fullName: 'Елена Радович', role: 'ADMIN', email: 'elena@ontop.property', active: true, lastSeenAt: ago(8 * MIN) },
+  { id: 'u2', fullName: 'Matteo Brunelli', role: 'REALTOR', email: 'matteo@ontop.property', active: true, lastSeenAt: ago(2 * HOUR) },
+  { id: 'u3', fullName: 'Кирилл Дорош', role: 'REALTOR', email: 'kirill@ontop.property', active: true, lastSeenAt: ago(26 * HOUR) },
+  { id: 'u4', fullName: 'Ольга Кравец', role: 'ASSISTANT', email: 'olga@ontop.property', active: false, lastSeenAt: ago(40 * DAY) },
 ];
 
 /** «Елена Радович» → «Елена Р.» — короткая подпись в списках и фильтрах. */
@@ -351,3 +353,13 @@ export const leads: Lead[] = [...coreLeads, ...extraLeads];
 export const tasks: Task[] = [...coreTasks, ...extraTasks];
 export const events: CalendarEvent[] = [...coreEvents, ...extraEvents];
 export const activities: Activity[] = [...coreActivities, ...extraActivities];
+
+/** Подборки и показы: у активных покупателей по два-три объекта на руках. */
+export const interests: Interest[] = [
+  { id: 'i1', clientId: 'c1', propertyId: 'p1', status: 'LIKED', at: ago(3 * DAY), note: 'Вид понравился обоим, смущает дорога к пляжу.' },
+  { id: 'i2', clientId: 'c1', propertyId: 'p4', status: 'SHOWN', at: ago(9 * DAY) },
+  { id: 'i3', clientId: 'c1', propertyId: 'p5', status: 'SELECTED', at: ago(1 * DAY) },
+  { id: 'i4', clientId: 'c13', propertyId: 'p2', status: 'SHOWN', at: ago(5 * DAY), note: 'Школа рядом, но третий этаж без лифта.' },
+  { id: 'i5', clientId: 'c13', propertyId: 'p6', status: 'REJECTED', at: ago(2 * DAY), note: 'Далеко от школы.' },
+  { id: 'i6', clientId: 'c10', propertyId: 'p3', status: 'SELECTED', at: ago(6 * HOUR) },
+];

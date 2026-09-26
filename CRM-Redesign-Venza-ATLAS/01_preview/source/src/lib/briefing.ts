@@ -1,5 +1,6 @@
 import type { CalendarEvent, Lead, Task } from './mock/types';
 import { STAGE_LABEL } from './labels';
+import { tr } from '@/lib/i18n';
 
 /**
  * Правила AI Briefing.
@@ -48,7 +49,7 @@ const days = (iso: string, now: number) => Math.floor((now - new Date(iso).getTi
 
 const bySeverity = (score: number): Severity => (score >= 85 ? 'now' : score >= 60 ? 'today' : 'week');
 
-export const SEVERITY_LABEL: Record<Severity, string> = { now: 'Сейчас', today: 'Сегодня', week: 'На этой неделе' };
+export const SEVERITY_LABEL: Record<Severity, string> = { now: tr('Сейчас'), today: tr('Сегодня'), week: tr('На этой неделе') };
 
 export type BriefingInput = {
   leads: Lead[];
@@ -67,12 +68,14 @@ export function buildBriefing({ leads, tasks, events, nameOf, now = Date.now() }
     const late = days(l.nextActionAt!, now);
     add({
       id: `overdue-${l.id}`, kind: 'overdue-action', score: 100 - Math.min(10, late),
-      title: `Связаться: ${nameOf(l.clientId)}`,
-      why: late >= 1 ? `Шаг просрочен на ${late} ${late === 1 ? 'день' : late < 5 ? 'дня' : 'дней'} · этап «${STAGE_LABEL[l.stage]}»` : `Шаг просрочен сегодня · этап «${STAGE_LABEL[l.stage]}»`,
+      title: tr('Связаться: {name}', { name: nameOf(l.clientId) }),
+      why: late >= 1
+        ? tr('Шаг просрочен на {n} {unit} · этап «{stage}»', { n: late, unit: late === 1 ? tr('день') : late < 5 ? tr('дня') : tr('дней'), stage: STAGE_LABEL[l.stage] })
+        : tr('Шаг просрочен сегодня · этап «{stage}»', { stage: STAGE_LABEL[l.stage] }),
       href: `/leads/${l.id}`,
       actions: [
-        { kind: 'task-call', label: 'Звонок сейчас', leadId: l.id, title: `Звонок: ${nameOf(l.clientId)}` },
-        { kind: 'plan-tomorrow', label: 'Перенести на завтра', leadId: l.id, at: atTomorrow(10) },
+        { kind: 'task-call', label: tr('Звонок сейчас'), leadId: l.id, title: tr('Звонок: {name}', { name: nameOf(l.clientId) }) },
+        { kind: 'plan-tomorrow', label: tr('Перенести на завтра'), leadId: l.id, at: atTomorrow(10) },
       ],
     });
   }
@@ -83,10 +86,10 @@ export function buildBriefing({ leads, tasks, events, nameOf, now = Date.now() }
     if (left <= 0 || left > 3 * HOUR) continue;
     add({
       id: `showing-${e.id}`, kind: 'showing-soon', score: 95 - Math.round(left / HOUR),
-      title: `Показ: ${e.title}`,
-      why: `Начало через ${Math.max(1, Math.round(left / 60_000))} мин · проверьте ключи и доступ`,
+      title: tr('Показ: {title}', { title: e.title }),
+      why: tr('Начало через {n} мин · проверьте ключи и доступ', { n: Math.max(1, Math.round(left / 60_000)) }),
       href: '/calendar',
-      actions: [{ kind: 'open', label: 'В календарь', href: '/calendar' }],
+      actions: [{ kind: 'open', label: tr('В календарь'), href: '/calendar' }],
     });
   }
 
@@ -95,10 +98,10 @@ export function buildBriefing({ leads, tasks, events, nameOf, now = Date.now() }
   if (lateTasks.length > 0) {
     add({
       id: 'tasks-overdue', kind: 'task-overdue', score: 88,
-      title: `Просроченные задачи: ${lateTasks.length}`,
-      why: `Самая старая — «${lateTasks[0].title}»`,
+      title: tr('Просроченные задачи: {n}', { n: lateTasks.length }),
+      why: tr('Самая старая — «{title}»', { title: lateTasks[0].title }),
       href: '/tasks',
-      actions: [{ kind: 'open', label: 'Открыть задачи', href: '/tasks' }],
+      actions: [{ kind: 'open', label: tr('Открыть задачи'), href: '/tasks' }],
     });
   }
 
@@ -106,12 +109,12 @@ export function buildBriefing({ leads, tasks, events, nameOf, now = Date.now() }
   for (const l of leads.filter((x) => x.priority === 'hot' && !x.nextActionAt)) {
     add({
       id: `noplan-${l.id}`, kind: 'hot-no-plan', score: 72,
-      title: `Нет следующего шага: ${nameOf(l.clientId)}`,
-      why: `Горячий лид на этапе «${STAGE_LABEL[l.stage]}» без запланированного действия`,
+      title: tr('Нет следующего шага: {name}', { name: nameOf(l.clientId) }),
+      why: tr('Горячий лид на этапе «{stage}» без запланированного действия', { stage: STAGE_LABEL[l.stage] }),
       href: `/leads/${l.id}`,
       actions: [
-        { kind: 'plan-today', label: 'Сегодня в 18:00', leadId: l.id, at: atToday(18) },
-        { kind: 'plan-tomorrow', label: 'Завтра в 10:00', leadId: l.id, at: atTomorrow(10) },
+        { kind: 'plan-today', label: tr('Сегодня в 18:00'), leadId: l.id, at: atToday(18) },
+        { kind: 'plan-tomorrow', label: tr('Завтра в 10:00'), leadId: l.id, at: atTomorrow(10) },
       ],
     });
   }
@@ -122,10 +125,10 @@ export function buildBriefing({ leads, tasks, events, nameOf, now = Date.now() }
     if (d < STALE_NEGOTIATION_DAYS) continue;
     add({
       id: `stale-${l.id}`, kind: 'negotiation-stale', score: 68,
-      title: `Переговоры замерли: ${nameOf(l.clientId)}`,
-      why: `Нет контакта ${d} ${d < 5 ? 'дня' : 'дней'} на этапе «Переговоры»`,
+      title: tr('Переговоры замерли: {name}', { name: nameOf(l.clientId) }),
+      why: tr('Нет контакта {n} {unit} на этапе «Переговоры»', { n: d, unit: d < 5 ? tr('дня') : tr('дней') }),
       href: `/leads/${l.id}`,
-      actions: [{ kind: 'task-call', label: 'Запланировать звонок', leadId: l.id, title: `Звонок: ${nameOf(l.clientId)}` }],
+      actions: [{ kind: 'task-call', label: tr('Запланировать звонок'), leadId: l.id, title: tr('Звонок: {name}', { name: nameOf(l.clientId) }) }],
     });
   }
 
@@ -135,10 +138,10 @@ export function buildBriefing({ leads, tasks, events, nameOf, now = Date.now() }
     if (d < COOLING_DAYS) continue;
     add({
       id: `cool-${l.id}`, kind: 'cooling', score: 52,
-      title: `Остывает: ${nameOf(l.clientId)}`,
-      why: `Последний контакт ${d} дней назад · этап «${STAGE_LABEL[l.stage]}»`,
+      title: tr('Остывает: {name}', { name: nameOf(l.clientId) }),
+      why: tr('Последний контакт {n} дней назад · этап «{stage}»', { n: d, stage: STAGE_LABEL[l.stage] }),
       href: `/leads/${l.id}`,
-      actions: [{ kind: 'plan-tomorrow', label: 'Напомнить завтра', leadId: l.id, at: atTomorrow(11) }],
+      actions: [{ kind: 'plan-tomorrow', label: tr('Напомнить завтра'), leadId: l.id, at: atTomorrow(11) }],
     });
   }
 
@@ -147,10 +150,10 @@ export function buildBriefing({ leads, tasks, events, nameOf, now = Date.now() }
   if (orphans.length > 0) {
     add({
       id: 'unassigned', kind: 'unassigned', score: 58,
-      title: `Без ответственного: ${orphans.length}`,
-      why: 'Новые лиды ждут распределения — за них никто не отвечает',
+      title: tr('Без ответственного: {n}', { n: orphans.length }),
+      why: tr('Новые лиды ждут распределения — за них никто не отвечает'),
       href: '/leads',
-      actions: [{ kind: 'open', label: 'Распределить', href: '/leads' }],
+      actions: [{ kind: 'open', label: tr('Распределить'), href: '/leads' }],
     });
   }
 
@@ -160,7 +163,7 @@ export function buildBriefing({ leads, tasks, events, nameOf, now = Date.now() }
 /** Заголовок сводки зависит от времени суток: утром это план, вечером — хвосты. */
 export function briefingHeadline(now = new Date()) {
   const h = now.getHours();
-  if (h < 11) return { title: 'План на день', text: 'С чего начать, пока все на связи' };
-  if (h < 17) return { title: 'Что успеть сегодня', text: 'Срочное и то, что нельзя переносить' };
-  return { title: 'Хвосты дня', text: 'Что закрыть до вечера и перенести на завтра' };
+  if (h < 11) return { title: tr('План на день'), text: tr('С чего начать, пока все на связи') };
+  if (h < 17) return { title: tr('Что успеть сегодня'), text: tr('Срочное и то, что нельзя переносить') };
+  return { title: tr('Хвосты дня'), text: tr('Что закрыть до вечера и перенести на завтра') };
 }

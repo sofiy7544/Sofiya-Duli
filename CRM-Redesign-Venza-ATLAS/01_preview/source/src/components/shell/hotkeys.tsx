@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useRouter } from '@/lib/router';
 import { Sheet } from '@/components/ui/sheet';
 import { ui } from './ui-state';
+import { tr } from '@/lib/i18n';
 
 /**
  * Горячие клавиши — как hotkeys-provider.tsx в CRM: ⌘K поиск, ⌘N клиент,
@@ -14,11 +15,11 @@ import { ui } from './ui-state';
 type Hotkey = { keys: string; label: string; run: (r: ReturnType<typeof useRouter>) => void };
 
 const LIST: Hotkey[] = [
-  { keys: 'K', label: 'Поиск по клиентам, лидам и объектам', run: () => ui.set({ search: true }) },
-  { keys: 'N', label: 'Новый клиент', run: (r) => r.navigate('/clients/new') },
-  { keys: 'L', label: 'Новый лид', run: (r) => r.navigate('/leads/new') },
-  { keys: 'O', label: 'Новый объект', run: (r) => r.navigate('/properties/new') },
-  { keys: 'S', label: 'Новое событие: показ, встреча, звонок', run: () => ui.set({ eventForm: true, quickCreate: null }) },
+  { keys: 'K', label: tr('Поиск по клиентам, лидам и объектам'), run: () => ui.set({ search: true }) },
+  { keys: 'N', label: tr('Новый клиент'), run: (r) => r.navigate('/clients/new') },
+  { keys: 'L', label: tr('Новый лид'), run: (r) => r.navigate('/leads/new') },
+  { keys: 'O', label: tr('Новый объект'), run: (r) => r.navigate('/properties/new') },
+  { keys: 'S', label: tr('Новое событие: показ, встреча, звонок'), run: () => ui.set({ eventForm: true, quickCreate: null }) },
 ];
 
 const isTyping = (el: EventTarget | null) => {
@@ -43,7 +44,7 @@ export function Hotkeys() {
   }, [router]);
 
   return (
-    <Sheet open={help} onOpenChange={setHelp} title="Горячие клавиши" description="На Mac — ⌘, на Windows и Linux — Ctrl." desktop="center" size="sm">
+    <Sheet open={help} onOpenChange={setHelp} title={tr('Горячие клавиши')} description={tr('На Mac — ⌘, на Windows и Linux — Ctrl.')} desktop="center" size="sm">
       <ul className="row-divider surface overflow-hidden">
         {LIST.map((h) => (
           <li key={h.keys} className="flex items-center gap-3 px-4 py-3">
@@ -53,11 +54,11 @@ export function Hotkeys() {
         ))}
         <li className="flex items-center gap-3 px-4 py-3">
           <kbd className="min-w-[68px] rounded-[8px] border border-border bg-surface-2 px-2 py-1 text-center text-[13px] font-medium">⇧ ?</kbd>
-          <span className="text-[14.5px]">Эта справка</span>
+          <span className="text-[14.5px]">{tr('Эта справка')}</span>
         </li>
         <li className="flex items-center gap-3 px-4 py-3">
           <kbd className="min-w-[68px] rounded-[8px] border border-border bg-surface-2 px-2 py-1 text-center text-[13px] font-medium">Esc</kbd>
-          <span className="text-[14.5px]">Закрыть лист или окно</span>
+          <span className="text-[14.5px]">{tr('Закрыть лист или окно')}</span>
         </li>
       </ul>
     </Sheet>

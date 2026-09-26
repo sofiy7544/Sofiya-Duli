@@ -10,21 +10,22 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState, ErrorState } from '@/components/ui/state';
 import { Avatar } from '@/components/ui/avatar';
 import { StatusBadge } from '@/components/ui/badge';
+import { tr } from '@/lib/i18n';
 
 /**
  * /team (ADMIN). По SCREEN-MAP: таблица нагрузки команды, строки ведут
  * в /leads?assignee=. Права проверяет маршрутизатор, здесь только экран.
  */
 const ROLE_LABEL: Record<string, string> = {
-  ADMIN: 'Администратор', MANAGER: 'Руководитель', REALTOR: 'Риелтор',
-  ASSISTANT: 'Ассистент', ANALYST: 'Аналитик', EMPLOYEE: 'Сотрудник',
+  ADMIN: tr('Администратор'), MANAGER: tr('Руководитель'), REALTOR: tr('Риелтор'),
+  ASSISTANT: tr('Ассистент'), ANALYST: tr('Аналитик'), EMPLOYEE: tr('Сотрудник'),
 };
 
 export function TeamScreen() {
   const r = useResource(() => api.leads());
 
-  if (r.error) return <PageBody><PageHeader title="Команда" /><ErrorState error={r.error} onRetry={r.retry} what="команду" /></PageBody>;
-  if (r.loading || !r.data) return <PageBody><PageHeader title="Команда" /><Skeleton className="h-80" /></PageBody>;
+  if (r.error) return <PageBody><PageHeader title={tr('Команда')} /><ErrorState error={r.error} onRetry={r.retry} what={tr('команду')} /></PageBody>;
+  if (r.loading || !r.data) return <PageBody><PageHeader title={tr('Команда')} /><Skeleton className="h-80" /></PageBody>;
 
   const leads = r.data;
   const rows = users.map((u) => {
@@ -36,31 +37,31 @@ export function TeamScreen() {
   }).sort((a, b) => b.active - a.active);
 
   const unassigned = leads.filter((l) => !l.assignedUserId && STAGES_ACTIVE.includes(l.stage)).length;
-  if (rows.length === 0) return <PageBody><PageHeader title="Команда" /><EmptyState icon={Users} title="В команде пока никого" text="Сотрудники появятся здесь после приглашения в настройках." /></PageBody>;
+  if (rows.length === 0) return <PageBody><PageHeader title={tr('Команда')} /><EmptyState icon={Users} title={tr('В команде пока никого')} text={tr('Сотрудники появятся здесь после приглашения в настройках.')} /></PageBody>;
 
   const total = rows.reduce((a, x) => a + x.active, 0);
 
   return (
     <PageBody>
-      <PageHeader title="Команда" subtitle={`${rows.length} ${plural(rows.length, 'сотрудник', 'сотрудника', 'сотрудников')} · ${total} ${plural(total, 'лид', 'лида', 'лидов')} в работе`} />
+      <PageHeader title={tr('Команда')} subtitle={`${rows.length} ${plural(rows.length, 'сотрудник', 'сотрудника', 'сотрудников')} · ${total} ${plural(total, 'лид', 'лида', 'лидов')} ${tr('в работе')}`} />
 
       {unassigned > 0 && (
         <Link href="/leads?assignee=none" className="pressable surface mb-4 flex items-center justify-between gap-3 p-4">
-          <span className="text-[14.5px]"><b className="tabular">{unassigned}</b> {plural(unassigned, 'лид', 'лида', 'лидов')} без ответственного</span>
-          <span className="text-[13px] font-medium text-primary">Распределить</span>
+          <span className="text-[14.5px]"><b className="tabular">{unassigned}</b> {plural(unassigned, 'лид', 'лида', 'лидов')} {tr('без ответственного')}</span>
+          <span className="text-[13px] font-medium text-primary">{tr('Распределить')}</span>
         </Link>
       )}
 
       <div data-hscroll className="surface overflow-x-auto">
         <table className="w-full min-w-[620px] text-[14px]">
-          <caption className="sr-only">Нагрузка сотрудников</caption>
+          <caption className="sr-only">{tr('Нагрузка сотрудников')}</caption>
           <thead>
             <tr className="border-b border-border text-left text-[12.5px] text-muted-foreground">
-              <th scope="col" className="px-4 py-2.5 font-medium">Сотрудник</th>
-              <th scope="col" className="px-3 py-2.5 text-right font-medium">В работе</th>
-              <th scope="col" className="px-3 py-2.5 text-right font-medium">Горячих</th>
-              <th scope="col" className="px-3 py-2.5 text-right font-medium">Сделок</th>
-              <th scope="col" className="px-4 py-2.5 text-right font-medium">Требуют внимания</th>
+              <th scope="col" className="px-4 py-2.5 font-medium">{tr('Сотрудник')}</th>
+              <th scope="col" className="px-3 py-2.5 text-right font-medium">{tr('В работе')}</th>
+              <th scope="col" className="px-3 py-2.5 text-right font-medium">{tr('Горячих')}</th>
+              <th scope="col" className="px-3 py-2.5 text-right font-medium">{tr('Сделок')}</th>
+              <th scope="col" className="px-4 py-2.5 text-right font-medium">{tr('Требуют внимания')}</th>
             </tr>
           </thead>
           <tbody>
@@ -68,7 +69,7 @@ export function TeamScreen() {
               <tr key={x.user.id} className="border-b border-border/70 last:border-0">
                 <th scope="row" className="px-4 py-2 text-left font-normal">
                   <Link href={`/leads?assignee=${x.user.id}`} className="tap-link flex items-center gap-2.5">
-                    <Avatar name={x.user.fullName} size={32} />
+                    <Avatar name={x.user.fullName} src={x.user.avatarUrl} size={32} />
                     <span className="min-w-0">
                       <span className="block truncate font-medium text-primary">{x.user.fullName}</span>
                       <span className="t-caption block">{ROLE_LABEL[x.user.role] ?? x.user.role}</span>
@@ -80,9 +81,9 @@ export function TeamScreen() {
                 <td className="px-3 py-2 text-right tabular">{x.won || '—'}</td>
                 <td className="px-4 py-2 text-right">
                   {x.overdue > 0
-                    ? <StatusBadge tone="danger">{x.overdue} просрочено</StatusBadge>
+                    ? <StatusBadge tone="danger">{x.overdue} {tr('просрочено')}</StatusBadge>
                     : x.noAction > 0
-                      ? <StatusBadge tone="warning">{x.noAction} без плана</StatusBadge>
+                      ? <StatusBadge tone="warning">{x.noAction} {tr('без плана')}</StatusBadge>
                       : <span className="t-caption">—</span>}
                 </td>
               </tr>
@@ -91,7 +92,7 @@ export function TeamScreen() {
         </table>
       </div>
 
-      <p className="t-caption mt-4">«Требуют внимания» — лиды с просроченным следующим действием или вовсе без запланированного.</p>
+      <p className="t-caption mt-4">{tr('«Требуют внимания» — лиды с просроченным следующим действием или вовсе без запланированного.')}</p>
     </PageBody>
   );
 }

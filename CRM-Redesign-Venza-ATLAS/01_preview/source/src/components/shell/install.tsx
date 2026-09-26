@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Check, Download, Share, SquarePlus } from 'lucide-react';
 import { Sheet } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
+import { tr } from '@/lib/i18n';
 
 /**
  * Установка CRM на телефон.
@@ -53,7 +54,7 @@ export function InstallCard() {
     return (
       <div className="surface flex items-center gap-3 p-4">
         <span className="grid h-10 w-10 place-items-center rounded-[12px] bg-success/14 text-success-text"><Check className="h-5 w-5" aria-hidden /></span>
-        <div><div className="text-[15.5px] font-medium">Приложение установлено</div><div className="t-caption">CRM открывается на весь экран, без адресной строки</div></div>
+        <div><div className="text-[15.5px] font-medium">{tr('Приложение установлено')}</div><div className="t-caption">{tr('CRM открывается на весь экран, без адресной строки')}</div></div>
       </div>
     );
   }
@@ -62,10 +63,10 @@ export function InstallCard() {
       <div className="surface flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
         <span className="grid h-10 w-10 shrink-0 place-items-center rounded-[12px] bg-primary-soft text-primary-text"><Download className="h-5 w-5" aria-hidden /></span>
         <div className="min-w-0 flex-1">
-          <div className="text-[15.5px] font-medium">Установить на телефон</div>
-          <div className="t-caption">Откроется во весь экран, без панели браузера. Работает и без сети.</div>
+          <div className="text-[15.5px] font-medium">{tr('Установить на телефон')}</div>
+          <div className="t-caption">{tr('Откроется во весь экран, без панели браузера. Работает и без сети.')}</div>
         </div>
-        <Button size="sm" className="shrink-0" onClick={() => { if (canPrompt) { void install(); } else { setIos(true); } }}>Установить</Button>
+        <Button size="sm" className="shrink-0" onClick={() => { if (canPrompt) { void install(); } else { setIos(true); } }}>{tr('Установить')}</Button>
       </div>
       <InstallGuide open={ios} onOpenChange={setIos} platform={platform} />
     </>
@@ -74,14 +75,14 @@ export function InstallCard() {
 
 function InstallGuide({ open, onOpenChange, platform }: { open: boolean; onOpenChange: (o: boolean) => void; platform: Platform }) {
   const steps = platform === 'ios'
-    ? [{ icon: Share, t: 'Нажмите «Поделиться»', s: 'Кнопка со стрелкой внизу Safari' },
-       { icon: SquarePlus, t: 'Выберите «На экран Домой»', s: 'Пролистайте список вниз' },
-       { icon: Check, t: 'Нажмите «Добавить»', s: 'Иконка появится на рабочем столе' }]
-    : [{ icon: Share, t: 'Откройте меню браузера', s: 'Три точки в правом верхнем углу' },
-       { icon: SquarePlus, t: 'Выберите «Установить приложение»', s: 'Или «Добавить на главный экран»' },
-       { icon: Check, t: 'Подтвердите установку', s: 'Иконка появится на рабочем столе' }];
+    ? [{ icon: Share, t: tr('Нажмите «Поделиться»'), s: tr('Кнопка со стрелкой внизу Safari') },
+       { icon: SquarePlus, t: tr('Выберите «На экран Домой»'), s: tr('Пролистайте список вниз') },
+       { icon: Check, t: tr('Нажмите «Добавить»'), s: tr('Иконка появится на рабочем столе') }]
+    : [{ icon: Share, t: tr('Откройте меню браузера'), s: tr('Три точки в правом верхнем углу') },
+       { icon: SquarePlus, t: tr('Выберите «Установить приложение»'), s: tr('Или «Добавить на главный экран»') },
+       { icon: Check, t: tr('Подтвердите установку'), s: tr('Иконка появится на рабочем столе') }];
   return (
-    <Sheet open={open} onOpenChange={onOpenChange} title="Добавить на экран «Домой»" description="Займёт пятнадцать секунд" desktop="center" size="sm">
+    <Sheet open={open} onOpenChange={onOpenChange} title={tr('Добавить на экран «Домой»')} description={tr('Займёт пятнадцать секунд')} desktop="center" size="sm">
       <ol className="space-y-3">
         {steps.map((s, i) => (
           <li key={s.t} className="flex items-start gap-3">
@@ -91,7 +92,7 @@ function InstallGuide({ open, onOpenChange, platform }: { open: boolean; onOpenC
           </li>
         ))}
       </ol>
-      <p className="t-caption mt-4">После установки CRM открывается во весь экран: адресная строка Safari больше не перекрывает нижние кнопки.</p>
+      <p className="t-caption mt-4">{tr('После установки CRM открывается во весь экран: адресная строка Safari больше не перекрывает нижние кнопки.')}</p>
     </Sheet>
   );
 }

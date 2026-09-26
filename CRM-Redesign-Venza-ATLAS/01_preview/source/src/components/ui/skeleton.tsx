@@ -1,9 +1,10 @@
 import { cn } from '@/lib/cn';
+import { tr } from '@/lib/i18n';
 export function Skeleton({ className, style }: { className?: string; style?: React.CSSProperties }) { return <div className={cn('skeleton', className)} style={style} aria-hidden />; }
 /** Skeleton по форме строк списка — не спиннер на всю страницу. */
 export function RowsSkeleton({ rows = 6, avatar = true }: { rows?: number; avatar?: boolean }) {
   return (
-    <div role="status" aria-label="Загрузка" className="surface row-divider overflow-hidden">
+    <div role="status" aria-label={tr('Загрузка')} className="surface row-divider overflow-hidden">
       {Array.from({ length: rows }).map((_, i) => (
         <div key={i} className="flex items-center gap-3 px-4 py-3.5">
           {avatar && <Skeleton className="h-10 w-10 rounded-full" />}

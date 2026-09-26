@@ -1,3 +1,4 @@
+import { tr } from '@/lib/i18n';
 import { cn } from '@/lib/cn';
 import { BRAND } from '@/lib/brand';
 import { Link, usePathname } from '@/lib/router';
@@ -25,7 +26,7 @@ export function HeaderBrand({ compact, className }: { compact?: boolean; classNa
   // На самой «Сегодня» ссылка вела бы на текущую страницу — оставляем просто знак.
   if (home) return <span className={cn('flex items-center lg:hidden', className)}>{mark}</span>;
   return (
-    <Link href="/today" aria-label={`${BRAND.name} — на главную`}
+    <Link href="/today" aria-label={tr('{brand} — на главную', { brand: BRAND.name })}
       className={cn('flex min-h-[44px] items-center pr-2 lg:hidden', className)}>
       {mark}
     </Link>

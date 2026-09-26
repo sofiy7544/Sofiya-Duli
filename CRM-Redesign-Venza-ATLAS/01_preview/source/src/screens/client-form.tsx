@@ -11,6 +11,7 @@ import { Field, Input, Select, Textarea } from '@/components/ui/field';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ErrorState } from '@/components/ui/state';
 import { toast } from '@/components/ui/toast';
+import { tr } from '@/lib/i18n';
 
 /**
  * /clients/new и /clients/:id/edit — ClientForm по SCREEN-MAP.
@@ -48,14 +49,14 @@ export function ClientFormScreen({ id }: { id?: string }) {
 
   const back = id ? `/clients/${id}` : '/clients';
 
-  if (id && r.error) return <PageBody className="lg:max-w-[760px]"><PageHeader title="Клиент" back="/clients" /><ErrorState error={r.error} onRetry={r.retry} what="клиента" /></PageBody>;
-  if (id && r.loading && !existing) return <PageBody className="lg:max-w-[760px]"><PageHeader title="Клиент" back="/clients" /><Skeleton className="h-96" /></PageBody>;
+  if (id && r.error) return <PageBody className="lg:max-w-[760px]"><PageHeader title={tr('Клиент')} back="/clients" /><ErrorState error={r.error} onRetry={r.retry} what={tr('клиента')} /></PageBody>;
+  if (id && r.loading && !existing) return <PageBody className="lg:max-w-[760px]"><PageHeader title={tr('Клиент')} back="/clients" /><Skeleton className="h-96" /></PageBody>;
 
   const submit = async () => {
     const e: typeof errors = {};
-    if (v.fullName.trim().length < 2) e.fullName = 'Имя — минимум 2 символа';
-    if (!/^[+0-9()\-\s]{6,32}$/.test(v.primaryPhone)) e.primaryPhone = 'Телефон: 6–32 символа, цифры, +, скобки и дефис';
-    if (v.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email)) e.email = 'Проверьте адрес почты';
+    if (v.fullName.trim().length < 2) e.fullName = tr('Имя — минимум 2 символа');
+    if (!/^[+0-9()\-\s]{6,32}$/.test(v.primaryPhone)) e.primaryPhone = tr('Телефон: 6–32 символа, цифры, +, скобки и дефис');
+    if (v.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email)) e.email = tr('Проверьте адрес почты');
     setErrors(e);
     if (Object.keys(e).length) return;
 
@@ -73,41 +74,41 @@ export function ClientFormScreen({ id }: { id?: string }) {
 
     setBusy(true);
     try {
-      if (id) { await api.updateClient(id, payload); toast.success('Клиент сохранён'); router.navigate(`/clients/${id}`); }
-      else { const c = await api.createClient(payload); toast.success('Клиент добавлен'); router.navigate(`/clients/${c.id}`); }
+      if (id) { await api.updateClient(id, payload); toast.success(tr('Клиент сохранён')); router.navigate(`/clients/${id}`); }
+      else { const c = await api.createClient(payload); toast.success(tr('Клиент добавлен')); router.navigate(`/clients/${c.id}`); }
     } catch (err) { toast.error((err as Error).message); }
     finally { setBusy(false); }
   };
 
   return (
-    <FormShell title={id ? 'Правка клиента' : 'Новый клиент'} back={back} dirty={dirty} busy={busy}
-      subtitle={id ? undefined : 'Контакт и пожелания. Остальное дозаполните позже.'}
-      submitLabel={id ? 'Сохранить' : 'Создать клиента'} onSubmit={submit}>
+    <FormShell title={id ? tr('Правка клиента') : tr('Новый клиент')} back={back} dirty={dirty} busy={busy}
+      subtitle={id ? undefined : tr('Контакт и пожелания. Остальное дозаполните позже.')}
+      submitLabel={id ? tr('Сохранить') : tr('Создать клиента')} onSubmit={submit}>
 
-      <FormSection title="Контакт">
+      <FormSection title={tr('Контакт')}>
         <FormGrid>
           <FormRow>
-            <Field label="Имя и фамилия" required error={errors.fullName}>
+            <Field label={tr('Имя и фамилия')} required error={errors.fullName}>
               {(fid, d) => <Input id={fid} aria-describedby={d} invalid={!!errors.fullName} value={v.fullName}
-                onChange={(e) => patch({ fullName: e.target.value })} placeholder="Ирина Савчук" autoComplete="name" />}
+                onChange={(e) => patch({ fullName: e.target.value })} placeholder={tr('Ирина Савчук')} autoComplete="name" />}
             </Field>
           </FormRow>
-          <Field label="Телефон" required error={errors.primaryPhone}>
+          <Field label={tr('Телефон')} required error={errors.primaryPhone}>
             {(fid, d) => <Input id={fid} aria-describedby={d} invalid={!!errors.primaryPhone} type="tel" inputMode="tel"
               value={v.primaryPhone} onChange={(e) => patch({ primaryPhone: e.target.value })} placeholder="+380 67 123 45 67" />}
           </Field>
-          <Field label="Почта" error={errors.email}>
+          <Field label={tr('Почта')} error={errors.email}>
             {(fid, d) => <Input id={fid} aria-describedby={d} invalid={!!errors.email} type="email" inputMode="email"
               value={v.email} onChange={(e) => patch({ email: e.target.value })} placeholder="name@example.com" />}
           </Field>
-          <Field label="Тип клиента">
+          <Field label={tr('Тип клиента')}>
             {(fid) => (
               <Select id={fid} value={v.type} onChange={(e) => patch({ type: e.target.value as ClientType })}>
                 {(Object.keys(CLIENT_TYPE_LABEL) as ClientType[]).map((t) => <option key={t} value={t}>{CLIENT_TYPE_LABEL[t]}</option>)}
               </Select>
             )}
           </Field>
-          <Field label="Источник">
+          <Field label={tr('Источник')}>
             {(fid) => (
               <Select id={fid} value={v.source} onChange={(e) => patch({ source: e.target.value as SourceType })}>
                 {(Object.keys(SOURCE_LABEL) as SourceType[]).map((t) => <option key={t} value={t}>{SOURCE_LABEL[t]}</option>)}
@@ -115,7 +116,7 @@ export function ClientFormScreen({ id }: { id?: string }) {
             )}
           </Field>
           <FormRow>
-            <Field label="Ответственный">
+            <Field label={tr('Ответственный')}>
               {(fid) => (
                 <Select id={fid} value={v.assignedUserId} onChange={(e) => patch({ assignedUserId: e.target.value })}>
                   {users.map((u) => <option key={u.id} value={u.id}>{u.fullName}</option>)}
@@ -126,27 +127,27 @@ export function ClientFormScreen({ id }: { id?: string }) {
         </FormGrid>
       </FormSection>
 
-      <FormSection title="Пожелания">
+      <FormSection title={tr('Пожелания')}>
         <FormGrid>
-          <Field label="Тип объекта">
+          <Field label={tr('Тип объекта')}>
             {(fid) => (
               <Select id={fid} value={v.propertyType} onChange={(e) => patch({ propertyType: e.target.value as PropertyType | '' })}>
-                <option value="">Не важно</option>
+                <option value="">{tr('Не важно')}</option>
                 {(Object.keys(PROPERTY_TYPE_LABEL) as PropertyType[]).map((t) => <option key={t} value={t}>{PROPERTY_TYPE_LABEL[t]}</option>)}
               </Select>
             )}
           </Field>
-          <Field label="Бюджет до, €">
+          <Field label={tr('Бюджет до, €')}>
             {(fid) => <Input id={fid} inputMode="numeric" value={v.budgetMax} onChange={(e) => patch({ budgetMax: e.target.value })} placeholder="450 000" />}
           </Field>
           <FormRow>
-            <Field label="Районы" hint="Через запятую">
-              {(fid, d) => <Input id={fid} aria-describedby={d} value={v.districts} onChange={(e) => patch({ districts: e.target.value })} placeholder="Набережная, Центр" />}
+            <Field label={tr('Районы')} hint={tr('Через запятую')}>
+              {(fid, d) => <Input id={fid} aria-describedby={d} value={v.districts} onChange={(e) => patch({ districts: e.target.value })} placeholder={tr('Набережная, Центр')} />}
             </Field>
           </FormRow>
           <FormRow>
-            <Field label="Заметка">
-              {(fid) => <Textarea id={fid} rows={4} value={v.notes} onChange={(e) => patch({ notes: e.target.value })} placeholder="Что важно помнить о клиенте" />}
+            <Field label={tr('Заметка')}>
+              {(fid) => <Textarea id={fid} rows={4} value={v.notes} onChange={(e) => patch({ notes: e.target.value })} placeholder={tr('Что важно помнить о клиенте')} />}
             </Field>
           </FormRow>
         </FormGrid>

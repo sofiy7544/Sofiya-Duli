@@ -13,6 +13,7 @@ import { EmptyState, ErrorState } from '@/components/ui/state';
 import { Button, IconButton } from '@/components/ui/button';
 import { SegmentedControl } from '@/components/ui/segmented';
 import { toast } from '@/components/ui/toast';
+import { tr } from '@/lib/i18n';
 
 /**
  * /notes. Устройство по SCREEN-MAP: мастер-деталь, вкладки «Заметки / Корзина»,
@@ -49,15 +50,15 @@ export function NotesScreen() {
   };
 
   const header = (
-    <PageHeader title="Заметки" subtitle={tab === 'notes' ? 'Личные записи и заметки по сделкам' : 'Удалённое хранится 30 дней'}
-      actions={tab === 'notes' ? <IconButton label="Новая заметка" onClick={create} disabled={busy}><Plus /></IconButton> : undefined}>
-      <SegmentedControl<'notes' | 'trash'> label="Раздел заметок" className="w-full sm:w-auto" value={tab}
+    <PageHeader title={tr('Заметки')} subtitle={tab === 'notes' ? tr('Личные записи и заметки по сделкам') : tr('Удалённое хранится 30 дней')}
+      actions={tab === 'notes' ? <IconButton label={tr('Новая заметка')} onClick={create} disabled={busy}><Plus /></IconButton> : undefined}>
+      <SegmentedControl<'notes' | 'trash'> label={tr('Раздел заметок')} className="w-full sm:w-auto" value={tab}
         onChange={(v) => { setTab(v); setOpenId(null); setFreshId(null); }}
-        options={[{ value: 'notes', label: 'Заметки' }, { value: 'trash', label: 'Корзина' }]} />
+        options={[{ value: 'notes', label: tr('Заметки') }, { value: 'trash', label: tr('Корзина') }]} />
     </PageHeader>
   );
 
-  if (r.error) return <PageBody>{header}<ErrorState error={r.error} onRetry={r.retry} what="заметки" /></PageBody>;
+  if (r.error) return <PageBody>{header}<ErrorState error={r.error} onRetry={r.retry} what={tr('заметки')} /></PageBody>;
   if (r.loading || !r.data) return <PageBody>{header}<div className="space-y-2.5">{[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-[74px]" />)}</div></PageBody>;
 
   /* Телефон: открытая заметка занимает экран целиком, список прячется. */
@@ -65,8 +66,8 @@ export function NotesScreen() {
     return (
       <PageBody>
         <div className="mb-3 flex items-center gap-1">
-          <IconButton label="К списку" variant="ghost" className="-ml-1 rounded-full" onClick={() => setOpenId(null)}><ArrowLeft /></IconButton>
-          <span className="t-caption">{tab === 'trash' ? 'Корзина' : 'Заметки'}</span>
+          <IconButton label={tr('К списку')} variant="ghost" className="-ml-1 rounded-full" onClick={() => setOpenId(null)}><ArrowLeft /></IconButton>
+          <span className="t-caption">{tab === 'trash' ? tr('Корзина') : tr('Заметки')}</span>
         </div>
         <NoteEditor note={current} trashed={tab === 'trash'} fresh={current.id === freshId} onClose={() => setOpenId(null)} />
       </PageBody>
@@ -75,8 +76,8 @@ export function NotesScreen() {
 
   const list = items.length === 0 ? (
     tab === 'trash'
-      ? <EmptyState icon={Trash2} title="Корзина пуста" text="Удалённые заметки будут появляться здесь и хранятся 30 дней." />
-      : <EmptyState icon={StickyNote} title="Заметок пока нет" text="Записывайте договорённости и скрипты — они останутся под рукой." action={<Button onClick={create} loading={busy}><Plus />Новая заметка</Button>} />
+      ? <EmptyState icon={Trash2} title={tr('Корзина пуста')} text={tr('Удалённые заметки будут появляться здесь и хранятся 30 дней.')} />
+      : <EmptyState icon={StickyNote} title={tr('Заметок пока нет')} text={tr('Записывайте договорённости и скрипты — они останутся под рукой.')} action={<Button onClick={create} loading={busy}><Plus />{tr('Новая заметка')}</Button>} />
   ) : (
     <ul className="space-y-2.5">
       {items.map((n) => (
@@ -85,14 +86,14 @@ export function NotesScreen() {
             className={cn('pressable surface w-full p-3.5 text-left transition-shadow',
               current?.id === n.id && isDesktop && 'bg-primary-soft/50 shadow-none ring-2 ring-primary/45')}>
             <div className="flex items-center gap-2">
-              {n.pinned && !n.deletedAt && <Pin className="h-3.5 w-3.5 flex-none text-primary" aria-label="Закреплено" />}
-              <span className="truncate font-medium">{n.title || 'Без названия'}</span>
+              {n.pinned && !n.deletedAt && <Pin className="h-3.5 w-3.5 flex-none text-primary" aria-label={tr('Закреплено')} />}
+              <span className="truncate font-medium">{n.title || tr('Без названия')}</span>
             </div>
-            <p className="t-caption mt-1 line-clamp-2">{n.body || 'Пустая заметка'}</p>
+            <p className="t-caption mt-1 line-clamp-2">{n.body || tr('Пустая заметка')}</p>
             <div className="t-caption mt-1.5 flex items-center gap-2">
-              <span>{n.deletedAt ? `удалена ${ago(n.deletedAt)}` : ago(n.updatedAt)}</span>
+              <span>{n.deletedAt ? tr('удалена {when}', { when: ago(n.deletedAt) }) : ago(n.updatedAt)}</span>
               {/* Ссылка на лид живёт в самой заметке: интерактивный элемент внутри кнопки ломает клавиатуру и скринридер. */}
-              {n.leadId && <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[11.5px] font-medium">по лиду</span>}
+              {n.leadId && <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[11.5px] font-medium">{tr('по лиду')}</span>}
             </div>
           </button>
         </li>
@@ -112,7 +113,7 @@ export function NotesScreen() {
         </div>
         {current
           ? <NoteEditor note={current} trashed={tab === 'trash'} fresh={current.id === freshId} onClose={() => setOpenId(null)} />
-          : <div className="surface grid min-h-[320px] place-items-center p-6"><p className="t-caption">Выберите заметку слева.</p></div>}
+          : <div className="surface grid min-h-[320px] place-items-center p-6"><p className="t-caption">{tr('Выберите заметку слева.')}</p></div>}
       </div>
     </PageBody>
   );
@@ -136,16 +137,16 @@ function NoteEditor({ note, trashed, fresh, onClose }: { note: Note; trashed: bo
   if (trashed) {
     return (
       <section className="surface p-4 lg:p-5">
-        <h2 className="t-h2">{note.title || 'Без названия'}</h2>
-        <p className="t-caption mt-1">Удалена {ago(note.deletedAt ?? note.updatedAt)}</p>
-        <p className="mt-3 whitespace-pre-wrap text-[15px] text-foreground/80">{note.body || 'Пустая заметка'}</p>
+        <h2 className="t-h2">{note.title || tr('Без названия')}</h2>
+        <p className="t-caption mt-1">{tr('Удалена')}{ago(note.deletedAt ?? note.updatedAt)}</p>
+        <p className="mt-3 whitespace-pre-wrap text-[15px] text-foreground/80">{note.body || tr('Пустая заметка')}</p>
         <div className="mt-5 flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" onClick={async () => { await notesApi.restore(note.id); onClose(); toast.success('Заметка восстановлена'); }}>
-            <RotateCcw />Восстановить
+          <Button variant="outline" size="sm" onClick={async () => { await notesApi.restore(note.id); onClose(); toast.success(tr('Заметка восстановлена')); }}>
+            <RotateCcw />{tr('Восстановить')}
           </Button>
           <Button variant="outline" size="sm" className="text-danger-text"
-            onClick={async () => { await notesApi.destroy(note.id); onClose(); toast.success('Удалено насовсем'); }}>
-            <Trash2 />Удалить насовсем
+            onClick={async () => { await notesApi.destroy(note.id); onClose(); toast.success(tr('Удалено насовсем')); }}>
+            <Trash2 />{tr('Удалить насовсем')}
           </Button>
         </div>
       </section>
@@ -156,27 +157,27 @@ function NoteEditor({ note, trashed, fresh, onClose }: { note: Note; trashed: bo
     <section className="surface p-4 lg:p-5">
       <div className="flex items-start gap-2">
         <label className="min-w-0 flex-1">
-          <span className="sr-only">Название заметки</span>
-          <input ref={titleRef} value={title} onChange={(e) => setTitle(e.target.value)} onBlur={commit} placeholder="Название"
+          <span className="sr-only">{tr('Название заметки')}</span>
+          <input ref={titleRef} value={title} onChange={(e) => setTitle(e.target.value)} onBlur={commit} placeholder={tr('Название')}
             className="w-full bg-transparent text-[19px] font-semibold outline-none placeholder:text-muted-foreground" />
         </label>
-        <IconButton label={note.pinned ? 'Открепить' : 'Закрепить'} variant="ghost"
+        <IconButton label={note.pinned ? tr('Открепить') : tr('Закрепить')} variant="ghost"
           onClick={() => void notesApi.save(note.id, { pinned: !note.pinned })}>
           {note.pinned ? <PinOff /> : <Pin />}
         </IconButton>
-        <IconButton label="В корзину" variant="ghost"
-          onClick={async () => { await notesApi.trash(note.id); onClose(); toast.success('Заметка в корзине', { action: { label: 'Вернуть', onClick: () => void notesApi.restore(note.id) } }); }}>
+        <IconButton label={tr('В корзину')} variant="ghost"
+          onClick={async () => { await notesApi.trash(note.id); onClose(); toast.success(tr('Заметка в корзине'), { action: { label: tr('Вернуть'), onClick: () => void notesApi.restore(note.id) } }); }}>
           <Trash2 />
         </IconButton>
       </div>
-      <p className="t-caption mt-0.5">Изменена {ago(note.updatedAt)}</p>
+      <p className="t-caption mt-0.5">{tr('Изменена')}{ago(note.updatedAt)}</p>
       <label className="mt-3 block">
-        <span className="sr-only">Текст заметки</span>
-        <textarea value={body} onChange={(e) => setBody(e.target.value)} onBlur={commit} rows={12} placeholder="Текст заметки"
+        <span className="sr-only">{tr('Текст заметки')}</span>
+        <textarea value={body} onChange={(e) => setBody(e.target.value)} onBlur={commit} rows={12} placeholder={tr('Текст заметки')}
           className="w-full resize-y rounded-control bg-surface-2/60 p-3 text-[15px] leading-relaxed outline-none ring-primary/40 placeholder:text-muted-foreground focus:ring-2" />
       </label>
       {note.leadId && (
-        <p className="t-caption mt-2">Заметка связана с <Link href={`/leads/${note.leadId}`} className="tap-link font-medium text-primary hover:underline">лидом</Link>.</p>
+        <p className="t-caption mt-2">{tr('Заметка связана с')} <Link href={`/leads/${note.leadId}`} className="tap-link font-medium text-primary hover:underline">{tr('лидом')}</Link>.</p>
       )}
     </section>
   );

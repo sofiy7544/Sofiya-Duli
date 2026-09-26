@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Table2 } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { Link } from '@/lib/router';
+import { tr } from '@/lib/i18n';
 
 /**
  * Детали графиков отчётов. Правила, которых держимся:
@@ -77,7 +78,7 @@ export function TableToggle({ on, onToggle }: { on: boolean; onToggle: () => voi
       className={cn('tap-link inline-flex items-center gap-1.5 rounded-control border border-border px-2.5 py-1.5 text-[13px] font-medium transition-colors',
         on ? 'bg-surface-2 text-foreground' : 'text-muted-foreground hover:text-foreground')}>
       <Table2 className="h-3.5 w-3.5" aria-hidden />
-      {on ? 'График' : 'Таблица'}
+      {on ? tr('График') : tr('Таблица')}
     </button>
   );
 }

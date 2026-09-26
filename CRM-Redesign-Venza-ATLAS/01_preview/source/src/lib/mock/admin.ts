@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react';
 import { ApiError } from './api';
-import { store } from './store';
-import type { UserRole } from './types';
+import { store, users } from './store';
+import type { User, UserRole } from './types';
 
 /**
  * Подразделы настроек: автоматизация, шаблоны, пользователи, брендинг.
@@ -16,7 +16,12 @@ export type Rule = {
   enabled: boolean;
 };
 export type Template = { id: string; name: string; channel: 'EMAIL' | 'TELEGRAM' | 'SMS'; subject?: string; body: string; updatedAt: string };
-export type Member = { id: string; fullName: string; email: string; role: UserRole; active: boolean; lastSeenAt?: string };
+/**
+ * Сотрудник — тот же пользователь, что и во всей CRM (store.users). Раньше
+ * настройки держали свой отдельный список: приглашённый там не появлялся ни в
+ * «Команде», ни в ответственных. Теперь список один.
+ */
+export type Member = User & { active: boolean };
 export type Branding = { agencyName: string; logoName?: string; watermark: boolean; watermarkOpacity: number };
 
 const MIN = 60_000;
@@ -34,12 +39,6 @@ let templates: Template[] = [
     body: 'Добрый день, {имя}!\n\nСобрал подборку под ваш бюджет {бюджет}. Во вложении — планировки и условия рассрочки.\n\nС уважением, {агент}' },
   { id: 't3', name: 'Напоминание о встрече', channel: 'SMS', updatedAt: back(20 * 24 * 60 * MIN),
     body: '{имя}, напоминаю о встрече сегодня в {время}. {агент}, On Top Property.' },
-];
-let members: Member[] = [
-  { id: 'u1', fullName: 'Елена Радович', email: 'elena@ontop.property', role: 'ADMIN', active: true, lastSeenAt: back(8 * MIN) },
-  { id: 'u2', fullName: 'Matteo Brunelli', email: 'matteo@ontop.property', role: 'REALTOR', active: true, lastSeenAt: back(2 * 60 * MIN) },
-  { id: 'u3', fullName: 'Кирилл Дорош', email: 'kirill@ontop.property', role: 'REALTOR', active: true, lastSeenAt: back(26 * 60 * MIN) },
-  { id: 'u4', fullName: 'Ольга Кравец', email: 'olga@ontop.property', role: 'ASSISTANT', active: false, lastSeenAt: back(40 * 24 * 60 * MIN) },
 ];
 let branding: Branding = { agencyName: 'On Top Property', logoName: 'ontop-logo.svg', watermark: true, watermarkOpacity: 35 };
 
@@ -82,23 +81,63 @@ export const adminApi = {
   },
   async deleteTemplate(id: string) { await wait(300); templates = templates.filter((x) => x.id !== id); emit(); },
 
-  members: () => respond(() => [...members], [] as Member[]),
+  members: () => respond(() => users.map((u) => ({ ...u, active: u.active !== false })), [] as Member[]),
   async setMemberActive(id: string, active: boolean) {
     await wait(300);
-    const m = members.find((x) => x.id === id); if (!m) throw new ApiError('Сотрудник не найден', 404);
-    m.active = active; members = [...members]; emit();
+    const m = users.find((x) => x.id === id); if (!m) throw new ApiError('Сотрудник не найден', 404);
+    m.active = active; emit();
   },
   async setMemberRole(id: string, role: UserRole) {
     await wait(300);
-    const m = members.find((x) => x.id === id); if (!m) throw new ApiError('Сотрудник не найден', 404);
-    m.role = role; members = [...members]; emit();
+    const m = users.find((x) => x.id === id); if (!m) throw new ApiError('Сотрудник не найден', 404);
+    m.role = role; emit();
   },
   async inviteMember(input: { fullName: string; email: string; role: UserRole }) {
     await wait(450);
     if (!input.fullName.trim()) throw new ApiError('Укажите имя', 400);
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(input.email)) throw new ApiError('Проверьте адрес почты', 400);
-    if (members.some((m) => m.email.toLowerCase() === input.email.toLowerCase())) throw new ApiError('Такой адрес уже есть в команде', 409);
-    members = [...members, { id: `u${Date.now()}`, ...input, active: true }]; emit();
+    if (users.some((m) => m.email.toLowerCase() === input.email.toLowerCase())) throw new ApiError('Такой адрес уже есть в команде', 409);
+    users.push({ id: `u${Date.now()}`, ...input, active: true }); emit();
+  },
+  /** PUT /api/users/:id/avatar — в CRM файл уходит в хранилище, сюда приходит ссылка. */
+  async setMemberPhoto(id: string, file: File) {
+    await wait(400);
+    const m = users.find((x) => x.id === id); if (!m) throw new ApiError('Сотрудник не найден', 404);
+    if (!file.type.startsWith('image/')) throw new ApiError('Нужен файл с фотографией', 400);
+    if (file.size > 10 * 1024 * 1024) throw new ApiError('Фото до 10 МБ', 400);
+    if (m.avatarUrl) URL.revokeObjectURL(m.avatarUrl);
+    m.avatarUrl = URL.createObjectURL(file); emit();
+  },
+  async removeMemberPhoto(id: string) {
+    await wait(250);
+    const m = users.find((x) => x.id === id); if (!m) throw new ApiError('Сотрудник не найден', 404);
+    if (m.avatarUrl) URL.revokeObjectURL(m.avatarUrl);
+    m.avatarUrl = undefined; emit();
+  },
+  /**
+   * DELETE /api/users/:id. Лиды, задачи, показы и объекты уволенного переходят
+   * на администратора: иначе строки остаются с пустым ответственным и теряются
+   * из виду. Последнего администратора удалить нельзя.
+   */
+  async deleteMember(id: string) {
+    await wait(450);
+    const i = users.findIndex((x) => x.id === id);
+    if (i < 0) throw new ApiError('Сотрудник не найден', 404);
+    const admins = users.filter((u) => u.role === 'ADMIN');
+    if (users[i].role === 'ADMIN' && admins.length < 2) throw new ApiError('Это последний администратор — сначала назначьте другого', 409);
+    const heir = users.find((u) => u.id !== id && u.role === 'ADMIN')!.id;
+    const moved = { leads: 0, tasks: 0, events: 0, properties: 0 };
+    store.mutate((d) => {
+      d.leads.forEach((l) => { if (l.assignedUserId === id) { l.assignedUserId = heir; moved.leads++; } });
+      d.clients.forEach((c) => { if (c.assignedUserId === id) c.assignedUserId = heir; });
+      d.tasks.forEach((t) => { if (t.userId === id) { t.userId = heir; moved.tasks++; } });
+      d.events.forEach((e) => { if (e.userId === id) { e.userId = heir; moved.events++; } });
+      d.properties.forEach((pr) => { if (pr.ownerUserId === id) { pr.ownerUserId = heir; moved.properties++; } });
+      d.activities.forEach((a) => { if (a.userId === id) a.userId = heir; });
+    });
+    if (users[i].avatarUrl) URL.revokeObjectURL(users[i].avatarUrl!);
+    users.splice(i, 1); emit();
+    return moved;
   },
 
   branding: () => respond(() => ({ ...branding }), branding),

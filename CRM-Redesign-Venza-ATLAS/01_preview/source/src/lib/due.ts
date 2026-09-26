@@ -11,6 +11,7 @@
  * Пресеты, которые уже прошли, не показываем: «Сегодня, 18:00» в 22:30
  * создавало задачу просроченной в момент создания.
  */
+import { tr } from '@/lib/i18n';
 export type DuePreset = { k: string; label: string; at: string };
 
 const at = (days: number, h: number, now: Date) => {
@@ -20,12 +21,12 @@ const at = (days: number, h: number, now: Date) => {
 export function duePresets(now = new Date()): DuePreset[] {
   const hourAhead = new Date(now.getTime() + 3_600_000); hourAhead.setMinutes(0, 0, 0);
   const list: DuePreset[] = [
-    { k: '1h', label: 'Через час', at: hourAhead },
-    { k: 'today18', label: 'Сегодня, 18:00', at: at(0, 18, now) },
-    { k: 'tmr10', label: 'Завтра, 10:00', at: at(1, 10, now) },
-    { k: 'tmr18', label: 'Завтра, 18:00', at: at(1, 18, now) },
-    { k: '3d', label: 'Через 3 дня', at: at(3, 10, now) },
-    { k: 'week', label: 'Через неделю', at: at(7, 10, now) },
+    { k: '1h', label: tr('Через час'), at: hourAhead },
+    { k: 'today18', label: tr('Сегодня, 18:00'), at: at(0, 18, now) },
+    { k: 'tmr10', label: tr('Завтра, 10:00'), at: at(1, 10, now) },
+    { k: 'tmr18', label: tr('Завтра, 18:00'), at: at(1, 18, now) },
+    { k: '3d', label: tr('Через 3 дня'), at: at(3, 10, now) },
+    { k: 'week', label: tr('Через неделю'), at: at(7, 10, now) },
   ].filter((p) => p.at.getTime() > now.getTime())
     .map((p) => ({ k: p.k, label: p.label, at: p.at.toISOString() }));
   return list;

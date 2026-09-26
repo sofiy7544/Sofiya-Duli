@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { cn } from '@/lib/cn';
 import { plural } from '@/lib/format';
+import { tr } from '@/lib/i18n';
 
 /** Формы для счётчика: «1 лид · 2 лида · 5 лидов». */
 export const WORDS: Record<string, [string, string, string]> = {
-  lead: ['лид', 'лида', 'лидов'],
-  client: ['клиент', 'клиента', 'клиентов'],
-  property: ['объект', 'объекта', 'объектов'],
-  task: ['задача', 'задачи', 'задач'],
-  deal: ['сделка', 'сделки', 'сделок'],
+  lead: [tr('лид'), tr('лида'), tr('лидов')],
+  client: [tr('клиент'), tr('клиента'), tr('клиентов')],
+  property: [tr('объект'), tr('объекта'), tr('объектов')],
+  task: [tr('задача'), tr('задачи'), tr('задач')],
+  deal: [tr('сделка'), tr('сделки'), tr('сделок')],
 };
 export type WordKey = keyof typeof WORDS;
 
@@ -51,9 +52,9 @@ export function ShowMore({ more, total, shown, onMore, what, className }: {
     <div ref={sentinel} className={cn('flex flex-col items-center gap-2 py-4', className)}>
       <button type="button" onClick={onMore}
         className="min-h-[44px] rounded-full border border-border bg-surface px-5 text-[14.5px] font-medium text-foreground transition-colors duration-tab hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-        Показать ещё {step}
+        {tr('Показать ещё')} {step}
       </button>
-      <p className="t-caption tabular">Показано {shown} из {total} {plural(total, ...WORDS[what])}</p>
+      <p className="t-caption tabular">{tr('Показано')} {shown} {tr('из')} {total} {plural(total, ...WORDS[what])}</p>
     </div>
   );
 }

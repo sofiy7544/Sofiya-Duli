@@ -5,6 +5,7 @@ import { detectTenant, PLATFORM } from '@/lib/tenants';
 import bgLoop from '@/assets/login-bg-loop.mp4';
 import bgLoopWebm from '@/assets/login-bg-loop.webm';
 import bgPoster from '@/assets/login-bg-poster.jpg';
+import { tr } from '@/lib/i18n';
 
 /**
  * Экран входа: зациклённый видеофон + прозрачное окно по центру.
@@ -132,17 +133,17 @@ function LoginPanel({ dark, onSuccess }: { dark: boolean; onSuccess: () => void 
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!/^\S+@\S+\.\S+$/.test(email)) return setError('Проверьте адрес почты');
-    if (password.length < 8) return setError('Пароль: не меньше 8 символов');
+    if (!/^\S+@\S+\.\S+$/.test(email)) return setError(tr('Проверьте адрес почты'));
+    if (password.length < 8) return setError(tr('Пароль: не меньше 8 символов'));
     setError(null); setBusy(true);
     await new Promise((r) => setTimeout(r, 700));
-    if (password === 'wrongpass') { setBusy(false); return setError('Неверная почта или пароль'); }
+    if (password === 'wrongpass') { setBusy(false); return setError(tr('Неверная почта или пароль')); }
     setLeaving(true); setTimeout(onSuccess, 520);
   };
 
   const sendReset = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!/^\S+@\S+\.\S+$/.test(email)) return setError('Проверьте адрес почты');
+    if (!/^\S+@\S+\.\S+$/.test(email)) return setError(tr('Проверьте адрес почты'));
     setError(null); setBusy(true);
     await new Promise((r) => setTimeout(r, 700));
     setBusy(false); setMode('sent'); // ответ одинаковый для любой почты — иначе форма выдаёт, кто есть в базе
@@ -155,14 +156,14 @@ function LoginPanel({ dark, onSuccess }: { dark: boolean; onSuccess: () => void 
       {mode === 'sent' ? (
         <div className="glassin__sent">
           <span className="glassin__sent-icon" aria-hidden><MailCheck /></span>
-          <p className="glassin__sent-title">Проверьте почту</p>
-          <p className="glassin__sent-text">Если аккаунт для <b>{email}</b> существует, ссылка для восстановления уже отправлена. Она действует 30 минут.</p>
-          <button type="button" className="glassin__go" onClick={() => { setMode('signin'); setError(null); }}>Вернуться ко входу</button>
+          <p className="glassin__sent-title">{tr('Проверьте почту')}</p>
+          <p className="glassin__sent-text">{tr('Если аккаунт для')} <b>{email}</b> {tr('существует, ссылка для восстановления уже отправлена. Она действует 30 минут.')}</p>
+          <button type="button" className="glassin__go" onClick={() => { setMode('signin'); setError(null); }}>{tr('Вернуться ко входу')}</button>
         </div>
       ) : (<>
       <label className={`glassin__field ${error && !/^\S+@\S+\.\S+$/.test(email) ? 'glassin__field--error' : ''}`}>
         <Mail className="glassin__icon" aria-hidden />
-        <input type="email" autoComplete="email" inputMode="email" placeholder="Почта" aria-label="Почта"
+        <input type="email" autoComplete="email" inputMode="email" placeholder={tr('Почта')} aria-label={tr('Почта')}
           onPointerDown={() => stopTyping('clear')} onFocus={() => stopTyping('clear')}
           value={email} onChange={(e) => { stopTyping('keep'); setEmail(e.target.value); setError(null); }} />
       </label>
@@ -170,25 +171,25 @@ function LoginPanel({ dark, onSuccess }: { dark: boolean; onSuccess: () => void 
       {mode === 'signin' && (
       <label className="glassin__field">
         <Lock className="glassin__icon" aria-hidden />
-        <input ref={passRef} onFocus={() => stopTyping('finish')} type={show ? 'text' : 'password'} autoComplete="current-password" maxLength={128} placeholder="Пароль" aria-label="Пароль"
+        <input ref={passRef} onFocus={() => stopTyping('finish')} type={show ? 'text' : 'password'} autoComplete="current-password" maxLength={128} placeholder={tr('Пароль')} aria-label={tr('Пароль')}
           value={password} onChange={(e) => { setPassword(e.target.value); setError(null); }} />
-        <button type="button" className="glassin__eye" onClick={() => setShow(!show)} aria-label={show ? 'Скрыть пароль' : 'Показать пароль'}>
+        <button type="button" className="glassin__eye" onClick={() => setShow(!show)} aria-label={show ? tr('Скрыть пароль') : tr('Показать пароль')}>
           {show ? <EyeOff aria-hidden /> : <Eye aria-hidden />}
         </button>
       </label>)}
 
       {error
         ? <p role="alert" className="glassin__error">{error}</p>
-        : mode === 'signin' && <p className="glassin__hint">Демо-доступ: пароль любой, от 8 символов</p>}
+        : mode === 'signin' && <p className="glassin__hint">{tr('Демо-доступ: пароль любой, от 8 символов')}</p>}
 
       <button type="submit" className="glassin__go" disabled={busy}>
         {busy ? <Loader2 className="glassin__spin" aria-hidden /> : null}
-        {busy ? (mode === 'reset' ? 'Отправляем…' : 'Входим…') : mode === 'reset' ? 'Отправить ссылку' : 'Войти'}
+        {busy ? (mode === 'reset' ? tr('Отправляем…') : tr('Входим…')) : mode === 'reset' ? tr('Отправить ссылку') : tr('Войти')}
       </button>
 
       <button type="button" className="glassin__link"
         onClick={() => { setError(null); setMode(mode === 'reset' ? 'signin' : 'reset'); if (mode === 'signin') setPassword(''); }}>
-        {mode === 'reset' ? 'Вернуться ко входу' : 'Забыли пароль?'}
+        {mode === 'reset' ? tr('Вернуться ко входу') : tr('Забыли пароль?')}
       </button>
       </>)}
     </form>

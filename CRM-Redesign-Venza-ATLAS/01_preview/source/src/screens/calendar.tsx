@@ -18,6 +18,7 @@ import { EmptyState, ErrorState } from '@/components/ui/state';
 import { Sheet } from '@/components/ui/sheet';
 import { toast } from '@/components/ui/toast';
 import { tr } from '@/lib/i18n';
+import { getIntlLocale } from '@/lib/locale';
 
 type View = 'month' | 'week' | 'day' | 'agenda';
 /** Цвета типов событий — токены семьи; тип всегда подписан текстом. */
@@ -40,7 +41,7 @@ export function CalendarScreen() {
   const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
   const on = (d: Date) => events.filter((e) => sameDay(new Date(e.startsAt), d)).sort((a, b) => a.startsAt.localeCompare(b.startsAt));
   const shift = (dir: number) => setCursor((c) => view === 'month' ? new Date(c.getFullYear(), c.getMonth() + dir, 1) : addDays(c, dir * (view === 'day' ? 1 : 7)));
-  const title = view === 'month' ? cursor.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' }) : view === 'day' ? cursor.toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' }) : `${days[0].toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' })} – ${days[6].toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' })}`;
+  const title = view === 'month' ? cursor.toLocaleDateString(getIntlLocale(), { month: 'long', year: 'numeric' }) : view === 'day' ? cursor.toLocaleDateString(getIntlLocale(), { weekday: 'long', day: 'numeric', month: 'long' }) : `${days[0].toLocaleDateString(getIntlLocale(), { day: 'numeric', month: 'short' })} – ${days[6].toLocaleDateString(getIntlLocale(), { day: 'numeric', month: 'short' })}`;
 
   const toolbar = (
     <div className="mb-4 flex flex-wrap items-center gap-2">
@@ -60,7 +61,7 @@ export function CalendarScreen() {
       {days.map((d) => { const active = sameDay(d, cursor); const today = sameDay(d, new Date()); const has = on(d).length > 0; return (
         <button key={d.toISOString()} role="tab" aria-selected={active} onClick={() => { setCursor(d); if (view === 'week') setView('day'); }}
           className={cn('flex flex-col items-center gap-1 rounded-[14px] py-2 transition-colors duration-tab', active ? 'bg-primary text-primary-foreground' : 'hover:bg-surface-2')}>
-          <span className={cn('text-[11px] font-medium uppercase', !active && 'text-muted-foreground')}>{d.toLocaleDateString('ru-RU', { weekday: 'short' }).slice(0, 2)}</span>
+          <span className={cn('text-[11px] font-medium uppercase', !active && 'text-muted-foreground')}>{d.toLocaleDateString(getIntlLocale(), { weekday: 'short' }).slice(0, 2)}</span>
           <span className={cn('tabular', family === 'venza' ? 'font-display text-[19px] font-semibold' : 'text-[16px] font-semibold', today && !active && 'text-primary')}>{d.getDate()}</span>
           <span aria-hidden className={cn('h-1 w-1 rounded-full', has ? (active ? 'bg-primary-foreground' : 'bg-primary') : 'bg-transparent')} />
         </button>); })}
@@ -96,7 +97,7 @@ export function CalendarScreen() {
           <div className="min-w-[760px]">
             <div className="grid border-b border-border" style={{ gridTemplateColumns: `56px repeat(${cols.length}, minmax(0,1fr))` }}>
               <div />
-              {cols.map((d) => <div key={d.toISOString()} className={cn('px-2 py-2.5 text-center', sameDay(d, new Date()) && 'text-primary')}><div className="text-[12px] font-medium uppercase text-muted-foreground">{d.toLocaleDateString('ru-RU', { weekday: 'short' })}</div><div className={cn('tabular', family === 'venza' ? 'font-display text-[20px] font-semibold' : 'text-[17px] font-bold')}>{d.getDate()}</div></div>)}
+              {cols.map((d) => <div key={d.toISOString()} className={cn('px-2 py-2.5 text-center', sameDay(d, new Date()) && 'text-primary')}><div className="text-[12px] font-medium uppercase text-muted-foreground">{d.toLocaleDateString(getIntlLocale(), { weekday: 'short' })}</div><div className={cn('tabular', family === 'venza' ? 'font-display text-[20px] font-semibold' : 'text-[17px] font-bold')}>{d.getDate()}</div></div>)}
             </div>
             <div className="relative grid" style={{ gridTemplateColumns: `56px repeat(${cols.length}, minmax(0,1fr))` }}>
               <div>{HOURS.map((h) => <div key={h} className="h-14 pr-2 text-right text-[11.5px] text-muted-foreground tabular -translate-y-2">{String(h).padStart(2, '0')}:00</div>)}</div>
@@ -124,7 +125,7 @@ export function CalendarScreen() {
       <div className="space-y-5">
         {withEvents.map((d) => (
           <section key={d.toISOString()}>
-            <h3 className={cn('mb-2 first-letter:uppercase', sameDay(d, new Date()) ? 'text-primary' : '', family === 'atlas' ? 'text-[13px] font-semibold' : 'font-display text-[17px] font-semibold')}>{sameDay(d, new Date()) ? tr('Сегодня') : d.toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' })}</h3>
+            <h3 className={cn('mb-2 first-letter:uppercase', sameDay(d, new Date()) ? 'text-primary' : '', family === 'atlas' ? 'text-[13px] font-semibold' : 'font-display text-[17px] font-semibold')}>{sameDay(d, new Date()) ? tr('Сегодня') : d.toLocaleDateString(getIntlLocale(), { weekday: 'long', day: 'numeric', month: 'long' })}</h3>
             <ul className="surface row-divider overflow-hidden">
               {on(d).map((e) => (
                 <li key={e.id}><button onClick={() => setSelected(e)} className="pressable flex min-h-[52px] w-full items-center gap-3 px-4 py-3 text-left">
@@ -158,7 +159,7 @@ function EventSheet({ event, onClose, onMove, onDone }: { event: CalendarEvent |
   const client = event?.clientId ? store.db.clients.find((c) => c.id === event.clientId) : null;
   const property = event?.propertyId ? store.db.properties.find((p) => p.id === event.propertyId) : null;
   return (
-    <Sheet open={!!event} onOpenChange={(o) => !o && onClose()} title={event?.title ?? ''} description={event ? `${EVENT_KIND_LABEL[event.kind]}, ${new Date(event.startsAt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })}, ${time(event.startsAt)}–${time(event.endsAt)}` : undefined} desktop="side" size="sm"
+    <Sheet open={!!event} onOpenChange={(o) => !o && onClose()} title={event?.title ?? ''} description={event ? `${EVENT_KIND_LABEL[event.kind]}, ${new Date(event.startsAt).toLocaleDateString(getIntlLocale(), { day: 'numeric', month: 'long' })}, ${time(event.startsAt)}–${time(event.endsAt)}` : undefined} desktop="side" size="sm"
       footer={event && !event.readOnly ? <>
         <Button variant="outline" className="flex-1" onClick={() => onMove(event)}>{tr('Перенести')}</Button>
         <Button className="flex-1" loading={busy} onClick={async () => {

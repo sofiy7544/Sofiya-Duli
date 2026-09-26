@@ -263,6 +263,34 @@
       (ep ? '' : '<a href="' + link + '"' + (hasTg ? ' target="_blank" rel="noopener"' : '') + '>Відкрити ще раз</a>') + '</p>';
   });
 
+
+  /* ── заявка за фото: дерева та ділянка ────────────────── */
+  var tf = document.getElementById('treeForm');
+  if (tf) tf.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var g = function (n) { return (tf.elements[n].value || '').trim(); };
+    var phone = tf.elements.phone, f = phone.closest('.field');
+    var d = g('phone').replace(/\D/g, '');
+    var ok = (d.length === 12 && d.indexOf('380') === 0) || (d.length === 10 && d.charAt(0) === '0');
+    if (f) f.classList.toggle('is-err', !ok);
+    if (!ok) { phone.focus(); return; }
+    var text = ['🌳 ДЕРЕВА ТА ДІЛЯНКА · DULI Service', '',
+      'Що зробити: ' + g('what'), 'Район: ' + g('zone'), 'Телефон: ' + (d.length === 10 ? '+38' + d : '+' + d),
+      'Про обʼєкт: ' + (g('msg') || '—'), '', '📷 Фото дерева й місця навколо прикріплю нижче.'].join('\n');
+    track('tree_submit', { what: g('what'), zone: g('zone') });
+    var ep = (window.DULI && window.DULI.formEndpoint) || '';
+    var hasTg = !!(window.DULI && window.DULI.telegram);
+    var link = hasTg ? 'https://t.me/' + window.DULI.telegram + '?text=' + encodeURIComponent(text)
+                     : 'sms:' + window.DULI.phone + (/iPhone|iPad|iPod/.test(navigator.userAgent) ? '&' : '?') + 'body=' + encodeURIComponent(text);
+    if (ep) fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: text, phone: g('phone') }) }).catch(function () {});
+    else if (hasTg) window.open(link, '_blank', 'noopener'); else window.location.href = link;
+    tf.innerHTML = '<div class="calc__done"><h3 class="calc__q">Заявку ' + (ep ? 'надіслано' : 'сформовано') + '</h3>' +
+      '<p class="calc__hint">' + (ep ? 'Передзвонимо протягом 30 хвилин у робочі години. Фото можна надіслати в Telegram або Viber на цей же номер.'
+        : 'Ми відкрили ' + (hasTg ? 'Telegram' : 'SMS') + ' із текстом заявки — прикріпіть фото дерева і натисніть «Надіслати». Відповімо з ціною протягом 30 хвилин у робочі години.') + '</p>' +
+      '<div class="calc__alt">' + (ep ? '' : '<a class="btn btn--primary" href="' + link + '"' + (hasTg ? ' target="_blank" rel="noopener"' : '') + '>Відкрити ' + (hasTg ? 'Telegram' : 'SMS') + ' ще раз</a>') +
+      '<a class="btn btn--ghost" href="tel:' + window.DULI.phone + '">Зателефонувати</a></div></div>';
+  });
+
   /* ── картка послуги відкриває розрахунок ──────────────── */
   document.querySelectorAll('[data-calc-type]').forEach(function (b) {
     b.addEventListener('click', function (e) {

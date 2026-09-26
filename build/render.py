@@ -357,7 +357,13 @@ def trust():
       <h2>Що ви можете перевірити на своєму замовленні</h2>
       <p class="lead muted">Жодних «ми найкращі». Тільки те, що видно під час і після прибирання.</p>
     </div>
-    <div class="tr rv">{facts_html}{items_html}</div>
+    <div class="tr__wrap">
+      <figure class="ph ph--portrait ph--trust rv">
+        <img src="{BASE}assets/photos/mop-apron-640.jpg" srcset="{BASE}assets/photos/mop-apron-640.jpg 640w, {BASE}assets/photos/mop-apron-1200.jpg 1200w" sizes="(min-width: 900px) 380px, 100vw" alt="Клінер DULI у фірмовому фартуху з ведмедиком миє паркет у коридорі" width="640" height="853" loading="lazy">
+        <figcaption>Клінер DULI у фірмовому фартуху. Так виглядає бригада, яка приїде.</figcaption>
+      </figure>
+      <div class="tr rv">{facts_html}{items_html}</div>
+    </div>
     {slot}
     <div class="section-cta rv">
       <a class="btn btn--primary" href="{CALC}" data-track="cta_trust">Перевірити на замовленні {ic('arrow')}</a>
@@ -1014,9 +1020,10 @@ def services_hub():
     return (head(title, desc, "/services/", [crumb_ld])
             + header(cur=BASE + "services/") + crumb_html
             + page_hero("Послуги клінінгу в Одесі",
-                        "Шість напрямків із фіксованими ставками. Оберіть свій — на сторінці буде повний "
+                        "Сім напрямків із фіксованими ставками. Оберіть свій — на сторінці буде повний "
                         "склад робіт і ціни, а розрахунок — в один клік.",
-                        note="Працюємо 7 днів на тиждень, виїзд у день звернення.", img=SITE["hero_photo"])
+                        note="Працюємо 7 днів на тиждень, виїзд у день звернення.", img=SITE["hero_photo"],
+                        img_alt="Клінер DULI у фірмовому фартуху та рукавичках миє підлогу шваброю")
             + f"""
 <section class="section section--surface">
   <div class="wrap"><div class="svc svc--hub rv">{''.join(cards)}</div></div>

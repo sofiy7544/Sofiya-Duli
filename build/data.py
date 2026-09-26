@@ -19,7 +19,7 @@ SITE = {
     "hours": "Пн–Нд, 08:00–21:00",
     "base_url": "https://sofiy7544.github.io/Sofiya-Duli",
     "legal": "",                          # ПІДТВЕРДИТИ: ФОП / ТОВ для підвалу
-    "hero_photo": "assets/illus/hero.svg",                     # шлях до фото першого екрана, напр. assets/photos/hero.webp
+    "hero_photo": "assets/photos/mop-apron-wide-640.jpg",                     # шлях до фото першого екрана, напр. assets/photos/hero.webp
     "form_endpoint": "",                  # порожньо → заявка йде в Telegram; вставте URL форми для автодоставки
     "ga4": "",                            # ПІДТВЕРДИТИ: ідентифікатор GA4
     "rating": "",                         # ПІДТВЕРДИТИ: напр. "4.9" — показується лише якщо заповнено
@@ -276,6 +276,8 @@ SERVICES = [
         "outcome": "Квартира готова до нових мешканців — без слідів попередніх",
         "photo": "assets/illus/generalna-pryburannya.svg",                      # assets/photos/<slug>.webp
         "lead": "Між орендарями або перед переїздом.",
+        "hero_photo": "assets/photos/parquet-wide-640.jpg",
+        "hero_alt": "Порожній коридор із паркетом під час миття підлоги перед заселенням",
         "from": 85, "unit": "м²",
         "h1": "Прибирання перед заселенням в Одесі",
         "seo_title": "Прибирання перед заселенням в Одесі — від 85 ₴/м² | DULI",

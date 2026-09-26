@@ -919,3 +919,7 @@ h2{line-height:1.12}
 .ph--portrait{max-width:520px}
 .ph--portrait img{aspect-ratio:4/5}
 .ph figcaption{padding:12px 16px;font-size:var(--fs-caption);color:var(--muted);background:var(--surface);border-top:1px solid var(--hair)}
+
+.tr__wrap{display:grid;gap:22px}
+.ph--trust{max-width:380px;margin:0}
+@media (min-width:900px){.tr__wrap{grid-template-columns:380px 1fr;align-items:start}.tr__wrap .tr{margin:0}}

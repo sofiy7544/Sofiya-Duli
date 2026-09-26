@@ -345,7 +345,8 @@
       '',
       'Ім’я: ' + g('name'),
       'Телефон: ' + phone,
-      'Адреса: ' + (g('address') || 'уточнимо при дзвінку')
+      'Адреса: ' + (g('address') || 'уточнимо при дзвінку'),
+      'Промокод: ' + (form.elements.promo && form.elements.promo.value.trim() || '—')
     ];
     var text = lines.join('\n');
 

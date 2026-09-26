@@ -965,3 +965,14 @@ h2{line-height:1.12}
 .note--trees{margin-top:26px;max-width:none;display:grid;gap:6px;font-size:1rem}
 .note--trees a{color:var(--brand);font-weight:700;display:inline-flex;align-items:center;gap:6px}
 .note--trees a svg{width:16px;height:16px}
+
+/* офери */
+.of__grid{display:grid;grid-template-columns:1fr;gap:12px}
+.of{background:var(--surface);border:1px solid var(--hair);border-radius:var(--r-lg);padding:22px 20px;display:grid;gap:8px;align-content:start;justify-items:start}
+.of__ic{width:44px;height:44px;border-radius:12px;background:var(--brand-soft);display:grid;place-items:center;margin-bottom:4px}
+.of__ic svg{width:22px;height:22px;color:var(--brand)}
+.of h3{font-size:1.12rem;margin:0}
+.of p{font-size:var(--fs-small);color:var(--ink-2);line-height:1.5;margin:0 0 6px}
+.of p b{color:var(--brand);letter-spacing:.06em}
+.of .btn{margin-top:auto}
+@media (min-width:700px){.of__grid{grid-template-columns:repeat(3,1fr)}}

@@ -11,7 +11,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from data import (SITE, CLAIMS, TYPES, OBJECTS, EXTRAS, FREQUENCY, ZONES,
-                  SERVICES, PACKAGES, STEPS, WHY, BEFORE_AFTER, FAQ, B2B_OBJECTS, HOME_SERVICES, TREES,
+                  SERVICES, PACKAGES, STEPS, WHY, BEFORE_AFTER, FAQ, B2B_OBJECTS, HOME_SERVICES, TREES, OFFERS,
                   PRICE_LIST, CHECKLISTS, GUARANTEES, EQUIPMENT, B2B_INCLUDED, FAQ_FULL,
                   FURNITURE, WINDOW_SASH, REVIEWS)
 
@@ -53,6 +53,9 @@ _SVG = {
     "stump": '<path d="M5 10h14v9a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2Z"/><ellipse cx="12" cy="10" rx="7" ry="3"/><path d="M12 10a3 1 0 1 0 .01 0M3 21h18"/>',
     "clear": '<path d="M4 20 20 4M8 20l4-4M12 20l4-4M4 16l4-4M4 12l4-4"/>',
     "truck": '<path d="M2 7h11v9H2zM13 10h5l3 3v3h-8zM6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>',
+    "gift": '<path d="M20 12v9H4v-9M2 7h20v5H2zM12 22V7M12 7c-1.5 0-4-1-4-3a2 2 0 0 1 4 0 2 2 0 0 1 4 0c0 2-2.5 3-4 3Z"/>',
+    "percent": '<path d="M19 5 5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>',
+    "repeat": '<path d="M17 2l4 4-4 4M3 11V8a2 2 0 0 1 2-2h16M7 22l-4-4 4-4M21 13v3a2 2 0 0 1-2 2H3"/>',
     "camera": '<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.2"/>',
     "spray": '<path d="M7 8h6v13H7zM10 8V5h4M17 5h1M20 3l1-1M20 7l1 1"/>',
     "msg": '<path d="M4.5 5.5h15v10.5H9l-4.5 3.5V5.5Z"/><path d="M8 9.5h8M8 12.5h5"/>',
@@ -321,6 +324,44 @@ def services():
 </section>"""
 
 
+def offers():
+    """Офери як у лідерів ринку: перше прибирання зі знижкою, сертифікат, абонемент, приведи друга. Керується OFFERS."""
+    cards = []
+    if OFFERS.get("first_order_pct"):
+        cards.append(("percent", "−%d%% на перше прибирання" % OFFERS["first_order_pct"],
+                      "Назвіть код <b>%s</b> при замовленні або впишіть у коментар до заявки." % OFFERS["promo_code"],
+                      CALC, "Розрахувати зі знижкою"))
+    best = max(FREQUENCY, key=lambda f: 1 - f["k"])
+    cards.append(("repeat", "Абонемент: до −%d%% за регулярність" % round((1 - best["k"]) * 100),
+                  "Раз на місяць, раз на два тижні або щотижня — знижка вже врахована в калькуляторі.",
+                  BASE + "pricing/#regular", "Порівняти графіки"))
+    if OFFERS.get("gift_certificate"):
+        tg = ('%s?text=%s' % (TG, "Вітаю! Хочу оформити подарунковий сертифікат на прибирання.")) if TG else TEL
+        cards.append(("gift", "Подарунковий сертифікат",
+                      "На будь-яку суму або на конкретне прибирання. Оформимо за 10 хвилин, надішлемо гарний PDF.",
+                      tg, "Оформити в Telegram" if TG else "Зателефонувати"))
+    if OFFERS.get("referral_uah"):
+        cards.append(("users", "Приведи друга — %d ₴ вам і другу" % OFFERS["referral_uah"],
+                      "Після першого прибирання друга обом нарахуємо знижку на наступне замовлення.",
+                      TEL, "Дізнатися умови"))
+    html = "".join(
+        '<article class="of"><div class="of__ic">%s</div><h3>%s</h3><p>%s</p><a class="btn btn--ghost btn--sm" href="%s"%s>%s %s</a></article>'
+        % (ic(i), t, d, h, ' target="_blank" rel="noopener"' if h.startswith("http") else "", l, ic("arrow"))
+        for i, t, d, h, l in cards
+    )
+    return f"""
+<section class="section" id="offers">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Вигідно</span>
+      <h2>Три способи платити менше</h2>
+      <p class="lead muted">Без «акція діє до кінця тижня». Умови постійні, і всі вони видно до замовлення.</p>
+    </div>
+    <div class="of__grid rv">{html}</div>
+  </div>
+</section>"""
+
+
 def home_services(compact=False):
     """Блок «Дім і двір»: лаконічна сітка побутових послуг для приватних будинків."""
     items = "".join(
@@ -582,6 +623,7 @@ def calculator(title="Скільки коштуватиме у вас",
                   <div class="field"><label for="fPhone">Телефон</label><input id="fPhone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" placeholder="+380 __ ___ __ __" aria-describedby="fPhoneErr"><span class="field__err" id="fPhoneErr">Перевірте номер: потрібно 10 цифр, наприклад 063 704 16 17.</span></div>
                 </div>
                 <div class="field"><label for="fAddr">Адреса <small>· необов’язково, уточнимо при дзвінку</small></label><input id="fAddr" name="address" autocomplete="street-address" placeholder="Вулиця, будинок, квартира"></div>
+                {('<div class="field"><label for="fPromo">Промокод <small>· наприклад, %s для першого прибирання</small></label><input id="fPromo" name="promo" autocomplete="off" placeholder="%s"></div>' % (OFFERS["promo_code"], OFFERS["promo_code"])) if OFFERS.get("first_order_pct") else ''}
                 <p class="consent">Натискаючи «Замовити прибирання», ви погоджуєтесь на обробку контактних даних для зв’язку щодо замовлення. <a href="{BASE}privacy/">Як ми з ними поводимось</a>.</p>
               </form>
             </div>
@@ -732,7 +774,7 @@ def packages():
     </div>
     <div class="pk rv">{''.join(cards)}</div>
 
-    <div class="reg rv">
+    <div class="reg rv" id="regular">
       <div>
         <span class="eyebrow">Регулярно</span>
         <h2>Один раз добре.<br>Регулярно — дешевше</h2>
@@ -1277,7 +1319,7 @@ def pricing_page():
                         "якщо роботи виявиться більше, узгоджуємо це до початку, а не за фактом.",
                         note="Мінімальне замовлення — %s ₴. Виїзд у межах міста безкоштовний."
                              % uah(CLAIMS["min_order_uah"]))
-            + packages()
+            + packages() + offers()
             + f"""
 <section class="section">
   <div class="wrap">
@@ -1631,7 +1673,7 @@ def build_home():
     # Коротка вітрина: усе детальне живе на своїх сторінках (меню в шапці).
     # before_after() повертається на головну, щойно з’являться власні фото: див. BEFORE_AFTER у data.py
     return (head(title, desc, "/") + header(cur=BASE) + hero() + strip() + services()
-            + home_services() + trust() + reviews() + final() + footer() + scripts())
+            + offers() + home_services() + trust() + reviews() + final() + footer() + scripts())
 
 
 def write(path, content):

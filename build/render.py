@@ -11,7 +11,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from data import (SITE, CLAIMS, TYPES, OBJECTS, EXTRAS, FREQUENCY, ZONES,
-                  SERVICES, PACKAGES, STEPS, WHY, BEFORE_AFTER, FAQ, B2B_OBJECTS, HOME_SERVICES,
+                  SERVICES, PACKAGES, STEPS, WHY, BEFORE_AFTER, FAQ, B2B_OBJECTS, HOME_SERVICES, TREES,
                   PRICE_LIST, CHECKLISTS, GUARANTEES, EQUIPMENT, B2B_INCLUDED, FAQ_FULL,
                   FURNITURE, WINDOW_SASH, REVIEWS)
 
@@ -48,6 +48,12 @@ _SVG = {
     "fuel": '<path d="M3 22V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16M3 22h10M3 12h10M13 8h2a2 2 0 0 1 2 2v6a1.5 1.5 0 0 0 3 0V9l-3-3"/>',
     "bolt": '<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/>',
     "bug": '<path d="M8 2v2M16 2v2M9 7h6a3 3 0 0 1 3 3v4a6 6 0 0 1-12 0v-4a3 3 0 0 1 3-3ZM3 13h3M18 13h3M4 20l3-2M20 20l-3-2M4 6l3 2M20 6l-3 2"/>',
+    "saw": '<path d="M3 17 14 6l4 4-8 8H6Z"/><path d="M14 6l3-3 4 4-3 3M6 18l-3 3"/>',
+    "blade": '<circle cx="12" cy="12" r="8"/><path d="M12 4v3M12 17v3M4 12h3M17 12h3M6.3 6.3l2.2 2.2M15.5 15.5l2.2 2.2M6.3 17.7l2.2-2.2M15.5 8.5l2.2-2.2"/>',
+    "stump": '<path d="M5 10h14v9a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2Z"/><ellipse cx="12" cy="10" rx="7" ry="3"/><path d="M12 10a3 1 0 1 0 .01 0M3 21h18"/>',
+    "clear": '<path d="M4 20 20 4M8 20l4-4M12 20l4-4M4 16l4-4M4 12l4-4"/>',
+    "truck": '<path d="M2 7h11v9H2zM13 10h5l3 3v3h-8zM6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>',
+    "camera": '<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.2"/>',
     "spray": '<path d="M7 8h6v13H7zM10 8V5h4M17 5h1M20 3l1-1M20 7l1 1"/>',
     "msg": '<path d="M4.5 5.5h15v10.5H9l-4.5 3.5V5.5Z"/><path d="M8 9.5h8M8 12.5h5"/>',
     "send": '<path d="m4 11.5 16-7-4.5 15.5-4-6.5-7.5-2Z"/><path d="m11.5 13.5 8.5-9"/>',
@@ -149,6 +155,7 @@ def header(cta=None, cur=""):
     nav = "".join(link(t, h) for t, h in NAV if h != CALC)
     menu_links = "".join(link(t, h, True) for t, h in [("Головна", BASE)] + NAV + [("Для бізнесу", BASE + "business/")])
     menu_sub = "".join('<a href="%sservices/%s/">%s</a>' % (BASE, s["slug"], s["name"]) for s in SERVICES)
+    menu_sub += '<a href="%sservices/%s/">%s</a>' % (BASE, TREES["slug"], TREES["name"])
     return f"""
 <a class="skip" href="#main">Перейти до вмісту</a>
 <header class="hdr">
@@ -316,7 +323,11 @@ def services():
 
 def home_services(compact=False):
     """Блок «Дім і двір»: лаконічна сітка побутових послуг для приватних будинків."""
-    items = "".join('<div class="hs__i">%s<b>%s</b><span>%s</span></div>' % (ic(i), t, d) for i, t, d in HOME_SERVICES)
+    items = "".join(
+        ('<a class="hs__i hs__i--link" href="%s">%s<b>%s</b><span>%s</span></a>' % (BASE + "services/" + TREES["slug"] + "/", ic(i), t, d))
+        if i == "tree" else
+        ('<div class="hs__i">%s<b>%s</b><span>%s</span></div>' % (ic(i), t, d))
+        for i, t, d in HOME_SERVICES)
     return f"""
 <section class="section section--surface" id="home-services">
   <div class="wrap">
@@ -781,7 +792,11 @@ def faq():
 </section>"""
 
 
-def final():
+def final(title=None, text=None, cta=None, cta_label=None):
+    title = title or "Поверніть собі вечір, а дому — чистоту"
+    text = text or "Розрахунок — менше хвилини. Ціна фіксується до виїзду й ні до чого не зобов’язує."
+    cta = cta or CALC
+    cta_label = cta_label or "Розрахувати вартість"
     links = ['<a href="%s">%s</a>' % (TEL, SITE["phone"])]
     if TG:
         links.append('<a href="%s" target="_blank" rel="noopener">Telegram</a>' % TG)
@@ -794,9 +809,9 @@ def final():
   <div class="wrap">
     <div class="final rv">
       <span class="eyebrow">Почнімо</span>
-      <h2>Поверніть собі вечір, а дому — чистоту</h2>
-      <p>Розрахунок — менше хвилини. Ціна фіксується до виїзду й ні до чого не зобов’язує.</p>
-      <a class="btn btn--primary btn--lg" href="{CALC}" data-track="cta_final">Розрахувати вартість {ic('arrow')}</a>
+      <h2>{title}</h2>
+      <p>{text}</p>
+      <a class="btn btn--primary btn--lg" href="{cta}" data-track="cta_final">{cta_label} {ic('arrow')}</a>
       <form class="cb" id="cbForm" novalidate aria-label="Замовити зворотний дзвінок">
         <label class="cb__l" for="cbPhone">Або залиште номер — передзвонимо протягом 15 хвилин у робочі години</label>
         <div class="cb__row">
@@ -814,6 +829,7 @@ def final():
 def footer(cta=None):
     cta = cta or CALC
     svc_links = "".join('<a href="%sservices/%s/">%s</a>' % (BASE, s["slug"], s["name"]) for s in SERVICES[:5])
+    svc_links += '<a href="%sservices/%s/">%s</a>' % (BASE, TREES["slug"], TREES["name"])
     nav_links = "".join('<a href="%s">%s</a>' % (h, t) for t, h in NAV)
     nav_links += '<a href="%sbusiness/">Для бізнесу</a>' % BASE
     legal = SITE["legal"] or ""
@@ -1033,6 +1049,151 @@ def service_page(s):
             + final() + footer() + prefill + scripts())
 
 
+def trees_page():
+    """Лендінг напряму «Дерева та ділянка»: що робимо → для кого → ціна → як відбувається → заявка за фото → FAQ."""
+    T = TREES
+    url = BASE + "services/" + T["slug"] + "/"
+    works = "".join(
+        '<article class="tw"><div class="tw__ic">%s</div><h3>%s</h3><p>%s</p><p class="tw__for"><b>Для кого:</b> %s</p></article>'
+        % (ic(i), t, d, f) for i, t, d, f in T["works"]
+    )
+    factors = "".join('<div class="pf"><b>%s</b><span>%s</span></div>' % (t, d) for t, d in T["price_factors"])
+    steps = "".join(
+        f'<div class="hstep"><div class="hstep__n">0{i + 1}</div><div class="hstep__b"><h3>{t}</h3><p>{d}</p></div></div>'
+        for i, (t, d) in enumerate(T["steps"])
+    )
+    guar = "".join('<div class="why__i">%s<h4>%s</h4><p>%s</p></div>' % (ic(i), t, d) for i, t, d in T["guarantees"])
+    faq_items = "".join(
+        '<div class="faq__i"><button class="faq__q" type="button" aria-expanded="false">%s%s</button>'
+        '<div class="faq__a"><div><p>%s</p></div></div></div>' % (q, ic("plus"), a) for q, a in T["faq"]
+    )
+    zones = "".join('<option>%s</option>' % z["name"] for z in ZONES)
+    what = "".join('<option>%s</option>' % t for _, t, _, _ in T["works"])
+    other = "".join(
+        '<a class="rel__c" href="%sservices/%s/"><b>%s</b><span>від %d ₴/%s</span>%s</a>'
+        % (BASE, x["slug"], x["name"], x["from"], x["unit"], ic("arrow"))
+        for x in SERVICES if x["slug"] in ("pislya-remontu", "pered-zaselennyam", "myttya-vikon")
+    )
+    crumb_html, crumb_ld = crumbs([("Головна", BASE), ("Послуги", BASE + "services/"), (T["name"], None)])
+    ld_service = {
+        "@context": "https://schema.org", "@type": "Service",
+        "name": T["name"], "serviceType": "Обрізка та спил дерев, корчування пнів, розчищення ділянки",
+        "description": T["seo_desc"], "provider": {"@id": SITE["base_url"] + "/#business"},
+        "areaServed": [{"@type": "City", "name": "Одеса"}] + [{"@type": "Place", "name": z["name"]} for z in ZONES if z["fee"]],
+        "url": SITE["base_url"] + "/services/" + T["slug"] + "/",
+    }
+    ld_faq = {"@context": "https://schema.org", "@type": "FAQPage",
+              "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in T["faq"]]}
+    tg_photo = ('%s?text=%s' % (TG, "Вітаю! Оцініть, будь ласка, роботу з деревами за фото (додаю нижче).")) if TG else ""
+    return (head(T["seo_title"], T["seo_desc"], "/services/%s/" % T["slug"], [crumb_ld, ld_service, ld_faq])
+            + header(cta="#tree-form", cur=BASE + "services/") + crumb_html
+            + f"""
+<section class="phero">
+  <div class="wrap phero__in">
+    <div>
+      <h1>{T['h1']}</h1>
+      <p class="lead phero__lead">{T['intro']}</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary btn--lg" href="#tree-form" data-track="cta_trees_hero">{ic('camera')} Оцінити за фото</a>
+        <a class="btn btn--ghost btn--lg" href="{TEL}">{ic('phone')} Викликати спеціаліста</a>
+      </div>
+      <p class="phero__note">Аварійні дерева — у день звернення. Одеса та передмістя, огляд по місту безкоштовний.</p>
+    </div>
+    <img class="phero__img phero__img--photo" src="{BASE}{T['photo']}" srcset="{BASE}{T['photo']} 640w, {BASE}{T['photo'].replace('-640', '-1200')} 1200w" sizes="(min-width: 900px) 440px, 100vw" alt="{T['photo_alt']}" width="640" height="400" fetchpriority="high">
+  </div>
+</section>
+
+<section class="section section--surface" id="works">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Що робимо</span>
+      <h2>Від однієї гілки до цілої ділянки</h2>
+      <p class="lead muted">Обрізка, спил, робота бензопилою, пні та розчищення. Кожна робота закінчується прибиранням.</p>
+    </div>
+    <div class="tw__grid rv">{works}</div>
+  </div>
+</section>
+
+<section class="section" id="price">
+  <div class="wrap price2">
+    <div class="rv">
+      <span class="eyebrow">Вартість</span>
+      <h2>Чому ціна — за фото, а не «від» на сайті</h2>
+      <p class="lead muted">Дві сосни однакової висоти можуть коштувати по-різному: одну валять цілком, іншу знімають частинами над дахом. Тому називаємо точну суму по вашому дереву — і фіксуємо її до початку робіт.</p>
+      <a class="btn btn--primary" href="#tree-form">{ic('camera')} Надіслати фото</a>
+    </div>
+    <div class="pf__grid rv">{factors}</div>
+  </div>
+</section>
+
+<section class="section section--surface" id="how">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Як це відбувається</span>
+      <h2>Чотири кроки — і ділянка чиста</h2>
+    </div>
+    <div class="hsteps rv">{steps}</div>
+  </div>
+</section>
+
+<section class="section" id="guarantees">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Що обіцяємо</span>
+      <h2>Те, що ви перевірите на своїй ділянці</h2>
+    </div>
+    <div class="why rv">{guar}</div>
+  </div>
+</section>
+
+<section class="section section--surface" id="tree-form">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Заявка за фото</span>
+      <h2>Оцінимо роботу за 30 хвилин</h2>
+      <p class="lead muted">Заповніть чотири поля — відкриємо Telegram із готовим текстом, вам залишиться прикріпити фото дерева і натиснути «Надіслати».</p>
+    </div>
+    <div class="formcard rv">
+      <form id="treeForm" novalidate>
+        <div class="field-row">
+          <div class="field"><label for="tw">Що потрібно зробити</label>
+            <select id="tw" name="what">{what}<option>Ще не знаю — підкажіть</option></select></div>
+          <div class="field"><label for="tz">Район</label><select id="tz" name="zone">{zones}<option>Інше передмістя</option></select></div>
+        </div>
+        <div class="field"><label for="tp">Телефон</label><input id="tp" name="phone" type="tel" inputmode="tel" autocomplete="tel" required placeholder="+380 __ ___ __ __" aria-describedby="tpErr"><span class="field__err" id="tpErr">Перевірте номер: потрібно 10 цифр, наприклад 063 704 16 17.</span></div>
+        <div class="field"><label for="tm">Коротко про обʼєкт <small>· необовʼязково</small></label><textarea id="tm" name="msg" rows="2" placeholder="Скільки дерев, приблизна висота, чи є куди валити, чи потрібен вивіз"></textarea></div>
+        <button class="btn btn--primary btn--block btn--lg" type="submit">{ic('send')} Надіслати заявку з фото</button>
+        <p class="consent">Натискаючи кнопку, ви погоджуєтесь на обробку номера для звʼязку щодо замовлення. <a href="{BASE}privacy/">Як ми з ним поводимось</a>.</p>
+      </form>
+    </div>
+    <p class="muted rv" style="margin-top:16px;font-size:var(--fs-small)">Простіше подзвонити? <a href="{TEL}">{SITE['phone']}</a>{(' · або одразу надішліть фото в <a href="%s" target="_blank" rel="noopener">Telegram</a>' % tg_photo) if tg_photo else ''}.</p>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Питання</span>
+      <h2>Про дерева, пні та дозволи</h2>
+    </div>
+    <div class="faq rv">{faq_items}</div>
+  </div>
+</section>
+
+<section class="section section--surface">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Після ділянки — дім</span>
+      <h2>Часто замовляють разом</h2>
+      <p class="lead muted">Розчистили ділянку або закінчили будівництво — приберемо і всередині, за один виїзд.</p>
+    </div>
+    <div class="rel rv">{other}</div>
+  </div>
+</section>"""
+            + final("Одне фото — і ви знаєте ціну", "Надішліть знімок дерева або ділянки. Відповімо протягом 30 хвилин у робочі години, аварійні — приїдемо сьогодні.",
+                    "#tree-form", "Оцінити за фото") + footer() + scripts())
+
+
 def services_hub():
     cards = []
     for i, s in enumerate(SERVICES):
@@ -1052,6 +1213,21 @@ def services_hub():
       </div>
     </article>""")
 
+    cards.append(f"""
+    <article class="svc__c svc__c--trees">
+      <a class="svc__link" href="{BASE}services/{TREES['slug']}/" aria-label="{TREES['name']}"></a>
+      <div class="svc__img"><img src="{BASE}{TREES['photo']}" alt="{TREES['photo_alt']}" loading="lazy" width="640" height="400"><span class="svc__pill">ціна <b>за фото</b></span></div>
+      <div class="svc__b">
+        <h3>{TREES['name']}</h3>
+        <p>Аварійні дерева, сухі гілки, пні, розчищення ділянки.</p>
+        <ul class="svc__inc"><li>Спил цілком або частинами</li><li>Санітарна та формуюча обрізка</li><li>Корчування пнів</li><li>Вивіз гілок входить</li></ul>
+        <div class="svc__f">
+          <div class="svc__price">за фото <span>· 30 хв</span></div>
+          <span class="btn btn--ghost btn--sm">Детальніше</span>
+        </div>
+      </div>
+    </article>""")
+
     crumb_html, crumb_ld = crumbs([("Головна", BASE), ("Послуги", None)])
     title = "Послуги клінінгу в Одесі — ціни й розрахунок | DULI"
     desc = ("Усі послуги DULI Service в Одесі: підтримуюче та генеральне прибирання, після ремонту, "
@@ -1059,8 +1235,8 @@ def services_hub():
     return (head(title, desc, "/services/", [crumb_ld])
             + header(cur=BASE + "services/") + crumb_html
             + page_hero("Послуги клінінгу в Одесі",
-                        "Сім напрямків із фіксованими ставками. Оберіть свій — на сторінці буде повний "
-                        "склад робіт і ціни, а розрахунок — в один клік.",
+                        "Прибирання з фіксованими ставками, а для приватних будинків — ще й дерева та ділянка. "
+                        "Оберіть свій напрямок: на сторінці повний склад робіт, ціни та розрахунок в один клік.",
                         note="Працюємо 7 днів на тиждень, виїзд у день звернення.", img=SITE["hero_photo"],
                         img_alt="Клінер DULI у фірмовому фартуху та рукавичках миє підлогу шваброю")
             + f"""
@@ -1123,6 +1299,11 @@ def pricing_page():
         <thead><tr><th>Район</th><th>Доплата</th></tr></thead>
         <tbody>{zones_rows}</tbody>
       </table>
+    </div>
+
+    <div class="note note--trees rv">
+      <b>Дерева та ділянка — ціна за фото.</b> Обрізка, спил, корчування пнів і розчищення не мають ставки «за м²»: надішліть фото — назвемо суму за 30 хвилин.
+      <a href="{BASE}services/{TREES['slug']}/">Детальніше про роботи з деревами {ic('arrow')}</a>
     </div>
   </div>
 </section>"""
@@ -1474,11 +1655,13 @@ def main():
     write("calc/index.html", calc_page())
     for s in SERVICES:
         write("services/%s/index.html" % s["slug"], service_page(s))
+    write("services/%s/index.html" % TREES["slug"], trees_page())
 
     write("robots.txt", "User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n" % SITE["base_url"])
 
     urls = ([("/", "1.0"), ("/services/", "0.9"), ("/pricing/", "0.9"), ("/calc/", "0.9")]
             + [("/services/%s/" % s["slug"], "0.8") for s in SERVICES]
+            + [("/services/%s/" % TREES["slug"], "0.8")]
             + [("/how-it-works/", "0.7"), ("/business/", "0.8"), ("/about/", "0.6"), ("/faq/", "0.7"), ("/privacy/", "0.2")])
     body = "".join(
         '  <url><loc>%s%s</loc><changefreq>weekly</changefreq><priority>%s</priority></url>\n'

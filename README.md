@@ -8,6 +8,7 @@
 - `build/render.py` — шаблони сторінок. Генерує HTML у корінь репозиторію: `index.html`, `services/*/`, `pricing/`, `calc/`, `how-it-works/`, `business/`, `about/`, `faq/`, `privacy/`, `404.html`, `sitemap.xml`.
 - `assets/css/site.css` — стилі (mobile-first), `assets/js/site.js` — меню, панель, форми, `assets/js/calc.js` — калькулятор.
 - `assets/photos/` — реальні фото робіт, `assets/illus/` — ілюстрації послуг, `assets/icons/` — іконки застосунку, `manifest.webmanifest`.
+- `TREES` у `data.py` — лендінг «Обрізка та спил дерев» (`/services/obrizka-ta-spyl-derev/`): заявка за фото йде в Telegram. Місце під фото «до/після» готове — додайте `assets/photos/trees-*.jpg` і згадайте в `TREES`.
 - `print/car-magnet/` — макети автомагнітів (двері 600×400, капот-будиночок), на сайт не потрапляють.
 
 ## Як змінити щось на сайті

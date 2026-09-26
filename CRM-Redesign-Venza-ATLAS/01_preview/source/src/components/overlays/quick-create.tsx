@@ -72,7 +72,7 @@ function LeadQuickForm() {
   const validate = () => {
     const e: typeof errors = {};
     if (v.fullName.trim().length < 2) e.fullName = tr('Минимум 2 символа');
-    if (!/^[+0-9()\-\s]{6,32}$/.test(v.primaryPhone.trim()) || v.primaryPhone.replace(/\D/g, '').length < 6) e.primaryPhone = 'Цифры, +, скобки и дефис, от 6 символов';
+    if (!/^[+0-9()\-\s]{6,32}$/.test(v.primaryPhone.trim()) || v.primaryPhone.replace(/\D/g, '').length < 6) e.primaryPhone = tr('Цифры, +, скобки и дефис, от 6 символов');
     setErrors(e); return !Object.keys(e).length;
   };
   React.useEffect(() => { if (touched) validate(); /* eslint-disable-next-line */ }, [v]);
@@ -157,7 +157,7 @@ function TaskQuickForm() {
               onChange={(e) => { setV({ ...v, due: e.target.value }); setDueError(null); }} />}
           </Field>
         </div>
-        {iso && !dueError && <p className="t-caption mt-2">{tr('Напомню')}{relDay(iso).toLowerCase()} в {time(iso)}</p>}
+        {iso && !dueError && <p className="t-caption mt-2">{tr('Напомню')} {relDay(iso).toLowerCase()} {tr('в')} {time(iso)}</p>}
       </fieldset>
       <div className="flex gap-2.5 pt-2">
         <Button type="button" variant="outline" className="flex-1" onClick={() => ui.set({ quickCreate: 'menu' })}>{tr('Назад')}</Button>

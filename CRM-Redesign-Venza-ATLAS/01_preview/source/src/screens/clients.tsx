@@ -49,7 +49,7 @@ export function ClientsScreen() {
     if (r.loading) return <RowsSkeleton rows={7} />;
     const items = page.visible;
     if (!items.length) return debounced
-      ? <EmptyState icon={Search} title={tr('Никого не нашли')} text={`По запросу «${debounced}» клиентов нет. Проверьте номер или имя.`} action={<Button variant="outline" size="sm" onClick={() => setTerm('')}>{tr('Очистить поиск')}</Button>} />
+      ? <EmptyState icon={Search} title={tr('Никого не нашли')} text={tr('По запросу «{q}» клиентов нет. Проверьте номер или имя.', { q: debounced })} action={<Button variant="outline" size="sm" onClick={() => setTerm('')}>{tr('Очистить поиск')}</Button>} />
       : status === 'active' ? <EmptyState icon={Users} title={tr('Клиентов пока нет')} text={tr('Клиент появится, когда вы создадите первый лид.')} action={<Button onClick={() => ui.set({ quickCreate: 'lead' })}><UserPlus />{tr('Новый лид')}</Button>} />
       : <EmptyState icon={status === 'archived' ? Archive : Ban} title={status === 'archived' ? tr('Архив пуст') : tr('Чёрный список пуст')} text={status === 'archived' ? tr('Сюда попадают клиенты, с которыми работа завершена.') : tr('Клиенты из чёрного списка не могут стать лидами.')} />;
 
@@ -93,7 +93,7 @@ export function ClientsScreen() {
   const total = r.data?.total;
   return (
     <PageBody wide={family === 'atlas'}>
-      <PageHeader title={tr('Клиенты')} subtitle={total !== undefined ? `${total} в разделе` : ' '}
+      <PageHeader title={tr('Клиенты')} subtitle={total !== undefined ? tr('{n} в разделе', { n: total }) : ' '}
         actions={<IconButton label={tr('Новый клиент')} onClick={() => router.navigate('/clients/new')}><UserPlus /></IconButton>} />
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
         <SegmentedControl<Status> label={tr('Статус клиентов')} value={status} onChange={setStatus} className="w-full sm:w-auto"
@@ -105,7 +105,7 @@ export function ClientsScreen() {
         </div>
       </div>
       {list()}
-      {total !== undefined && total > 0 && <p className="t-caption mt-3 text-center">{tr('Показано')}{total} из {total}</p>}
+      {total !== undefined && total > 0 && <p className="t-caption mt-3 text-center">{tr('Показано')} {total} {tr('из')} {total}</p>}
     </PageBody>
   );
 }
@@ -175,7 +175,7 @@ export function ClientDetailScreen({ id }: { id: string }) {
       <h2 className="t-h3 mb-2">{tr('Предпочтения')}</h2>
       {prefs ? (
         <dl className="row-divider -mx-1 text-[14.5px]">
-          {[[tr('Тип'), prefs.propertyType ? PROPERTY_TYPE_LABEL[prefs.propertyType] : tr('Любой')], [tr('Районы'), prefs.districts.join(', ') || '—'], [tr('Комнат'), prefs.rooms?.min ? `от ${prefs.rooms.min}` : '—'], [tr('Бюджет'), budget(prefs.price?.min, prefs.price?.max, prefs.currency)]].map(([k, v]) => (
+          {[[tr('Тип'), prefs.propertyType ? PROPERTY_TYPE_LABEL[prefs.propertyType] : tr('Любой')], [tr('Районы'), prefs.districts.join(', ') || '—'], [tr('Комнат'), prefs.rooms?.min ? tr('от {n}', { n: prefs.rooms.min }) : '—'], [tr('Бюджет'), budget(prefs.price?.min, prefs.price?.max, prefs.currency)]].map(([k, v]) => (
             <div key={k} className="flex justify-between gap-4 px-1 py-2.5"><dt className="text-muted-foreground">{k}</dt><dd className="text-right font-medium">{v}</dd></div>))}
         </dl>
       ) : <p className="t-caption">{tr('Не заполнены. Добавьте в форме клиента.')}</p>}
@@ -193,7 +193,7 @@ export function ClientDetailScreen({ id }: { id: string }) {
         <div className={cn('mt-1.5 flex flex-wrap items-center gap-2', family !== 'atlas' && 'max-lg:justify-center')}>
           <StatusBadge tone="neutral">{CLIENT_TYPE_LABEL[c.type]}</StatusBadge>
           {c.isArchived && <StatusBadge tone="warning" dot>{tr('В архиве')}</StatusBadge>}
-          <span className="t-caption">{SOURCE_LABEL[c.source]}, с {relDay(c.createdAt).toLowerCase()}</span>
+          <span className="t-caption">{SOURCE_LABEL[c.source]}, {tr('с')} {relDay(c.createdAt).toLowerCase()}</span>
         </div>
       </div>
     </div>
@@ -264,7 +264,7 @@ function ClientProperties({ clientId, onAttach }: { clientId: string; onAttach: 
                       <span className="t-caption block truncate">{p.district} · {money(p.price, p.currency, true)}</span>
                     </span>
                   </Link>
-                  <IconButton label={`Убрать ${p.title}`} variant="ghost" onClick={() => setRemove(x)}><X /></IconButton>
+                  <IconButton label={tr('Убрать {name}', { name: p.title })} variant="ghost" onClick={() => setRemove(x)}><X /></IconButton>
                 </div>
                 <div className="mt-2 flex flex-wrap items-center gap-1.5">
                   {INTEREST_ORDER.map((st) => (

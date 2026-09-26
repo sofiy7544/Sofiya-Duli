@@ -21,7 +21,7 @@ export function ErrorState({ error, onRetry, what = tr('данные') }: { erro
     <div role="alert" className="surface flex flex-col items-center border-danger/25 px-6 py-10 text-center">
       <span className="mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-danger/10 text-danger-text"><RotateCw className="h-[22px] w-[22px]" aria-hidden /></span>
       <h2 className="t-h3">{tr('Не удалось загрузить')}{what}</h2>
-      <p className="t-caption mt-1 max-w-[34ch]">{error.message} Остальные разделы работают.</p>
+      <p className="t-caption mt-1 max-w-[34ch]">{error.message} {tr('Остальные разделы работают.')}</p>
       <Button variant="outline" size="sm" className="mt-5" onClick={onRetry}><RotateCw aria-hidden />{tr('Повторить')}</Button>
     </div>
   );

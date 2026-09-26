@@ -157,7 +157,7 @@ function LoginPanel({ dark, onSuccess }: { dark: boolean; onSuccess: () => void 
         <div className="glassin__sent">
           <span className="glassin__sent-icon" aria-hidden><MailCheck /></span>
           <p className="glassin__sent-title">{tr('Проверьте почту')}</p>
-          <p className="glassin__sent-text">Если аккаунт для <b>{email}</b>{tr('существует, ссылка для восстановления уже отправлена. Она действует 30 минут.')}</p>
+          <p className="glassin__sent-text">{tr('Если аккаунт для')} <b>{email}</b> {tr('существует, ссылка для восстановления уже отправлена. Она действует 30 минут.')}</p>
           <button type="button" className="glassin__go" onClick={() => { setMode('signin'); setError(null); }}>{tr('Вернуться ко входу')}</button>
         </div>
       ) : (<>

@@ -28,7 +28,7 @@ export function LeadRow({ lead, onActions, showStage }: { lead: Lead; onActions?
           </div>
         </div>
       </Link>
-      {onActions && <button onClick={() => onActions(lead)} aria-label={`Действия: ${client?.fullName}`} className="absolute right-2 grid h-11 w-11 place-items-center rounded-full text-muted-foreground hover:bg-surface-2"><MoreHorizontal className="h-5 w-5" /></button>}
+      {onActions && <button onClick={() => onActions(lead)} aria-label={tr('Действия: {name}', { name: client?.fullName ?? '' })} className="absolute right-2 grid h-11 w-11 place-items-center rounded-full text-muted-foreground hover:bg-surface-2"><MoreHorizontal className="h-5 w-5" /></button>}
     </div>
   );
 }

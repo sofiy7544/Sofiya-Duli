@@ -31,7 +31,7 @@ export function NotFoundScreen({ path }: { path: string }) {
   return (
     <PageBody>
       <PageHeader title={tr('Страница не найдена')} />
-      <EmptyState icon={Compass} title={`Адрес ${path} не существует`}
+      <EmptyState icon={Compass} title={tr('Адрес {path} не существует', { path })}
         text={tr('Возможно, ссылка устарела или в ней опечатка. Разделы CRM — в нижней панели и в «Ещё».')}
         action={<Link href="/today" className="pressable inline-flex h-11 items-center rounded-control bg-primary px-4 text-[15px] font-semibold text-primary-foreground">{tr('На сегодня')}</Link>} />
     </PageBody>

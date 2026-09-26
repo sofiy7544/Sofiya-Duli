@@ -27,6 +27,7 @@ import { toast } from '@/components/ui/toast';
 import { PropertyMedia } from '@/components/domain/property-media';
 import { FilterButton, FiltersSheet, activeFilterCount, type FilterValue } from '@/components/domain/filters';
 import { tr } from '@/lib/i18n';
+import { getIntlLocale } from '@/lib/locale';
 
 export function PropertiesScreen() {
   const router = useRouter();
@@ -98,7 +99,7 @@ function PropertyCard({ p }: { p: Property }) {
           <div className="t-caption mt-0.5 flex items-center gap-1 truncate"><MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden />{p.district}</div>
           <div className={cn('mt-3 flex items-center gap-3 text-[13px] text-muted-foreground', atlas && 'mt-2 border-t border-border/70 pt-2')}>
             {p.rooms && <span className="inline-flex items-center gap-1"><BedDouble className="h-3.5 w-3.5" aria-hidden />{p.rooms} {plural(p.rooms, 'комн.', 'комн.', 'комн.')}</span>}
-            <span className="inline-flex items-center gap-1 tabular"><Ruler className="h-3.5 w-3.5" aria-hidden />{p.area.toLocaleString('ru-RU')} м²</span>
+            <span className="inline-flex items-center gap-1 tabular"><Ruler className="h-3.5 w-3.5" aria-hidden />{p.area.toLocaleString(getIntlLocale())} {tr('м²')}</span>
             {p.floor && <span className="inline-flex items-center gap-1 tabular"><Layers className="h-3.5 w-3.5" aria-hidden />{p.floor}/{p.totalFloors}</span>}
           </div>
         </div>
@@ -141,8 +142,8 @@ export function PropertyDetailScreen({ id }: { id: string }) {
   const facts = [
     { icon: Building, label: tr('Тип'), value: PROPERTY_TYPE_LABEL[p.type] },
     p.rooms ? { icon: BedDouble, label: tr('Комнат'), value: String(p.rooms) } : null,
-    { icon: Ruler, label: tr('Площадь'), value: `${p.area.toLocaleString('ru-RU')} м²` },
-    p.floor ? { icon: Layers, label: tr('Этаж'), value: `${p.floor} из ${p.totalFloors}` } : null,
+    { icon: Ruler, label: tr('Площадь'), value: `${p.area.toLocaleString(getIntlLocale())} ${tr('м²')}` },
+    p.floor ? { icon: Layers, label: tr('Этаж'), value: tr('{floor} из {total}', { floor: p.floor, total: p.totalFloors ?? '—' }) } : null,
   ].filter(Boolean) as { icon: typeof Building; label: string; value: string }[];
 
   /* Загрузка своих файлов. В CRM это отправка в хранилище (S3) и запись в media;
@@ -154,13 +155,13 @@ export function PropertyDetailScreen({ id }: { id: string }) {
     const wrong = all.filter((f) => !f.type.startsWith('image/') && !f.type.startsWith('video/'));
     const heavy = all.filter((f) => f.size > MAX_MB * 1024 * 1024);
     const ok = all.filter((f) => !wrong.includes(f) && !heavy.includes(f));
-    if (wrong.length) toast.error(`Не подходит: ${wrong.map((f) => f.name).join(', ')}. Нужны фото или видео.`);
-    if (heavy.length) toast.error(`Слишком большой файл: ${heavy.map((f) => f.name).join(', ')}. До ${MAX_MB} МБ.`);
+    if (wrong.length) toast.error(tr('Не подходит: {files}. Нужны фото или видео.', { files: wrong.map((f) => f.name).join(', ') }));
+    if (heavy.length) toast.error(tr('Слишком большой файл: {files}. До {mb} МБ.', { files: heavy.map((f) => f.name).join(', '), mb: MAX_MB }));
     if (!ok.length) return;
     setUpBusy(true);
     try {
       await api.addPropertyMedia(p.id, ok);
-      toast.success(`Добавлено ${ok.length} ${plural(ok.length, 'файл', 'файла', 'файлов')}`);
+      toast.success(`${tr('Добавлено')} ${ok.length} ${plural(ok.length, 'файл', 'файла', 'файлов')}`);
     } catch (e) { toast.error((e as Error).message); }
     finally { setUpBusy(false); if (filePick.current) filePick.current.value = ''; }
   };
@@ -173,7 +174,7 @@ export function PropertyDetailScreen({ id }: { id: string }) {
       <div ref={track} onScroll={onScroll} data-hscroll className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto" aria-label={tr('Фотографии')} role="region">
         {p.photos.map((ph, i) => (
           <button key={ph.id} onClick={() => setLightbox(i)} className="relative w-full shrink-0 snap-center"
-            aria-label={`${ph.kind === 'video' ? tr('Видео') : tr('Фото')} ${i + 1} из ${p.photos.length}, открыть`}>
+            aria-label={tr('{kind} {n} из {total}, открыть', { kind: ph.kind === 'video' ? tr('Видео') : tr('Фото'), n: i + 1, total: p.photos.length })}>
             <PropertyMedia art={ph.art} src={ph.url} video={ph.kind === 'video'} aspect={isDesktop ? (family === 'atlas' ? '16/10' : '16/9') : '4/3'} rounded={false} parallax={i === 0} />
             {ph.kind === 'video' && (
               <span className="material pointer-events-none absolute left-1/2 top-1/2 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-[var(--glass-border)]" aria-hidden>
@@ -227,7 +228,7 @@ export function PropertyDetailScreen({ id }: { id: string }) {
       </div>
       <p className="t-caption mt-1">
         {canEdit
-          ? `Фото и видео с телефона или компьютера, до ${MAX_MB} МБ на файл. В превью файлы живут до перезагрузки страницы — в CRM они уходят в хранилище агентства.`
+          ? tr('Фото и видео с телефона или компьютера, до {mb} МБ на файл. В превью файлы живут до перезагрузки страницы — в CRM они уходят в хранилище агентства.', { mb: MAX_MB })
           : tr('Добавлять файлы может ответственный за объект или администратор.')}
       </p>
       <input ref={filePick} type="file" accept="image/*,video/*" multiple aria-label={tr('Фото и видео объекта')} className="sr-only" tabIndex={-1}
@@ -236,7 +237,7 @@ export function PropertyDetailScreen({ id }: { id: string }) {
         {p.photos.map((ph, i) => (
           <li key={ph.id} className="relative">
             <button type="button" onClick={() => setLightbox(i)} className="pressable block w-full overflow-hidden rounded-control"
-              aria-label={`${ph.kind === 'video' ? tr('Видео') : tr('Фото')} ${i + 1}, открыть`}>
+              aria-label={tr('{kind} {n}, открыть', { kind: ph.kind === 'video' ? tr('Видео') : tr('Фото'), n: i + 1 })}>
               <PropertyMedia art={ph.art} src={ph.url} video={ph.kind === 'video'} aspect="1/1" />
             </button>
             {ph.kind === 'video' && (

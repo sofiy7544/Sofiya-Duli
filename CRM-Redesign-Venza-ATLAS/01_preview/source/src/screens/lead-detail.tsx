@@ -64,7 +64,7 @@ export function LeadDetailScreen({ id }: { id: string }) {
     <CallDispositionSheet open={call} onOpenChange={setCall} clientId={client.id} leadId={lead.id} name={client.fullName} phone={client.primaryPhone} />
     <RemindSheet open={remind} onOpenChange={setRemind} leadId={lead.id} current={lead.nextActionAt} />
     <ScheduleShowingSheet open={showing} onOpenChange={setShowing} client={client} defaultPropertyId={lead.interestPropertyId} />
-    <ConfirmDialog open={del} onOpenChange={setDel} title={tr('Удалить лид?')} text={`Лид ${client.fullName} и его история будут удалены. Клиент останется в базе.`} confirmLabel={tr('Удалить')}
+    <ConfirmDialog open={del} onOpenChange={setDel} title={tr('Удалить лид?')} text={tr('Лид {name} и его история будут удалены. Клиент останется в базе.', { name: client.fullName })} confirmLabel={tr('Удалить')}
       onConfirm={() => { setDel(false); router.navigate('/leads', { replace: true }); toast.success(tr('Лид удалён')); }} />
     {lostSheet}
   </>);
@@ -105,7 +105,7 @@ export function LeadDetailScreen({ id }: { id: string }) {
         <div className="mt-3 lg:mt-0">
           <h1 className="t-h1">{client.fullName}</h1>
           <div className="mt-2 flex flex-wrap items-center justify-center gap-2 lg:justify-start">
-            <button onClick={() => setStageOpen(true)} className="inline-flex min-h-[40px] items-center rounded-full px-1 focus-visible:ring-2 focus-visible:ring-ring" aria-label={`Этап: ${STAGE_LABEL[lead.stage]}. Сменить`}><StageBadge stage={lead.stage} /></button>
+            <button onClick={() => setStageOpen(true)} className="inline-flex min-h-[40px] items-center rounded-full px-1 focus-visible:ring-2 focus-visible:ring-ring" aria-label={tr('Этап: {stage}. Сменить', { stage: STAGE_LABEL[lead.stage] })}><StageBadge stage={lead.stage} /></button>
             <PriorityMark priority={lead.priority} withLabel />
           </div>
         </div>
@@ -163,7 +163,7 @@ export function QuickActions({ client, onTask, onShowing, onCall, onRemind }: { 
 function RequestList({ lead, client }: { lead: Lead; client: Client }) {
   const rows: [string, React.ReactNode][] = [
     [tr('Цель'), PURPOSE_LABEL[lead.purpose]], [tr('Бюджет'), <span className="tabular">{budget(lead.budgetMin, lead.budgetMax, lead.budgetCurrency)}</span>],
-    [tr('Районы'), client.preferences?.districts.join(', ') || '—'], [tr('Комнат'), client.preferences?.rooms?.min ? `от ${client.preferences.rooms.min}` : '—'],
+    [tr('Районы'), client.preferences?.districts.join(', ') || '—'], [tr('Комнат'), client.preferences?.rooms?.min ? tr('от {n}', { n: client.preferences.rooms.min }) : '—'],
     [tr('Телефон'), <a href={`tel:${client.primaryPhone}`} className="tabular text-primary">{client.primaryPhone}</a>], [tr('Источник'), SOURCE_LABEL[lead.source]],
   ];
   return <dl className="row-divider -mx-1">{rows.map(([k, v]) => <div key={k} className="flex items-baseline justify-between gap-4 px-1 py-2.5 text-[14.5px]"><dt className="text-muted-foreground">{k}</dt><dd className="text-right font-medium">{v}</dd></div>)}</dl>;
@@ -243,9 +243,9 @@ export function ScheduleShowingSheet({ open, onOpenChange, client, defaultProper
         setBusy(true);
         const property = store.db.properties.find((p) => p.id === propertyId);
         try {
-          await api.createEvent({ kind: 'SHOWING', title: `Показ · ${property?.title ?? client.fullName}`, startsAt: d.toISOString(), minutes: 60, clientId: client.id, propertyId });
+          await api.createEvent({ kind: 'SHOWING', title: tr('Показ · {what}', { what: property?.title ?? client.fullName }), startsAt: d.toISOString(), minutes: 60, clientId: client.id, propertyId });
           onOpenChange(false);
-          toast.success(`Показ назначен: ${relDay(d.toISOString()).toLowerCase()}, ${time(d.toISOString())}`);
+          toast.success(tr('Показ назначен: {day}, {time}', { day: relDay(d.toISOString()).toLowerCase(), time: time(d.toISOString()) }));
         } catch (err) { toast.error((err as Error).message); }
         finally { setBusy(false); }
       }}>{tr('Назначить')}</Button></>}>
@@ -262,7 +262,7 @@ export function ScheduleShowingSheet({ open, onOpenChange, client, defaultProper
         <Field label={tr('Время')} hint={tr('Длительность 60 минут')} error={hasTime ? undefined : tr('Выберите время показа')}>
           {(id, dsc) => <Input id={id} aria-describedby={dsc} invalid={!hasTime} required type="time" step={900} value={hour} onChange={(e) => setHour(e.target.value)} className="tabular" />}
         </Field>
-        {conflict && <div role="status" className="rounded-control border border-warning/35 bg-warning/12 px-3.5 py-3 text-[14px] text-warning-text">{tr('Пересекается с «')}{conflict.title}» в {time(conflict.startsAt)}. Показ можно назначить, но проверьте расписание.</div>}
+        {conflict && <div role="status" className="rounded-control border border-warning/35 bg-warning/12 px-3.5 py-3 text-[14px] text-warning-text">{tr('Пересекается с «')}{conflict.title}{tr('» в')} {time(conflict.startsAt)}. Показ можно назначить, но проверьте расписание.</div>}
       </div>
     </Sheet>
   );
@@ -281,7 +281,7 @@ export const _unused = EmptyState;
 
 /** Правая панель лида: этап · приоритет · ответственный (ADMIN/MANAGER) · «Готов купить». */
 function LeadControls({ lead, canAssign, onStage, onReady }: { lead: Lead; canAssign: boolean; onStage: () => void; onReady: () => void }) {
-  const setPriority = async (p: Priority) => { await api.updateLead(lead.id, { priority: p }); toast.success(`Приоритет: ${PRIORITY_LABEL[p].toLowerCase()}`); };
+  const setPriority = async (p: Priority) => { await api.updateLead(lead.id, { priority: p }); toast.success(tr('Приоритет: {p}', { p: PRIORITY_LABEL[p].toLowerCase() })); };
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3"><span className="t-caption text-[13.5px]">{tr('Этап')}</span><button onClick={onStage} className="rounded-full focus-visible:ring-2 focus-visible:ring-ring" aria-label={tr('Сменить этап')}><StageBadge stage={lead.stage} /></button></div>

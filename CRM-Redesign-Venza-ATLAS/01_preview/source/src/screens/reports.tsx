@@ -69,9 +69,9 @@ export function ReportsScreen() {
   }
   if (leads.length === 0) {
     return (
-      <PageBody><PageHeader title={tr('Отчёты')} subtitle={`Период: ${PERIOD_HINT[period]}`}>{periodFilter}</PageHeader>
+      <PageBody><PageHeader title={tr('Отчёты')} subtitle={tr('Период: {p}', { p: PERIOD_HINT[period] })}>{periodFilter}</PageHeader>
         <EmptyState icon={BarChart3} title={tr('За этот период данных нет')}
-          text={`Лиды за ${PERIOD_HINT[period]} не найдены. Выберите более широкий период — например, «Всё время».`} />
+          text={tr('Лиды за {p} не найдены. Выберите более широкий период — например, «Всё время».', { p: PERIOD_HINT[period] })} />
       </PageBody>
     );
   }
@@ -120,20 +120,20 @@ export function ReportsScreen() {
   return (
     <PageBody>
       <PageHeader title={tr('Отчёты')}
-        subtitle={`${PERIOD_HINT[period]} · ${leads.length} ${plural(leads.length, 'лид', 'лида', 'лидов')}${period === 'all' ? '' : ` из ${allLeads.length}`}`}>
+        subtitle={`${PERIOD_HINT[period]} · ${leads.length} ${plural(leads.length, 'лид', 'лида', 'лидов')}${period === 'all' ? '' : ` ${tr('из')} ${allLeads.length}`}`}>
         {periodFilter}
       </PageHeader>
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatTile label={tr('В работе')} value={String(active.length)} hint={`${money(active.reduce((a, l) => a + avg(l), 0), 'EUR', true)} бюджетов`} />
-        <StatTile label={tr('Конверсия в сделку')} value={closed > 0 ? `${conversion}%` : '—'} hint={closed > 0 ? `${won.length} из ${closed} закрытых` : tr('Закрытых лидов пока нет')} />
+        <StatTile label={tr('В работе')} value={String(active.length)} hint={tr('{sum} бюджетов', { sum: money(active.reduce((a, l) => a + avg(l), 0), 'EUR', true) })} />
+        <StatTile label={tr('Конверсия в сделку')} value={closed > 0 ? `${conversion}%` : '—'} hint={closed > 0 ? tr('{won} из {closed} закрытых', { won: won.length, closed }) : tr('Закрытых лидов пока нет')} />
         <StatTile label={tr('Закрыто сделок')} value={String(completed.length)} hint={money(completed.reduce((a, x) => a + x.amount, 0), 'EUR', true)} />
         <StatTile label={tr('Комиссия')} value={money(commission, 'EUR', true)} hint={tr('По завершённым сделкам')} />
       </div>
 
       <ChartFigure
         title={tr('Воронка по этапам')}
-        caption="Сколько лидов стоит на каждом этапе и на какую сумму бюджетов."
+        caption={tr('Сколько лидов стоит на каждом этапе и на какую сумму бюджетов.')}
         action={<Link href="/leads" className="tap-link text-[13px] font-medium text-primary hover:underline">{tr('Открыть канбан')}</Link>}
       >
         {funnel.map((x) => (
@@ -144,7 +144,7 @@ export function ReportsScreen() {
 
       <ChartFigure
         title={tr('Каналы')}
-        caption="Откуда пришли лиды и сколько из них дошли до сделки."
+        caption={tr('Откуда пришли лиды и сколько из них дошли до сделки.')}
         action={<TableToggle on={asTable} onToggle={() => setAsTable((v) => !v)} />}
       >
         {asTable ? (
@@ -172,7 +172,7 @@ export function ReportsScreen() {
         ) : channels.map((c) => (
           <BarRow key={c.key} label={c.label} color={c.color} value={c.value} max={channelMax}
             href={`/leads?source=${c.key}`}
-            right={<><b className="tabular">{c.value}</b>{c.won > 0 && <span className="t-caption ml-2 tabular">{c.won} в сделку</span>}</>} />
+            right={<><b className="tabular">{c.value}</b>{c.won > 0 && <span className="t-caption ml-2 tabular">{c.won} {tr('в сделку')}</span>}</>} />
         ))}
       </ChartFigure>
 
@@ -227,7 +227,7 @@ export function ReportsScreen() {
         )}
       </section>
 
-      <p className="t-caption mt-4">Данные превью. В CRM отчёт берёт те же поля из <span className="font-medium">/api/reports</span>.</p>
+      <p className="t-caption mt-4">{tr('Данные превью. В CRM отчёт берёт те же поля из')} <span className="font-medium">/api/reports</span>.</p>
     </PageBody>
   );
 }

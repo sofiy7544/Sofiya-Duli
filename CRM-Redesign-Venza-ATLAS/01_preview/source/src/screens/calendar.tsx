@@ -130,7 +130,7 @@ export function CalendarScreen() {
                 <li key={e.id}><button onClick={() => setSelected(e)} className="pressable flex min-h-[52px] w-full items-center gap-3 px-4 py-3 text-left">
                   <span className="w-12 shrink-0 text-[14px] font-semibold tabular">{time(e.startsAt)}</span>
                   <span aria-hidden className="h-9 w-[3px] rounded-full" style={{ background: `hsl(${KIND_COLOR[e.kind]})` }} />
-                  <span className="min-w-0 flex-1"><span className="block truncate text-[15px] font-medium">{e.title}</span><span className="t-caption">{EVENT_KIND_LABEL[e.kind]}, до {time(e.endsAt)}</span></span>
+                  <span className="min-w-0 flex-1"><span className="block truncate text-[15px] font-medium">{e.title}</span><span className="t-caption">{EVENT_KIND_LABEL[e.kind]}, {tr('до')} {time(e.endsAt)}</span></span>
                   {e.readOnly && <Lock className="h-4 w-4 text-muted-foreground" aria-label={tr('Только просмотр')} />}
                 </button></li>
               ))}

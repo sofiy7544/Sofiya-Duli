@@ -48,13 +48,13 @@ export function NotificationsPanel() {
   const items: Item[] = [];
   if (d) {
     for (const t of d.tasks.filter((x) => !x.completedAt && new Date(x.dueAt).getTime() < now).slice(0, 4)) {
-      items.push({ id: `t-${t.id}`, icon: CheckSquare, tone: 'danger', title: t.title, meta: `Срок прошёл ${ago(t.dueAt)}`, href: '/tasks' });
+      items.push({ id: `t-${t.id}`, icon: CheckSquare, tone: 'danger', title: t.title, meta: tr('Срок прошёл {when}', { when: ago(t.dueAt) }), href: '/tasks' });
     }
     for (const e of d.events.filter((x) => new Date(x.startsAt).getTime() > now).slice(0, 3)) {
-      items.push({ id: `e-${e.id}`, icon: CalendarClock, tone: 'warning', title: e.title, meta: `Сегодня в ${time(e.startsAt)}`, href: '/calendar' });
+      items.push({ id: `e-${e.id}`, icon: CalendarClock, tone: 'warning', title: e.title, meta: tr('Сегодня в {time}', { time: time(e.startsAt) }), href: '/calendar' });
     }
     for (const l of d.newLeads.filter((x) => !x.assignedUserId).slice(0, 3)) {
-      items.push({ id: `l-${l.id}`, icon: UserPlus, title: `Новый лид: ${nameOf(l.clientId)}`, meta: tr('Без ответственного'), href: `/leads/${l.id}` });
+      items.push({ id: `l-${l.id}`, icon: UserPlus, title: tr('Новый лид: {name}', { name: nameOf(l.clientId) }), meta: tr('Без ответственного'), href: `/leads/${l.id}` });
     }
   }
 

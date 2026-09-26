@@ -68,7 +68,7 @@ export function LeadFormScreen() {
   return (
     <FormShell title={tr('Новый лид')} back="/leads" dirty={dirty} busy={busy}
       subtitle={tr('Полная карточка. Для звонка на ходу есть быстрый захват — «молния» в шапке.')}
-      submitLabel="Создать лид" onSubmit={submit}>
+      submitLabel={tr('Создать лид')} onSubmit={submit}>
 
       <FormSection title={tr('Клиент')}>
         <FormGrid>

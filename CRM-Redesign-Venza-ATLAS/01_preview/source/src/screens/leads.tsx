@@ -71,7 +71,7 @@ export function LeadsScreen() {
   const page = useChunked(list, `leads:${stage}:${activeFilterCount(filters)}`);
 
   const header = (
-    <PageHeader title={tr('Лиды')} subtitle={r.data ? `${active.length} ${plural(active.length, 'активный', 'активных', 'активных')}` : 'Загружаем воронку'}
+    <PageHeader title={tr('Лиды')} subtitle={r.data ? `${active.length} ${plural(active.length, 'активный', 'активных', 'активных')}` : tr('Загружаем воронку')}
       actions={<>
         {isDesktop && <SegmentedControl label={tr('Вид')} size="sm" value={view} onChange={setView} options={[{ value: 'board', label: tr('Канбан') }, { value: 'list', label: tr('Список') }]} />}
         <IconButton label={tr('Новый лид')} onClick={() => router.navigate('/leads/new')}><Plus /></IconButton>
@@ -112,7 +112,7 @@ export function LeadsScreen() {
         {activeFilterCount(filters) > 0 && <Button variant="ghost" size="sm" onClick={() => setFilters({})}>{tr('Сбросить')}</Button>}
         <div className="flex-1" />
         {isDesktop && isAdmin && view === 'board' && <Button size="sm" variant={selectMode ? 'soft' : 'ghost'} onClick={() => { setSelectMode(!selectMode); setSelected([]); }}>{selectMode ? tr('Готово') : tr('Выбрать')}</Button>}
-        {isDesktop && <span className="t-caption hidden items-center gap-1.5 xl:flex">{view === 'board' ? <SquareKanban className="h-4 w-4" /> : <LayoutList className="h-4 w-4" />}Перетащите карточку или нажмите «…» на ней, чтобы сменить этап</span>}
+        {isDesktop && <span className="t-caption hidden items-center gap-1.5 xl:flex">{view === 'board' ? <SquareKanban className="h-4 w-4" /> : <LayoutList className="h-4 w-4" />}{tr('Перетащите карточку или нажмите «…» на ней, чтобы сменить этап')}</span>}
       </div>
       {body()}
       {selectMode && selected.length > 0 && (
@@ -142,10 +142,10 @@ function LeadActions({ lead, onClose, onStage, onLost }: { lead: Lead | null; on
   const client = lead ? store.db.clients.find((c) => c.id === lead.clientId) : null;
   const row = 'pressable flex min-h-[54px] w-full items-center gap-3.5 rounded-control px-3 text-left text-[16px] font-medium';
   return (
-    <Sheet open={!!lead} onOpenChange={(o) => !o && onClose()} title={client?.fullName ?? ''} description={lead ? `Этап: ${STAGE_LABEL[lead.stage]}` : undefined} desktop="center" size="sm">
+    <Sheet open={!!lead} onOpenChange={(o) => !o && onClose()} title={client?.fullName ?? ''} description={lead ? tr('Этап: {stage}', { stage: STAGE_LABEL[lead.stage] }) : undefined} desktop="center" size="sm">
       {lead && (<div className="space-y-3">
         <div className="surface-quiet p-1.5">
-          <a href={`tel:${client?.primaryPhone.replace(/\s/g, '')}`} className={row} onClick={onClose}><Phone className="h-5 w-5 text-primary" aria-hidden />Позвонить<span className="t-caption ml-auto tabular">{client?.primaryPhone}</span></a>
+          <a href={`tel:${client?.primaryPhone.replace(/\s/g, '')}`} className={row} onClick={onClose}><Phone className="h-5 w-5 text-primary" aria-hidden />{tr('Позвонить')}<span className="t-caption ml-auto tabular">{client?.primaryPhone}</span></a>
           <button className={row} onClick={() => onStage(lead)}><Workflow className="h-5 w-5 text-primary" aria-hidden />{tr('Сменить этап')}</button>
           <button className={row} onClick={() => { onClose(); router.navigate(`/leads/${lead.id}`); }}><LayoutList className="h-5 w-5 text-primary" aria-hidden />{tr('Открыть карточку')}</button>
         </div>
@@ -205,7 +205,7 @@ function Board({ leads, onMove, family, selectMode, selected, onToggle, onStage 
                 <div key={l.id} draggable={!selectMode} onDragStart={(e) => { setDragId(l.id); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', l.id); }} onDragEnd={() => { setDragId(null); setOver(null); }}
                   className={cn('group/card relative', selectMode ? '' : 'cursor-grab active:cursor-grabbing', settled === l.id && 'settle', selected.includes(l.id) && 'rounded-card ring-2 ring-primary')}>
                   <LeadCard lead={l} dragging={dragId === l.id} />
-                  {!selectMode && <button onClick={(e) => { e.preventDefault(); onStage(l); }} aria-label={`Сменить этап: ${store.db.clients.find((c) => c.id === l.clientId)?.fullName ?? ''}`}
+                  {!selectMode && <button onClick={(e) => { e.preventDefault(); onStage(l); }} aria-label={tr('Сменить этап: {name}', { name: store.db.clients.find((c) => c.id === l.clientId)?.fullName ?? '' })}
                     className="absolute right-1.5 top-1.5 z-10 grid h-8 w-8 place-items-center rounded-full text-muted-foreground opacity-0 transition-opacity hover:bg-surface-2 focus-visible:opacity-100 group-hover/card:opacity-100"><MoreHorizontal className="h-4 w-4" /></button>}
                   {selectMode && <button onClick={() => onToggle(l.id)} role="checkbox" aria-checked={selected.includes(l.id)} aria-label={tr('Выбрать лид')} className="absolute inset-0 z-10 flex items-start justify-end rounded-card p-2">
                     <span className={cn('grid h-5 w-5 place-items-center rounded-[6px] border-[1.5px] text-[11px] font-bold', selected.includes(l.id) ? 'border-primary bg-primary text-primary-foreground' : 'border-muted-foreground/50 bg-surface')}>{selected.includes(l.id) ? '✓' : ''}</span>
@@ -215,7 +215,7 @@ function Board({ leads, onMove, family, selectMode, selected, onToggle, onStage 
               {items.length > visible.length && (
                 <button type="button" onClick={() => setShown((v) => ({ ...v, [s]: take + PER_COLUMN }))}
                   className="min-h-[44px] rounded-control border border-border bg-surface/80 text-[13.5px] font-medium text-muted-foreground transition-colors duration-tab hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                  Ещё {Math.min(PER_COLUMN, items.length - visible.length)} из {items.length - visible.length}
+                  {tr('Ещё')} {Math.min(PER_COLUMN, items.length - visible.length)} {tr('из')} {items.length - visible.length}
                 </button>
               )}
               {s !== 'LOST' && items.length === 0 && <div className="t-caption grid flex-1 place-items-center text-center">{tr('Пусто')}</div>}

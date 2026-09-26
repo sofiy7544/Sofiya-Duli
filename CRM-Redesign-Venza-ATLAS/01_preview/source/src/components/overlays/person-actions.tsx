@@ -30,11 +30,11 @@ export function CallDispositionSheet({ open, onOpenChange, clientId, leadId, nam
       footer={<><Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>{tr('Отмена')}</Button><Button className="flex-[2]" loading={busy} onClick={async () => {
         if (!outcome) { setError(tr('Выберите результат звонка')); return; }
         setBusy(true); await api.logCall({ clientId, leadId, outcome, note: note.trim(), callbackAt }); setBusy(false); onOpenChange(false);
-        toast.success(callbackAt ? `Звонок сохранён, перезвон ${relDay(callbackAt).toLowerCase()} в ${time(callbackAt)}` : tr('Звонок сохранён'));
+        toast.success(callbackAt ? tr('Звонок сохранён, перезвон {day} в {time}', { day: relDay(callbackAt).toLowerCase(), time: time(callbackAt) }) : tr('Звонок сохранён'));
       }}>{tr('Сохранить')}</Button></>}>
       <div className="space-y-5">
         <a href={`tel:${phone.replace(/\s/g, '')}`} className="flex h-12 items-center justify-center gap-2 rounded-control bg-primary-soft text-[15px] font-semibold text-primary-text"><PhoneCall className="h-[18px] w-[18px]" aria-hidden />{tr('Позвонить')}{phone}</a>
-        <fieldset><legend className="mb-2 text-[13px] font-medium">Результат<span className="text-danger-text">*</span></legend>
+        <fieldset><legend className="mb-2 text-[13px] font-medium">{tr('Результат')}<span className="text-danger-text">*</span></legend>
           <div className="grid grid-cols-3 gap-2" role="radiogroup">
             {tiles.map((t) => <button key={t.v} role="radio" aria-checked={outcome === t.v} onClick={() => { setOutcome(t.v); setError(null); }}
               className={cn('flex flex-col items-center gap-1.5 rounded-control border py-3 text-[13.5px] font-medium transition-[background-color,border-color,transform] duration-tab active:scale-[.97]', outcome === t.v ? t.cls : 'border-border bg-surface text-muted-foreground')}><t.icon className="h-5 w-5" aria-hidden />{t.label}</button>)}
@@ -61,7 +61,7 @@ export function RemindSheet({ open, onOpenChange, leadId, current }: { open: boo
   React.useEffect(() => { if (open) setValue(current ? toLocalInput(current) : ''); }, [open, current]);
   return (
     <Sheet open={open} onOpenChange={onOpenChange} title={tr('Напомнить')} description={tr('Время следующего действия по лиду.')} desktop="center" size="sm"
-      footer={<><Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>{tr('Отмена')}</Button><Button className="flex-[2]" disabled={!value} loading={busy} onClick={async () => { setBusy(true); const iso = new Date(value).toISOString(); await api.updateLead(leadId, { nextActionAt: iso }); setBusy(false); onOpenChange(false); toast.success(`Напомню ${relDay(iso).toLowerCase()} в ${time(iso)}`); }}>{tr('Сохранить')}</Button></>}>
+      footer={<><Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>{tr('Отмена')}</Button><Button className="flex-[2]" disabled={!value} loading={busy} onClick={async () => { setBusy(true); const iso = new Date(value).toISOString(); await api.updateLead(leadId, { nextActionAt: iso }); setBusy(false); onOpenChange(false); toast.success(tr('Напомню {day} в {time}', { day: relDay(iso).toLowerCase(), time: time(iso) })); }}>{tr('Сохранить')}</Button></>}>
       <div className="space-y-4">
         <div className="flex flex-wrap gap-2">{duePresets().map((p) => <button key={p.k} aria-pressed={value === toLocalInput(p.at)} onClick={() => setValue(toLocalInput(p.at))} className={cn('h-11 rounded-full border px-3.5 text-[14px] font-medium', value === toLocalInput(p.at) ? 'border-primary bg-primary-soft text-primary-text' : 'border-border bg-surface')}>{p.label}</button>)}</div>
         <Field label={tr('Дата и время')}>{(id) => <Input id={id} required type="datetime-local" value={value} onChange={(e) => setValue(e.target.value)} />}</Field>

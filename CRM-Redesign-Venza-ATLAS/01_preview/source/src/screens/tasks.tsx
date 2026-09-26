@@ -134,7 +134,7 @@ export function TasksScreen() {
 
   return (
     <PageBody wide={family === 'atlas'}>
-      <PageHeader title={tr('Задачи')} subtitle={r.data ? (buckets.overdue.length ? <span className="font-medium text-danger-text">{buckets.overdue.length} просрочено</span> : tr('Без просрочек')) : ' '}
+      <PageHeader title={tr('Задачи')} subtitle={r.data ? (buckets.overdue.length ? <span className="font-medium text-danger-text">{buckets.overdue.length} {tr('просрочено')}</span> : tr('Без просрочек')) : ' '}
         /* Кнопка в шапке — как «Новый клиент» на «Клиентах»: задача создаётся отсюда сразу,
            без выбора типа в общем меню. Значок со списком, а не голый плюс: рядом на
            компьютере стоит «+ Создать», два одинаковых плюса читались бы как одно и то же. */

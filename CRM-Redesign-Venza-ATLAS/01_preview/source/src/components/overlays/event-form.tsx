@@ -75,10 +75,10 @@ export function EventFormSheet({ open, onOpenChange, move, kind: initialKind = '
     try {
       if (move) {
         await api.moveEvent(move.id, iso);
-        toast.success(`Перенесено на ${relDay(iso).toLowerCase()}, ${time(iso)}`);
+        toast.success(tr('Перенесено на {day}, {time}', { day: relDay(iso).toLowerCase(), time: time(iso) }));
       } else {
         await api.createEvent({ kind: v.kind, title, startsAt: iso, minutes: v.minutes, clientId: v.clientId || undefined, propertyId: v.propertyId || undefined });
-        toast.success(`${EVENT_KIND_LABEL[v.kind]} в календаре: ${relDay(iso).toLowerCase()}, ${time(iso)}`);
+        toast.success(tr('{kind} в календаре: {day}, {time}', { kind: EVENT_KIND_LABEL[v.kind], day: relDay(iso).toLowerCase(), time: time(iso) }));
       }
       onOpenChange(false);
       onDone?.();
@@ -120,7 +120,7 @@ export function EventFormSheet({ open, onOpenChange, move, kind: initialKind = '
           </div>
           {clash && iso && (
             <p className="t-caption mt-2 flex items-center gap-1.5 text-warning-text">
-              <CalendarClock className="h-3.5 w-3.5" aria-hidden />{tr('Рядом уже стоит «')}{clash.title}» в {time(clash.startsAt)}
+              <CalendarClock className="h-3.5 w-3.5" aria-hidden />{tr('Рядом уже стоит «')}{clash.title}{tr('» в')} {time(clash.startsAt)}
             </p>
           )}
         </fieldset>
@@ -129,7 +129,7 @@ export function EventFormSheet({ open, onOpenChange, move, kind: initialKind = '
           <fieldset>
             <legend className="mb-2 text-[13px] font-medium">{tr('Длительность')}</legend>
             <SegmentedControl<Minutes> label={tr('Длительность')} className="w-full" value={String(v.minutes) as Minutes} onChange={(m) => setV({ ...v, minutes: Number(m) })}
-              options={MINUTES.map((m) => ({ value: m, label: `${m} мин` }))} />
+              options={MINUTES.map((m) => ({ value: m, label: `${m} ${tr('мин')}` }))} />
           </fieldset>
 
           <PickerField label={tr('Клиент')} hint={tr('Событие попадёт в его историю')} emptyLabel={tr('Без клиента')}
@@ -140,7 +140,7 @@ export function EventFormSheet({ open, onOpenChange, move, kind: initialKind = '
             value={v.propertyId} onChange={(propertyId) => setV({ ...v, propertyId })}
             options={properties.map((p) => ({ value: p.id, label: p.title, meta: p.district }))} />
 
-          <Field label={tr('Название')} hint={`Если оставить пустым: «${suggested()}»`} error={errors.title}>
+          <Field label={tr('Название')} hint={tr('Если оставить пустым: «{title}»', { title: suggested() })} error={errors.title}>
             {(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.title} value={v.title} maxLength={120}
               onChange={(e) => { setV({ ...v, title: e.target.value }); setErrors({ ...errors, title: undefined }); }} placeholder={suggested()} />}
           </Field>

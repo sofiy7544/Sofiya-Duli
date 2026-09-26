@@ -80,7 +80,7 @@ export function SettingsScreen() {
             const on = l.code === locale;
             return (
               <li key={l.code}>
-                <button role="radio" aria-checked={on} onClick={() => { setLocale(l.code as LocaleCode); setLangOpen(false); toast.success(`Язык: ${l.label}`); }}
+                <button role="radio" aria-checked={on} onClick={() => { setLocale(l.code as LocaleCode); setLangOpen(false); toast.success(tr('Язык: {lang}', { lang: l.label })); }}
                   className={cn('flex min-h-[56px] w-full items-center gap-3 rounded-control px-3 text-left transition-colors', on ? 'bg-primary-soft' : 'hover:bg-surface-2')}>
                   <span className="text-[22px] leading-none" aria-hidden>{l.flag}</span>
                   <span className="flex-1 text-[16px] font-medium">{l.label}</span>
@@ -90,7 +90,7 @@ export function SettingsScreen() {
             );
           })}
         </ul>
-        <p className="t-caption mt-3">В CRM подписи берутся из next-intl (messages/ru.json, uk, en, fr, it). В превью переключение меняет форматы дат, времени и чисел.</p>
+        <p className="t-caption mt-3">{tr('Подписи интерфейса, форматы дат, времени и чисел меняются сразу. Демо-данные — имена клиентов, адреса, тексты заметок — остаются как есть: в CRM они приходят из базы.')}</p>
       </Sheet>
     </PageBody>
   );

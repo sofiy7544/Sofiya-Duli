@@ -16,7 +16,7 @@ import { Sparkles } from 'lucide-react';
 import { tr } from '@/lib/i18n';
 
 /** Панель дизайн-превью: НЕ часть CRM. Переключает тему, состояние данных, роль и флаг интеграций. */
-export const THEME_NAMES: Record<Theme, string> = { atlas: 'ATLAS (стандарт)', sepia: tr('Сепия'), venza: 'Venza' };
+export const THEME_NAMES: Record<Theme, string> = { atlas: tr('ATLAS (стандарт)'), sepia: tr('Сепия'), venza: 'Venza' };
 
 /** Мини-макет экрана CRM в цветах темы: видно сайдбар, карточки и кнопку, а не просто цвет. */
 const PREVIEW: Record<Theme, { bg: string; surface: string; rail: string; railOn: string; text: string; muted: string; primary: string; border: string }> = {

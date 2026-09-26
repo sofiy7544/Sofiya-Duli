@@ -98,7 +98,7 @@ export function DealsScreen() {
 
   return (
     <PageBody wide={family === 'atlas'}>
-      <PageHeader title={tr('Сделки')} subtitle={r.data ? `${active.length} в работе, ожидаемая комиссия ${money(expected, 'EUR', true)}` : ' '}
+      <PageHeader title={tr('Сделки')} subtitle={r.data ? tr('{n} в работе, ожидаемая комиссия {sum}', { n: active.length, sum: money(expected, 'EUR', true) }) : ' '}
         actions={<><SegmentedControl label={tr('Вид')} size="sm" value={view} onChange={setView} options={[{ value: 'list', label: tr('Список') }, { value: 'board', label: tr('Доска') }]} /><Button size="sm" variant="soft" className="max-lg:hidden" onClick={() => router.navigate('/deals/new')}><Plus />{tr('Сделка')}</Button></>} />
       {body()}
       <LostReasonSheet open={!!cancelFor} onOpenChange={(o) => !o && setCancelFor(null)} onConfirm={async (reason) => { if (cancelFor) await move(cancelFor, 'CANCELLED', reason); }} />
@@ -116,7 +116,7 @@ function DealCard({ d }: { d: Deal }) {
         <div className="flex items-baseline justify-between gap-2"><span className="truncate text-[14.5px] font-semibold">{clientName(d.clientId)}</span><span className="text-[14px] font-bold tabular">{money(d.amount, d.currency, true)}</span></div>
         <div className="t-caption truncate">{p?.title ?? tr('Объект не выбран')}</div>
         <div className="mt-2.5">
-          <div className="flex justify-between text-[12px] text-muted-foreground"><span>{tr('Комиссия')}{d.commissionPercent}%</span><span className="tabular">{money(paid, d.currency, true)} из {money(commission, d.currency, true)}</span></div>
+          <div className="flex justify-between text-[12px] text-muted-foreground"><span>{tr('Комиссия')}{d.commissionPercent}%</span><span className="tabular">{money(paid, d.currency, true)} {tr('из')} {money(commission, d.currency, true)}</span></div>
           <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-primary transition-[width] duration-row" style={{ width: `${Math.min(100, (paid / Math.max(1, commission)) * 100)}%` }} /></div>
         </div>
       </div>
@@ -152,7 +152,7 @@ export function DealNewScreen() {
 
   return (
     <PageBody className="lg:max-w-[680px]">
-      <PageHeader title={tr('Новая сделка')} back="/deals" subtitle={initialLead ? `Из лида: ${clientName(initialLead.clientId)}` : undefined} />
+      <PageHeader title={tr('Новая сделка')} back="/deals" subtitle={initialLead ? tr('Из лида: {name}', { name: clientName(initialLead.clientId) }) : undefined} />
       <form onSubmit={submit} noValidate className="surface space-y-4 p-4 lg:p-6">
         <PickerField label={tr('Лид')} required error={errors.leadId} emptyLabel={tr('Выберите лид')}
           value={v.leadId} onChange={(leadId) => { const l = store.db.leads.find((x) => x.id === leadId); setV({ ...v, leadId, propertyId: l?.interestPropertyId ?? v.propertyId }); }}
@@ -160,12 +160,12 @@ export function DealNewScreen() {
         <PickerField label={tr('Объект')} hint={tr('Можно выбрать позже')} emptyLabel={tr('Не выбран')} searchPlaceholder={tr('Найти по названию или району')}
           value={v.propertyId} onChange={(propertyId) => setV({ ...v, propertyId })}
           options={store.db.properties.filter((p) => p.status !== 'SOLD').map((p) => ({ value: p.id, label: p.title, meta: p.district }))} />
-        {conflict && <div role="status" className="flex gap-2.5 rounded-control border border-warning/35 bg-warning/12 px-3.5 py-3 text-[14px] text-warning-text"><AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />{tr('По этому объекту уже есть активная сделка с')}{clientName(conflict.clientId)}. Создать можно, но проверьте, не дубль ли это.</div>}
+        {conflict && <div role="status" className="flex gap-2.5 rounded-control border border-warning/35 bg-warning/12 px-3.5 py-3 text-[14px] text-warning-text"><AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />{tr('По этому объекту уже есть активная сделка с {name}. Создать можно, но проверьте, не дубль ли это.', { name: clientName(conflict.clientId) })}</div>}
         <div className="grid grid-cols-[1fr_120px] gap-3">
           <Field label={tr('Сумма, €')} required error={errors.amount}>{(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.amount} inputMode="numeric" className="tabular" value={v.amount} onChange={(e) => setV({ ...v, amount: e.target.value.replace(/[^\d\s]/g, '') })} />}</Field>
           <Field label={tr('Комиссия, %')} required error={errors.commission}>{(id, d) => <Input id={id} aria-describedby={d} invalid={!!errors.commission} inputMode="decimal" className="tabular" value={v.commission} onChange={(e) => setV({ ...v, commission: e.target.value.replace(/[^\d.,]/g, '') })} />}</Field>
         </div>
-        {amount > 0 && pct >= 0 && pct <= 100 && <p className="rounded-control bg-primary-soft px-3.5 py-3 text-[14.5px]">Комиссия агентства: <b className="tabular">{money(Math.round((amount * pct) / 100))}</b></p>}
+        {amount > 0 && pct >= 0 && pct <= 100 && <p className="rounded-control bg-primary-soft px-3.5 py-3 text-[14.5px]">{tr('Комиссия агентства:')} <b className="tabular">{money(Math.round((amount * pct) / 100))}</b></p>}
         <div className="flex gap-2.5 pt-2">
           <Button type="button" variant="outline" className="flex-1" onClick={() => (dirty ? setDiscard(true) : router.back('/deals'))}>{tr('Отмена')}</Button>
           <Button type="submit" className="flex-[2]" loading={busy}>{tr('Создать сделку')}</Button>
@@ -206,7 +206,7 @@ export function DealDetailScreen({ id }: { id: string }) {
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="min-w-0 space-y-4">
           <section className="surface grid grid-cols-3 divide-x divide-border/70 p-0">
-            {[[tr('Сумма сделки'), money(d.amount, d.currency, true)], [`Комиссия ${d.commissionPercent}%`, money(commission, d.currency, true)], [tr('Остаток'), money(Math.max(0, left), d.currency, true)]].map(([k, val], i) => (
+            {[[tr('Сумма сделки'), money(d.amount, d.currency, true)], [tr('Комиссия {pct}%', { pct: d.commissionPercent }), money(commission, d.currency, true)], [tr('Остаток'), money(Math.max(0, left), d.currency, true)]].map(([k, val], i) => (
               <div key={k} className="min-w-0 p-3 sm:p-3.5 lg:p-4"><div className="t-caption truncate">{k}</div><div className={cn('mt-1 whitespace-nowrap', num, i === 2 && left > 0 && d.status !== 'CANCELLED' && 'text-warning-text')}>{val}</div></div>))}
           </section>
 
@@ -227,7 +227,7 @@ export function DealDetailScreen({ id }: { id: string }) {
               <ul className="row-divider">{d.documents.map((doc) => (
                 <li key={doc.id} className="flex items-center gap-3 py-2.5"><span className="grid h-9 w-9 place-items-center rounded-[10px] bg-surface-2 text-muted-foreground"><FileText className="h-4 w-4" aria-hidden /></span>
                   <div className="min-w-0 flex-1"><div className="truncate text-[14.5px] font-medium">{doc.name}</div><div className="t-caption">{doc.size}, {relDay(doc.addedAt).toLowerCase()}</div></div>
-                  <IconButton label={`Удалить ${doc.name}`} size="iconSm" className="text-muted-foreground" onClick={() => setConfirm({ doc: doc.id })}><Trash2 /></IconButton></li>))}</ul>
+                  <IconButton label={tr('Удалить {name}', { name: doc.name })} size="iconSm" className="text-muted-foreground" onClick={() => setConfirm({ doc: doc.id })}><Trash2 /></IconButton></li>))}</ul>
             ) : <p className="t-caption py-3">{tr('Документов нет. Загрузите договор или скан паспорта.')}</p>}
           </section>
         </div>
@@ -248,10 +248,10 @@ export function DealDetailScreen({ id }: { id: string }) {
       <PaymentSheet open={payOpen} onOpenChange={setPayOpen} deal={d} />
       <Sheet open={contract} onOpenChange={setContract} title={tr('Печать договора')} description={tr('Документ откроется в новой вкладке.')} desktop="center" size="sm"
         footer={<Button className="flex-1" onClick={() => { setContract(false); toast.success(tr('Договор открыт для печати')); }}><Printer />{tr('Открыть договор')}</Button>}>
-        <Field label={tr('Шаблон')}>{(fid) => <Select id={fid} defaultValue="t1"><option value="t1">Договор купли-продажи (ru)</option><option value="t2">Договір купівлі-продажу (uk)</option><option value="t3">Агентский договор (ru)</option></Select>}</Field>
+        <Field label={tr('Шаблон')}>{(fid) => <Select id={fid} defaultValue="t1"><option value="t1">{tr('Договор купли-продажи (ru)')}</option><option value="t2">Договір купівлі-продажу (uk)</option><option value="t3">Агентский договор (ru)</option></Select>}</Field>
       </Sheet>
       <LostReasonSheet open={cancel} onOpenChange={setCancel} onConfirm={async (reason) => { await dealsApi.setStatus(d.id, 'CANCELLED', reason); toast.success(tr('Сделка отменена, лид — «Проиграно»')); }} />
-      <ConfirmDialog open={confirm === 'complete'} onOpenChange={(o) => !o && setConfirm(null)} tone="primary" title={tr('Завершить сделку?')} text={left > 0 ? `Комиссия оплачена не полностью: остаток ${money(left, d.currency)}. Лид перейдёт в «Сделка».` : tr('Лид перейдёт в этап «Сделка».')} confirmLabel={tr('Завершить')}
+      <ConfirmDialog open={confirm === 'complete'} onOpenChange={(o) => !o && setConfirm(null)} tone="primary" title={tr('Завершить сделку?')} text={left > 0 ? tr('Комиссия оплачена не полностью: остаток {sum}. Лид перейдёт в «Сделка».', { sum: money(left, d.currency) }) : tr('Лид перейдёт в этап «Сделка».')} confirmLabel={tr('Завершить')}
         onConfirm={async () => { setConfirm(null); const { prev } = await dealsApi.setStatus(d.id, 'COMPLETED'); toast.success(tr('Сделка завершена'), { action: { label: tr('Отменить'), onClick: () => dealsApi.setStatus(d.id, prev) } }); }} />
       <ConfirmDialog open={confirm === 'delete'} onOpenChange={(o) => !o && setConfirm(null)} title={tr('Удалить сделку?')} text={tr('Платежи и документы удалятся. Лид останется в воронке.')} confirmLabel={tr('Удалить')}
         onConfirm={async () => { setConfirm(null); await dealsApi.remove(d.id); router.navigate('/deals', { replace: true }); toast.success(tr('Сделка удалена')); }} />

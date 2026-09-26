@@ -88,7 +88,7 @@ export function QuickCapture() {
       const lead = await api.createLead({ fullName: name, primaryPhone: `${v.code} ${v.phone}`.trim(), priority: 'warm', budgetMax });
 
       if (next === 'showing') {
-        await api.createTask({ title: `Показ: ${name}`, type: 'SHOWING', dueAt: todayAt(v.showingAt), leadId: lead.id });
+        await api.createTask({ title: tr('Показ: {name}', { name }), type: 'SHOWING', dueAt: todayAt(v.showingAt), leadId: lead.id });
       } else if (v.note.trim()) {
         await api.createTask({ title: v.note.trim(), type: 'CALL', dueAt: todayAt('10:00'), leadId: lead.id });
       }

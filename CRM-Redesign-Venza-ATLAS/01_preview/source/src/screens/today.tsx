@@ -96,7 +96,7 @@ export function TodayScreen({ firstEntry }: { firstEntry?: boolean }) {
         <TitleBlock family={family} part={part} name={first} now={now} />
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 xl:grid-cols-5">
           <Kpi loading={r.loading} icon={Users} label={tr('Новые лиды')} value={d?.newLeads.length} sub={tr('ждут первого контакта')} href="/leads" />
-          <Kpi loading={r.loading} icon={CheckSquare} label={tr('Задачи сегодня')} value={todayTasks.filter((t) => !t.completedAt).length} sub={overdue.length ? `${overdue.length} ${plural(overdue.length, 'просрочена', 'просрочены', 'просрочено')}` : 'без просрочек'} subTone={overdue.length ? 'danger' : undefined} href="/tasks" />
+          <Kpi loading={r.loading} icon={CheckSquare} label={tr('Задачи сегодня')} value={todayTasks.filter((t) => !t.completedAt).length} sub={overdue.length ? `${overdue.length} ${plural(overdue.length, 'просрочена', 'просрочены', 'просрочено')}` : tr('без просрочек')} subTone={overdue.length ? 'danger' : undefined} href="/tasks" />
           <Kpi loading={r.loading} icon={Eye} label={tr('Показы')} value={showings.length} sub={tr('запланировано на сегодня')} href="/calendar" />
           <Kpi loading={r.loading} icon={Workflow} label={tr('Лиды в работе')} value={d?.activeLeads.length} sub={tr('во всех этапах')} href="/leads" />
           <Kpi loading={r.loading} icon={Handshake} label={tr('Бюджеты в работе')} value={d ? money(pipelineBudget, 'EUR', true) : undefined} sub={tr('сумма «до» активных лидов')} href="/leads" className="col-span-2 sm:col-span-1" />
@@ -260,7 +260,7 @@ function UrgentBlock({ overdue, nameOf, compact }: { overdue: Task[]; nameOf: (i
       <p className={cn('mt-1 text-[14px]', compact ? 'text-foreground/80' : 'text-primary-foreground')}>{nameOf(t.clientId)}{overdue.length > 1 && tr(', и ещё {n}', { n: overdue.length - 1 })}</p>
       <div className="mt-4 flex gap-2">
         <Link href={t.clientId ? `/clients/${t.clientId}` : '/tasks'} className={cn('inline-flex h-11 items-center lg:h-10 gap-1.5 px-4 text-[14px] font-semibold transition-colors', compact ? 'rounded-control bg-surface border border-border hover:bg-surface-2' : 'rounded-full bg-primary-foreground text-primary-text hover:brightness-95')}><Phone className="h-4 w-4" aria-hidden />{tr('Связаться')}</Link>
-        <Link href="/tasks" className={cn('inline-flex h-11 items-center lg:h-10 gap-1 rounded-full px-3 text-[14px] font-medium', compact ? 'text-foreground' : 'text-primary-foreground')}>Все задачи<ChevronRight className="h-4 w-4" aria-hidden /></Link>
+        <Link href="/tasks" className={cn('inline-flex h-11 items-center lg:h-10 gap-1 rounded-full px-3 text-[14px] font-medium', compact ? 'text-foreground' : 'text-primary-foreground')}>{tr('Все задачи')}<ChevronRight className="h-4 w-4" aria-hidden /></Link>
       </div>
     </section>
   );

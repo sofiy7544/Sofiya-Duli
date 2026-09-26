@@ -91,7 +91,7 @@ export function NotesScreen() {
             </div>
             <p className="t-caption mt-1 line-clamp-2">{n.body || tr('Пустая заметка')}</p>
             <div className="t-caption mt-1.5 flex items-center gap-2">
-              <span>{n.deletedAt ? `удалена ${ago(n.deletedAt)}` : ago(n.updatedAt)}</span>
+              <span>{n.deletedAt ? tr('удалена {when}', { when: ago(n.deletedAt) }) : ago(n.updatedAt)}</span>
               {/* Ссылка на лид живёт в самой заметке: интерактивный элемент внутри кнопки ломает клавиатуру и скринридер. */}
               {n.leadId && <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[11.5px] font-medium">{tr('по лиду')}</span>}
             </div>
@@ -142,11 +142,11 @@ function NoteEditor({ note, trashed, fresh, onClose }: { note: Note; trashed: bo
         <p className="mt-3 whitespace-pre-wrap text-[15px] text-foreground/80">{note.body || tr('Пустая заметка')}</p>
         <div className="mt-5 flex flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={async () => { await notesApi.restore(note.id); onClose(); toast.success(tr('Заметка восстановлена')); }}>
-            <RotateCcw />Восстановить
+            <RotateCcw />{tr('Восстановить')}
           </Button>
           <Button variant="outline" size="sm" className="text-danger-text"
             onClick={async () => { await notesApi.destroy(note.id); onClose(); toast.success(tr('Удалено насовсем')); }}>
-            <Trash2 />Удалить насовсем
+            <Trash2 />{tr('Удалить насовсем')}
           </Button>
         </div>
       </section>
@@ -177,7 +177,7 @@ function NoteEditor({ note, trashed, fresh, onClose }: { note: Note; trashed: bo
           className="w-full resize-y rounded-control bg-surface-2/60 p-3 text-[15px] leading-relaxed outline-none ring-primary/40 placeholder:text-muted-foreground focus:ring-2" />
       </label>
       {note.leadId && (
-        <p className="t-caption mt-2">Заметка связана с <Link href={`/leads/${note.leadId}`} className="tap-link font-medium text-primary hover:underline">{tr('лидом')}</Link>.</p>
+        <p className="t-caption mt-2">{tr('Заметка связана с')} <Link href={`/leads/${note.leadId}`} className="tap-link font-medium text-primary hover:underline">{tr('лидом')}</Link>.</p>
       )}
     </section>
   );

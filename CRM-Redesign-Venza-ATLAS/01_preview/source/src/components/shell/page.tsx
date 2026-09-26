@@ -49,7 +49,7 @@ export function PageHeader({ title, subtitle, back, actions, large = true, child
 export function NotificationsButton({ className }: { className?: string }) {
   const alerts = useAlertCount();
   return (
-    <IconButton label={alerts ? `Уведомления: ${alerts}` : tr('Уведомления')} className={cn('relative', className)} onClick={() => ui.set({ notifications: true })}>
+    <IconButton label={alerts ? tr('Уведомления: {n}', { n: alerts }) : tr('Уведомления')} className={cn('relative', className)} onClick={() => ui.set({ notifications: true })}>
       <Bell />
       {alerts > 0 && <span aria-hidden className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-danger ring-2 ring-background" />}
     </IconButton>

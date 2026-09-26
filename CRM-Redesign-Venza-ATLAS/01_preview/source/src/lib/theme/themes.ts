@@ -1,3 +1,4 @@
+import { tr } from '../i18n';
 /**
  * Единая модель тем CRM. Темы меняют ТОЛЬКО presentation layer.
  * Источник истины для: провайдера, селектора, no-flash bootstrap, тостов.
@@ -53,9 +54,9 @@ export function resolveIsDark(mode: Mode, systemPrefersDark: boolean): boolean {
 }
 
 export const MODE_OPTIONS: ReadonlyArray<{ value: Mode; label: string }> = [
-  { value: 'light', label: 'Светлый' },
-  { value: 'dark', label: 'Тёмный' },
-  { value: 'system', label: 'Как в системе' },
+  { value: 'light', label: tr('Светлый') },
+  { value: 'dark', label: tr('Тёмный') },
+  { value: 'system', label: tr('Как в системе') },
 ];
 
 /** Порядок и подписи в селекторе. labelKey — ключ next-intl в неймспейсе `themes`. */

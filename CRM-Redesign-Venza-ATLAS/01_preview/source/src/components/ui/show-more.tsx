@@ -52,9 +52,9 @@ export function ShowMore({ more, total, shown, onMore, what, className }: {
     <div ref={sentinel} className={cn('flex flex-col items-center gap-2 py-4', className)}>
       <button type="button" onClick={onMore}
         className="min-h-[44px] rounded-full border border-border bg-surface px-5 text-[14.5px] font-medium text-foreground transition-colors duration-tab hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-        Показать ещё {step}
+        {tr('Показать ещё')} {step}
       </button>
-      <p className="t-caption tabular">{tr('Показано')}{shown} из {total} {plural(total, ...WORDS[what])}</p>
+      <p className="t-caption tabular">{tr('Показано')} {shown} {tr('из')} {total} {plural(total, ...WORDS[what])}</p>
     </div>
   );
 }

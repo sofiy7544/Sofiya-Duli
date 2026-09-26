@@ -43,11 +43,11 @@ export function TeamScreen() {
 
   return (
     <PageBody>
-      <PageHeader title={tr('Команда')} subtitle={`${rows.length} ${plural(rows.length, 'сотрудник', 'сотрудника', 'сотрудников')} · ${total} ${plural(total, 'лид', 'лида', 'лидов')} в работе`} />
+      <PageHeader title={tr('Команда')} subtitle={`${rows.length} ${plural(rows.length, 'сотрудник', 'сотрудника', 'сотрудников')} · ${total} ${plural(total, 'лид', 'лида', 'лидов')} ${tr('в работе')}`} />
 
       {unassigned > 0 && (
         <Link href="/leads?assignee=none" className="pressable surface mb-4 flex items-center justify-between gap-3 p-4">
-          <span className="text-[14.5px]"><b className="tabular">{unassigned}</b> {plural(unassigned, 'лид', 'лида', 'лидов')} без ответственного</span>
+          <span className="text-[14.5px]"><b className="tabular">{unassigned}</b> {plural(unassigned, 'лид', 'лида', 'лидов')} {tr('без ответственного')}</span>
           <span className="text-[13px] font-medium text-primary">{tr('Распределить')}</span>
         </Link>
       )}
@@ -81,9 +81,9 @@ export function TeamScreen() {
                 <td className="px-3 py-2 text-right tabular">{x.won || '—'}</td>
                 <td className="px-4 py-2 text-right">
                   {x.overdue > 0
-                    ? <StatusBadge tone="danger">{x.overdue} просрочено</StatusBadge>
+                    ? <StatusBadge tone="danger">{x.overdue} {tr('просрочено')}</StatusBadge>
                     : x.noAction > 0
-                      ? <StatusBadge tone="warning">{x.noAction} без плана</StatusBadge>
+                      ? <StatusBadge tone="warning">{x.noAction} {tr('без плана')}</StatusBadge>
                       : <span className="t-caption">—</span>}
                 </td>
               </tr>

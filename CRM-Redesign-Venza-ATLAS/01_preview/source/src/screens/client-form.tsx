@@ -55,7 +55,7 @@ export function ClientFormScreen({ id }: { id?: string }) {
   const submit = async () => {
     const e: typeof errors = {};
     if (v.fullName.trim().length < 2) e.fullName = tr('Имя — минимум 2 символа');
-    if (!/^[+0-9()\-\s]{6,32}$/.test(v.primaryPhone)) e.primaryPhone = 'Телефон: 6–32 символа, цифры, +, скобки и дефис';
+    if (!/^[+0-9()\-\s]{6,32}$/.test(v.primaryPhone)) e.primaryPhone = tr('Телефон: 6–32 символа, цифры, +, скобки и дефис');
     if (v.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email)) e.email = tr('Проверьте адрес почты');
     setErrors(e);
     if (Object.keys(e).length) return;

@@ -68,7 +68,7 @@ export function AutomationScreen() {
                     <p className="t-caption mt-1"><b className="font-medium text-foreground/80">{tr('Когда:')}</b> {rule.when}</p>
                     <p className="t-caption mt-0.5"><b className="font-medium text-foreground/80">{tr('Тогда:')}</b> {rule.then}</p>
                   </div>
-                  <Switch label={`Правило «${rule.name}»`} checked={rule.enabled} onChange={() => void adminApi.toggleRule(rule.id)} />
+                  <Switch label={tr('Правило «{name}»', { name: rule.name })} checked={rule.enabled} onChange={() => void adminApi.toggleRule(rule.id)} />
                 </div>
                 <div className="mt-3 flex items-center justify-between">
                   <StatusBadge tone={rule.enabled ? 'success' : 'neutral'}>{rule.enabled ? tr('Включено') : tr('Выключено')}</StatusBadge>
@@ -154,7 +154,7 @@ export function TemplatesScreen() {
         )}
 
       <Sheet open={edit !== null} onOpenChange={(v) => !v && setEdit(null)} title={edit?.name ? tr('Шаблон') : tr('Новый шаблон')}
-        description="В фигурных скобках — подстановки: {имя}, {объект}, {дата}, {время}, {бюджет}, {агент}."
+        description={tr('В фигурных скобках — подстановки: имя, объект, дата, время, бюджет, агент.')}
         footer={<><Button variant="outline" onClick={() => setEdit(null)}>{tr('Отмена')}</Button><Button loading={busy} onClick={save}>{tr('Сохранить')}</Button></>}>
         {edit && (
           <div className="space-y-3">
@@ -203,7 +203,7 @@ export function IntegrationsScreen() {
       </ul>
       <p className="t-caption mt-4 flex items-start gap-1.5">
         <Plug className="mt-0.5 h-3.5 w-3.5 flex-none" aria-hidden />
-        Подключение делает администратор на стороне CRM — в превью кнопки выключены намеренно. Чтобы посмотреть, как выглядит раздел с подключёнными каналами, включите «Интеграции» в панели превью.
+        {tr('Подключение делает администратор на стороне CRM — в превью кнопки выключены намеренно. Чтобы посмотреть, как выглядит раздел с подключёнными каналами, включите «Интеграции» в панели превью.')}
       </p>
     </PageBody>
   );
@@ -246,7 +246,7 @@ export function BrandingScreen() {
             const f = e.target.files?.[0]; if (!f) return;
             e.target.value = '';
             if (f.size > 2 * 1024 * 1024) { toast.error(tr('Файл больше 2 МБ')); return; }
-            void adminApi.saveBranding({ logoName: f.name }).then(() => toast.success(`Логотип «${f.name}» загружен`));
+            void adminApi.saveBranding({ logoName: f.name }).then(() => toast.success(tr('Логотип «{name}» загружен', { name: f.name })));
           }} />
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <span className="grid h-16 w-16 place-items-center rounded-card bg-surface-2 text-[12px] text-muted-foreground">{r.data.logoName ? 'SVG' : tr('нет')}</span>
@@ -344,7 +344,7 @@ export function UsersScreen() {
                   <span className="flex items-center gap-3">
                     <button type="button" className="pressable relative shrink-0 rounded-full"
                       onClick={() => { photoFor.current = m.id; photoPick.current?.click(); }}
-                      aria-label={m.avatarUrl ? `Сменить фото: ${m.fullName}` : `Добавить фото: ${m.fullName}`}>
+                      aria-label={m.avatarUrl ? tr('Сменить фото: {name}', { name: m.fullName }) : tr('Добавить фото: {name}', { name: m.fullName })}>
                       <Avatar name={m.fullName} src={m.avatarUrl} size={40} />
                       <span className="absolute -bottom-0.5 -right-0.5 grid h-[18px] w-[18px] place-items-center rounded-full bg-primary text-primary-foreground" aria-hidden>
                         <Camera className="h-3 w-3" />
@@ -361,7 +361,7 @@ export function UsersScreen() {
                   </span>
                 </th>
                 <td className="px-3 py-2.5">
-                  <Select aria-label={`Роль: ${m.fullName}`} value={m.role} onChange={(e) => void adminApi.setMemberRole(m.id, e.target.value as UserRole).then(() => toast.success(tr('Роль изменена')))}>
+                  <Select aria-label={tr('Роль: {name}', { name: m.fullName })} value={m.role} onChange={(e) => void adminApi.setMemberRole(m.id, e.target.value as UserRole).then(() => toast.success(tr('Роль изменена')))}>
                     {(Object.keys(ROLE_LABEL) as UserRole[]).map((role) => <option key={role} value={role}>{ROLE_LABEL[role]}</option>)}
                   </Select>
                 </td>
@@ -371,7 +371,7 @@ export function UsersScreen() {
                     {m.active
                       ? <Button size="sm" variant="outline" onClick={() => setConfirm(m)}>{tr('Отключить')}</Button>
                       : <Button size="sm" variant="outline" onClick={() => void adminApi.setMemberActive(m.id, true).then(() => toast.success(tr('Доступ возвращён')))}>{tr('Включить')}</Button>}
-                    <IconButton label={`Удалить из команды: ${m.fullName}`} variant="outline" className="text-danger-text" onClick={() => setFire(m)}><UserMinus /></IconButton>
+                    <IconButton label={tr('Удалить из команды: {name}', { name: m.fullName })} variant="outline" className="text-danger-text" onClick={() => setFire(m)}><UserMinus /></IconButton>
                   </div>
                 </td>
               </tr>
@@ -398,18 +398,18 @@ export function UsersScreen() {
       </Sheet>
 
       <ConfirmDialog open={fire !== null} onOpenChange={(v) => !v && setFire(null)} title={tr('Удалить из команды?')}
-        text={fire ? `${fire.fullName} исчезнет из списков и фильтров. Лиды, задачи, показы и объекты перейдут администратору — ничего не потеряется.` : ''} confirmLabel={tr('Удалить')}
+        text={fire ? tr('{name} исчезнет из списков и фильтров. Лиды, задачи, показы и объекты перейдут администратору — ничего не потеряется.', { name: fire.fullName }) : ''} confirmLabel={tr('Удалить')}
         onConfirm={async () => {
           if (!fire) return;
           try {
             const moved = await adminApi.deleteMember(fire.id);
-            const parts = [moved.leads && `лиды: ${moved.leads}`, moved.tasks && `задачи: ${moved.tasks}`, moved.properties && `объекты: ${moved.properties}`].filter(Boolean).join(', ');
-            toast.success(parts ? `Сотрудник удалён. Передано администратору — ${parts}` : tr('Сотрудник удалён'));
+            const parts = [moved.leads && `${tr('лиды')}: ${moved.leads}`, moved.tasks && `${tr('задачи')}: ${moved.tasks}`, moved.properties && `${tr('объекты')}: ${moved.properties}`].filter(Boolean).join(', ');
+            toast.success(parts ? tr('Сотрудник удалён. Передано администратору — {parts}', { parts }) : tr('Сотрудник удалён'));
           } catch (e) { toast.error((e as Error).message); }
           finally { setFire(null); }
         }} />
       <ConfirmDialog open={confirm !== null} onOpenChange={(v) => !v && setConfirm(null)} title={tr('Отключить доступ?')}
-        text={confirm ? `${confirm.fullName} не сможет войти. Лиды и задачи останутся закреплены за ним.` : ''} confirmLabel={tr('Отключить')}
+        text={confirm ? tr('{name} не сможет войти. Лиды и задачи останутся закреплены за ним.', { name: confirm.fullName }) : ''} confirmLabel={tr('Отключить')}
         onConfirm={async () => { if (confirm) await adminApi.setMemberActive(confirm.id, false); setConfirm(null); toast.success(tr('Доступ отключён')); }} />
     </PageBody>
   );

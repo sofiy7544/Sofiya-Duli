@@ -37,7 +37,7 @@ export function LostReasonsScreen() {
   const setPeriod = (p: Period) => { try { localStorage.setItem(PERIOD_STORAGE_KEY, p); } catch { /* ignore */ } setPeriodState(p); };
 
   const header = (
-    <PageHeader title={tr('Причины отказов')} back="/reports" subtitle={`Почему лиды уходят · ${PERIOD_HINT[period]}`}>
+    <PageHeader title={tr('Причины отказов')} back="/reports" subtitle={`${tr('Почему лиды уходят')} · ${PERIOD_HINT[period]}`}>
       <SegmentedControl<Period> label={tr('Период')} size="sm" className="w-full sm:w-auto" value={period} onChange={setPeriod}
         options={PERIODS.map((p) => ({ value: p, label: PERIOD_LABEL[p] }))} />
     </PageHeader>
@@ -47,7 +47,7 @@ export function LostReasonsScreen() {
 
   const lost: Lead[] = r.data.filter((l) => l.stage === 'LOST' && inPeriod(l.createdAt, period));
   if (lost.length === 0) {
-    return <PageBody className="lg:max-w-[860px]">{header}<EmptyState icon={ThumbsDown} title={tr('Проигранных лидов нет')} text={`За ${PERIOD_HINT[period]} проигранных лидов нет. Выберите период шире.`} /></PageBody>;
+    return <PageBody className="lg:max-w-[860px]">{header}<EmptyState icon={ThumbsDown} title={tr('Проигранных лидов нет')} text={tr('За {p} проигранных лидов нет. Выберите период шире.', { p: PERIOD_HINT[period] })} /></PageBody>;
   }
 
   const reasons = top(count(lost.map((l) => l.lostReason?.trim() || tr('Причина не указана'))));
@@ -61,15 +61,15 @@ export function LostReasonsScreen() {
     <PageBody className="lg:max-w-[860px]">
       {header}
 
-      <ChartFigure title={tr('Топ причин')} caption={`${lost.length} ${plural(lost.length, 'проигранный лид', 'проигранных лида', 'проигранных лидов')} всего`}>
+      <ChartFigure title={tr('Топ причин')} caption={`${lost.length} $${plural(lost.length, 'проигранный лид', 'проигранных лида', 'проигранных лидов')} ${tr('всего')}`}>
         {reasons.map((x) => <BarRow key={x.label} label={x.label} value={x.value} max={max(reasons)} color="hsl(var(--danger))" right={<b className="tabular">{x.value}</b>} />)}
       </ChartFigure>
 
-      <ChartFigure title={tr('По источникам')} caption="Канал, из которого пришёл лид, закрывшийся отказом.">
+      <ChartFigure title={tr('По источникам')} caption={tr('Канал, из которого пришёл лид, закрывшийся отказом.')}>
         {sources.map((x) => <BarRow key={x.label} label={x.label} value={x.value} max={max(sources)} color="hsl(var(--warning))" right={<b className="tabular">{x.value}</b>} />)}
       </ChartFigure>
 
-      <ChartFigure title={tr('По месяцам')} caption="Месяц создания лида, а не закрытия: так видно, какие когорты не дошли.">
+      <ChartFigure title={tr('По месяцам')} caption={tr('Месяц создания лида, а не закрытия: так видно, какие когорты не дошли.')}>
         {months.map((x) => <BarRow key={x.label} label={x.label} value={x.value} max={max(months)} color="hsl(var(--muted-foreground))" right={<b className="tabular">{x.value}</b>} />)}
       </ChartFigure>
 

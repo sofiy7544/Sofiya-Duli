@@ -48,14 +48,14 @@ export function PickerField({ label, hint, required, error, value, onChange, opt
         <div className="space-y-2">
           {big && (
             <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder={searchPlaceholder}
-              aria-label={`Поиск: ${label.toLowerCase()}`} autoComplete="off" />
+              aria-label={tr('Поиск: {what}', { what: label.toLowerCase() })} autoComplete="off" />
           )}
           <Select id={id} aria-describedby={d} value={value} onChange={(e) => onChange(e.target.value)}>
             {emptyLabel !== undefined && <option value="">{emptyLabel}</option>}
             {list.map((o) => <option key={o.value} value={o.value}>{o.meta ? `${o.label}, ${o.meta}` : o.label}</option>)}
           </Select>
           {big && options.length > list.length && (
-            <p className="t-caption tabular">{tr('Показаны первые')}{list.length} из {options.length} — уточните поиск</p>
+            <p className="t-caption tabular">{tr('Показаны первые')} {list.length} {tr('из')} {options.length} — {tr('уточните поиск')}</p>
           )}
           {big && q.trim() && list.length === 0 && <p className="t-caption">{tr('Никого не нашли по запросу «')}{q.trim()}»</p>}
         </div>

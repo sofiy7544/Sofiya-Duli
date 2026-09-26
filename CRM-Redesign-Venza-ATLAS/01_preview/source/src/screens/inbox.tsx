@@ -145,7 +145,7 @@ function Thread({ c }: { c: Conversation }) {
           <AlertTriangle className="mt-0.5 h-4 w-4 flex-none text-warning-text" aria-hidden />
           <div className="text-[13.5px]">
             <b className="font-semibold">{tr('Похоже на существующего клиента.')}</b>{' '}
-            {c.duplicateOf.reason} с карточкой{' '}
+            {c.duplicateOf.reason} {tr('с карточкой')}{' '}
             <Link href={`/clients/${c.duplicateOf.clientId}`} className="tap-link font-medium text-primary hover:underline">{c.duplicateOf.name}</Link>.
             <div className="mt-2 flex flex-wrap gap-2">
               <Link href={`/clients/${c.duplicateOf.clientId}`} className="inline-flex h-11 items-center justify-center gap-2 rounded-control border border-border bg-surface px-3.5 text-sm font-medium transition-colors hover:bg-surface-2 lg:h-9">{tr('Открыть карточку')}</Link>
@@ -173,10 +173,10 @@ function Thread({ c }: { c: Conversation }) {
           <div className="mt-2.5 flex flex-wrap gap-2">
             <Button size="sm" loading={busy}
               onClick={async () => { setBusy(true); await inboxApi.qualify(c.id); setBusy(false); toast.success(tr('Лид создан'), { action: { label: tr('Открыть'), onClick: () => { location.hash = '/leads'; } } }); }}>
-              <UserPlus />Создать лид
+              <UserPlus />{tr('Создать лид')}
             </Button>
             <Button size="sm" variant="outline" onClick={async () => { await inboxApi.dismiss(c.id); toast.success(tr('Убрано из новых')); }}>
-              <X />Не лид
+              <X />{tr('Не лид')}
             </Button>
           </div>
         </div>
@@ -189,7 +189,7 @@ function Thread({ c }: { c: Conversation }) {
       <form onSubmit={send} className="flex items-end gap-2 border-t border-border px-4 py-3">
         <label className="min-w-0 flex-1">
           <span className="sr-only">{tr('Ответ в')}{CHANNEL_LABEL[c.channel]}</span>
-          <input value={text} onChange={(e) => setText(e.target.value)} placeholder={`Ответить в ${CHANNEL_LABEL[c.channel]}`}
+          <input value={text} onChange={(e) => setText(e.target.value)} placeholder={tr('Ответить в {channel}', { channel: CHANNEL_LABEL[c.channel] })}
             className="h-11 w-full rounded-control bg-surface-2/60 px-3 text-[14.5px] outline-none ring-primary/40 placeholder:text-muted-foreground focus:ring-2" />
         </label>
         <Button type="submit" size="sm" disabled={!text.trim()}><Send />{tr('Отправить')}</Button>

@@ -49,7 +49,7 @@ export function useStageMove() {
     if (stage === 'LOST' && !lostReason) { setLostFor(lead); return false; }
     try {
       const { prev } = await api.moveLead(lead.id, stage, lostReason);
-      toast.success(`Этап: ${STAGE_LABEL[stage]}`, { action: { label: tr('Отменить'), onClick: () => { api.moveLead(lead.id, prev, prev === 'LOST' ? lead.lostReason : undefined).catch(() => {}); } } });
+      toast.success(tr('Этап: {stage}', { stage: STAGE_LABEL[stage] }), { action: { label: tr('Отменить'), onClick: () => { api.moveLead(lead.id, prev, prev === 'LOST' ? lead.lostReason : undefined).catch(() => {}); } } });
       return true;
     } catch (e) { toast.error((e as ApiError).message); return false; }
   }, []);

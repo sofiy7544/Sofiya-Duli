@@ -105,6 +105,8 @@ SERVICES = [
         "outcome": "Дім знову виглядає як після клінінгу — щотижня, без вашої участі",
         "photo": "assets/illus/uborka-kvartir.svg",                      # assets/photos/<slug>.webp
         "lead": "Щоб дім залишався чистим без вашої участі.",
+        "hero_photo": "assets/photos/kitchen-640.jpg",
+        "hero_alt": "Кухня після підтримуючого прибирання: чиста стільниця, варильна поверхня та фартух",
         "from": 55, "unit": "м²",
         "h1": "Прибирання квартир в Одесі",
         "seo_title": "Прибирання квартир в Одесі — від 55 ₴/м² | DULI Service",
@@ -133,6 +135,8 @@ SERVICES = [
         "outcome": "Чисто там, куди руки не доходили місяцями",
         "photo": "assets/illus/generalna-pryburannya.svg",                      # assets/photos/<slug>.webp
         "lead": "Раз на сезон — усе зверху донизу.",
+        "hero_photo": "assets/photos/table-640.jpg",
+        "hero_alt": "Стіл із темною кам’яною стільницею після генерального прибирання: без пилу й розводів",
         "from": 115, "unit": "м²",
         "h1": "Генеральне прибирання в Одесі",
         "seo_title": "Генеральне прибирання в Одесі — від 115 ₴/м² | DULI",

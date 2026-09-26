@@ -909,3 +909,13 @@ h2{line-height:1.12}
 .cb__done{font-size:1rem;color:#fff;text-align:center;line-height:1.5}
 .cb__done a{color:#fff;text-decoration:underline;text-underline-offset:4px}
 @media (min-width:560px){.cb__row{grid-template-columns:1fr auto}}
+
+/* фото в шапці послуги з бейджем ціни; фото на «Про нас» */
+.phero__media{position:relative;width:min(440px,100%)}
+.phero__media .phero__img{display:block;width:100%}
+.phero__price--over{position:absolute;left:14px;bottom:14px;width:auto;padding:12px 16px;box-shadow:var(--sh-2)}
+.ph{margin:0 0 26px;border-radius:var(--r-lg);overflow:hidden;background:var(--surface-2);max-width:880px}
+.ph img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
+.ph--portrait{max-width:520px}
+.ph--portrait img{aspect-ratio:4/5}
+.ph figcaption{padding:12px 16px;font-size:var(--fs-caption);color:var(--muted);background:var(--surface);border-top:1px solid var(--hair)}

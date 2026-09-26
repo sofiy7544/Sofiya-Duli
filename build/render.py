@@ -862,7 +862,9 @@ def page_hero(h1, intro, price_from=None, unit=None, note=None, img=None, img_al
         else:
             price = '<img class="phero__img" src="%s%s" alt="" width="640" height="400">' % (BASE, img)
     if price_from:
-        price = ('<div class="phero__price"><span>від</span><b>%d ₴</b><span>/ %s</span></div>' % (price_from, unit))
+        badge = '<div class="phero__price"><span>від</span><b>%d ₴</b><span>/ %s</span></div>' % (price_from, unit)
+        # фото + ціна: бейдж лягає на фото
+        price = ('<div class="phero__media">%s%s</div>' % (price, badge.replace('phero__price', 'phero__price phero__price--over'))) if price else badge
     return f"""
 <section class="phero">
   <div class="wrap phero__in">
@@ -932,6 +934,7 @@ def service_page(s):
             + page_hero(s["h1"], s["intro"], s["from"], s["unit"],
                         "Мінімальне замовлення — %s ₴. Виїзд по Одесі безкоштовний."
                         % uah(next((t["min"] for t in TYPES if t["id"] == s["calc"]), CLAIMS["min_order_uah"])),
+                        img=s.get("hero_photo"), img_alt=s.get("hero_alt", ""),
                         cta="%s?type=%s&amp;object=%s" % (CALC, s["calc"], obj))
             + f"""
 <section class="section section--surface">
@@ -1258,6 +1261,10 @@ def about_page():
       <p class="lead muted">Клінер заходить до вас додому, тож ви маєте знати, хто приїде. Усі працюють у нас
       постійно й проходять навчання роботі з хімією та поверхнями — це не випадкові люди під замовлення.</p>
     </div>
+    <figure class="ph ph--portrait rv">
+      <img src="{BASE}assets/photos/cleaner-bath-640.jpg" srcset="{BASE}assets/photos/cleaner-bath-640.jpg 640w, {BASE}assets/photos/cleaner-bath-1200.jpg 1200w" sizes="(min-width: 900px) 520px, 100vw" alt="Клінер DULI у формі миє ванну: санвузол, чорна плитка, мікрофібра" width="640" height="853" loading="lazy">
+      <figcaption>Клінер DULI за роботою. Форма, мікрофібра й окремий засіб під кожну поверхню.</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -1268,6 +1275,10 @@ def about_page():
       <h2>Що бригада привозить із собою</h2>
       <p class="lead muted">Вам не треба купувати нічого — ані хімії, ані ганчірок.</p>
     </div>
+    <figure class="ph rv">
+      <img src="{BASE}assets/photos/chem-640.jpg" srcset="{BASE}assets/photos/chem-640.jpg 640w, {BASE}assets/photos/chem-1200.jpg 1200w" sizes="(min-width: 900px) 880px, 100vw" alt="Професійна хімія бригади: засоби для підлоги, сантехніки, скла та крем-мило у пʼятилітрових каністрах" width="640" height="480" loading="lazy">
+      <figcaption>Професійна хімія бригади: окремі засоби для підлоги, сантехніки, скла та поверхонь.</figcaption>
+    </figure>
     <div class="eq__grid rv">{equip}</div>
   </div>
 </section>

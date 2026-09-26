@@ -90,7 +90,15 @@ const run = async (theme, mode, size, dev) => {
   for (const rt of ROUTES) {
     await page.goto(BASE + rt, { waitUntil: 'networkidle' });
     await page.waitForTimeout(900);
-    const rows = await page.evaluate(CHECK);
+    /* Перекрытие считаем дефектом, только если оно держится и вверху страницы, и
+       внизу: под фиксированной нижней панелью закономерно оказывается то, что
+       ещё не прокрутили. */
+    const atTop = await page.evaluate(CHECK);
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(600);
+    const atBottom = await page.evaluate(CHECK);
+    const bottomSet = new Set(atBottom.map(([k, t]) => k + t));
+    const rows = atTop.filter(([kind, text]) => kind !== 'перекрыто' || bottomSet.has(kind + text));
     for (const [kind, text] of rows) found.push(`${theme}/${size.width} ${rt} · ${kind}: ${text}`);
   }
   await browser.close();

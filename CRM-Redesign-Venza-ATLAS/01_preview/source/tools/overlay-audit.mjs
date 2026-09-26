@@ -29,15 +29,14 @@ const BASE = 'http://localhost:5173/#';
 
 /** Те же проверки, но внутри открытого окна. */
 /**
- * Проверку перекрытий делаем на прокрученном до низа листе: пока лист не
- * долистан, под закреплённым рядом кнопок закономерно оказывается содержимое —
- * это не дефект. Дефект — если элемент остаётся под ним и внизу.
+ * Перекрытие считается дефектом, только если элемент закрыт и вверху листа, и
+ * внизу: недолистанный лист закономерно прячет содержимое под закреплённым
+ * рядом кнопок, а долистанный — под шапкой. Настоящий дефект — когда до
+ * элемента нельзя добраться ни в одном положении.
  */
 const CHECK_IN = (sel) => {
   const root = document.querySelector(sel);
   if (!root) return [['окно', 'не открылось']];
-  const area = root.querySelector('.overflow-y-auto');
-  if (area) area.scrollTop = area.scrollHeight;
   const out = [];
   const vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight;
   const touch = vw < 900;                                   // 44×44 — правило про палец
@@ -122,9 +121,16 @@ const run = async (theme, size, dev) => {
       });
       if (!/Удалить файл/.test(top)) found.push(`${theme}/${size.width} ${name}: в центре экрана не подтверждение, а «${top}»`);
     }
-    await page.evaluate((sel) => { const a = document.querySelector(sel)?.querySelector('.overflow-y-auto'); if (a) a.scrollTop = a.scrollHeight; }, '[role=dialog]');
-    await page.waitForTimeout(400);
-    const rows = await page.evaluate(CHECK_IN, '[role=dialog]');
+    const scrollTo = async (pos) => {
+      await page.evaluate(([sel, p]) => { const a = document.querySelector(sel)?.querySelector('.overflow-y-auto'); if (a) a.scrollTop = p === 'bottom' ? a.scrollHeight : 0; }, ['[role=dialog]', pos]);
+      await page.waitForTimeout(400);
+      return page.evaluate(CHECK_IN, '[role=dialog]');
+    };
+    const atTop = await scrollTo('top');
+    const atBottom = await scrollTo('bottom');
+    const bottomSet = new Set(atBottom.map(([k, t]) => k + t));
+    // размеры и выход за экран берём сверху, перекрытия — только те, что держатся в обоих положениях
+    const rows = atTop.filter(([kind, text]) => kind !== 'перекрыто' || bottomSet.has(kind + text));
     for (const [kind, text] of rows) found.push(`${theme}/${size.width} ${name} · ${kind}: ${text}`);
     await page.keyboard.press('Escape').catch(() => {});
     await page.waitForTimeout(400);

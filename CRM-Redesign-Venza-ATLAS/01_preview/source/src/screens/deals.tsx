@@ -203,7 +203,7 @@ export function DealDetailScreen({ id }: { id: string }) {
         subtitle={<span className="flex flex-wrap items-center gap-2"><StatusBadge tone={STATUS_TONE[d.status]} dot>{DEAL_STATUS_LABEL[d.status]}</StatusBadge>{tr('Создана')}{relDay(d.createdAt).toLowerCase()}, {owner}</span>}
         actions={canManage ? <IconButton label={tr('Удалить сделку')} variant="outline" onClick={() => setConfirm('delete')}><Trash2 /></IconButton> : undefined} />
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="min-w-0 space-y-4">
           <section className="surface grid grid-cols-3 divide-x divide-border/70 p-0">
             {[[tr('Сумма сделки'), money(d.amount, d.currency, true)], [tr('Комиссия {pct}%', { pct: d.commissionPercent }), money(commission, d.currency, true)], [tr('Остаток'), money(Math.max(0, left), d.currency, true)]].map(([k, val], i) => (

@@ -184,7 +184,7 @@ export function QuickCapture() {
             <div className="flex flex-wrap gap-1.5">
               {CHIPS.map((c) => (
                 <button key={c.key} type="button" aria-pressed={chip === c.key} onClick={() => pickChip(c.key)}
-                  className={cn('min-h-[36px] rounded-full border px-3 text-[13px] font-medium transition-colors',
+                  className={cn('min-h-[44px] rounded-full border px-3.5 text-[13px] font-medium transition-colors lg:min-h-[36px]',
                     chip === c.key ? 'border-primary bg-primary text-primary-foreground' : 'border-border hover:bg-surface-2')}>
                   {c.label}
                 </button>
@@ -206,7 +206,9 @@ export function QuickCapture() {
         )}
       </section>
 
-      <div className="flex gap-2.5 pt-1">
+      {/* Кнопки прилипают к низу листа: форма длиннее экрана, и «Создать» уезжал
+          под сгиб — до него приходилось прокручивать всю форму. */}
+      <div className="sticky bottom-0 -mx-5 -mb-5 flex gap-2.5 border-t border-border/70 bg-surface px-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3">
         <Button type="button" variant="outline" className="flex-1" onClick={() => ui.set({ quickCreate: null })}>{tr('Отмена')}</Button>
         <Button type="button" className="flex-1" loading={busy} onClick={submit}><Zap />{tr('Создать')}</Button>
       </div>

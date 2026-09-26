@@ -342,7 +342,7 @@ export function UsersScreen() {
               <tr key={m.id} className={cn('border-b border-border/70 last:border-0', !m.active && 'text-muted-foreground')}>
                 <th scope="row" className="px-4 py-2.5 text-left font-normal">
                   <span className="flex items-center gap-3">
-                    <button type="button" className="pressable relative shrink-0 rounded-full"
+                    <button type="button" className="pressable relative grid h-11 w-11 shrink-0 place-items-center rounded-full"
                       onClick={() => { photoFor.current = m.id; photoPick.current?.click(); }}
                       aria-label={m.avatarUrl ? tr('Сменить фото: {name}', { name: m.fullName }) : tr('Добавить фото: {name}', { name: m.fullName })}>
                       <Avatar name={m.fullName} src={m.avatarUrl} size={40} />

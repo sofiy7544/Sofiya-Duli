@@ -72,7 +72,7 @@ export function SearchOverlay() {
               <SearchIcon className="h-[18px] w-[18px] text-muted-foreground" aria-hidden />
               <input autoFocus value={term} onChange={(e) => setTerm(e.target.value)} placeholder={tr('Имя, телефон, почта или объект')}
                 className={cn('min-w-0 flex-1 bg-transparent outline-none placeholder:text-muted-foreground', isDesktop ? 'h-14 text-[16px]' : 'h-full text-[16px]')} aria-label={tr('Поиск по CRM')} />
-              {term && <button onClick={() => setTerm('')} aria-label={tr('Очистить')} className="grid h-8 w-8 place-items-center rounded-full text-muted-foreground hover:bg-muted"><X className="h-4 w-4" /></button>}
+              {term && <button onClick={() => setTerm('')} aria-label={tr('Очистить')} className="grid h-11 w-11 place-items-center rounded-full text-muted-foreground hover:bg-muted lg:h-8 lg:w-8"><X className="h-4 w-4" /></button>}
               {isDesktop && <kbd className="rounded-md bg-surface-2 px-1.5 py-0.5 text-[11px] text-muted-foreground">Esc</kbd>}
             </div>
           </div>

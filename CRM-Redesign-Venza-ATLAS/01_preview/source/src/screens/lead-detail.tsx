@@ -105,7 +105,7 @@ export function LeadDetailScreen({ id }: { id: string }) {
         <div className="mt-3 lg:mt-0">
           <h1 className="t-h1">{client.fullName}</h1>
           <div className="mt-2 flex flex-wrap items-center justify-center gap-2 lg:justify-start">
-            <button onClick={() => setStageOpen(true)} className="inline-flex min-h-[40px] items-center rounded-full px-1 focus-visible:ring-2 focus-visible:ring-ring" aria-label={tr('Этап: {stage}. Сменить', { stage: STAGE_LABEL[lead.stage] })}><StageBadge stage={lead.stage} /></button>
+            <button onClick={() => setStageOpen(true)} className="inline-flex min-h-[44px] items-center rounded-full px-1 focus-visible:ring-2 focus-visible:ring-ring" aria-label={tr('Этап: {stage}. Сменить', { stage: STAGE_LABEL[lead.stage] })}><StageBadge stage={lead.stage} /></button>
             <PriorityMark priority={lead.priority} withLabel />
           </div>
         </div>
@@ -164,7 +164,7 @@ function RequestList({ lead, client }: { lead: Lead; client: Client }) {
   const rows: [string, React.ReactNode][] = [
     [tr('Цель'), PURPOSE_LABEL[lead.purpose]], [tr('Бюджет'), <span className="tabular">{budget(lead.budgetMin, lead.budgetMax, lead.budgetCurrency)}</span>],
     [tr('Районы'), client.preferences?.districts.join(', ') || '—'], [tr('Комнат'), client.preferences?.rooms?.min ? tr('от {n}', { n: client.preferences.rooms.min }) : '—'],
-    [tr('Телефон'), <a href={`tel:${client.primaryPhone}`} className="tabular text-primary">{client.primaryPhone}</a>], [tr('Источник'), SOURCE_LABEL[lead.source]],
+    [tr('Телефон'), <a href={`tel:${client.primaryPhone}`} className="tap-link inline-flex min-h-[44px] items-center tabular text-primary lg:min-h-0">{client.primaryPhone}</a>], [tr('Источник'), SOURCE_LABEL[lead.source]],
   ];
   return <dl className="row-divider -mx-1">{rows.map(([k, v]) => <div key={k} className="flex items-baseline justify-between gap-4 px-1 py-2.5 text-[14.5px]"><dt className="text-muted-foreground">{k}</dt><dd className="text-right font-medium">{v}</dd></div>)}</dl>;
 }
@@ -284,7 +284,7 @@ function LeadControls({ lead, canAssign, onStage, onReady }: { lead: Lead; canAs
   const setPriority = async (p: Priority) => { await api.updateLead(lead.id, { priority: p }); toast.success(tr('Приоритет: {p}', { p: PRIORITY_LABEL[p].toLowerCase() })); };
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between gap-3"><span className="t-caption text-[13.5px]">{tr('Этап')}</span><button onClick={onStage} className="rounded-full focus-visible:ring-2 focus-visible:ring-ring" aria-label={tr('Сменить этап')}><StageBadge stage={lead.stage} /></button></div>
+      <div className="flex items-center justify-between gap-3"><span className="t-caption text-[13.5px]">{tr('Этап')}</span><button onClick={onStage} className="inline-flex min-h-[44px] items-center rounded-full px-1 focus-visible:ring-2 focus-visible:ring-ring" aria-label={tr('Сменить этап')}><StageBadge stage={lead.stage} /></button></div>
       <div>
         <div className="t-caption mb-1.5 text-[13.5px]">{tr('Приоритет')}</div>
         <SegmentedControl<Priority> label={tr('Приоритет')} className="w-full" value={lead.priority} onChange={setPriority} options={(['hot', 'warm', 'cold'] as Priority[]).map((p) => ({ value: p, label: PRIORITY_LABEL[p] }))} />
@@ -293,7 +293,7 @@ function LeadControls({ lead, canAssign, onStage, onReady }: { lead: Lead; canAs
         <label htmlFor={`as-${lead.id}`} className="t-caption text-[13.5px]">{tr('Ответственный')}</label>
         {canAssign ? (
           <select id={`as-${lead.id}`} value={lead.assignedUserId ?? ''} onChange={async (e) => { await api.updateLead(lead.id, { assignedUserId: e.target.value || null }); toast.success(tr('Ответственный изменён')); }}
-            className="h-9 max-w-[60%] rounded-control border border-input bg-surface px-2.5 text-[14px] font-medium outline-none focus:border-primary">
+            className="h-11 max-w-[60%] rounded-control border border-input bg-surface px-2.5 text-[14px] font-medium outline-none focus:border-primary lg:h-9">
             <option value="">{tr('Не назначен')}</option>{users.map((u) => <option key={u.id} value={u.id}>{u.fullName}</option>)}
           </select>
         ) : <span className="text-[14px] font-medium">{users.find((u) => u.id === lead.assignedUserId)?.fullName ?? tr('Не назначен')}</span>}

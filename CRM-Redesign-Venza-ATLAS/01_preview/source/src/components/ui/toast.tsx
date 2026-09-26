@@ -35,7 +35,7 @@ export function Toaster() {
             className={cn('pointer-events-auto flex w-full max-w-[380px] items-center gap-3 rounded-2xl bg-foreground py-3 pl-4 pr-2 text-[14px] text-background shadow-lift', t.leaving ? 'toast-out' : 'toast-in')}>
             <Icon className={cn('h-[18px] w-[18px] shrink-0', t.kind === 'error' ? 'text-[hsl(0_85%_75%)]' : t.kind === 'success' ? 'text-[hsl(145_55%_70%)]' : 'opacity-70')} aria-hidden />
             <span className="flex-1 leading-5">{t.text}</span>
-            {t.action && <button className="h-9 rounded-xl px-3 text-[13.5px] font-semibold hover:bg-background/10" onClick={() => { t.action!.onClick(); dismiss(t.id); }}>{t.action.label}</button>}
+            {t.action && <button className="h-11 rounded-xl px-3 text-[13.5px] font-semibold hover:bg-background/10 lg:h-9" onClick={() => { t.action!.onClick(); dismiss(t.id); }}>{t.action.label}</button>}
           </div>
         );
       })}

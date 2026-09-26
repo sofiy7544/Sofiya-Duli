@@ -219,7 +219,7 @@ export function ClientDetailScreen({ id }: { id: string }) {
       <PageHeader title="" back="/clients" large={false} actions={<IconButton label={tr('Действия')} onClick={() => setMenu(true)}><MoreHorizontal /></IconButton>} />
       <div className="-mt-6 lg:-mt-2">{identity}</div>
       <div className="mx-auto mt-5 max-w-[420px] lg:mx-0"><QuickActions client={c} onCall={() => setCall(true)} onShowing={() => setShowing(true)} onTask={() => ui.set({ quickCreate: 'task' })} /></div>
-      <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-6">
+      <div className="mt-6 grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-6">
         <div className="min-w-0 space-y-4 lg:order-2">{leadBanner}{prefsBlock}{interestsBlock}</div>
         <div className="min-w-0 space-y-4 lg:order-1"><h2 className="t-h2">{tr('История')}</h2><NoteComposer clientId={c.id} /><section className="surface p-4"><ActivityTimeline clientId={c.id} /></section></div>
       </div>
@@ -270,7 +270,7 @@ function ClientProperties({ clientId, onAttach }: { clientId: string; onAttach: 
                   {INTEREST_ORDER.map((st) => (
                     <button key={st} type="button" aria-pressed={x.status === st}
                       onClick={() => void api.setInterest(x.id, { status: st })}
-                      className={cn('min-h-[32px] rounded-full border px-2.5 text-[12.5px] font-medium transition-colors',
+                      className={cn('min-h-[44px] rounded-full border px-3 text-[12.5px] font-medium transition-colors lg:min-h-[32px]',
                         x.status === st ? 'border-primary bg-primary-soft text-primary' : 'border-border bg-surface text-muted-foreground hover:bg-surface-2')}>
                       {INTEREST_LABEL[st]}
                     </button>

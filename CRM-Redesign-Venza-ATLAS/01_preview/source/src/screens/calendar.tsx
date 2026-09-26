@@ -27,6 +27,44 @@ const HOURS = Array.from({ length: 13 }, (_, i) => 8 + i); // 08–20
 const startOfWeek = (d: Date) => { const x = new Date(d); const wd = (x.getDay() + 6) % 7; x.setDate(x.getDate() - wd); x.setHours(0, 0, 0, 0); return x; };
 const addDays = (d: Date, n: number) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
 
+/**
+ * Пересекающиеся события — рядом, а не друг на друге.
+ *
+ * Показ и планёрка на одно время рисовались в одном прямоугольнике: верхнее
+ * закрывало нижнее целиком, и второго события в дне просто не было видно.
+ * Считаем для каждого события его колонку внутри группы пересечений — как в
+ * обычном календаре.
+ */
+function overlapLayout(list: CalendarEvent[]): Map<string, { col: number; cols: number }> {
+  const out = new Map<string, { col: number; cols: number }>();
+  const ms = (iso: string) => new Date(iso).getTime();
+  let group: CalendarEvent[] = [];
+  let groupEnd = 0;
+
+  const place = () => {
+    if (!group.length) return;
+    const ends: number[] = [];                     // конец последнего события в каждой колонке
+    const cols = new Map<string, number>();
+    for (const e of group) {
+      let c = ends.findIndex((end) => end <= ms(e.startsAt));
+      if (c === -1) { c = ends.length; ends.push(0); }
+      ends[c] = ms(e.endsAt);
+      cols.set(e.id, c);
+    }
+    const total = ends.length;
+    for (const e of group) out.set(e.id, { col: cols.get(e.id)!, cols: total });
+    group = []; groupEnd = 0;
+  };
+
+  for (const e of [...list].sort((a, b) => ms(a.startsAt) - ms(b.startsAt))) {
+    if (group.length && ms(e.startsAt) >= groupEnd) place();
+    group.push(e);
+    groupEnd = Math.max(groupEnd, ms(e.endsAt));
+  }
+  place();
+  return out;
+}
+
 export function CalendarScreen() {
   const { family } = useTheme();
   const isDesktop = useIsDesktop();
@@ -105,11 +143,14 @@ export function CalendarScreen() {
                 <div key={d.toISOString()} className={cn('relative border-l border-border/60', sameDay(d, new Date()) && 'bg-primary-soft/40')}>
                   {HOURS.map((h) => <div key={h} className="h-14 border-b border-border/50" />)}
                   {sameDay(d, new Date()) && new Date().getHours() >= 8 && new Date().getHours() < 21 && <div aria-hidden className="absolute inset-x-0 z-10 h-px bg-danger" style={{ top: ((new Date().getHours() - 8) * 60 + new Date().getMinutes()) / 60 * 56 }}><span className="absolute -left-1 -top-1 h-2 w-2 rounded-full bg-danger" /></div>}
-                  {on(d).map((e) => { const s = new Date(e.startsAt), en = new Date(e.endsAt); const top = ((s.getHours() - 8) * 60 + s.getMinutes()) / 60 * 56; const h = Math.max(26, (en.getTime() - s.getTime()) / 3_600_000 * 56 - 2); return (
-                    <button key={e.id} onClick={() => setSelected(e)} className="absolute inset-x-1 overflow-hidden rounded-[8px] border-l-[3px] px-2 py-1 text-left text-[12px] leading-4 shadow-soft transition-transform duration-tap hover:brightness-[.98] active:scale-[.98]"
-                      style={{ top, height: h, background: `hsl(${KIND_COLOR[e.kind]} / .13)`, borderColor: `hsl(${KIND_COLOR[e.kind]})` }}>
-                      <span className="block truncate font-semibold">{e.title}</span><span className="block truncate text-foreground/85 tabular">{time(e.startsAt)}</span>
-                    </button>); })}
+                  {(() => { const lay = overlapLayout(on(d)); return on(d).map((e) => { const s = new Date(e.startsAt), en = new Date(e.endsAt); const top = ((s.getHours() - 8) * 60 + s.getMinutes()) / 60 * 56; const h = Math.max(26, (en.getTime() - s.getTime()) / 3_600_000 * 56 - 2); const { col, cols: n } = lay.get(e.id) ?? { col: 0, cols: 1 }; return (
+                    <button key={e.id} onClick={() => setSelected(e)} className="absolute overflow-hidden rounded-[8px] border-l-[3px] px-2 py-1 text-left text-[12px] leading-4 shadow-soft transition-transform duration-tap hover:brightness-[.98] active:scale-[.98]"
+                      style={{ top, height: h, left: `calc(4px + ${col} * (100% - 8px) / ${n})`, width: `calc((100% - 8px) / ${n} - ${n > 1 ? 2 : 0}px)`, background: `hsl(${KIND_COLOR[e.kind]} / .13)`, borderColor: `hsl(${KIND_COLOR[e.kind]})` }}>
+                      {/* В получасовой блок две строки не влезают — время срезалось по нижнему краю.
+                          Короткие события показывают только название: время видно по положению в сетке. */}
+                      <span className="block truncate font-semibold">{e.title}</span>
+                      {h >= 40 && <span className="block truncate text-foreground/85 tabular">{time(e.startsAt)}</span>}
+                    </button>); }); })()}
                 </div>
               ))}
             </div>

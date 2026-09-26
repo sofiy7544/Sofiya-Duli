@@ -104,7 +104,7 @@ function LeadQuickForm() {
         </div>
       </fieldset>
       <Field label={tr('Бюджет до, €')} hint={tr('Можно заполнить позже')}>{(id, d) => <Input id={id} aria-describedby={d} inputMode="numeric" className="tabular" value={v.budget} onChange={(e) => setV({ ...v, budget: e.target.value.replace(/[^\d\s]/g, '') })} placeholder="1 500 000" />}</Field>
-      <div className="flex gap-2.5 pt-2">
+      <div className="sticky bottom-0 -mx-5 -mb-5 flex gap-2.5 border-t border-border/70 bg-surface px-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3">
         <Button type="button" variant="outline" className="flex-1" onClick={() => ui.set({ quickCreate: 'menu' })}>{tr('Назад')}</Button>
         <Button type="submit" className="flex-[2]" loading={busy}>{tr('Создать лид')}</Button>
       </div>
@@ -159,7 +159,7 @@ function TaskQuickForm() {
         </div>
         {iso && !dueError && <p className="t-caption mt-2">{tr('Напомню')} {relDay(iso).toLowerCase()} {tr('в')} {time(iso)}</p>}
       </fieldset>
-      <div className="flex gap-2.5 pt-2">
+      <div className="sticky bottom-0 -mx-5 -mb-5 flex gap-2.5 border-t border-border/70 bg-surface px-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3">
         <Button type="button" variant="outline" className="flex-1" onClick={() => ui.set({ quickCreate: 'menu' })}>{tr('Назад')}</Button>
         <Button type="submit" className="flex-[2]" loading={busy}>{tr('Создать задачу')}</Button>
       </div>

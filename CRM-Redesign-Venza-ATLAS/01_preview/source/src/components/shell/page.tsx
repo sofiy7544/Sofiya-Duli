@@ -102,7 +102,7 @@ export function PageBody({ children, wide, className }: { children: React.ReactN
   const { family } = useTheme();
   return (
     <div className={cn('mx-auto w-full pb-mobile-nav lg:pb-12',
-      family === 'atlas' ? 'px-3.5 lg:px-6 lg:pt-5' : family === 'venza' ? 'px-4 sm:px-5 lg:px-10 lg:pt-8' : 'px-4 lg:px-8 lg:pt-6',
+      family === 'atlas' ? 'px-4 lg:px-6 lg:pt-5' : family === 'venza' ? 'px-4 sm:px-5 lg:px-10 lg:pt-8' : 'px-4 lg:px-8 lg:pt-6',
       wide ? 'max-w-[1480px] 2xl:max-w-[1720px]' : family === 'venza' ? 'max-w-[1120px]' : 'max-w-[1280px]', className)}>
       {children}
     </div>

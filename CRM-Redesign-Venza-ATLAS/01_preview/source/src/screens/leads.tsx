@@ -178,7 +178,7 @@ function Board({ leads, onMove, family, selectMode, selected, onToggle, onStage 
   };
 
   return (
-    <div ref={boardRow} data-hscroll className="no-scrollbar relative -mx-3.5 flex gap-3 overflow-x-auto px-3.5 pb-4 lg:-mx-6 lg:px-6 2xl:gap-2.5" aria-label={tr('Канбан воронки')}>
+    <div ref={boardRow} data-hscroll className="no-scrollbar relative -mx-4 flex gap-3 overflow-x-auto px-4 pb-4 lg:-mx-6 lg:px-6 2xl:gap-2.5" aria-label={tr('Канбан воронки')}>
       {columns.map((s) => {
         const items = s === 'LOST' ? [] : leads.filter((l) => l.stage === s);
         const take = shown[s] ?? PER_COLUMN;

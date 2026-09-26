@@ -275,7 +275,7 @@ export function PropertyDetailScreen({ id }: { id: string }) {
   );
 
   const overlays = (<>
-    <Lightbox photos={p.photos} index={lightbox} onChange={setLightbox} title={p.title} onDelete={canEdit ? setRmMedia : undefined} />
+    <Lightbox photos={p.photos} index={lightbox} onChange={setLightbox} title={p.title} onDelete={canEdit ? (mediaId) => { setLightbox(null); setRmMedia(mediaId); } : undefined} />
     <PdfSheet open={pdf} onOpenChange={setPdf} />
     <Sheet open={menu} onOpenChange={setMenu} title={p.title} desktop="center" size="sm">
       <div className="space-y-3">
@@ -310,7 +310,9 @@ export function PropertyDetailScreen({ id }: { id: string }) {
     <PageBody>
       {gallery}
       <div className="mt-5 space-y-5">
-        {priceBlock}
+        {/* Цена на телефоне — в карточке, как на компьютере: 30-пиксельное число
+            прямо на фоне страницы упиралось в край экрана и выглядело обрезком. */}
+        <section className="surface p-4">{priceBlock}</section>
         {factsBlock}
         <SegmentedControl label={tr('Разделы объекта')} className="w-full" value={tab} onChange={setTab} options={[{ value: 'about', label: tr('Об объекте') }, { value: 'match', label: tr('Клиенты'), count: matches.length }]} />
         <div key={tab} className="page-fade pb-24">{tab === 'about' ? about : matchBlock}</div>

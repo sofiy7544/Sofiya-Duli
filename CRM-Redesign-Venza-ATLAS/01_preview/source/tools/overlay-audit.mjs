@@ -28,9 +28,16 @@ writeFileSync(SAMPLE, Buffer.from(
 const BASE = 'http://localhost:5173/#';
 
 /** Те же проверки, но внутри открытого окна. */
+/**
+ * Проверку перекрытий делаем на прокрученном до низа листе: пока лист не
+ * долистан, под закреплённым рядом кнопок закономерно оказывается содержимое —
+ * это не дефект. Дефект — если элемент остаётся под ним и внизу.
+ */
 const CHECK_IN = (sel) => {
   const root = document.querySelector(sel);
   if (!root) return [['окно', 'не открылось']];
+  const area = root.querySelector('.overflow-y-auto');
+  if (area) area.scrollTop = area.scrollHeight;
   const out = [];
   const vw = document.documentElement.clientWidth, vh = document.documentElement.clientHeight;
   const touch = vw < 900;                                   // 44×44 — правило про палец
@@ -115,6 +122,8 @@ const run = async (theme, size, dev) => {
       });
       if (!/Удалить файл/.test(top)) found.push(`${theme}/${size.width} ${name}: в центре экрана не подтверждение, а «${top}»`);
     }
+    await page.evaluate((sel) => { const a = document.querySelector(sel)?.querySelector('.overflow-y-auto'); if (a) a.scrollTop = a.scrollHeight; }, '[role=dialog]');
+    await page.waitForTimeout(400);
     const rows = await page.evaluate(CHECK_IN, '[role=dialog]');
     for (const [kind, text] of rows) found.push(`${theme}/${size.width} ${name} · ${kind}: ${text}`);
     await page.keyboard.press('Escape').catch(() => {});

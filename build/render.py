@@ -1120,8 +1120,8 @@ def how_page():
             + header(cur=BASE + "how-it-works/") + crumb_html
             + page_hero("Як це працює",
                         "П’ять кроків, у яких від вас — два: сказати, що прибрати, і прийняти роботу. "
-                        "Решту робимо ми.", img="assets/photos/tools-1610-640.jpg",
-                        img_alt="Відра з водою, парова швабра та засоби для прибирання на підлозі перед початком роботи")
+                        "Решту робимо ми.", img="assets/photos/stairs-640.jpg",
+                        img_alt="Клінер DULI у фірмовому фартуху миє паркет у холі приватного будинку з дубовими сходами")
             + f"""
 <section class="section section--surface">
   <div class="wrap"><div class="hsteps rv">{steps_html}</div></div>

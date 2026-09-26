@@ -11,7 +11,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from data import (SITE, CLAIMS, TYPES, OBJECTS, EXTRAS, FREQUENCY, ZONES,
-                  SERVICES, PACKAGES, STEPS, WHY, BEFORE_AFTER, FAQ, B2B_OBJECTS,
+                  SERVICES, PACKAGES, STEPS, WHY, BEFORE_AFTER, FAQ, B2B_OBJECTS, HOME_SERVICES,
                   PRICE_LIST, CHECKLISTS, GUARANTEES, EQUIPMENT, B2B_INCLUDED, FAQ_FULL,
                   FURNITURE, WINDOW_SASH, REVIEWS)
 
@@ -41,6 +41,14 @@ _SVG = {
     "spark": '<path d="M12 4.5 13.7 9l4.5 1.7-4.5 1.7L12 17l-1.7-4.6L5.8 10.7 10.3 9 12 4.5Z"/>',
     "chev": '<path d="m6 9.5 6 6 6-6"/>',
     "chevr": '<path d="m9 6 6 6-6 6"/>',
+    "scissors": '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.5 15.5M8.5 8.5 20 20"/>',
+    "tree": '<path d="M12 22v-6M8 16h8l-2.5-4h1.5L12 6 9 12h1.5Z"/>',
+    "leaf": '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.5 5-7"/>',
+    "drop": '<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7Z"/>',
+    "fuel": '<path d="M3 22V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16M3 22h10M3 12h10M13 8h2a2 2 0 0 1 2 2v6a1.5 1.5 0 0 0 3 0V9l-3-3"/>',
+    "bolt": '<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/>',
+    "bug": '<path d="M8 2v2M16 2v2M9 7h6a3 3 0 0 1 3 3v4a6 6 0 0 1-12 0v-4a3 3 0 0 1 3-3ZM3 13h3M18 13h3M4 20l3-2M20 20l-3-2M4 6l3 2M20 6l-3 2"/>',
+    "spray": '<path d="M7 8h6v13H7zM10 8V5h4M17 5h1M20 3l1-1M20 7l1 1"/>',
     "msg": '<path d="M4.5 5.5h15v10.5H9l-4.5 3.5V5.5Z"/><path d="M8 9.5h8M8 12.5h5"/>',
     "send": '<path d="m4 11.5 16-7-4.5 15.5-4-6.5-7.5-2Z"/><path d="m11.5 13.5 8.5-9"/>',
     "star": '<path d="m12 4 2.4 5 5.5.7-4 3.8 1 5.5-4.9-2.7L7.1 19l1-5.5-4-3.8L9.6 9 12 4Z"/>',
@@ -301,6 +309,32 @@ def services():
       <a class="btn btn--primary" href="{CALC}" data-track="cta_services">Розрахувати вартість {ic('arrow')}</a>
       <a class="btn btn--ghost" href="{BASE}services/">Усі послуги {ic('arrow')}</a>
       <p>Не знайшли своєї ситуації? Зателефонуйте — підберемо формат за хвилину.</p>
+    </div>
+  </div>
+</section>"""
+
+
+def home_services(compact=False):
+    """Блок «Дім і двір»: лаконічна сітка побутових послуг для приватних будинків."""
+    items = "".join('<div class="hs__i">%s<b>%s</b><span>%s</span></div>' % (ic(i), t, d) for i, t, d in HOME_SERVICES)
+    return f"""
+<section class="section section--surface" id="home-services">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Дім і двір</span>
+      <h2>Не тільки прибирання</h2>
+      <p class="lead muted">Для приватних будинків беремо на себе й двір, і побут: усе, що зазвичай відкладається «на вихідні».</p>
+    </div>
+    <div class="hs rv">{items}</div>
+    <div class="hs__foot rv">
+      <figure class="ph hs__ph">
+        <img src="{BASE}assets/photos/garden-wide-640.jpg" srcset="{BASE}assets/photos/garden-wide-640.jpg 640w, {BASE}assets/photos/garden-wide-1200.jpg 1200w" sizes="(min-width: 900px) 520px, 100vw" alt="Підстрижений газон і туї біля будинку після догляду за ділянкою" width="640" height="400" loading="lazy">
+      </figure>
+      <div class="hs__cta">
+        <p>Ціну називаємо після огляду або за фото — зазвичай у той самий день. Можна поєднати з прибиранням в один виїзд.</p>
+        <a class="btn btn--primary" href="{TEL}" data-track="cta_home_services">{ic('phone')} Зателефонувати</a>
+        {('<a class="btn btn--ghost" href="%s" target="_blank" rel="noopener">%s Написати в Telegram</a>' % (TG, ic('send'))) if TG else ''}
+      </div>
     </div>
   </div>
 </section>"""
@@ -1028,7 +1062,7 @@ def services_hub():
 <section class="section section--surface">
   <div class="wrap"><div class="svc svc--hub rv">{''.join(cards)}</div></div>
 </section>"""
-            + why() + final() + footer() + scripts())
+            + home_services() + why() + final() + footer() + scripts())
 
 
 def pricing_page():
@@ -1282,10 +1316,16 @@ def about_page():
       <h2>Що бригада привозить із собою</h2>
       <p class="lead muted">Вам не треба купувати нічого — ані хімії, ані ганчірок.</p>
     </div>
-    <figure class="ph rv">
+    <div class="ph__pair rv">
+    <figure class="ph">
+      <img src="{BASE}assets/photos/karcher-640.jpg" srcset="{BASE}assets/photos/karcher-640.jpg 640w, {BASE}assets/photos/karcher-1200.jpg 1200w" sizes="(min-width: 900px) 430px, 100vw" alt="Професійний пилосос Kärcher на бруківці біля будинку" width="640" height="480" loading="lazy">
+      <figcaption>Професійний пилосос Kärcher: бригада привозить свою техніку.</figcaption>
+    </figure>
+    <figure class="ph">
       <img src="{BASE}assets/photos/chem-640.jpg" srcset="{BASE}assets/photos/chem-640.jpg 640w, {BASE}assets/photos/chem-1200.jpg 1200w" sizes="(min-width: 900px) 880px, 100vw" alt="Професійна хімія бригади: засоби для підлоги, сантехніки, скла та крем-мило у пʼятилітрових каністрах" width="640" height="480" loading="lazy">
       <figcaption>Професійна хімія бригади: окремі засоби для підлоги, сантехніки, скла та поверхонь.</figcaption>
     </figure>
+    </div>
     <div class="eq__grid rv">{equip}</div>
   </div>
 </section>
@@ -1405,7 +1445,7 @@ def build_home():
     # Коротка вітрина: усе детальне живе на своїх сторінках (меню в шапці).
     # before_after() повертається на головну, щойно з’являться власні фото: див. BEFORE_AFTER у data.py
     return (head(title, desc, "/") + header(cur=BASE) + hero() + strip() + services()
-            + trust() + reviews() + final() + footer() + scripts())
+            + home_services() + trust() + reviews() + final() + footer() + scripts())
 
 
 def write(path, content):

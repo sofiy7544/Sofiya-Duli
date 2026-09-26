@@ -923,3 +923,19 @@ h2{line-height:1.12}
 .tr__wrap{display:grid;gap:22px}
 .ph--trust{max-width:380px;margin:0}
 @media (min-width:900px){.tr__wrap{grid-template-columns:380px 1fr;align-items:start}.tr__wrap .tr{margin:0}}
+
+/* Дім і двір */
+.hs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hs__i{background:var(--surface);border:1px solid var(--hair);border-radius:var(--r);padding:16px 14px;display:grid;gap:6px;align-content:start}
+.hs__i svg{width:22px;height:22px;color:var(--brand)}
+.hs__i b{font-size:.98rem;font-weight:700;letter-spacing:-.014em;line-height:1.25}
+.hs__i span{font-size:var(--fs-caption);color:var(--muted);line-height:1.45}
+.hs__foot{display:grid;gap:18px;margin-top:22px;align-items:center}
+.hs__ph{margin:0;max-width:none}
+.hs__ph img{aspect-ratio:16/10}
+.hs__cta{display:grid;gap:12px;justify-items:start}
+.hs__cta p{color:var(--muted);font-size:var(--fs-small);line-height:1.5;max-width:46ch}
+@media (min-width:700px){.hs{grid-template-columns:repeat(4,1fr)}.hs__foot{grid-template-columns:520px 1fr;gap:28px}}
+.ph__pair{display:grid;gap:14px;margin-bottom:26px}
+.ph__pair .ph{margin:0}
+@media (min-width:700px){.ph__pair{grid-template-columns:1fr 1fr;max-width:880px}}

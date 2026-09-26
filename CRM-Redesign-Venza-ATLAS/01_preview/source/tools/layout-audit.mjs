@@ -60,8 +60,16 @@ const CHECK = () => {
     if ((r.left < -1 || r.right > vw + 1) && !scrollable(el)) out.push(['за краем', `«${label(el)}» ${Math.round(r.left)}…${Math.round(r.right)} при ширине ${vw}`]);
 
     // 4. перекрыто другим слоем
-    const x = Math.min(Math.max(r.left + r.width / 2, 1), vw - 1);
-    const y = Math.min(Math.max(r.top + r.height / 2, 1), vh - 1);
+    const x = r.left + r.width / 2, y = r.top + r.height / 2;
+    if (x < 0 || x > vw || y < 0 || y > vh) continue;              // центр вне экрана — прокрутится
+    const box = (() => {                                           // видимая часть прокручиваемого ряда
+      for (let n = el.parentElement; n; n = n.parentElement) {
+        const cs = getComputedStyle(n);
+        if (['auto', 'scroll', 'hidden'].includes(cs.overflowX) || ['auto', 'scroll'].includes(cs.overflowY)) return n.getBoundingClientRect();
+      }
+      return null;
+    })();
+    if (box && (x < box.left || x > box.right || y < box.top || y > box.bottom)) continue;
     const top = document.elementFromPoint(x, y);
     if (top && top !== el && !el.contains(top) && !top.contains(el)) {
       const blocker = top.closest('[role=dialog], [role=status], [role=alert], nav, aside, header, footer') || top;

@@ -104,7 +104,7 @@ export function TodayScreen({ firstEntry }: { firstEntry?: boolean }) {
         {revenueStrip}
         <BriefingCard loading={r.loading} tasks={todayTasks} events={d?.events ?? []} leads={d?.activeLeads ?? []} />
 
-        <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="mt-4 grid grid-cols-[minmax(0,1fr)] gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
           <div className="min-w-0 space-y-4">
             <section className="surface p-4">
               <div className="mb-3 flex items-center justify-between"><h2 className="t-h2">{tr('Воронка')}</h2><Link href="/leads" className="tap-link text-[13px] font-medium text-primary hover:underline">{tr('Открыть канбан')}</Link></div>

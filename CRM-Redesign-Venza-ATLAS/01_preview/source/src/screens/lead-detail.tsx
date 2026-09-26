@@ -164,7 +164,7 @@ function RequestList({ lead, client }: { lead: Lead; client: Client }) {
   const rows: [string, React.ReactNode][] = [
     [tr('Цель'), PURPOSE_LABEL[lead.purpose]], [tr('Бюджет'), <span className="tabular">{budget(lead.budgetMin, lead.budgetMax, lead.budgetCurrency)}</span>],
     [tr('Районы'), client.preferences?.districts.join(', ') || '—'], [tr('Комнат'), client.preferences?.rooms?.min ? tr('от {n}', { n: client.preferences.rooms.min }) : '—'],
-    [tr('Телефон'), <a href={`tel:${client.primaryPhone}`} className="tabular text-primary">{client.primaryPhone}</a>], [tr('Источник'), SOURCE_LABEL[lead.source]],
+    [tr('Телефон'), <a href={`tel:${client.primaryPhone}`} className="tap-link inline-flex min-h-[44px] items-center tabular text-primary lg:min-h-0">{client.primaryPhone}</a>], [tr('Источник'), SOURCE_LABEL[lead.source]],
   ];
   return <dl className="row-divider -mx-1">{rows.map(([k, v]) => <div key={k} className="flex items-baseline justify-between gap-4 px-1 py-2.5 text-[14.5px]"><dt className="text-muted-foreground">{k}</dt><dd className="text-right font-medium">{v}</dd></div>)}</dl>;
 }

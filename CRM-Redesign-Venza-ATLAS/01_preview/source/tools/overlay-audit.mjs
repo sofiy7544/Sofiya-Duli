@@ -67,10 +67,10 @@ const OVERLAYS = [
   ['меню создания', '/today', async (p) => { await p.locator('button[aria-label="Создать"]:visible, button:visible:has-text("Создать")').first().click(); }],
   ['быстрый захват', '/today', async (p) => { await p.locator('button[aria-label="Быстрый захват лида"]:visible').first().click(); }],
   ['уведомления', '/today', async (p) => { await p.locator('button[aria-label^="Уведомления"]:visible').first().click(); }],
-  ['поиск', '/leads', async (p) => { const s = p.locator('button[aria-label="Поиск по CRM"]:visible, button[aria-label="Поиск"]:visible, input[aria-label="Поиск по CRM"]:visible').first(); await s.click(); }],
+  ['поиск', '/leads', async (p, size) => { if (size.width >= 1024) await p.keyboard.press('Meta+k'); else await p.locator('button[aria-label="Поиск"]:visible').first().click(); }],
   ['фильтры', '/leads', async (p) => { await p.locator('button:visible').filter({ hasText: 'Фильтры' }).first().click(); }],
-  ['смена этапа', '/leads/l1', async (p) => { await p.locator('button:visible').filter({ hasText: /Сменить этап|Этап:/ }).first().click(); }],
-  ['итог звонка', '/leads/l1', async (p) => { await p.locator('button:visible').filter({ hasText: 'Позвонить' }).first().click(); }],
+  ['смена этапа', '/leads/l1', async (p) => { await p.locator('button[aria-label^="Сменить этап"]:visible, button[aria-label^="Этап:"]:visible').first().click(); }],
+  ['итог звонка', '/leads/l1', async (p) => { await p.locator('main button:visible').filter({ hasText: /^Звонок$/ }).first().click(); }],
   ['назначить показ', '/properties/p1', async (p) => { await p.locator('button:visible').filter({ hasText: 'Назначить показ' }).first().click(); }],
   ['PDF-презентация', '/properties/p1', async (p) => { await p.locator('button:visible').filter({ hasText: /^PDF$/ }).first().click(); }],
   ['действия объекта', '/properties/p1', async (p) => { await p.locator('button[aria-label="Действия"]:visible').first().click(); }],
@@ -103,7 +103,7 @@ const run = async (theme, size, dev) => {
   for (const [name, route, open] of OVERLAYS) {
     await page.goto(BASE + route, { waitUntil: 'networkidle' });
     await page.waitForTimeout(1200);
-    try { await open(page); } catch { found.push(`${theme}/${size.width} ${name}: не удалось открыть`); continue; }
+    try { await open(page, size); } catch { found.push(`${theme}/${size.width} ${name}: не удалось открыть`); continue; }
     await page.waitForTimeout(1100);
     if (!(await page.locator('[role=dialog]').count())) { found.push(`${theme}/${size.width} ${name}: окно не появилось`); continue; }
     if (name === 'удаление файла') {

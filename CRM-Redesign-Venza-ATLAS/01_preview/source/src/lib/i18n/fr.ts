@@ -1064,4 +1064,8 @@ export const fr: Record<string, string> = {
   'Показать {n}': 'Afficher {n}',
   'Напомню {day} в {time}': 'Rappel {day} à {time}',
   'CRM агентства': 'CRM de l’agence',
+
+  // меню створення
+  'Квартира, дом, коммерция или участок': 'Appartement, maison, local ou terrain',
+  'Контакт без заявки: продавец или знакомый': 'Un contact sans demande : vendeur ou connaissance',
 };

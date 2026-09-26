@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CalendarPlus, CheckSquare, ChevronRight, Flame, Snowflake, Sun, UserPlus } from 'lucide-react';
+import { Building2, CalendarPlus, CheckSquare, ChevronRight, Flame, Snowflake, Sun, User, UserPlus } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { api, ApiError } from '@/lib/mock/api';
 import { useRouter } from '@/lib/router';
@@ -32,27 +32,49 @@ export function QuickCreate() {
   );
 }
 
+/**
+ * Меню создания под кнопкой «+»: все сущности, которые риелтор заводит руками.
+ *
+ * Лид и задача открываются коротким листом прямо здесь — это самое частое и
+ * должно занимать секунды. Событие открывается своим листом: он же переносит
+ * существующие. Объект и клиент ведут на полные формы: там десяток полей,
+ * в лист они не помещаются и заполняются не на бегу.
+ */
 function Menu() {
-  const items = [
+  const router = useRouter();
+  const sheetItems = [
     { key: 'lead' as const, icon: UserPlus, title: tr('Лид'), text: tr('Новый запрос клиента в воронку') },
     { key: 'task' as const, icon: CheckSquare, title: tr('Задача'), text: tr('Звонок, показ или напоминание') },
   ];
-  /* Событие открывается своим листом: он же переносит существующие. */
+  const formItems = [
+    { href: '/properties/new', icon: Building2, title: tr('Объект'), text: tr('Квартира, дом, коммерция или участок') },
+    { href: '/clients/new', icon: User, title: tr('Клиент'), text: tr('Контакт без заявки: продавец или знакомый') },
+  ];
   const openEvent = () => ui.set({ quickCreate: null, eventForm: true });
+  const go = (href: string) => { ui.set({ quickCreate: null }); router.navigate(href); };
+  const row = 'pressable surface flex w-full items-center gap-3.5 p-3.5 text-left';
+  const badge = 'grid h-11 w-11 place-items-center rounded-[13px] bg-primary-soft text-primary-text';
   return (
     <div className="space-y-2">
-      {items.map((it) => (
-        <button key={it.key} onClick={() => ui.set({ quickCreate: it.key })} className="pressable surface flex w-full items-center gap-3.5 p-3.5 text-left">
-          <span className="grid h-11 w-11 place-items-center rounded-[13px] bg-primary-soft text-primary-text"><it.icon className="h-5 w-5" aria-hidden /></span>
+      {sheetItems.map((it) => (
+        <button key={it.key} onClick={() => ui.set({ quickCreate: it.key })} className={row}>
+          <span className={badge}><it.icon className="h-5 w-5" aria-hidden /></span>
           <span className="flex-1"><span className="block text-[15.5px] font-semibold">{it.title}</span><span className="t-caption">{it.text}</span></span>
           <ChevronRight className="h-4 w-4 text-muted-foreground" aria-hidden />
         </button>
       ))}
-      <button onClick={openEvent} className="pressable surface flex w-full items-center gap-3.5 p-3.5 text-left">
-        <span className="grid h-11 w-11 place-items-center rounded-[13px] bg-primary-soft text-primary-text"><CalendarPlus className="h-5 w-5" aria-hidden /></span>
+      <button onClick={openEvent} className={row}>
+        <span className={badge}><CalendarPlus className="h-5 w-5" aria-hidden /></span>
         <span className="flex-1"><span className="block text-[15.5px] font-semibold">{tr('Событие')}</span><span className="t-caption">{tr('Показ, встреча или звонок в календарь')}</span></span>
         <ChevronRight className="h-4 w-4 text-muted-foreground" aria-hidden />
       </button>
+      {formItems.map((it) => (
+        <button key={it.href} onClick={() => go(it.href)} className={row}>
+          <span className={badge}><it.icon className="h-5 w-5" aria-hidden /></span>
+          <span className="flex-1"><span className="block text-[15.5px] font-semibold">{it.title}</span><span className="t-caption">{it.text}</span></span>
+          <ChevronRight className="h-4 w-4 text-muted-foreground" aria-hidden />
+        </button>
+      ))}
       <p className="t-caption px-1">{tr('В карточке лида или клиента показ назначается быстрее: клиент там уже выбран.')}</p>
     </div>
   );

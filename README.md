@@ -45,3 +45,8 @@
 ## Автомагніти
 
 `print/car-magnet/README.md` — розміри, файли для друку, контур різу, текст для типографії.
+
+## Phone Check (`phone-check/`)
+
+Окремий застосунок (Next.js + PostgreSQL) для звірки телефонів клієнтів із власною CRM магазину. На сайт GitHub Pages не потрапляє.
+Опис, запуск у Docker і тести: [`phone-check/README.md`](phone-check/README.md).

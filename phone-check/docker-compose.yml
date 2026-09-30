@@ -1,0 +1,75 @@
+# Запуск: cp .env.example .env && заполнить ключи && docker compose up -d --build
+# Демо-данные: docker compose --profile demo run --rm seed
+
+x-app: &app
+  build: .
+  image: phone-check:latest
+  env_file: .env
+  environment:
+    DATABASE_URL: postgres://${POSTGRES_USER:-phonecheck}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/${POSTGRES_DB:-phonecheck}
+  restart: unless-stopped
+  read_only: true
+  tmpfs: [/tmp]
+  security_opt: [no-new-privileges:true]
+  cap_drop: [ALL]
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-phonecheck}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-phonecheck}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+    networks: [backend]
+
+  migrate:
+    <<: *app
+    command: ['node', 'dist/scripts/migrate.js']
+    restart: 'no'
+    depends_on:
+      db: { condition: service_healthy }
+    networks: [backend]
+
+  web:
+    <<: *app
+    ports: ['${WEB_PORT:-3000}:3000']
+    tmpfs: [/tmp, /app/.next/cache]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    networks: [backend, frontend]
+
+  # Worker без выхода в интернет: сеть backend внутренняя, доступна только PostgreSQL
+  worker:
+    <<: *app
+    command: ['node', 'dist/worker/main.js']
+    healthcheck: { disable: true }
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    networks: [backend]
+
+  seed:
+    <<: *app
+    profiles: [demo]
+    command: ['node', 'dist/scripts/seed.js']
+    restart: 'no'
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-phonecheck}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-phonecheck}
+      ALLOW_DEMO_SEED: 'true'
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    networks: [backend]
+
+networks:
+  backend:
+    internal: true
+  frontend: {}
+
+volumes:
+  pgdata: {}

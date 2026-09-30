@@ -1,0 +1,9 @@
+node_modules/
+.next/
+dist/
+coverage/
+.env
+.env.local
+*.tsbuildinfo
+next-env.d.ts
+samples/phones-*[0-9].csv

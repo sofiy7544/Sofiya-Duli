@@ -214,14 +214,13 @@ def hero():
 <section class="hero">
   <div class="wrap hero__grid">
     <div>
-      <p class="hero__kicker"><b>DULI Service</b><i></i><span>Клінінг в Одесі</span><i></i><span>Квартири · Будинки · Офіси</span></p>
+      <p class="hero__kicker"><b>Клінінг в Одесі</b><i></i><span>Квартири · Будинки · Офіси</span></p>
       <h1>Повертайтеся <em>в чистий дім</em></h1>
-      <p class="lead hero__lead">Прибирання квартир, будинків і офісів в Одесі. Ціну бачите одразу на сайті, бригада приїжджає зі своєю хімією та технікою, а за результат відповідаємо {CLAIMS['guarantee_hours']} години.</p>
+      <p class="lead hero__lead">Прибирання квартир, будинків і офісів. Ціну бачите одразу, бригада приїжджає зі своїм, за результат відповідаємо {CLAIMS['guarantee_hours']} години.</p>
       <div class="hero__cta">
         <a class="btn btn--primary btn--lg" href="{CALC}" data-track="cta_hero">Розрахувати вартість {ic('arrow')}</a>
         <a class="btn btn--ghost btn--lg" href="{TEL}">{ic('phone')} Зателефонувати</a>
       </div>
-      <p class="hero__hint">15 секунд, без дзвінка й без зобов’язань. Від&nbsp;{uah(CLAIMS['min_order_uah']).replace(' ', '&nbsp;')}&nbsp;₴ за&nbsp;візит.</p>
     </div>
 
     <div class="quick" id="quick">
@@ -241,7 +240,7 @@ def hero():
         </div>
         <a class="btn btn--primary" id="qGo" href="{CALC}">Уточнити {ic('arrow')}</a>
       </div>
-      <p class="quick__note">Мінімальне замовлення — {uah(CLAIMS['min_order_uah'])} ₴. Точну суму з доплатами й знижкою порахуємо на сторінці розрахунку за 5 кроків.</p>
+      <p class="quick__note">Орієнтир без зобов’язань. Мінімальне замовлення — {uah(CLAIMS['min_order_uah'])} ₴.</p>
     </div>
   </div>
 </section>"""
@@ -312,13 +311,12 @@ def services():
     <div class="section-head rv">
       <span class="eyebrow">Оберіть свою ситуацію</span>
       <h2>Який результат вам потрібен?</h2>
-      <p class="lead muted">Не «послуга з прайсу», а конкретний результат у вашому домі. Натисніть «Розрахувати» — калькулятор відкриється з готовим вибором, ціну побачите одразу.</p>
+      <p class="lead muted">Оберіть ситуацію — калькулятор відкриється з готовим вибором, і ви одразу побачите ціну.</p>
     </div>
     <div class="svc svc--compact rv">{cards}</div>
     <div class="section-cta rv">
-      <a class="btn btn--primary" href="{CALC}" data-track="cta_services">Розрахувати вартість {ic('arrow')}</a>
-      <a class="btn btn--ghost" href="{BASE}services/">Усі послуги {ic('arrow')}</a>
-      <p>Не знайшли своєї ситуації? Зателефонуйте — підберемо формат за хвилину.</p>
+      <a class="btn btn--ghost" href="{BASE}services/">Усі послуги та ціни {ic('arrow')}</a>
+      <p>Не знайшли своєї ситуації? <a href="{TEL}">Зателефонуйте</a> — підберемо формат за хвилину.</p>
     </div>
   </div>
 </section>"""
@@ -363,21 +361,8 @@ def offers():
 
 
 def home_services(compact=False):
-    """Блок «Дім і двір»: лаконічна сітка побутових послуг для приватних будинків."""
-    items = "".join(
-        ('<a class="hs__i hs__i--link" href="%s">%s<b>%s</b><span>%s</span></a>' % (BASE + "services/" + TREES["slug"] + "/", ic(i), t, d))
-        if i == "tree" else
-        ('<div class="hs__i">%s<b>%s</b><span>%s</span></div>' % (ic(i), t, d))
-        for i, t, d in HOME_SERVICES)
-    return f"""
-<section class="section section--surface" id="home-services">
-  <div class="wrap">
-    <div class="section-head rv">
-      <span class="eyebrow">Дім і двір</span>
-      <h2>Не тільки прибирання</h2>
-      <p class="lead muted">Для приватних будинків беремо на себе й двір, і побут: усе, що зазвичай відкладається «на вихідні».</p>
-    </div>
-    <div class="hs rv">{items}</div>
+    """Блок «Дім і двір». compact=True (головна): лише картки й рядок із телефоном; фото та кнопки — на /services/."""
+    foot = f"""
     <div class="hs__foot rv">
       <div class="hs__phs">
       <figure class="ph hs__ph">
@@ -392,6 +377,47 @@ def home_services(compact=False):
         <a class="btn btn--primary" href="{TEL}" data-track="cta_home_services">{ic('phone')} Зателефонувати</a>
         {('<a class="btn btn--ghost" href="%s" target="_blank" rel="noopener">%s Написати в Telegram</a>' % (TG, ic('send'))) if TG else ''}
       </div>
+    </div>
+"""
+    if compact:
+        foot = ('<p class="hs__line rv">Потрібно щось із цього? <a href="%s">%s</a> або <a href="%sservices/">усі послуги</a>.</p>'
+                % (TEL, SITE["phone"], BASE))
+    items = "".join(
+        ('<a class="hs__i hs__i--link" href="%s">%s<b>%s</b><span>%s</span></a>' % (BASE + "services/" + TREES["slug"] + "/", ic(i), t, d))
+        if i == "tree" else
+        ('<div class="hs__i">%s<b>%s</b><span>%s</span></div>' % (ic(i), t, d))
+        for i, t, d in HOME_SERVICES)
+    return f"""
+<section class="section section--surface" id="home-services">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Дім і двір</span>
+      <h2>Не тільки прибирання</h2>
+      <p class="lead muted">Для приватних будинків беремо на себе й двір, і побут. Ціну називаємо після огляду або за фото.</p>
+    </div>
+    <div class="hs rv">{items}</div>
+    {foot}
+  </div>
+</section>"""
+
+
+def how_short():
+    """Три кроки для головної: заявка → виїзд → приймання. Повна версія — /how-it-works/."""
+    picks = [STEPS[0], STEPS[2], STEPS[4]]
+    steps = "".join(
+        f'<div class="hstep"><div class="hstep__n">0{i + 1}</div><div class="hstep__b"><h3>{t}</h3><p>{d}</p></div></div>'
+        for i, (t, d) in enumerate(picks)
+    )
+    return f"""
+<section class="section section--surface" id="how">
+  <div class="wrap">
+    <div class="section-head rv">
+      <span class="eyebrow">Як це працює</span>
+      <h2>Три кроки від заявки до чистого дому</h2>
+    </div>
+    <div class="hsteps hsteps--3 rv">{steps}</div>
+    <div class="section-cta rv">
+      <a class="btn btn--ghost" href="{BASE}how-it-works/">Повний процес і чек-листи {ic('arrow')}</a>
     </div>
   </div>
 </section>"""
@@ -430,10 +456,10 @@ def trust():
         facts.append((SITE["orders_done"], "виконаних прибирань"))
     facts_html = "".join('<div class="tr__i tr__fact"><b>%s</b><span>%s</span></div>' % f for f in facts)
     items = [
-        ("shield", "Ціна фіксується до виїзду", "Сума відома до того, як бригада зайшла у двері. Більше робіт — тільки за вашою згодою."),
-        ("clock", "Гарантія %d години" % CLAIMS["guarantee_hours"], "Помітили недолік протягом доби — повертаємось і переробляємо безкоштовно."),
-        ("box", "Усе своє привозимо", "Хімія, техніка, витратники. Вам не треба нічого купувати й готувати."),
-        ("users", "Постійні бригади", "Ті самі навчені клінери, а не випадкові люди під замовлення."),
+        ("users", "Постійні бригади", "Ті самі навчені клінери, не випадкові люди під замовлення. Працюють офіційно."),
+        ("box", "Своя техніка та хімія", "Kärcher, парогенератор, сертифіковані засоби. За запитом — еко-лінійка для дітей і тварин."),
+        ("list", "Чек-лист замість «на око»", "Кожна зона — пункт у списку. Приймаєте роботу за ним і платите після приймання."),
+        ("shield", "Матеріальна відповідальність", "Пошкодження майна з нашої вини компенсуємо."),
     ]
     items_html = "".join('<div class="tr__i">%s<b>%s</b><span>%s</span></div>' % (ic(i), t, d) for i, t, d in items)
     slot = ""
@@ -444,9 +470,9 @@ def trust():
 <section class="section" id="trust">
   <div class="wrap">
     <div class="section-head rv">
-      <span class="eyebrow">Довіра</span>
-      <h2>Що ви можете перевірити на своєму замовленні</h2>
-      <p class="lead muted">Жодних «ми найкращі». Тільки те, що видно під час і після прибирання.</p>
+      <span class="eyebrow">Хто приїде</span>
+      <h2>Люди, яким можна відкрити двері</h2>
+      <p class="lead muted">Клінер заходить до вас додому, тож ось що ви про нього знаєте заздалегідь.</p>
     </div>
     <div class="tr__wrap">
       <figure class="ph ph--portrait ph--trust rv">
@@ -457,7 +483,7 @@ def trust():
     </div>
     {slot}
     <div class="section-cta rv">
-      <a class="btn btn--primary" href="{CALC}" data-track="cta_trust">Перевірити на замовленні {ic('arrow')}</a>
+      <a class="btn btn--ghost" href="{BASE}about/">Про бригаду та обладнання {ic('arrow')}</a>
     </div>
   </div>
 </section>"""
@@ -733,8 +759,7 @@ def why():
     </div>
     <div class="why rv">{items}</div>
     <div class="section-cta rv">
-      <a class="btn btn--ghost" href="{BASE}about/">Хто приїде і що привезе {ic('arrow')}</a>
-      <p>Кожна обіцянка — пункт у вашій заявці, а не слоган.</p>
+      <a class="btn btn--ghost" href="{BASE}about/">Про бригаду та обладнання {ic('arrow')}</a>
     </div>
   </div>
 </section>"""
@@ -782,7 +807,7 @@ def packages():
         <p class="reg__note">У прикладі — генеральне прибирання 60 м². Ваша сума залежить від площі й типу.</p>
         <div class="reg__cta">
           <a class="btn btn--primary" href="{CALC}" data-track="cta_regular">Порахувати свою {ic('arrow')}</a>
-          <a class="btn btn--quiet" href="{BASE}pricing/">Повний прайс {ic('arrow')}</a>
+          <a class="btn btn--quiet" href="#pg-0">До повного прайсу {ic('arrow')}</a>
         </div>
       </div>
       <div class="reg__tbl">{''.join(rows)}</div>
@@ -1285,7 +1310,7 @@ def services_hub():
 <section class="section section--surface">
   <div class="wrap"><div class="svc svc--hub rv">{''.join(cards)}</div></div>
 </section>"""
-            + home_services() + why() + final() + footer() + scripts())
+            + home_services() + final() + footer() + scripts())
 
 
 def pricing_page():
@@ -1514,13 +1539,12 @@ def about_page():
             "фіксована ціна й гарантія 24 години.")
     return (head(title, desc, "/about/", [crumb_ld])
             + header(cur=BASE + "about/") + crumb_html
-            + page_hero("Служба, яка працює на результат, а не на години",
+            + page_hero("Платите за результат, а не за години",
                         "Ми свідомо відмовились від оплати «за присутність». Клієнт платить за результат: "
                         "обсяг робіт зафіксовано в чек-листі, ціна — до виїзду, а якщо щось зроблено погано, "
                         "ми повертаємось і переробляємо.", img="assets/photos/stove-1610-640.jpg",
                         img_alt="Клінер миє варильну поверхню: плита в піні, рожеві рукавички",
                         note="Ми виїзна служба: офісу для клієнтів немає, бригада приїжджає до вас. Одеса та передмістя, %s." % SITE["hours"])
-            + saturday()
             + f"""
 <section class="section section--surface">
   <div class="wrap">
@@ -1673,7 +1697,8 @@ def build_home():
     # Коротка вітрина: усе детальне живе на своїх сторінках (меню в шапці).
     # before_after() повертається на головну, щойно з’являться власні фото: див. BEFORE_AFTER у data.py
     return (head(title, desc, "/") + header(cur=BASE) + hero() + strip() + services()
-            + offers() + home_services() + trust() + reviews() + final() + footer() + scripts())
+            + home_services(compact=True) + how_short() + trust() + reviews() + offers()
+            + final() + footer() + scripts())
 
 
 def write(path, content):

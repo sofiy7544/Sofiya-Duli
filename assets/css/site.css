@@ -997,5 +997,5 @@ h2{line-height:1.12}
 @keyframes spin{to{transform:rotate(360deg)}}
 .field input:not(:placeholder-shown):valid,.field select:valid{border-color:var(--hair-2)}
 
-.ftr a,.muted a,.hs__line a,.calc__hint a{display:inline-block;padding-block:4px}
+.ftr__bot a,.ftr__brand p a,.muted a,.hs__line a,.calc__hint a{display:inline-block;padding-block:4px}
 .svc__go{min-height:var(--tap);padding-block:4px}
